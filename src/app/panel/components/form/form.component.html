@@ -1,0 +1,105 @@
+<div *ngFor="let field of fields">
+
+    <div [ngSwitch]="field.type">
+
+        <!--<divider
+                *ngSwitchCase="formConfig.noInputTypes.DIVIDER"
+                [field]="field">
+        </divider>-->
+
+        <app-input-text
+                *ngSwitchCase="formConfig.types.TEXT"
+                [form]="form"
+                [field]="field">
+        </app-input-text>
+
+       <!-- <color-picker
+                *ngSwitchCase="formConfig.types.COLOR"
+                [form]="form"
+                [field]="field"
+                [isEdit]="isEdit">
+        </color-picker>
+
+        <input-text-area
+                *ngSwitchCase="formConfig.types.TEXTAREA"
+                [form]="form"
+                [field]="field">
+        </input-text-area>
+
+        <input-email
+                *ngSwitchCase="formConfig.types.EMAIL"
+                [form]="form"
+                [field]="field">
+        </input-email>
+
+        <input-url
+                *ngSwitchCase="formConfig.types.URL"
+                [form]="form"
+                [field]="field">
+        </input-url>
+
+        <input-number
+                *ngSwitchCase="formConfig.types.NUMBER"
+                [form]="form"
+                [field]="field">
+        </input-number>
+
+        <input-password
+                *ngSwitchCase="formConfig.types.PASSWORD"
+                [form]="form"
+                [field]="field">
+        </input-password>
+
+        <checkbox
+                *ngSwitchCase="formConfig.types.CHECKBOX"
+                [form]="form"
+                [field]="field">
+        </checkbox>
+
+        <ui-select
+                *ngSwitchCase="formConfig.types.SELECT"
+                [form]="form"
+                [field]="field"
+                [isEdit]="isEdit">
+        </ui-select>
+
+        <date-range-picker
+                *ngSwitchCase="formConfig.types.DATE_RANGE"
+                [form]="form"
+                [field]="field">
+        </date-range-picker>
+
+        <date-picker
+                *ngSwitchCase="formConfig.types.DATE"
+                [form]="form"
+                [field]="field">
+        </date-picker>
+
+        <lat-lng
+                *ngSwitchCase="formConfig.types.LAT_LNG"
+                [form]="form"
+                [field]="field">
+        </lat-lng>
+
+        <file-uploader
+                *ngSwitchCase="formConfig.types.FILE"
+                [form]="form"
+                [field]="field">
+        </file-uploader>
+
+        <list-details
+                *ngSwitchCase="formConfig.types.LIST_DETAILS"
+                [form]="form"
+                [field]="field"
+                [isEdit]="isEdit">
+        </list-details>
+
+        <calendar
+                *ngSwitchCase="formConfig.types.CALENDAR"
+                [form]="form"
+                [field]="field">
+        </calendar> -->
+
+    </div>
+
+</div>

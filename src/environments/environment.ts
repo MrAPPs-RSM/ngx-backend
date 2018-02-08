@@ -4,5 +4,12 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  api: {
+    baseFilesUrl: 'http://0.0.0.0:5555/files/output/',
+    baseUrl: 'http://0.0.0.0:5555/api/',
+    auth: {
+      tokenKey: 'access_token'
+    }
+  }
 };
