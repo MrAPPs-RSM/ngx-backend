@@ -49,9 +49,10 @@ export class ApiService {
      * @param endpoint
      * @param body
      * @param params
+     * @param isLogin
      * @returns {Promise<T>}
      */
-    public post(endpoint: string, body: any, params?: Object): Promise<any> {
+    public post(endpoint: string, body: any, params?: Object | null, isLogin: boolean = false): Promise<any> {
         return new Promise((resolve, reject) => {
             this._http.post(ApiService.composeUrl(endpoint), body, this.setOptions(params))
                 .subscribe(
@@ -59,7 +60,9 @@ export class ApiService {
                         resolve(data);
                     },
                     error => {
-                        this.handleError(error);
+                        if (!isLogin) {
+                            this.handleError(error);
+                        }
                         reject(error);
                     }
                 );
@@ -136,11 +139,16 @@ export class ApiService {
      * @param error
      */
     private handleError(error: HttpErrorResponse): void {
-        // TODO:
         switch (error.status) {
+            case 401: {
+                this._tokenService.removeToken();
+                location.reload();
+            }
+                break;
             default: {
 
             }
+                break;
         }
     }
 
@@ -150,7 +158,7 @@ export class ApiService {
      * @param withoutHeaders
      * @returns {RequestOptions}
      */
-    private setOptions(params: Object, withoutHeaders?: boolean): RequestOptions {
+    private setOptions(params: Object | null, withoutHeaders?: boolean): RequestOptions {
         const requestOptions: RequestOptions = {
             params: this.setAuth(params),
             headers: this.headers
@@ -168,12 +176,14 @@ export class ApiService {
      * @param params
      * @returns {HttpParams}
      */
-    private setAuth(params: Object): HttpParams {
+    private setAuth(params: Object | null): HttpParams {
         if (this._tokenService.getToken() !== null) {
             const obj = {};
-            Object.keys(params).forEach((key) => {
-                obj[key] = params[key];
-            });
+            if (params !== null) {
+                Object.keys(params).forEach((key) => {
+                    obj[key] = params[key];
+                });
+            }
             obj[this._tokenService.key] = this._tokenService.getToken();
             return new HttpParams({
                 fromObject: obj

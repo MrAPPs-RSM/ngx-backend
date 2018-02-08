@@ -1,0 +1,12 @@
+@mixin box-shadow($horizontal: 5px, $vertical: 5px, $blur: 20px, $spread: 0, $color: rgba(0, 0, 0, 0.3)) {
+  @if $horizontal==none {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+  }
+  @else {
+    -webkit-box-shadow: $horizontal $vertical $blur $spread $color;
+    -moz-box-shadow: $horizontal $vertical $blur $spread $color;
+    box-shadow: $horizontal $vertical $blur $spread $color;
+  }
+}

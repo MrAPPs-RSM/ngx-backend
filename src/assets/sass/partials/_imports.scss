@@ -1,8 +1,15 @@
 @import 'variables.scss';
 @import '../mixins/clearfix.scss';
+@import '../mixins/form-input.scss';
 @import '../mixins/responsive.scss';
 @import '../mixins/ellipsis-multiline.scss';
 @import '../mixins/_transform.scss';
 @import '../mixins/verticallyMiddleInsideBox.scss';
 @import '../mixins/_transition.scss';
 @import '../mixins/clean-nl.scss';
+@import '../mixins/box-shadow.scss';
+@import "~ngx-toastr/toastr";
+@import "toasts.scss";
+
+@import 'buttons.scss';
+@import 'form.scss';

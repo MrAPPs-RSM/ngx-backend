@@ -1,4 +1,22 @@
-<p>
-    panel works!
-</p>
-<router-outlet></router-outlet>
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a (click)="logout()" class="logout"><i class="fa fa-power-off"></i> Logout</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="wrapper" id="wrapper">
+    <div class="sidebar">
+        <span class="toggler" (click)="toggleSidebar()"><i class="fa fa-bars"></i></span>
+        <div class="title">{{ title }}</div>
+        <div class="menu"></div>
+    </div>
+    <div class="content">
+        content
+        <router-outlet></router-outlet>
+    </div>
+</div>
+

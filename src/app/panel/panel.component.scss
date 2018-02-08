@@ -1,0 +1,91 @@
+@import '../../assets/sass/partials/imports';
+
+app-panel {
+  $navbarHeight: 50px;
+  > nav.navbar {
+    border: none;
+    background-color: #ffffff;
+    @include box-shadow(0, 1px, 5px, 0);
+    > div.container {
+      margin-right: 0;
+      > div.navbar-header {
+        > a.navbar-brand {
+          color: $primary;
+          padding-left: 0;
+          font-weight: bold;
+          font-size: 20px;
+        }
+      }
+      > div.navbar-collapse {
+        > ul {
+          > li {
+            > a {
+              cursor: pointer;
+              &.logout {
+                font-weight: bold;
+                background-color: $error;
+                color: #ffffff;
+                &:hover {
+                  background-color: darken($error, 20);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  > .wrapper {
+    $sidebarWidth: 300px;
+
+    &.sidebar-closed {
+      > .sidebar {
+        @include _transform(translateX(-240px));
+      }
+      > .content {
+        margin-left: 60px;
+      }
+    }
+    > .sidebar {
+      height: 100%;
+      position: fixed;
+      z-index: 1031;
+      top: 0;
+      left: 0;
+      background-color: #282c33;
+      overflow-x: hidden;
+      width: $sidebarWidth;
+      @include _transition(all 0.5s);
+
+      > span.toggler {
+        cursor: pointer;
+        font-size: 20px;
+        position: absolute;
+        top: 6px;
+        right: 0;
+        color: #ffffff;
+        padding: 4px 22px;
+      }
+
+      > .title {
+        padding-left: 15px;
+        font-size: 20px;
+        color: #ffffff;
+        line-height: $navbarHeight;
+        height: $navbarHeight;
+        border-bottom: 1px solid #ddd;
+      }
+
+      > .menu {
+      }
+    }
+
+    > .content {
+      margin-top: $navbarHeight;
+      @include _transition(margin-left 0.5s);
+      padding: 20px;
+      margin-left: $sidebarWidth;
+    }
+  }
+}

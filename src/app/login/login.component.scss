@@ -2,11 +2,15 @@
 
 app-login {
   > div.container {
-    background-color: $primaryColor;
+    @include box-shadow();
+    background-color: #ffffff;
     border-radius: $borderRadius;
-    color: #fff;
     margin: 200px auto;
     max-width: 600px;
-    text-align: center;
+    padding: 20px 40px;
+    > h3 {
+      text-align: center;
+      margin-bottom: 25px;
+    }
   }
 }

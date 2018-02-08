@@ -9,9 +9,6 @@ import {formConfig} from './form.config';
 })
 export class FormComponent implements OnInit {
 
-    /**
-     * This component should ONLY get in input an array and render the HTML structure of the wanted form
-     */
     @Input() fields: any[] = [];
     @Input() form: FormGroup;
     @Input() isEdit: boolean;
@@ -22,5 +19,10 @@ export class FormComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.form.valueChanges
+            .subscribe(data => {
+                    console.log(this.form.value);
+                }
+            );
     }
 }

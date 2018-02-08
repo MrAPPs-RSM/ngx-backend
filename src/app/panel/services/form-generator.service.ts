@@ -133,6 +133,8 @@ export class FormGeneratorService {
                         break;
                 }
             });
+
+            return new FormGroup(group);
         } else {
             return new Error('Form structure cannot be empty');
         }

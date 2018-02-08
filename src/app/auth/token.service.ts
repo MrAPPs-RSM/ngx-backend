@@ -7,7 +7,7 @@ export class TokenService {
     constructor() {
     }
 
-    public key = environment.api.auth.tokenKey;
+    public key = environment.auth.tokenKey;
 
     public storeToken(token: string): void {
         localStorage.setItem(this.key, token);

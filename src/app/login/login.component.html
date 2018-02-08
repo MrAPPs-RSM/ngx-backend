@@ -1,4 +1,11 @@
 <div class="container">
     <h3>{{ title }}</h3>
+    <app-form [form]="form" [fields]="fields" (keyup.enter)="onSubmit()"></app-form>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <button (click)="onSubmit()" [disabled]="!form.valid" type="submit" class="btn btn-primary pull-right">Login</button>
+        </div>
+    </div>
 </div>
 

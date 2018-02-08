@@ -8,9 +8,7 @@ import {AuthGuard} from '../auth/auth.guard';
 import {PanelComponent} from './panel.component';
 import {FormPageComponent} from './pages/form-page/form-page.component';
 import {TablePageComponent} from './pages/table-page/table-page.component';
-import {FormComponent} from './components/form/form.component';
 import {TableComponent} from './components/table/table.component';
-import {InputTextComponent} from './components/form/types/input-text/input-text.component';
 
 const routes: Routes = [
     {
@@ -33,7 +31,7 @@ const routes: Routes = [
         RouterModule.forChild(routes),
         ReactiveFormsModule
     ],
-    declarations: [PanelComponent, FormPageComponent, TablePageComponent, FormComponent, TableComponent, InputTextComponent],
+    declarations: [PanelComponent, FormPageComponent, TablePageComponent, TableComponent],
     providers: [
         AuthGuard
     ]
