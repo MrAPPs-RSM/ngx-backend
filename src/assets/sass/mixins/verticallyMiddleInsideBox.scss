@@ -1,0 +1,10 @@
+@mixin verticallyMiddleInsideBox($size, $lineHeight:$size) {
+  width: $size;
+  height: $size;
+  @if $lineHeight!=$size {
+    line-height: #{$lineHeight};
+  } @else {
+    line-height: #{$lineHeight - 2px};
+  }
+
+}

@@ -1,0 +1,5 @@
+@mixin clean-nl($elementsPerLine) {
+  &:nth-child(#{$elementsPerLine}n+1) {
+    clear: left;
+  }
+}
