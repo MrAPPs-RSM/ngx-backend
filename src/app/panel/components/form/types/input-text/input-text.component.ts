@@ -18,6 +18,10 @@ export class InputTextComponent implements OnInit {
     }
 
     get isValid() {
-        return this.form.controls[this.field.key].valid;
+        if (this.form.controls[this.field.key].value === null || this.form.controls[this.field.key].value === '') {
+            return true;
+        } else {
+            return this.form.controls[this.field.key].valid;
+        }
     }
 }
