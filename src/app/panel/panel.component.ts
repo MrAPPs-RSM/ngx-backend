@@ -16,18 +16,19 @@ export class PanelComponent implements OnInit {
     public title = environment.name;
     public menu: any[] = [];
 
-    constructor(private _tokenService: TokenService,
+    constructor(private _router: Router,
+                private _tokenService: TokenService,
                 private _route: ActivatedRoute) {
     }
 
     ngOnInit() {
         this.menu = this._route.snapshot.data['params'];
-        console.log(this.menu);
+        this._router.navigate(['panel/dashboard']);
     }
 
     logout(): void {
         this._tokenService.removeToken();
-        location.reload();
+        this._router.navigate(['login']);
     }
 
     toggleSidebar(): void {

@@ -32,7 +32,7 @@ export class SetupService {
                 .catch((error) => {
                     // Might never happen, in case, logout the user
                     this._tokenService.removeToken();
-                    location.reload();
+                    this._router.navigate(['login']);
                 });
         });
     }

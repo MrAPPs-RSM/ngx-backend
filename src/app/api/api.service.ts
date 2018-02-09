@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {environment} from '../../environments/environment';
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from '@angular/common/http';
 import {TokenService} from '../auth/token.service';
+import {Router} from '@angular/router';
 
 const API_URL = environment.api.baseUrl;
 
@@ -19,7 +20,7 @@ export class ApiService {
         return API_URL + endpoint;
     }
 
-    constructor(private _http: HttpClient, private _tokenService: TokenService) {
+    constructor(private _http: HttpClient, private _tokenService: TokenService, private _router: Router) {
     }
 
     /**
@@ -142,7 +143,7 @@ export class ApiService {
         switch (error.status) {
             case 401: {
                 this._tokenService.removeToken();
-                location.reload();
+                this._router.navigate(['login']);
             }
                 break;
             default: {

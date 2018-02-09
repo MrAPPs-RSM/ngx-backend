@@ -33,7 +33,6 @@ app-panel {
               padding: 15px;
               cursor: pointer;
               &.logout {
-                font-weight: bold;
                 background-color: $error;
                 color: #ffffff;
                 &:hover {
@@ -65,7 +64,6 @@ app-panel {
       top: 0;
       left: 0;
       background-color: $sidebar;
-      overflow-x: hidden;
       width: $sidebarWidth;
       @include _transition(all 0.5s);
 
@@ -81,7 +79,10 @@ app-panel {
           top: 6px;
           right: 0;
           color: #ffffff;
-          padding: 4px 22px;
+          padding: 4px 10px;
+          border-radius: 50%;
+          background-color: lighten($sidebar, 20);
+          @include _transform(translateX(50%));
         }
 
         > .title {
