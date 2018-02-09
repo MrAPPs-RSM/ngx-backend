@@ -45,7 +45,7 @@ const routes: Routes = [
         InputPasswordComponent
     ],
     imports: [
-        RouterModule.forRoot(routes),
+        RouterModule.forRoot(routes, {useHash: true}),
         ReactiveFormsModule,
         BrowserModule,
         ToastNoAnimationModule,
