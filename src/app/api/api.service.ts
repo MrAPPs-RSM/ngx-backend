@@ -179,7 +179,7 @@ export class ApiService {
     private setAuth(params: Object | null): HttpParams {
         if (this._tokenService.getToken() !== null) {
             const obj = {};
-            if (params !== null) {
+            if (params) {
                 Object.keys(params).forEach((key) => {
                     obj[key] = params[key];
                 });
