@@ -14,13 +14,15 @@ declare const $: any;
 export class PanelComponent implements OnInit {
 
     public title = environment.name;
+    public menu: any[] = [];
 
     constructor(private _tokenService: TokenService,
                 private _route: ActivatedRoute) {
     }
 
     ngOnInit() {
-        console.log(this._route.snapshot.data['params']);
+        this.menu = this._route.snapshot.data['params'];
+        console.log(this.menu);
     }
 
     logout(): void {
@@ -31,5 +33,11 @@ export class PanelComponent implements OnInit {
     toggleSidebar(): void {
         const wrapper = $('div#wrapper');
         wrapper.toggleClass('sidebar-closed');
+    }
+
+    onGroupClick($event: any): void {
+        const element = $($event.target);
+        element.toggleClass('open');
+        $(element.next('ul')).slideToggle();
     }
 }

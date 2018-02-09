@@ -27,7 +27,7 @@ const routes: Routes = [
     },
     {
         path: '',
-        redirectTo: 'login',
+        redirectTo: 'panel',
         pathMatch: 'full'
     },
     {
@@ -45,7 +45,7 @@ const routes: Routes = [
         InputPasswordComponent
     ],
     imports: [
-        RouterModule.forRoot(routes, {useHash: true}),
+        RouterModule.forRoot(routes),
         ReactiveFormsModule,
         BrowserModule,
         ToastNoAnimationModule,

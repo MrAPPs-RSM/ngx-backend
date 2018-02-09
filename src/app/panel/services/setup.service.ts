@@ -90,13 +90,17 @@ export class SetupService {
                 if (item.type === 'group') {
                     item.params.menu['children'] = [];
                     item.children.forEach((child) => {
-                        child.params.menu.path = child.path;
-                        item.params.menu.children.push(child.params.menu);
+                        if (child.params.menu.sidebar === true) {
+                            child.params.menu.path = child.path;
+                            item.params.menu.children.push(child.params.menu);}
+
                     });
                     menu.push(item.params.menu);
                 } else {
-                    item.params.menu.path = item.path;
-                    menu.push(item.params.menu);
+                    if (item.params.menu.sidebar === true) {
+                        item.params.menu.path = item.path;
+                        menu.push(item.params.menu);
+                    }
                 }
             }
         });
