@@ -6,6 +6,14 @@ export class UtilsService {
     constructor() {
     }
 
+    public static sortByKey(array: any[], key: string): any[] {
+        return array.sort((a, b) => {
+            const x = a[key];
+            const y = b[key];
+            return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+        });
+    }
+
     public static containsObject(obj: any, list: any[]): boolean {
         let i;
         for (i = 0; i < list.length; i++) {
@@ -20,7 +28,7 @@ export class UtilsService {
         return Object.keys(obj).length === 0;
     }
 
-    static containsValue(obj: any, value: any): boolean {
+    public static containsValue(obj: any, value: any): boolean {
         Object.keys(obj).forEach((key) => {
             if (obj[key] === value) {
                 return true;

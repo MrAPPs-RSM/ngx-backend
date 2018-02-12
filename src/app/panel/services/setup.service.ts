@@ -6,6 +6,7 @@ import {environment} from '../../../environments/environment';
 import {DashboardPageComponent} from '../pages/dashboard-page/dashboard-page.component';
 import {TablePageComponent} from '../pages/table-page/table-page.component';
 import {FormPageComponent} from '../pages/form-page/form-page.component';
+import {UtilsService} from "../../services/utils.service";
 
 const TYPES = {
     dashboard: DashboardPageComponent,
@@ -76,13 +77,10 @@ export class SetupService {
 
         routerConfig[1].children = routes;
         this._router.resetConfig(routerConfig);
-
-        // TODO: remove this
-        console.log(this._router.config);
     }
 
     private prepareMenu(data: any): any[] {
-        const menu = [];
+        let menu = [];
 
         data.forEach((item) => {
             if (item.type) {
@@ -104,6 +102,8 @@ export class SetupService {
                 }
             }
         });
+
+        menu = UtilsService.sortByKey(menu, 'order');
 
         return menu;
     }

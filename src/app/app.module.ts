@@ -8,6 +8,7 @@ import {ToastrModule, ToastNoAnimation, ToastNoAnimationModule} from 'ngx-toastr
 import {AppComponent} from './app.component';
 import {LoginComponent} from './login/login.component';
 
+import {GlobalState} from './global.state';
 import {ApiService} from './api/api.service';
 import {TokenService} from './auth/token.service';
 import {LoginGuard} from './auth/login.guard';
@@ -62,6 +63,7 @@ const routes: Routes = [
         PanelModule,
     ],
     providers: [
+        GlobalState,
         ApiService,
         TokenService,
         LoginGuard,

@@ -1,18 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {PageTitleService} from '../../services/page-title.service';
 
 @Component({
-  selector: 'app-form-page',
-  templateUrl: './form-page.component.html',
-  styleUrls: ['./form-page.component.scss']
+    selector: 'app-form-page',
+    templateUrl: './form-page.component.html',
+    styleUrls: ['./form-page.component.scss']
 })
 export class FormPageComponent implements OnInit {
 
-  /**
-   * This component should include all the necessaries form.component.ts and handle all the requests
-   */
-  constructor() { }
+    private params: any = {}; // Setup params
 
-  ngOnInit() {
-  }
+    constructor(private _route: ActivatedRoute,
+                private _pageTitle: PageTitleService) {
+    }
+
+    ngOnInit() {
+        this.params = this._route.snapshot.data;
+        console.log(this.params);
+        this._pageTitle.set(this._route);
+    }
 
 }

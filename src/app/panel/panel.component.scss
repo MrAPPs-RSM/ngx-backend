@@ -48,16 +48,21 @@ app-panel {
 
   > .wrapper {
     $sidebarWidth: 250px;
+    $sidebarWidthClosed: 60px;
+    $difference: -190px;
+
+    @include clearfix();
 
     &.sidebar-closed {
       > .sidebar {
-        @include _transform(translateX(-190px));
+        @include _transform(translateX($difference));
       }
       > .content {
-        margin-left: 60px;
+        width: calc(100% - #{$sidebarWidthClosed});
       }
     }
     > .sidebar {
+      overflow-y: scroll;
       height: 100%;
       position: fixed;
       z-index: 1031;
@@ -77,15 +82,13 @@ app-panel {
           font-size: 20px;
           position: absolute;
           top: 6px;
-          right: 0;
+          right: 12px;
           color: #ffffff;
           padding: 4px 10px;
-          border-radius: 50%;
-          background-color: lighten($sidebar, 20);
-          @include _transform(translateX(50%));
         }
 
         > .title {
+          font-weight: bold;
           display: block;
           padding-left: 15px;
           font-size: 20px;
@@ -95,7 +98,6 @@ app-panel {
           border-bottom: 1px solid #ddd;
         }
       }
-
 
       > .menu {
         > ul {
@@ -119,7 +121,7 @@ app-panel {
                 margin-right: 15px;
               }
               &:hover, &.open {
-                background-color: lighten($sidebar, 3);
+                background-color: lighten($sidebar, 5);
               }
               &.active {
                 background-color: lighten($sidebar, 15);
@@ -137,8 +139,13 @@ app-panel {
                   padding: 15px;
                   padding-left: 45px;
                   color: $grey;
+                  > i {
+                    pointer-events: none;
+                    width: 15px;
+                    margin-right: 15px;
+                  }
                   &:hover {
-                    background-color: lighten($sidebar, 5);
+                    background-color: lighten($sidebar, 8);
                   }
                   &.active {
                     background-color: lighten($sidebar, 15);
@@ -152,10 +159,55 @@ app-panel {
     }
 
     > .content {
-      margin-top: $navbarHeight;
-      @include _transition(margin-left 0.5s);
-      padding: 20px;
-      margin-left: $sidebarWidth;
+      margin-top: $navbarHeight + 10px;
+      margin-bottom: 10px;
+      width: calc(100% - #{$sidebarWidth});
+      float: right;
+      @include _transition(all 0.5s);
+      > .breadcrumbs {
+        padding: 10px 15px;
+        background-color: #ffffff;
+        > div.row {
+          > div {
+            &:first-child {
+              float: left;
+              > h1 {
+                margin: 0;
+                font-weight: bold;
+                font-size: 20px;
+              }
+            }
+            &:last-child {
+              float: right;
+              text-align: right;
+              > ul.breadcrumb {
+                padding: 0;
+                margin: 0;
+                background-color: inherit;
+                > li {
+                  + li {
+                    &:before {
+                      content: '\f105';
+                      display: inline-block;
+                      font: normal normal normal 14px/1 FontAwesome;
+                      font-size: inherit;
+                      text-rendering: auto;
+                      -webkit-font-smoothing: antialiased;
+                    }
+                  }
+                  > a {
+                    color: $default;
+                    &.active {
+                      color: $primary;
+                      font-weight: bold;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

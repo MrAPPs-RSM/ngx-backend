@@ -18,11 +18,15 @@
         <div class="menu">
             <ul>
                 <li *ngFor="let item of menu">
-                    <a *ngIf="!item.children" [routerLink]="item.path" routerLinkActive="active"><i *ngIf="item.icon" class="{{item.icon}}"></i>{{item.title}}</a>
-                    <a *ngIf="item.children" (click)="onGroupClick($event)"><i *ngIf="item.icon" class="{{item.icon}}"></i>{{item.title}} <span class="fa fa-caret-down"></span></a>
+                    <a *ngIf="!item.children" [routerLink]="item.path" routerLinkActive="active"><i *ngIf="item.icon"
+                                                                                                    class="{{item.icon}}"></i>{{item.title}}</a>
+                    <a *ngIf="item.children" (click)="onGroupClick($event)"><i *ngIf="item.icon"
+                                                                               class="{{item.icon}}"></i>{{item.title}}
+                        <span class="fa fa-caret-down"></span></a>
                     <ul *ngIf="item.children">
                         <li *ngFor="let child of item.children">
-                            <a [routerLink]="child.path" routerLinkActive="active"><i *ngIf="child.icon" class="{{child.icon}}"></i>{{child.title}}</a>
+                            <a [routerLink]="child.path" routerLinkActive="active"><i *ngIf="child.icon"
+                                                                                      class="{{child.icon}}"></i>{{child.title}}</a>
                         </li>
                     </ul>
                 </li>
@@ -30,6 +34,20 @@
         </div>
     </div>
     <div class="content">
+        <div class="breadcrumbs">
+            <div class="row">
+                <div class="col-sm-4">
+                    <h1 class="page-title">{{ activePage }}</h1>
+                </div>
+                <div class="col-sm-8">
+                    <ul class="breadcrumb" *ngIf="breadcrumb.length > 1">
+                        <li *ngFor="let item of breadcrumb">
+                            <a [routerLink]="item.route" routerLinkActive="active">{{ item.title }}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
         <router-outlet></router-outlet>
     </div>
 </div>

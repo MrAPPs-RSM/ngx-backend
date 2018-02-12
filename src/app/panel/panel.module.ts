@@ -11,6 +11,7 @@ import {TableComponent} from './components/table/table.component';
 import {PanelResolver} from './resolvers/panel.resolver';
 import {SetupService} from './services/setup.service';
 import {DashboardPageComponent} from './pages/dashboard-page/dashboard-page.component';
+import {PageTitleService} from './services/page-title.service';
 
 const routes: Routes = [
     {
@@ -40,7 +41,8 @@ const routes: Routes = [
     providers: [
         AuthGuard,
         SetupService,
-        PanelResolver
+        PanelResolver,
+        PageTitleService
     ],
     entryComponents: [
         FormPageComponent,
