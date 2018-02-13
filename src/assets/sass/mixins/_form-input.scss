@@ -1,7 +1,7 @@
 @mixin _form-input {
   width: 100%;
-  border-radius: 5px;
-  height: 50px;
+  border-radius: $borderRadius;
+  height: 45px;
   box-shadow: none;
   @include _transition(background-color 0.3s);
   &:focus {

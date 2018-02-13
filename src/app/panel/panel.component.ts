@@ -3,6 +3,7 @@ import {TokenService} from '../auth/token.service';
 import {environment} from '../../environments/environment';
 import {ActivatedRoute, Router} from '@angular/router';
 import {GlobalState} from '../global.state';
+import {PageRefreshService} from '../services/page-refresh.service';
 
 declare const $: any;
 
@@ -23,13 +24,18 @@ export class PanelComponent implements OnInit {
     constructor(private _state: GlobalState,
                 private _router: Router,
                 private _tokenService: TokenService,
-                private _route: ActivatedRoute) {
+                private _route: ActivatedRoute,
+                private _pageRefresh: PageRefreshService) {
     }
 
     ngOnInit() {
         this.menu = this._route.snapshot.data['params'];
         this.loadBreadcrumb();
-        this._router.navigate(['panel/dashboard']);
+        if (this._pageRefresh.getLastPath() !== null) {
+            this._pageRefresh.renavigate();
+        } else {
+            this._router.navigate(['panel/dashboard']);
+        }
     }
 
     loadBreadcrumb(): void {
@@ -65,6 +71,7 @@ export class PanelComponent implements OnInit {
 
     logout(): void {
         this._tokenService.removeToken();
+        this._pageRefresh.reset();
         this._router.navigate(['login']);
     }
 

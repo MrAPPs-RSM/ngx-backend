@@ -1,0 +1,37 @@
+/* Modals */
+
+div.modal-content {
+  box-shadow: none;
+  border: 0;
+  border-radius: $borderRadius;
+  > modal-content {
+    > modal-title {
+      > .modal-header-custom {
+        padding: 10px 20px;
+        border-bottom: 1px solid $grey;
+        > h3.modal-title {
+          font-size: 18px;
+        }
+      }
+    }
+    > modal-body {
+      > .modal-body-custom {
+        padding: 10px 20px;
+      }
+    }
+    > modal-footer {
+      > .modal-footer-custom {
+        padding: 10px 20px;
+        text-align: right;
+        border-top: 1px solid $grey;
+        button {
+          margin: 0 5px 0 5px;
+        }
+      }
+    }
+  }
+}
+
+
+
+

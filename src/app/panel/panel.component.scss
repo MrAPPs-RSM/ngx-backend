@@ -12,7 +12,6 @@ app-panel {
         > a.navbar-brand {
           color: $primary;
           padding-left: 0;
-          font-weight: bold;
           font-size: 20px;
         }
       }
@@ -88,20 +87,19 @@ app-panel {
         }
 
         > .title {
-          font-weight: bold;
           display: block;
-          padding-left: 15px;
+          margin: 0 15px;
           font-size: 20px;
           color: #ffffff;
           line-height: $navbarHeight;
           height: $navbarHeight;
-          border-bottom: 1px solid #ddd;
+          border-bottom: 1px solid $default;
         }
       }
 
       > .menu {
         > ul {
-          margin: 0;
+          margin: $navbarHeight+10px 0 0;
           padding: 0;
           list-style: none;
           > li {
@@ -111,6 +109,7 @@ app-panel {
               padding: 15px;
               color: $grey;
               > span {
+                @include _transition(all 0.3s);
                 pointer-events: none;
                 margin: 3px 13px 0 0;
                 float: right;
@@ -122,6 +121,11 @@ app-panel {
               }
               &:hover, &.open {
                 background-color: lighten($sidebar, 5);
+              }
+              &.open {
+                > span {
+                  @include _transform(rotate(180deg));
+                }
               }
               &.active {
                 background-color: lighten($sidebar, 15);
@@ -160,20 +164,18 @@ app-panel {
 
     > .content {
       margin-top: $navbarHeight + 10px;
-      margin-bottom: 10px;
       width: calc(100% - #{$sidebarWidth});
       float: right;
       @include _transition(all 0.5s);
       > .breadcrumbs {
+        margin-bottom: 10px;
         padding: 10px 15px;
-        background-color: #ffffff;
         > div.row {
           > div {
             &:first-child {
               float: left;
               > h1 {
                 margin: 0;
-                font-weight: bold;
                 font-size: 20px;
               }
             }

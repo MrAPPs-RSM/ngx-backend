@@ -1,3 +1,7 @@
-<p>
-  form-page works!
-</p>
+<div class="container-fluid">
+    <div class="row">
+        <div *ngFor="let form of params.forms" [class]="form.class ? form.class : 'col-sm-12'">
+            <app-form [config]="form" (response)="onResponse(form, $event)"></app-form>
+        </div>
+    </div>
+</div>

@@ -45,38 +45,29 @@ export class SetupService {
         const routes = [];
 
         data.forEach((item) => {
-            if (!item.type) {
-                // Is redirect object
-                const redirect = {
-                    path: item.path,
-                    redirectTo: item.redirectTo,
-                    pathMatch: 'full'
-                };
-                routes.push(redirect);
-            } else {
-                // Is a component
-                if (item.type === 'group') {
-                    item.children.forEach((child) => {
-                        const childRoute = {
-                            path: child.path,
-                            component: TYPES[child.type],
-                            data: child.params
-                        };
-                        routes.push(childRoute);
-                    });
-                } else {
-                    const route = {
-                        path: item.path,
-                        component: TYPES[item.type],
-                        data: item.params
+            if (item.type === 'group') {
+                item.children.forEach((child) => {
+                    const childRoute = {
+                        path: child.path,
+                        component: TYPES[child.type],
+                        data: child.params
                     };
-                    routes.push(route);
-                }
+                    routes.push(childRoute);
+                });
+            } else {
+                const route = {
+                    path: item.path,
+                    component: TYPES[item.type],
+                    data: item.params
+                };
+                routes.push(route);
             }
         });
 
         routerConfig[1].children = routes;
+
         this._router.resetConfig(routerConfig);
+        console.log(this._router.config);
     }
 
     private prepareMenu(data: any): any[] {
@@ -90,7 +81,8 @@ export class SetupService {
                     item.children.forEach((child) => {
                         if (child.params.menu.sidebar === true) {
                             child.params.menu.path = child.path;
-                            item.params.menu.children.push(child.params.menu);}
+                            item.params.menu.children.push(child.params.menu);
+                        }
 
                     });
                     menu.push(item.params.menu);

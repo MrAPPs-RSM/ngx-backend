@@ -14,9 +14,7 @@ import {TokenService} from './auth/token.service';
 import {LoginGuard} from './auth/login.guard';
 import {UtilsService} from './services/utils.service';
 import {FormGeneratorService} from './panel/services/form-generator.service';
-import {FormComponent} from './panel/components/form/form.component';
-import {InputTextComponent} from './panel/components/form/types/input-text/input-text.component';
-import {InputPasswordComponent} from './panel/components/form/types/input-password/input-password.component';
+import {PageRefreshService} from './services/page-refresh.service';
 
 const routes: Routes = [
     {
@@ -41,10 +39,7 @@ const routes: Routes = [
 @NgModule({
     declarations: [
         AppComponent,
-        LoginComponent,
-        FormComponent,
-        InputTextComponent,
-        InputPasswordComponent
+        LoginComponent
     ],
     imports: [
         RouterModule.forRoot(routes),
@@ -68,7 +63,8 @@ const routes: Routes = [
         TokenService,
         LoginGuard,
         UtilsService,
-        FormGeneratorService
+        FormGeneratorService,
+        PageRefreshService
     ],
     bootstrap: [AppComponent]
 })

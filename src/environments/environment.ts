@@ -4,40 +4,44 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 export const environment = {
-  production: false,
-  name: 'Ngx Backend',
-  api: {
-    baseFilesUrl: 'http://0.0.0.0:5555/files/output/',
-    baseUrl: 'http://0.0.0.0:5555/api/',
-    setupEndpoint: 'setup'
-  },
-  auth: {
-    tokenKey: 'access_token',
-    login: {
-      endpoint: 'persons/login',
-      form: {
-        fields: [
-          {
-            key: 'username',
-            type: 'text',
-            label: 'Username',
-            placeholder: 'Username',
-            validators: {
-              required: true
+    production: false,
+    name: 'Ngx Backend',
+    api: {
+        baseFilesUrl: 'http://0.0.0.0:5555/files/output/',
+        baseUrl: 'http://0.0.0.0:5555/api/',
+        setupEndpoint: 'setup'
+    },
+    auth: {
+        tokenKey: 'access_token',
+        login: {
+            endpoint: 'persons/login',
+            form: {
+                fields: [
+                    {
+                        key: 'username',
+                        type: 'text',
+                        label: 'Username',
+                        placeholder: 'Username',
+                        validators: {
+                            required: true
+                        }
+                    },
+                    {
+                        key: 'password',
+                        type: 'password',
+                        label: 'Password',
+                        placeholder: 'Password',
+                        validators: {
+                            required: true,
+                            minLength: 4
+                        }
+                    }
+                ],
+                submit: {
+                    label: 'Login'
+                },
+                isLoginForm: true
             }
-          },
-          {
-            key: 'password',
-            type: 'password',
-            label: 'Password',
-            placeholder: 'Password',
-            validators: {
-              required: true,
-              minLength: 4
-            }
-          }
-        ]
-      }
+        }
     }
-  }
 };

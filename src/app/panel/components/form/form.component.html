@@ -1,6 +1,12 @@
-<form *ngIf="form" [formGroup]="form">
+<form *ngIf="form" [formGroup]="form" (keyup.enter)="onSubmit()">
+    <header [ngClass]="{'loading': isLoading}" *ngIf="!config.isLoginForm">
+        <span *ngIf="config.title">{{ config.title }}</span>
+        <div *ngIf="isLoading" class="progress">
+            <div class="indeterminate"></div>
+        </div>
+    </header>
     <div class="row">
-        <div *ngFor="let field of fields">
+        <div *ngFor="let field of config.fields">
 
             <div [ngSwitch]="field.type">
 
@@ -108,4 +114,13 @@
 
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="pull-right">
+                <button type="button" (click)="onSubmit()" class="btn btn-primary" [disabled]="!form.valid || isLoading"> {{ config.submit?.label ? config.submit.label : 'Save'}}</button>
+            </div>
+        </div>
+    </div>
 </form>
+

@@ -1,4 +1,5 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import {Component, ViewEncapsulation, OnInit} from '@angular/core';
+import {Router, NavigationEnd} from '@angular/router';
 
 @Component({
     selector: 'app-root',
@@ -6,8 +7,11 @@ import {Component, ViewEncapsulation} from '@angular/core';
     styleUrls: ['../assets/sass/ngx-backend.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 
-    constructor() {
+    constructor(private _router: Router) {
+    }
+
+    ngOnInit() {
     }
 }
