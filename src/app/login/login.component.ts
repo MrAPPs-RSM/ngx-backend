@@ -28,7 +28,7 @@ export class LoginComponent implements OnInit {
         this._apiService.post(this.environment.auth.login.endpoint, data, null, true)
             .then((response) => {
                 this._tokenService.storeToken(response.id);
-                this._router.navigate(['panel/dashboard']);
+                this._router.navigate(['panel']);
             })
             .catch((error) => {
                 // TODO:

@@ -1,0 +1,24 @@
+<div [formGroup]="form" [class]="field.class ? field.class : 'col-sm-12'">
+  <div class="form-group" [ngClass]="{'has-error': !isValid}">
+
+    <!-- Label -->
+    <label for="{{field.key}}">
+      {{field.label}}
+      <span *ngIf="field.validators && field.validators.required">*</span>
+    </label>
+
+    <!-- Input -->
+    <input
+            type="number"
+            [attr.disabled]="field.disabled ? '' : null"
+            formControlName="{{field.key}}"
+            class="form-control"
+            id="{{field.key}}"
+            placeholder="{{field.placeholder}}"
+            value="{{field.value}}"
+    >
+
+    <!-- Others -->
+    <span *ngIf="field.description" class="help-block">{{field.description}}</span>
+  </div>
+</div>

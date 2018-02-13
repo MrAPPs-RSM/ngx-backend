@@ -32,7 +32,12 @@ export class PanelComponent implements OnInit {
         this.menu = this._route.snapshot.data['params'];
         this.loadBreadcrumb();
         if (this._pageRefresh.getLastPath() !== null) {
-            this._pageRefresh.renavigate();
+            if (this._pageRefresh.getLastPath() !== '/panel'
+            && this._pageRefresh.getLastPath() !== '/login') {
+                this._pageRefresh.renavigate();
+            } else {
+                this._router.navigate(['panel/dashboard']);
+            }
         } else {
             this._router.navigate(['panel/dashboard']);
         }

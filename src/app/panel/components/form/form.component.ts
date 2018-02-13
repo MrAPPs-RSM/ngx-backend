@@ -30,6 +30,11 @@ export class FormComponent implements OnInit {
 
     ngOnInit() {
         this.form = this._formGenerator.generate(this.config.fields);
+        this.form.valueChanges.subscribe(
+            data => {
+                console.log(data);
+            }
+        );
         if (this.config.isEdit) {
             this.loadData();
         }
@@ -56,8 +61,8 @@ export class FormComponent implements OnInit {
 
     onSubmit(): void {
         if (this.config.isLoginForm) {
+            /** If is login form, the login component will handle the request */
             this.response.emit(this.form.value);
-            /** If is login form, the login component will do the request */
         } else {
             if (this.form.valid) {
                 if (this.config.confirm) {

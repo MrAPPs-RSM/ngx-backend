@@ -10,10 +10,10 @@
 
             <div [ngSwitch]="field.type">
 
-                <!--<divider
-                        *ngSwitchCase="formConfig.noInputTypes.DIVIDER"
+                <app-separator
+                        *ngSwitchCase="formConfig.noInputTypes.SEPARATOR"
                         [field]="field">
-                </divider>-->
+                </app-separator>
 
                 <app-input-text
                         *ngSwitchCase="formConfig.types.TEXT"
@@ -27,12 +27,26 @@
                         [field]="field">
                 </app-input-password>
 
-                <!-- <color-picker
-                         *ngSwitchCase="formConfig.types.COLOR"
-                         [form]="form"
-                         [field]="field"
-                         [isEdit]="isEdit">
-                 </color-picker>
+                <app-input-url
+                        *ngSwitchCase="formConfig.types.URL"
+                        [form]="form"
+                        [field]="field">
+                </app-input-url>
+
+                <app-input-number
+                        *ngSwitchCase="formConfig.types.NUMBER"
+                        [form]="form"
+                        [field]="field">
+                </app-input-number>
+
+                <app-input-color
+                        *ngSwitchCase="formConfig.types.COLOR"
+                        [form]="form"
+                        [field]="field"
+                        [isEdit]="config.isEdit"
+                ></app-input-color>
+
+                <!--
 
                  <input-text-area
                          *ngSwitchCase="formConfig.types.TEXTAREA"
@@ -46,17 +60,8 @@
                          [field]="field">
                  </input-email>
 
-                 <input-url
-                         *ngSwitchCase="formConfig.types.URL"
-                         [form]="form"
-                         [field]="field">
-                 </input-url>
 
-                 <input-number
-                         *ngSwitchCase="formConfig.types.NUMBER"
-                         [form]="form"
-                         [field]="field">
-                 </input-number>
+
 
 
 

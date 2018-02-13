@@ -7,6 +7,8 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {ToastrModule, ToastNoAnimation, ToastNoAnimationModule} from 'ngx-toastr';
 import {AppComponent} from './app.component';
 import {LoginComponent} from './login/login.component';
+import {ModalModule} from 'ngx-modialog';
+import {BootstrapModalModule} from 'ngx-modialog/plugins/bootstrap';
 
 import {GlobalState} from './global.state';
 import {ApiService} from './api/api.service';
@@ -56,6 +58,8 @@ const routes: Routes = [
         }),
         HttpClientModule,
         PanelModule,
+        ModalModule.forRoot(),
+        BootstrapModalModule
     ],
     providers: [
         GlobalState,

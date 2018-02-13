@@ -2,8 +2,7 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterModule, Routes} from '@angular/router';
 import {ReactiveFormsModule} from '@angular/forms';
-import {ModalModule} from 'ngx-modialog';
-import {BootstrapModalModule} from 'ngx-modialog/plugins/bootstrap';
+import {ColorPickerModule} from 'ngx-color-picker';
 
 import {AuthGuard} from '../auth/auth.guard';
 import {PanelComponent} from './panel.component';
@@ -18,6 +17,10 @@ import {FormComponent} from './components/form/form.component';
 import {InputPasswordComponent} from './components/form/types/input-password/input-password.component';
 import {InputTextComponent} from './components/form/types/input-text/input-text.component';
 import {ModalService} from './services/modal.service';
+import {InputUrlComponent} from './components/form/types/input-url/input-url.component';
+import {InputNumberComponent} from './components/form/types/input-number/input-number.component';
+import {SeparatorComponent} from './components/form/types/separator/separator.component';
+import { InputColorComponent } from './components/form/types/input-color/input-color.component';
 
 const routes: Routes = [
     {
@@ -42,8 +45,7 @@ const routes: Routes = [
         CommonModule,
         RouterModule.forChild(routes),
         ReactiveFormsModule,
-        ModalModule.forRoot(),
-        BootstrapModalModule
+        ColorPickerModule
     ],
     exports: [
         FormComponent,
@@ -58,7 +60,11 @@ const routes: Routes = [
         InputTextComponent,
         InputPasswordComponent,
         FormPageComponent,
-        TablePageComponent
+        TablePageComponent,
+        InputUrlComponent,
+        InputNumberComponent,
+        SeparatorComponent,
+        InputColorComponent
     ],
     providers: [
         AuthGuard,

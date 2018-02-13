@@ -17,7 +17,7 @@ export let formConfig = {
         CALENDAR: 'calendar'
     },
     noInputTypes: {
-        DIVIDER: 'divider'
+        SEPARATOR: 'separator'
     },
     validators: {
         REQUIRED: 'required',

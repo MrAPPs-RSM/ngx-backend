@@ -1,0 +1,28 @@
+<div [formGroup]="form" [class]="field.class ? field.class : 'col-sm-12'">
+    <div class="form-group" [ngClass]="{'has-error': !isValid}">
+
+        <!-- Label -->
+        <label for="{{field.key}}">
+            {{field.label}}
+            <span *ngIf="field.validators && field.validators.required">*</span>
+        </label>
+
+        <!-- Input -->
+        <input *ngIf="color !== null"
+               type="text"
+               [attr.disabled]="field.disabled ? '' : null"
+               [cpPosition]="'bottom'"
+               id="{{field.key}}"
+               formControlName="{{field.key}}"
+               class="form-control"
+               [cpAlphaChannel]="'disabled'"
+               (colorPickerChange)="onColorChange($event)"
+               [(colorPicker)]="color"
+               [style.background]="color"
+               [value]="color"
+        >
+
+        <!-- Others -->
+        <span *ngIf="field.description" class="help-block">{{field.description}}</span>
+    </div>
+</div>

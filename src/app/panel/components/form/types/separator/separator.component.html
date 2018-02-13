@@ -1,0 +1,4 @@
+<div [class]="field.class ? field.class : 'col-sm-12'">
+    <p class="title" *ngIf="field.title"><i *ngIf="field.icon" [class]="field.icon"></i> {{field.title}}</p>
+    <p class="text" *ngIf="field.text">{{ field.text }}</p>
+</div>
