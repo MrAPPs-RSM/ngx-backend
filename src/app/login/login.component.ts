@@ -14,6 +14,7 @@ import {ToastrService} from 'ngx-toastr';
 export class LoginComponent implements OnInit {
 
     public environment = environment;
+    public isLoading: boolean = false;
 
     constructor(private _apiService: ApiService,
                 private _tokenService: TokenService,
@@ -25,12 +26,15 @@ export class LoginComponent implements OnInit {
     }
 
     onSubmit(data): void {
+        this.isLoading = true;
         this._apiService.post(this.environment.auth.login.endpoint, data, null, true)
             .then((response) => {
+                this.isLoading = false;
                 this._tokenService.storeToken(response.id);
                 this._router.navigate(['panel']);
             })
             .catch((error) => {
+                this.isLoading = false;
                 // TODO:
                 this._toastService.error('message', 'title');
             });

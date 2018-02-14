@@ -77,4 +77,103 @@
       background-color: darken($default, 20);
     }
   }
+
+  &.loading {
+    $size: 40px;
+    font-size: 0;
+    width: $size;
+    height: $size;
+    border-radius: 50%;
+    padding: 0;
+    border: 5px solid $primary;
+    border-bottom: 5px solid lighten($primary, 40);
+    border-left: 5px solid lighten($primary, 40);
+    background-color: transparent !important;
+    animation-name: rotateAnimation;
+    -webkit-animation-name: wk-rotateAnimation;
+    animation-duration: 1s;
+    -webkit-animation-duration: 1s;
+    animation-delay: 0.2s;
+    -webkit-animation-delay: 0.2s;
+    animation-iteration-count: infinite;
+    -webkit-animation-iteration-count: infinite;
+
+    &.btn-primary {
+      border: 5px solid $primary;
+      border-bottom: 5px solid lighten($primary, 40);
+      border-left: 5px solid lighten($primary, 40);
+      &:hover {
+        border: 5px solid $primary;
+        border-bottom: 5px solid lighten($primary, 40);
+        border-left: 5px solid lighten($primary, 40);
+      }
+    }
+    &.btn-success {
+      border: 5px solid $success;
+      border-bottom: 5px solid lighten($success, 40);
+      border-left: 5px solid lighten($success, 40);
+      &:hover {
+        border: 5px solid $success;
+        border-bottom: 5px solid lighten($success, 40);
+        border-left: 5px solid lighten($success, 40);
+      }
+    }
+    &.btn-info {
+      border: 5px solid $info;
+      border-bottom: 5px solid lighten($info, 40);
+      border-left: 5px solid lighten($info, 40);
+      &:hover {
+        border: 5px solid $info;
+        border-bottom: 5px solid lighten($info, 40);
+        border-left: 5px solid lighten($info, 40);
+      }
+    }
+    &.btn-danger {
+      border: 5px solid $error;
+      border-bottom: 5px solid lighten($error, 40);
+      border-left: 5px solid lighten($error, 40);
+      &:hover {
+        border: 5px solid $error;
+        border-bottom: 5px solid lighten($error, 40);
+        border-left: 5px solid lighten($error, 40);
+      }
+    }
+    &.btn-warning {
+      border: 5px solid $warning;
+      border-bottom: 5px solid lighten($warning, 40);
+      border-left: 5px solid lighten($warning, 40);
+      &:hover {
+        border: 5px solid $warning;
+        border-bottom: 5px solid lighten($warning, 40);
+        border-left: 5px solid lighten($warning, 40);
+      }
+    }
+    &.btn-default {
+      border: 5px solid $warning;
+      border-bottom: 5px solid lighten($warning, 40);
+      border-left: 5px solid lighten($warning, 40);
+      &:hover {
+        border: 5px solid $warning;
+        border-bottom: 5px solid lighten($warning, 40);
+        border-left: 5px solid lighten($warning, 40);
+      }
+    }
+  }
+
+  @keyframes rotateAnimation {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  @-webkit-keyframes wk-rotateAnimation {
+    0% {
+      -webkit-transform: rotate(0deg);
+    }
+    100% {
+      -webkit-transform: rotate(360deg);
+    }
+  }
 }

@@ -16,6 +16,7 @@ import {ApiService} from '../../../api/api.service';
 export class FormComponent implements OnInit {
 
     @Input() config: FormConfiguration;
+    @Input() isLoginLoading: boolean;
     @Output() response: EventEmitter<any> = new EventEmitter<any>();
 
     public form: FormGroup;

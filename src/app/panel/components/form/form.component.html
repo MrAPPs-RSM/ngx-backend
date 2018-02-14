@@ -123,6 +123,7 @@
         <div class="col-sm-12">
             <div class="pull-right">
                 <button type="button" (click)="onSubmit()" class="btn btn-primary"
+                        [ngClass]="{'loading':isLoading || isLoginLoading}"
                         [disabled]="!form.valid || isLoading"> {{ config.submit?.label ? config.submit.label : 'Save'}}
                 </button>
             </div>
