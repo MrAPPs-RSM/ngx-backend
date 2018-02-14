@@ -3,6 +3,7 @@ import {CommonModule} from '@angular/common';
 import {RouterModule, Routes} from '@angular/router';
 import {ReactiveFormsModule} from '@angular/forms';
 import {ColorPickerModule} from 'ngx-color-picker';
+import {EditorModule} from '@tinymce/tinymce-angular';
 
 import {AuthGuard} from '../auth/auth.guard';
 import {PanelComponent} from './panel.component';
@@ -20,7 +21,8 @@ import {ModalService} from './services/modal.service';
 import {InputUrlComponent} from './components/form/types/input-url/input-url.component';
 import {InputNumberComponent} from './components/form/types/input-number/input-number.component';
 import {SeparatorComponent} from './components/form/types/separator/separator.component';
-import { InputColorComponent } from './components/form/types/input-color/input-color.component';
+import {InputColorComponent} from './components/form/types/input-color/input-color.component';
+import {InputTextareaComponent} from './components/form/types/input-textarea/input-textarea.component';
 
 const routes: Routes = [
     {
@@ -45,7 +47,8 @@ const routes: Routes = [
         CommonModule,
         RouterModule.forChild(routes),
         ReactiveFormsModule,
-        ColorPickerModule
+        ColorPickerModule,
+        EditorModule
     ],
     exports: [
         FormComponent,
@@ -64,7 +67,8 @@ const routes: Routes = [
         InputUrlComponent,
         InputNumberComponent,
         SeparatorComponent,
-        InputColorComponent
+        InputColorComponent,
+        InputTextareaComponent
     ],
     providers: [
         AuthGuard,

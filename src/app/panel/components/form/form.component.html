@@ -46,14 +46,13 @@
                         [isEdit]="config.isEdit"
                 ></app-input-color>
 
+                <app-input-textarea
+                        *ngSwitchCase="formConfig.types.TEXTAREA"
+                        [form]="form"
+                        [field]="field">
+                </app-input-textarea>
+
                 <!--
-
-                 <input-text-area
-                         *ngSwitchCase="formConfig.types.TEXTAREA"
-                         [form]="form"
-                         [field]="field">
-                 </input-text-area>
-
                  <input-email
                          *ngSwitchCase="formConfig.types.EMAIL"
                          [form]="form"
@@ -123,7 +122,9 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="pull-right">
-                <button type="button" (click)="onSubmit()" class="btn btn-primary" [disabled]="!form.valid || isLoading"> {{ config.submit?.label ? config.submit.label : 'Save'}}</button>
+                <button type="button" (click)="onSubmit()" class="btn btn-primary"
+                        [disabled]="!form.valid || isLoading"> {{ config.submit?.label ? config.submit.label : 'Save'}}
+                </button>
             </div>
         </div>
     </div>

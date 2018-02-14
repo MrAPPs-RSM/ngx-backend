@@ -1,0 +1,35 @@
+<div [formGroup]="form" [class]="field.class ? field.class : 'col-sm-12'">
+    <div class="form-group" [ngClass]="{'has-error': !isValid}">
+
+        <!-- Label -->
+        <label for="{{field.key}}">
+            {{field.label}}
+            <span *ngIf="field.validators && field.validators.required">*</span>
+        </label>
+
+        <!-- Input -->
+        <!-- TODO: apiKey -->
+        <editor
+                *ngIf="field.options && field.options.tinyMce == true"
+                apiKey="test"
+                [init]="{plugins: 'link'}"
+                id="{{field.key}}"
+                formControlName="{{field.key}}">
+        </editor>
+
+        <textarea
+                *ngIf="!field.options || !field.options.tinyMce"
+                formControlName="{{field.key}}"
+                id="{{field.key}}"
+                [attr.disabled]="field.disabled ? '' : null"
+                rows="{{field.options?.rows}}"
+                cols="{{field.options?.cols}}"
+                class="form-control"
+                placeholder="{{field.placeholder}}">
+            {{field.value}}
+        </textarea>
+
+        <!-- Others -->
+        <span *ngIf="field.description" class="help-block">{{field.description}}</span>
+    </div>
+</div>

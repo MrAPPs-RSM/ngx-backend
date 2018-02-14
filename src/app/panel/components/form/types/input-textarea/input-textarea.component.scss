@@ -1,0 +1,21 @@
+@import '../../../../../../assets/sass/partials/imports';
+
+app-input-textarea {
+  div.form-group {
+    > editor {
+      > div.mce-tinymce {
+        border: 1px solid $grey;
+        border-radius: $borderRadius;
+        box-shadow: none;
+      }
+    }
+
+    &.has-error {
+      > editor {
+        > div.mce-tinymce {
+          border-color: $error;
+        }
+      }
+    }
+  }
+}
