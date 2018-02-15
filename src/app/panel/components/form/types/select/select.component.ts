@@ -1,5 +1,8 @@
 import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {FormGroup} from '@angular/forms';
+import {ApiService} from '../../../../../api/api.service';
+import {ActivatedRoute} from '@angular/router';
+import {HttpErrorResponse} from '@angular/common/http';
 
 @Component({
     selector: 'app-select',
@@ -13,25 +16,14 @@ export class SelectComponent implements OnInit {
     @Input() field: any = {};
     @Input() isEdit: boolean;
 
-    public options: SelectData[] = [
-        {
-            id: 1,
-            text: 'One'
-        },
-        {
-            id: 2,
-            text: 'Two'
-        },
-        {
-            id: 3,
-            text: 'Three'
-        }
-    ];
+    public options: SelectData[] = [];
 
-    constructor() {
+    constructor(private _apiService: ApiService,
+                private _route: ActivatedRoute) {
     }
 
     ngOnInit() {
+        this.loadData();
     }
 
     get isValid() {
@@ -50,6 +42,39 @@ export class SelectComponent implements OnInit {
         }
     }
 
+    private loadData(): void {
+        this.loadOptions()
+            .then(() => {
+            // TODO: If this.isEdit == true, load pre-selected data, changing this.form.controls[this.field.key].value
+                console.log('LOAD DATA if edit');
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+    private loadOptions(): Promise<any> {
+        return new Promise((resolve, reject) => {
+            if (this.field.options instanceof Array) {
+                this.options = this.field.options;
+                resolve();
+            } else {
+                let endpoint = this.field.options;
+                if (endpoint.indexOf(':id') !== -1) {
+                    endpoint = endpoint.replace(':id', this._route.params['value'].id);
+                }
+
+                this._apiService.get(endpoint)
+                    .then((response) => {
+                        this.options = response;
+                    })
+                    .catch((response: HttpErrorResponse) => {
+                    // TODO: decide what to do if select options can't be loaded (back to prev page?, alert?, message?)
+                        console.log(response.error);
+                    });
+            }
+        });
+    }
 }
 
 export interface SelectData {
