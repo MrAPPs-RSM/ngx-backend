@@ -82,9 +82,11 @@ export class SetupService {
         for (const item of data) {
             if ('type' in item) {
                 // Is a component
-                if (item.type === 'group' || 'children' in item) {
-                    item.params.menu['children'] = this.remapMenu(item.children);
-                    menu.push(item.params.menu);
+                if (item.type === 'group') {
+                    if ('children' in item) {
+                        item.params.menu['children'] = this.remapMenu(item.children);
+                        menu.push(item.params.menu);
+                    }
                 } else {
                     if (item.params.menu.sidebar === true) {
                         item.params.menu.path = item.path;
