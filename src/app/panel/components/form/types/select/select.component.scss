@@ -30,7 +30,7 @@ app-select {
               background-color: #f5f5f5;
               border-radius: $borderRadius;
               border-color: $lightGrey;
-              > span.ng-value-icon {
+              > span.ng-value-icon.left {
                 border: none;
                 padding: 1px 5px;
                 &:hover {

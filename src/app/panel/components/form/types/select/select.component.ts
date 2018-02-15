@@ -28,8 +28,6 @@ export class SelectComponent implements OnInit {
         }
     ];
 
-    public value: any = null;
-
     constructor() {
     }
 
@@ -39,13 +37,13 @@ export class SelectComponent implements OnInit {
     get isValid() {
         if (this.field.validators && this.field.validators.required) {
             if (this.field.multiple) {
-                if (this.value instanceof Array) {
-                    return this.value.length > 0;
+                if (this.form.controls[this.field.key].value instanceof Array) {
+                    return this.form.controls[this.field.key].value.length > 0;
                 } else {
-                    return this.value !== null;
+                    return this.form.controls[this.field.key].value !== null;
                 }
             } else {
-                return this.value !== null;
+                return this.form.controls[this.field.key].value !== null;
             }
         } else {
             return true;
