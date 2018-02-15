@@ -18,6 +18,13 @@
         padding: 12px;
       }
     }
+
+    /* Date picker */
+    + div.ngui-datetime-picker-wrapper {
+      > input {
+        @include _form-input;
+      }
+    }
   }
 
   &.has-error {
@@ -27,6 +34,16 @@
         border-color: $error;
         &:focus {
           border-color: $error;
+        }
+      }
+
+      /* Date picker */
+      + div.ngui-datetime-picker-wrapper {
+        > input {
+          border-color: $error;
+          &:focus {
+            border-color: $error;
+          }
         }
       }
     }

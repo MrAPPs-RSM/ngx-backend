@@ -5,6 +5,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {ColorPickerModule} from 'ngx-color-picker';
 import {EditorModule} from '@tinymce/tinymce-angular';
 import {NgSelectModule} from '@ng-select/ng-select';
+import {NguiDatetimePickerModule} from '@ngui/datetime-picker';
 
 import {AuthGuard} from '../auth/auth.guard';
 import {PanelComponent} from './panel.component';
@@ -24,9 +25,10 @@ import {InputNumberComponent} from './components/form/types/input-number/input-n
 import {SeparatorComponent} from './components/form/types/separator/separator.component';
 import {InputColorComponent} from './components/form/types/input-color/input-color.component';
 import {InputTextareaComponent} from './components/form/types/input-textarea/input-textarea.component';
-import { SelectComponent } from './components/form/types/select/select.component';
-import { InputEmailComponent } from './components/form/types/input-email/input-email.component';
-import { CheckboxComponent } from './components/form/types/checkbox/checkbox.component';
+import {SelectComponent} from './components/form/types/select/select.component';
+import {InputEmailComponent} from './components/form/types/input-email/input-email.component';
+import {CheckboxComponent} from './components/form/types/checkbox/checkbox.component';
+import { DateTimeComponent } from './components/form/types/date-time/date-time.component';
 
 const routes: Routes = [
     {
@@ -53,7 +55,8 @@ const routes: Routes = [
         ReactiveFormsModule,
         ColorPickerModule,
         EditorModule,
-        NgSelectModule
+        NgSelectModule,
+        NguiDatetimePickerModule
     ],
     exports: [
         FormComponent,
@@ -76,7 +79,8 @@ const routes: Routes = [
         InputTextareaComponent,
         SelectComponent,
         InputEmailComponent,
-        CheckboxComponent
+        CheckboxComponent,
+        DateTimeComponent
     ],
     providers: [
         AuthGuard,

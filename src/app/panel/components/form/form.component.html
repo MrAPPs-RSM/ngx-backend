@@ -71,18 +71,18 @@
                          [field]="field">
                  </app-checkbox>
 
+                <app-date-time
+                        *ngSwitchCase="formConfig.types.DATE"
+                        [form]="form"
+                        [field]="field"
+                ></app-date-time>
+
 <!--
                  <date-range-picker
                          *ngSwitchCase="formConfig.types.DATE_RANGE"
                          [form]="form"
                          [field]="field">
                  </date-range-picker>
-
-                 <date-picker
-                         *ngSwitchCase="formConfig.types.DATE"
-                         [form]="form"
-                         [field]="field">
-                 </date-picker>
 
                  <lat-lng
                          *ngSwitchCase="formConfig.types.LAT_LNG"

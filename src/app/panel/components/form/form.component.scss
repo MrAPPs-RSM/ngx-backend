@@ -3,7 +3,7 @@
 app-form {
   > form {
     > header {
-      background: $lightGrey;
+      background: $grey;
       margin: -20px -30px 20px;
       &:not(.loading) {
         border-top: 5px solid lighten($primary, 40);

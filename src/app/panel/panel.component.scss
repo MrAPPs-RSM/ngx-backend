@@ -5,7 +5,7 @@ app-panel {
   $sidebarWidth: 250px;
   > nav.navbar {
     border: none;
-    border-bottom: 1px solid $lightGrey;
+    border-bottom: 1px solid $grey;
     background-color: #ffffff;
     > div.container-fluid {
       margin-right: 0;
@@ -164,7 +164,7 @@ app-panel {
       @include _transition(all 0.5s);
       > .breadcrumbs {
         background-color: #ffffff;
-        border-bottom: 1px solid $lightGrey;
+        border-bottom: 1px solid $grey;
         padding: 15px;
         > div.row {
           > div {

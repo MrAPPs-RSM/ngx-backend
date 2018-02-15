@@ -1,11 +1,10 @@
-import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 
 @Component({
     selector: 'app-checkbox',
     templateUrl: './checkbox.component.html',
-    styleUrls: ['./checkbox.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    styleUrls: ['./checkbox.component.scss']
 })
 export class CheckboxComponent implements OnInit {
 

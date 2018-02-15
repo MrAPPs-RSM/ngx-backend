@@ -1,0 +1,20 @@
+<div [formGroup]="form" [class]="field.class ? field.class : 'col-sm-12'">
+    <div class="form-group" [ngClass]="{'has-error': !isValid}">
+
+        <!-- Label -->
+        <label for="{{field.key}}">
+            {{field.label}}
+            <span *ngIf="field.validators && field.validators.required">*</span>
+        </label>
+        <!-- Input -->
+
+        <input
+                ngui-datetime-picker
+                class="form-control date-picker"
+                id="{{field.key}}"
+                formControlName="{{ field.key }}">
+
+        <!-- Others -->
+        <span *ngIf="field.description" class="help-block sub-little-text">{{field.description}}</span>
+    </div>
+</div>
