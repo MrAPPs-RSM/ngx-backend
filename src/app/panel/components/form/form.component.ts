@@ -90,15 +90,17 @@ export class FormComponent implements OnInit {
                             this.response.emit(response);
                         });
                 } else {
-                    this._apiService.put(this.config.api.endpoint, this.form.value)
-                        .then((response) => {
-                            this.isLoading = false;
-                            this.response.emit(response);
-                        })
-                        .catch((response: HttpErrorResponse) => {
-                            this.isLoading = false;
-                            this.response.emit(response);
-                        });
+                    setTimeout(() => {
+                        this._apiService.put(this.config.api.endpoint, this.form.value)
+                            .then((response) => {
+                                this.isLoading = false;
+                                this.response.emit(response);
+                            })
+                            .catch((response: HttpErrorResponse) => {
+                                this.isLoading = false;
+                                this.response.emit(response);
+                            });
+                    }, 5000);
                 }
             })
             .catch(() => {

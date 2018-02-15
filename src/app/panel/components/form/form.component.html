@@ -1,9 +1,9 @@
 <form *ngIf="form" [formGroup]="form" (keyup.enter)="onSubmit()">
-    <header [ngClass]="{'loading': isLoading}" *ngIf="!config.isLoginForm">
+    <header [ngClass]="{'loading': isLoading}" *ngIf="!config.isLoginForm && config.title">
         <span *ngIf="config.title">{{ config.title }}</span>
-        <div *ngIf="isLoading" class="progress">
+        <!--<div *ngIf="isLoading" class="progress">
             <div class="indeterminate"></div>
-        </div>
+        </div>-->
     </header>
     <div class="row">
         <div *ngFor="let field of config.fields">

@@ -1,5 +1,9 @@
 <nav class="navbar navbar-default navbar-fixed-top">
-    <div class="container">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" [routerLink]="'/panel/dashboard'">{{ title }}</a>
+            <span class="toggler" (click)="toggleSidebar()"><i class="fa fa-bars"></i></span>
+        </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li><a (click)="logout()" class="logout"><i class="fa fa-power-off"></i> <span
@@ -11,16 +15,12 @@
 
 <div class="wrapper" id="wrapper">
     <div class="sidebar">
-        <div class="header">
-            <span class="toggler" (click)="toggleSidebar()"><i class="fa fa-bars"></i></span>
-            <a class="title" [routerLink]="'/panel/dashboard'">{{ title }}</a>
-        </div>
         <div class="menu">
             <ul>
                 <li *ngFor="let item of menu">
                     <a *ngIf="!item.children" [routerLink]="item.path" routerLinkActive="active"><i *ngIf="item.icon" class="{{item.icon}}"></i>{{item.title}}</a>
                     <a *ngIf="item.children && item.children.length > 0" (click)="onGroupClick($event)"><i *ngIf="item.icon" class="{{item.icon}}"></i>{{item.title}}
-                        <span class="fa fa-caret-down"></span></a>
+                        <span class="fa fa-angle-down"></span></a>
                     <ul *ngIf="item.children">
                         <li *ngFor="let child of item.children">
                             <a [routerLink]="child.path" routerLinkActive="active"><i *ngIf="child.icon"

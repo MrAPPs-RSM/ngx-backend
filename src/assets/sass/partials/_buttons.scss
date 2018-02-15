@@ -1,6 +1,6 @@
 .btn {
   border: none;
-  font-weight: 400;
+  font-weight: $regular;
   padding: 10px 20px;
   letter-spacing: 1px;
   max-width: 100%;
@@ -85,9 +85,6 @@
     height: $size;
     border-radius: 50%;
     padding: 0;
-    border: 5px solid $primary;
-    border-bottom: 5px solid lighten($primary, 40);
-    border-left: 5px solid lighten($primary, 40);
     background-color: transparent !important;
     animation-name: rotateAnimation;
     -webkit-animation-name: wk-rotateAnimation;
@@ -100,62 +97,62 @@
 
     &.btn-primary {
       border: 5px solid $primary;
-      border-bottom: 5px solid lighten($primary, 40);
-      border-left: 5px solid lighten($primary, 40);
+      border-bottom-color: lighten($primary, 40);
+      border-left-color: lighten($primary, 40);
       &:hover {
         border: 5px solid $primary;
-        border-bottom: 5px solid lighten($primary, 40);
-        border-left: 5px solid lighten($primary, 40);
+        border-bottom-color: lighten($primary, 40);
+        border-left-color: lighten($primary, 40);
       }
     }
     &.btn-success {
       border: 5px solid $success;
-      border-bottom: 5px solid lighten($success, 40);
-      border-left: 5px solid lighten($success, 40);
+      border-bottom-color: lighten($success, 40);
+      border-left-color: lighten($success, 40);
       &:hover {
         border: 5px solid $success;
-        border-bottom: 5px solid lighten($success, 40);
-        border-left: 5px solid lighten($success, 40);
+        border-bottom-color: lighten($success, 40);
+        border-left-color: lighten($success, 40);
       }
     }
     &.btn-info {
       border: 5px solid $info;
-      border-bottom: 5px solid lighten($info, 40);
-      border-left: 5px solid lighten($info, 40);
+      border-bottom-color: lighten($info, 40);
+      border-left-color: lighten($info, 40);
       &:hover {
         border: 5px solid $info;
-        border-bottom: 5px solid lighten($info, 40);
-        border-left: 5px solid lighten($info, 40);
+        border-bottom-color: lighten($info, 40);
+        border-left-color: lighten($info, 40);
       }
     }
     &.btn-danger {
       border: 5px solid $error;
-      border-bottom: 5px solid lighten($error, 40);
-      border-left: 5px solid lighten($error, 40);
+      border-bottom-color: lighten($error, 40);
+      border-left-color: lighten($error, 40);
       &:hover {
         border: 5px solid $error;
-        border-bottom: 5px solid lighten($error, 40);
-        border-left: 5px solid lighten($error, 40);
+        border-bottom-color: lighten($error, 40);
+        border-left-color: lighten($error, 40);
       }
     }
     &.btn-warning {
       border: 5px solid $warning;
-      border-bottom: 5px solid lighten($warning, 40);
-      border-left: 5px solid lighten($warning, 40);
+      border-bottom-color: lighten($warning, 40);
+      border-left-color: lighten($warning, 40);
       &:hover {
         border: 5px solid $warning;
-        border-bottom: 5px solid lighten($warning, 40);
-        border-left: 5px solid lighten($warning, 40);
+        border-bottom-color: lighten($warning, 40);
+        border-left-color: lighten($warning, 40);
       }
     }
     &.btn-default {
-      border: 5px solid $warning;
-      border-bottom: 5px solid lighten($warning, 40);
-      border-left: 5px solid lighten($warning, 40);
+      border: 5px solid $default;
+      border-bottom-color: lighten($default, 40);
+      border-left-color: lighten($default, 40);
       &:hover {
-        border: 5px solid $warning;
-        border-bottom: 5px solid lighten($warning, 40);
-        border-left: 5px solid lighten($warning, 40);
+        border: 5px solid $default;
+        border-bottom-color: lighten($default, 40);
+        border-left-color: lighten($default, 40);
       }
     }
   }

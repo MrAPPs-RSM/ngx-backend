@@ -2,17 +2,30 @@
 
 app-panel {
   $navbarHeight: 50px;
+  $sidebarWidth: 250px;
   > nav.navbar {
     border: none;
     background-color: #ffffff;
-    @include box-shadow(0, 1px, 5px, 0);
-    > div.container {
+    > div.container-fluid {
       margin-right: 0;
       > div.navbar-header {
+        width: $sidebarWidth;
+        margin-left: -15px;
+        position: relative;
         > a.navbar-brand {
           color: $primary;
-          padding-left: 0;
           font-size: 20px;
+          padding-left: 30px;
+          font-weight: $regular;
+        }
+        > span.toggler {
+          cursor: pointer;
+          font-size: 20px;
+          position: absolute;
+          top: 6px;
+          right: 0;
+          color: $primary;
+          padding: 4px;
         }
       }
       > div.navbar-collapse {
@@ -32,6 +45,7 @@ app-panel {
               padding: 15px;
               cursor: pointer;
               &.logout {
+                font-weight: $regular;
                 background-color: $error;
                 color: #ffffff;
                 &:hover {
@@ -46,18 +60,16 @@ app-panel {
   }
 
   > .wrapper {
-    $sidebarWidth: 250px;
-    $sidebarWidthClosed: 60px;
-    $difference: -190px;
+    margin-top: $navbarHeight;
 
     @include clearfix();
 
     &.sidebar-closed {
       > .sidebar {
-        @include _transform(translateX($difference));
+        @include _transform(translateX(-100%));
       }
       > .content {
-        width: calc(100% - #{$sidebarWidthClosed});
+        width: 100%;
       }
     }
     > .sidebar {
@@ -65,41 +77,15 @@ app-panel {
       height: 100%;
       position: fixed;
       z-index: 1031;
-      top: 0;
+      top: $navbarHeight;
       left: 0;
       background-color: $sidebar;
       width: $sidebarWidth;
       @include _transition(all 0.5s);
 
-      > .header {
-        position: fixed;
-        z-index: 1040;
-        background-color: $sidebar;
-        width: $sidebarWidth;
-        > span.toggler {
-          cursor: pointer;
-          font-size: 20px;
-          position: absolute;
-          top: 6px;
-          right: 12px;
-          color: #ffffff;
-          padding: 4px 10px;
-        }
-
-        > .title {
-          display: block;
-          margin: 0 15px;
-          font-size: 20px;
-          color: #ffffff;
-          line-height: $navbarHeight;
-          height: $navbarHeight;
-          border-bottom: 1px solid $default;
-        }
-      }
-
       > .menu {
         > ul {
-          margin: $navbarHeight+10px 0 0;
+          margin: 10px 0 0;
           padding: 0;
           list-style: none;
           > li {
@@ -119,19 +105,24 @@ app-panel {
                 width: 15px;
                 margin-right: 15px;
               }
-              &:hover, &.open {
-                background-color: lighten($sidebar, 5);
+              &:hover {
+                background-color: $primary !important;
               }
               &.open {
+                background-color: $sidebarDark;
                 > span {
                   @include _transform(rotate(180deg));
                 }
               }
               &.active {
-                background-color: lighten($sidebar, 15);
+                background-color: $sidebarLight;
+                > i {
+                  color: $primary;
+                }
               }
             }
             > ul {
+              background-color: $sidebarDark;
               display: none;
               margin: 0;
               padding: 0;
@@ -149,10 +140,13 @@ app-panel {
                     margin-right: 15px;
                   }
                   &:hover {
-                    background-color: lighten($sidebar, 8);
+                    background-color: $primary;
                   }
                   &.active {
-                    background-color: lighten($sidebar, 15);
+                    background-color: $sidebarDark;
+                    > i {
+                      color: $primary;
+                    }
                   }
                 }
               }
@@ -163,7 +157,7 @@ app-panel {
     }
 
     > .content {
-      margin-top: $navbarHeight + 10px;
+      margin-top: 10px;
       width: calc(100% - #{$sidebarWidth});
       float: right;
       @include _transition(all 0.5s);
@@ -177,6 +171,7 @@ app-panel {
               > h1 {
                 margin: 0;
                 font-size: 20px;
+                font-weight: $regular;
               }
             }
             &:last-child {
@@ -198,10 +193,11 @@ app-panel {
                     }
                   }
                   > a {
+                    font-weight: $light;
                     color: $default;
                     &.active {
                       color: $primary;
-                      font-weight: bold;
+                      font-weight: $regular;
                     }
                   }
                 }

@@ -28,7 +28,7 @@ export class InputColorComponent implements OnInit {
     ngOnInit() {
         if (this.isEdit) {
             this.form.controls[this.field.key].valueChanges
-                .first()
+            .first() // TODO: remove comment
                 .subscribe(
                     value => {
                         this.onColorChange(value);
