@@ -52,6 +52,13 @@
                         [field]="field">
                 </app-input-textarea>
 
+                <app-select
+                        *ngSwitchCase="formConfig.types.SELECT"
+                        [form]="form"
+                        [field]="field"
+                        [isEdit]="isEdit">
+                </app-select>
+
                 <!--
                  <input-email
                          *ngSwitchCase="formConfig.types.EMAIL"
@@ -70,12 +77,7 @@
                          [field]="field">
                  </checkbox>
 
-                 <ui-select
-                         *ngSwitchCase="formConfig.types.SELECT"
-                         [form]="form"
-                         [field]="field"
-                         [isEdit]="isEdit">
-                 </ui-select>
+
 
                  <date-range-picker
                          *ngSwitchCase="formConfig.types.DATE_RANGE"

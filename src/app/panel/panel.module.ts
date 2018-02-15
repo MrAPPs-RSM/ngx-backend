@@ -4,6 +4,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {ReactiveFormsModule} from '@angular/forms';
 import {ColorPickerModule} from 'ngx-color-picker';
 import {EditorModule} from '@tinymce/tinymce-angular';
+import {NgSelectModule} from '@ng-select/ng-select';
 
 import {AuthGuard} from '../auth/auth.guard';
 import {PanelComponent} from './panel.component';
@@ -23,6 +24,7 @@ import {InputNumberComponent} from './components/form/types/input-number/input-n
 import {SeparatorComponent} from './components/form/types/separator/separator.component';
 import {InputColorComponent} from './components/form/types/input-color/input-color.component';
 import {InputTextareaComponent} from './components/form/types/input-textarea/input-textarea.component';
+import { SelectComponent } from './components/form/types/select/select.component';
 
 const routes: Routes = [
     {
@@ -48,7 +50,8 @@ const routes: Routes = [
         RouterModule.forChild(routes),
         ReactiveFormsModule,
         ColorPickerModule,
-        EditorModule
+        EditorModule,
+        NgSelectModule
     ],
     exports: [
         FormComponent,
@@ -68,7 +71,8 @@ const routes: Routes = [
         InputNumberComponent,
         SeparatorComponent,
         InputColorComponent,
-        InputTextareaComponent
+        InputTextareaComponent,
+        SelectComponent
     ],
     providers: [
         AuthGuard,
