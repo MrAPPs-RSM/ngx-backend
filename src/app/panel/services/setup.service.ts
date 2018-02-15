@@ -6,7 +6,7 @@ import {environment} from '../../../environments/environment';
 import {DashboardPageComponent} from '../pages/dashboard-page/dashboard-page.component';
 import {TablePageComponent} from '../pages/table-page/table-page.component';
 import {FormPageComponent} from '../pages/form-page/form-page.component';
-import {UtilsService} from "../../services/utils.service";
+import {UtilsService} from '../../services/utils.service';
 
 const TYPES = {
     dashboard: DashboardPageComponent,
@@ -34,8 +34,23 @@ export class SetupService {
                     // Might never happen, in case, logout the user
                     this._tokenService.removeToken();
                     this._router.navigate(['login']);
+                    reject(error);
                 });
         });
+    }
+
+    private remapRoutesData(data: any, ): Array<any> {
+        let routes = [];
+
+        for (const item of data) {
+            if ('children' in item) {
+                routes = routes.concat(this.remapRoutesData(item.children));
+            } else {
+                routes.push(item);
+            }
+        }
+
+        return routes;
     }
 
     private loadRoutes(data: any): void {
@@ -44,17 +59,9 @@ export class SetupService {
 
         const routes = [];
 
-        data.forEach((item) => {
-            if (item.type === 'group') {
-                item.children.forEach((child) => {
-                    const childRoute = {
-                        path: child.path,
-                        component: TYPES[child.type],
-                        data: child.params
-                    };
-                    routes.push(childRoute);
-                });
-            } else {
+        for (const item of this.remapRoutesData(data)) {
+
+            if (item.type in TYPES) {
                 const route = {
                     path: item.path,
                     component: TYPES[item.type],
@@ -62,29 +69,21 @@ export class SetupService {
                 };
                 routes.push(route);
             }
-        });
+        }
 
         routerConfig[1].children = routes;
-
         this._router.resetConfig(routerConfig);
-        console.log(this._router.config);
     }
 
-    private prepareMenu(data: any): any[] {
+
+    private remapMenu(data: any): any[] {
         let menu = [];
 
-        data.forEach((item) => {
-            if (item.type) {
+        for (const item of data) {
+            if ('type' in item) {
                 // Is a component
-                if (item.type === 'group') {
-                    item.params.menu['children'] = [];
-                    item.children.forEach((child) => {
-                        if (child.params.menu.sidebar === true) {
-                            child.params.menu.path = child.path;
-                            item.params.menu.children.push(child.params.menu);
-                        }
-
-                    });
+                if (item.type === 'group' || 'children' in item) {
+                    item.params.menu['children'] = this.remapMenu(item.children);
                     menu.push(item.params.menu);
                 } else {
                     if (item.params.menu.sidebar === true) {
@@ -92,9 +91,16 @@ export class SetupService {
                         menu.push(item.params.menu);
                     }
                 }
+            } else if ('children' in item) {
+                menu = menu.concat(this.remapMenu(item.children));
             }
-        });
+        }
 
+        return menu;
+    }
+
+    private prepareMenu(data: any): any[] {
+        let menu = this.remapMenu(data);
         menu = UtilsService.sortByKey(menu, 'order');
 
         return menu;
