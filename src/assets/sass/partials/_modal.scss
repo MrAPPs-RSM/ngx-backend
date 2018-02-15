@@ -8,7 +8,7 @@ div.modal-content {
     > modal-title {
       > .modal-header-custom {
         padding: 10px 20px;
-        border-bottom: 1px solid $grey;
+        border-bottom: 1px solid $lightGrey;
         > h3.modal-title {
           font-size: 18px;
         }
@@ -23,7 +23,7 @@ div.modal-content {
       > .modal-footer-custom {
         padding: 10px 20px;
         text-align: right;
-        border-top: 1px solid $grey;
+        border-top: 1px solid $lightGrey;
         button {
           margin: 0 5px 0 5px;
         }

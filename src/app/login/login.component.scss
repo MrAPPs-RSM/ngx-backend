@@ -2,8 +2,8 @@
 
 app-login {
   > div.container {
-    @include box-shadow();
     background-color: #ffffff;
+    border: 1px solid $lightGrey;
     border-radius: $borderRadius;
     margin: 200px auto;
     max-width: 600px;

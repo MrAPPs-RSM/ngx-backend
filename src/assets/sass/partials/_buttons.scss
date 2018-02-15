@@ -1,6 +1,7 @@
 .btn {
   border: none;
-  font-weight: $regular;
+  border-radius: $borderRadius;
+  font-weight: $light;
   padding: 10px 20px;
   letter-spacing: 1px;
   max-width: 100%;

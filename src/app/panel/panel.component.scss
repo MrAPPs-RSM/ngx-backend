@@ -5,6 +5,7 @@ app-panel {
   $sidebarWidth: 250px;
   > nav.navbar {
     border: none;
+    border-bottom: 1px solid $lightGrey;
     background-color: #ffffff;
     > div.container-fluid {
       margin-right: 0;
@@ -85,7 +86,7 @@ app-panel {
 
       > .menu {
         > ul {
-          margin: 10px 0 0;
+          margin: 0;
           padding: 0;
           list-style: none;
           > li {
@@ -93,7 +94,7 @@ app-panel {
               cursor: pointer;
               display: block;
               padding: 15px;
-              color: $grey;
+              color: $lightGrey;
               > span {
                 @include _transition(all 0.3s);
                 pointer-events: none;
@@ -115,6 +116,7 @@ app-panel {
                 }
               }
               &.active {
+                color: #ffffff;
                 background-color: $sidebarLight;
                 > i {
                   color: $primary;
@@ -131,9 +133,8 @@ app-panel {
                 > a {
                   cursor: pointer;
                   display: block;
-                  padding: 15px;
-                  padding-left: 45px;
-                  color: $grey;
+                  padding: 15px 0 15px 45px;
+                  color: #ddd;
                   > i {
                     pointer-events: none;
                     width: 15px;
@@ -143,7 +144,8 @@ app-panel {
                     background-color: $primary;
                   }
                   &.active {
-                    background-color: $sidebarDark;
+                    color: #ffffff;
+                    background-color: $sidebarLight;
                     > i {
                       color: $primary;
                     }
@@ -157,20 +159,21 @@ app-panel {
     }
 
     > .content {
-      margin-top: 10px;
       width: calc(100% - #{$sidebarWidth});
       float: right;
       @include _transition(all 0.5s);
       > .breadcrumbs {
-        margin-bottom: 10px;
-        padding: 10px 15px;
+        background-color: #ffffff;
+        border-bottom: 1px solid $lightGrey;
+        padding: 15px;
         > div.row {
           > div {
             &:first-child {
               float: left;
-              > h1 {
+              > h3 {
+                color: $primary;
                 margin: 0;
-                font-size: 20px;
+                font-size: 15px;
                 font-weight: $regular;
               }
             }
