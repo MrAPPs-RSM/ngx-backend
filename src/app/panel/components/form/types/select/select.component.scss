@@ -27,7 +27,6 @@ app-select {
           > div.ng-value-container {
             > div.ng-value {
               overflow: hidden;
-              background-color: #f5f5f5;
               border-radius: $borderRadius;
               border-color: $lightGrey;
               > span.ng-value-icon.left {
@@ -40,7 +39,16 @@ app-select {
               }
             }
           }
+        }
 
+        &[ng-reflect-multiple="true"] {
+          > div.ng-control {
+            > div.ng-value-container {
+              > div.ng-value {
+                background-color: #f5f5f5;
+              }
+            }
+          }
         }
         > div.ng-select-dropdown-outer {
           margin-top: 0;

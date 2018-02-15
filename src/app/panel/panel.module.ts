@@ -25,6 +25,7 @@ import {SeparatorComponent} from './components/form/types/separator/separator.co
 import {InputColorComponent} from './components/form/types/input-color/input-color.component';
 import {InputTextareaComponent} from './components/form/types/input-textarea/input-textarea.component';
 import { SelectComponent } from './components/form/types/select/select.component';
+import { InputEmailComponent } from './components/form/types/input-email/input-email.component';
 
 const routes: Routes = [
     {
@@ -72,7 +73,8 @@ const routes: Routes = [
         SeparatorComponent,
         InputColorComponent,
         InputTextareaComponent,
-        SelectComponent
+        SelectComponent,
+        InputEmailComponent
     ],
     providers: [
         AuthGuard,
