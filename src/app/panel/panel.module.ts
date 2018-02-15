@@ -26,6 +26,7 @@ import {InputColorComponent} from './components/form/types/input-color/input-col
 import {InputTextareaComponent} from './components/form/types/input-textarea/input-textarea.component';
 import { SelectComponent } from './components/form/types/select/select.component';
 import { InputEmailComponent } from './components/form/types/input-email/input-email.component';
+import { CheckboxComponent } from './components/form/types/checkbox/checkbox.component';
 
 const routes: Routes = [
     {
@@ -74,7 +75,8 @@ const routes: Routes = [
         InputColorComponent,
         InputTextareaComponent,
         SelectComponent,
-        InputEmailComponent
+        InputEmailComponent,
+        CheckboxComponent
     ],
     providers: [
         AuthGuard,
