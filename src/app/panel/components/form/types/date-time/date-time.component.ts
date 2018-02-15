@@ -22,7 +22,7 @@ export class DateTimeComponent implements OnInit {
             return true;
         } else {
             // TODO: validate date
-            if (!isNaN(Date.parse(this.form.controls[this.field.key]))) {
+            if (!isNaN(Date.parse(this.form.controls[this.field.key].value))) {
                 return this.form.controls[this.field.key].valid;
             } else {
                 return false;
