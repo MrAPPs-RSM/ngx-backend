@@ -106,8 +106,7 @@ export class FileUploadComponent implements OnInit {
         const event: UploadInput = {
          type: 'uploadAll',
          url: ApiService.composeUrl(this.field.options.api.upload),
-         method: 'POST',
-         concurrency: 1
+         method: 'POST'
          };
 
         this.uploadInput.emit(event);
