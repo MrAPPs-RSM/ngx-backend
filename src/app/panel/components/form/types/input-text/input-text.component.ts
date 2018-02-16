@@ -1,6 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormGroup} from '@angular/forms';
-import {FormField} from '../../interfaces/form-field';
 
 @Component({
     selector: 'app-input-text',
@@ -10,7 +9,7 @@ import {FormField} from '../../interfaces/form-field';
 export class InputTextComponent implements OnInit {
 
     @Input() form: FormGroup;
-    @Input() field: FormField;
+    @Input() field: any = {};
 
     constructor() {
     }

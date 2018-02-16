@@ -6,6 +6,7 @@ import {ColorPickerModule} from 'ngx-color-picker';
 import {EditorModule} from '@tinymce/tinymce-angular';
 import {NgSelectModule} from '@ng-select/ng-select';
 import {NguiDatetimePickerModule} from '@ngui/datetime-picker';
+import {NgUploaderModule} from 'ngx-uploader';
 
 import {AuthGuard} from '../auth/auth.guard';
 import {PanelComponent} from './panel.component';
@@ -28,8 +29,9 @@ import {InputTextareaComponent} from './components/form/types/input-textarea/inp
 import {SelectComponent} from './components/form/types/select/select.component';
 import {InputEmailComponent} from './components/form/types/input-email/input-email.component';
 import {CheckboxComponent} from './components/form/types/checkbox/checkbox.component';
-import { DateTimeComponent } from './components/form/types/date-time/date-time.component';
-import { DateTimeRangeComponent } from './components/form/types/date-time-range/date-time-range.component';
+import {DateTimeComponent} from './components/form/types/date-time/date-time.component';
+import {DateTimeRangeComponent} from './components/form/types/date-time-range/date-time-range.component';
+import {FileUploadComponent} from './components/form/types/file-upload/file-upload.component';
 
 const routes: Routes = [
     {
@@ -57,7 +59,8 @@ const routes: Routes = [
         ColorPickerModule,
         EditorModule,
         NgSelectModule,
-        NguiDatetimePickerModule
+        NguiDatetimePickerModule,
+        NgUploaderModule
     ],
     exports: [
         FormComponent,
@@ -82,7 +85,8 @@ const routes: Routes = [
         InputEmailComponent,
         CheckboxComponent,
         DateTimeComponent,
-        DateTimeRangeComponent
+        DateTimeRangeComponent,
+        FileUploadComponent
     ],
     providers: [
         AuthGuard,

@@ -1,0 +1,47 @@
+<div [formGroup]="form" [class]="field.class ? field.class : 'col-sm-12'">
+    <div class="form-group">
+
+        <!-- Label -->
+        <label>
+            {{field.label}}
+            <span *ngIf="field.validators && field.validators.required">*</span>
+        </label>
+
+        <div class="drop-container"
+             ngFileDrop
+             [options]="options"
+             (uploadOutput)="onUploadOutput($event)"
+             [uploadInput]="uploadInput"
+             [ngClass]="{ 'is-drop-over': dragOver }">
+            <span class="drag" *ngIf="files.length <= 0">Drag &amp; drop or <span class="choose"
+                                                                                  (click)="bringFileSelector()">choose file(s)</span></span>
+            <div *ngIf="files.length > 0" class="files-container">
+                <span *ngFor="let file of files; let last = last">
+                    <span class="remove" (click)="removeFile(file.id)">×</span>
+                    {{ file.name }}
+                </span>
+            </div>
+            <span *ngIf="files.length > 1" (click)="removeAllFiles()" class="remove-all">×</span>
+        </div>
+
+        <input type="file"
+               class="hidden"
+               #fileUpload
+               ngFileSelect
+               [options]="options"
+               [uploadInput]="uploadInput"
+               (uploadOutput)="onUploadOutput($event)"
+               [multiple]="field.options?.multiple">
+
+        <button type="button"
+                class="btn btn-sm btn-default"
+                [ngClass]="{'loading':isLoading}"
+                [disabled]="files.length <= 0"
+                (click)="startUpload()">
+            Upload
+        </button>
+
+        <!-- Others -->
+        <span *ngIf="field.description" class="help-block">{{field.description}}</span>
+    </div>
+</div>

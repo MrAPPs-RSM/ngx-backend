@@ -6,6 +6,7 @@ import {FormGeneratorService} from '../../services/form-generator.service';
 import {HttpErrorResponse} from '@angular/common/http';
 import {ModalService} from '../../services/modal.service';
 import {ApiService} from '../../../api/api.service';
+import {FormConfiguration} from './interfaces/form-configuration';
 
 @Component({
     selector: 'app-form',
@@ -132,18 +133,4 @@ export class FormComponent implements OnInit {
                 });
         }
     }
-}
-
-export interface FormConfiguration {
-    api: {
-        endpoint: string
-    };
-    fields: any[];
-    isEdit?: boolean;
-    submit?: any;
-    confirm?: boolean;
-    isLoginForm?: boolean;
-    messages?: any;
-    class?: string;
-    title?: string;
 }

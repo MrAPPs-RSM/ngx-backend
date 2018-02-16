@@ -83,6 +83,12 @@
                         [field]="field"
                 ></app-date-time-range>
 
+                <app-file-upload
+                        *ngSwitchCase="formConfig.types.FILE"
+                        [form]="form"
+                        [field]="field"
+                ></app-file-upload>
+
 <!--
 
                  <lat-lng

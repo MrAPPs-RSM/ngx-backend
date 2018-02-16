@@ -29,13 +29,17 @@ app-select {
               overflow: hidden;
               border-radius: $borderRadius;
               border-color: $lightGrey;
+              font-size: 13px;
+              padding: 2px 5px;
               > span.ng-value-icon.left {
                 border: none;
-                padding: 1px 5px;
+                padding: 0;
                 &:hover {
-                  color: $lightGrey;
-                  background-color: $sidebar;
+                  background-color: #f5f5f5;
                 }
+              }
+              > span.ng-value-label {
+                padding: 0;
               }
             }
           }

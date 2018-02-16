@@ -46,7 +46,7 @@ export class SelectComponent implements OnInit {
     private loadData(): void {
         this.loadOptions()
             .then(() => {
-                // TODO: If this.isEdit == true, load pre-selected data, changing this.form.controls[this.field.key].value
+            // TODO: If this.isEdit == true, load pre-selected data, changing this.form.controls[this.field.key].value
                 console.log('LOAD DATA if edit');
             })
             .catch((error) => {
@@ -56,23 +56,27 @@ export class SelectComponent implements OnInit {
 
     private loadOptions(): Promise<any> {
         return new Promise((resolve, reject) => {
-            if (this.field.options instanceof Array) {
-                this.options = this.field.options;
-                resolve();
-            } else {
-                let endpoint = this.field.options;
-                if (endpoint.indexOf(':id') !== -1) {
-                    endpoint = endpoint.replace(':id', this._route.params['value'].id);
-                }
+            if (this.field.options) {
+                if (this.field.options instanceof Array) {
+                    this.options = this.field.options;
+                    resolve();
+                } else {
+                    let endpoint = this.field.options;
+                    if (endpoint.indexOf(':id') !== -1) {
+                        endpoint = endpoint.replace(':id', this._route.params['value'].id);
+                    }
 
-                this._apiService.get(endpoint)
-                    .then((response) => {
-                        this.options = response;
-                    })
-                    .catch((response: HttpErrorResponse) => {
-                        // TODO: decide what to do if select options can't be loaded (back to prev page?, alert?, message?)
-                        console.log(response.error);
-                    });
+                    this._apiService.get(endpoint)
+                        .then((response) => {
+                            this.options = response;
+                        })
+                        .catch((response: HttpErrorResponse) => {
+                            // TODO: decide what to do if select options can't be loaded (back to prev page?, alert?, message?)
+                            console.log(response.error);
+                        });
+                }
+            } else {
+                reject();
             }
         });
     }

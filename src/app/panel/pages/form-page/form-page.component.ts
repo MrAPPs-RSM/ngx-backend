@@ -3,8 +3,8 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {PageTitleService} from '../../services/page-title.service';
 import {PageRefreshService} from '../../../services/page-refresh.service';
 import {ToastrService} from 'ngx-toastr';
-import {FormConfiguration} from '../../components/form/form.component';
 import {HttpErrorResponse} from '@angular/common/http';
+import {FormConfiguration} from '../../components/form/interfaces/form-configuration';
 
 @Component({
     selector: 'app-form-page',
