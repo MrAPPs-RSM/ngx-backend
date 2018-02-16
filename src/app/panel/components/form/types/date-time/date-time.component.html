@@ -12,7 +12,9 @@
                 ngui-datetime-picker
                 class="form-control date-picker"
                 id="{{field.key}}"
-                formControlName="{{ field.key }}">
+                formControlName="{{ field.key }}"
+                [date-only]="!field.isDateTime"
+        >
 
         <!-- Others -->
         <span *ngIf="field.description" class="help-block sub-little-text">{{field.description}}</span>

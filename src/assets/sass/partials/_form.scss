@@ -1,6 +1,14 @@
 .form-group {
   @include clearfix;
-  margin-bottom: 25px;
+
+  /* Layout */
+  &.no-margin {
+    margin-bottom: 0;
+  }
+  &:not(.no-margin) {
+    margin-bottom: 25px;
+  }
+
   > label {
     font-weight: inherit;
     font-size: 13px;
@@ -50,7 +58,15 @@
   }
 
   .help-block {
+    color: $default;
     font-size: 13px;
+
+    &.danger {
+      color: $error;
+    }
+    &.success {
+      color: $success;
+    }
   }
 
   > div.checkbox {

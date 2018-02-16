@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormGroup} from '@angular/forms';
+import {FormFieldDate} from '../../interfaces/form-field-date';
 
 @Component({
     selector: 'app-date-time',
@@ -9,7 +10,7 @@ import {FormGroup} from '@angular/forms';
 export class DateTimeComponent implements OnInit {
 
     @Input() form: FormGroup;
-    @Input() field: any = {};
+    @Input() field: FormFieldDate;
 
     constructor() {
     }

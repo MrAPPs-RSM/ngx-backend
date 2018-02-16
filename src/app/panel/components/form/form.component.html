@@ -77,12 +77,13 @@
                         [field]="field"
                 ></app-date-time>
 
+                <app-date-time-range
+                        *ngSwitchCase="formConfig.types.DATE_RANGE"
+                        [form]="form"
+                        [field]="field"
+                ></app-date-time-range>
+
 <!--
-                 <date-range-picker
-                         *ngSwitchCase="formConfig.types.DATE_RANGE"
-                         [form]="form"
-                         [field]="field">
-                 </date-range-picker>
 
                  <lat-lng
                          *ngSwitchCase="formConfig.types.LAT_LNG"

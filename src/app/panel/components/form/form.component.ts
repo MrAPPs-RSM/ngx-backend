@@ -34,6 +34,7 @@ export class FormComponent implements OnInit {
         this.form.valueChanges.subscribe(
             data => {
                 console.log(data);
+                console.log(this.form);
             }
         );
         if (this.config.isEdit) {
