@@ -29,6 +29,7 @@ import {SelectComponent} from './components/form/types/select/select.component';
 import {InputEmailComponent} from './components/form/types/input-email/input-email.component';
 import {CheckboxComponent} from './components/form/types/checkbox/checkbox.component';
 import { DateTimeComponent } from './components/form/types/date-time/date-time.component';
+import { DateTimeRangeComponent } from './components/form/types/date-time-range/date-time-range.component';
 
 const routes: Routes = [
     {
@@ -80,7 +81,8 @@ const routes: Routes = [
         SelectComponent,
         InputEmailComponent,
         CheckboxComponent,
-        DateTimeComponent
+        DateTimeComponent,
+        DateTimeRangeComponent
     ],
     providers: [
         AuthGuard,

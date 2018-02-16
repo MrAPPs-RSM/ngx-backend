@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormGroup} from '@angular/forms';
+import {FormFieldPassword} from '../../interfaces/form-field-password';
 
 @Component({
     selector: 'app-input-password',
@@ -9,7 +10,7 @@ import {FormGroup} from '@angular/forms';
 export class InputPasswordComponent implements OnInit {
 
     @Input() form: FormGroup;
-    @Input() field: any = {};
+    @Input() field: FormFieldPassword;
 
     constructor() {
     }

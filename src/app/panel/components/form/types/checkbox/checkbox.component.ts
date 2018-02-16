@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormGroup} from '@angular/forms';
+import {FormFieldCheckbox} from '../../interfaces/form-field-checkbox';
 
 @Component({
     selector: 'app-checkbox',
@@ -9,7 +10,7 @@ import {FormGroup} from '@angular/forms';
 export class CheckboxComponent implements OnInit {
 
     @Input() form: FormGroup;
-    @Input() field: any = {};
+    @Input() field: FormFieldCheckbox;
     @Input() isEdit: boolean;
 
     constructor() {

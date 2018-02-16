@@ -1,5 +1,7 @@
 import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {FormGroup} from '@angular/forms';
+import {FormFieldTextarea} from '../../interfaces/form-field-textarea';
+
 
 @Component({
     selector: 'app-input-textarea',
@@ -10,7 +12,7 @@ import {FormGroup} from '@angular/forms';
 export class InputTextareaComponent implements OnInit {
 
     @Input() form: FormGroup;
-    @Input() field: any = {};
+    @Input() field: FormFieldTextarea;
 
     constructor() {
     }

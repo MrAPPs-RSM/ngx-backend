@@ -3,6 +3,7 @@ import {FormGroup} from '@angular/forms';
 import {ApiService} from '../../../../../api/api.service';
 import {ActivatedRoute} from '@angular/router';
 import {HttpErrorResponse} from '@angular/common/http';
+import {FormFieldSelect} from '../../interfaces/form-field-select';
 
 @Component({
     selector: 'app-select',
@@ -13,7 +14,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 export class SelectComponent implements OnInit {
 
     @Input() form: FormGroup;
-    @Input() field: any = {};
+    @Input() field: FormFieldSelect;
     @Input() isEdit: boolean;
 
     public options: SelectData[] = [];
@@ -45,7 +46,7 @@ export class SelectComponent implements OnInit {
     private loadData(): void {
         this.loadOptions()
             .then(() => {
-            // TODO: If this.isEdit == true, load pre-selected data, changing this.form.controls[this.field.key].value
+                // TODO: If this.isEdit == true, load pre-selected data, changing this.form.controls[this.field.key].value
                 console.log('LOAD DATA if edit');
             })
             .catch((error) => {
@@ -69,7 +70,7 @@ export class SelectComponent implements OnInit {
                         this.options = response;
                     })
                     .catch((response: HttpErrorResponse) => {
-                    // TODO: decide what to do if select options can't be loaded (back to prev page?, alert?, message?)
+                        // TODO: decide what to do if select options can't be loaded (back to prev page?, alert?, message?)
                         console.log(response.error);
                     });
             }

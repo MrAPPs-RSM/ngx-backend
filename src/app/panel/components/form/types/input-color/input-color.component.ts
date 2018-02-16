@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import 'rxjs/add/operator/first';
+import {FormField} from '../../interfaces/form-field';
 
 @Component({
     selector: 'app-input-color',
@@ -10,7 +11,7 @@ import 'rxjs/add/operator/first';
 export class InputColorComponent implements OnInit {
 
     @Input() form: FormGroup;
-    @Input() field: any = {};
+    @Input() field: FormField;
     @Input() isEdit: boolean;
 
     color: any = null;
@@ -29,7 +30,7 @@ export class InputColorComponent implements OnInit {
     ngOnInit() {
         if (this.isEdit) {
             this.form.controls[this.field.key].valueChanges
-                .first() 
+                .first()
                 .subscribe(
                     value => {
                         this.onColorChange(value);

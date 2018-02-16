@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormGroup} from '@angular/forms';
+import {FormField} from '../../interfaces/form-field';
 
 @Component({
     selector: 'app-input-url',
@@ -9,7 +10,7 @@ import {FormGroup} from '@angular/forms';
 export class InputUrlComponent implements OnInit {
 
     @Input() form: FormGroup;
-    @Input() field: any = {};
+    @Input() field: FormField;
 
     constructor() {
     }

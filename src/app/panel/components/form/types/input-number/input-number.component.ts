@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
+import {FormField} from '../../interfaces/form-field';
 
 @Component({
     selector: 'app-input-number',
@@ -10,9 +11,9 @@ import {ActivatedRoute} from '@angular/router';
 export class InputNumberComponent implements OnInit {
 
     @Input() form: FormGroup;
-    @Input() field: any = {};
+    @Input() field: FormField;
 
-    public calculatedValue: any = null;
+    public calculatedValue: number = null;
 
     constructor(private _route: ActivatedRoute) {
     }
