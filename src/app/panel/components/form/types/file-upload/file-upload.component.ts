@@ -3,9 +3,16 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import {FormGroup} from '@angular/forms';
-import {FormFieldFile} from '../../interfaces/form-field-file';
+import {
+    FormFieldFile, GoogleCloudStorageResponse, isGoogleCloudStorageResponse, isLocalStorageResponse,
+    LocalStorageResponse,
+    UploadedFile
+} from '../../interfaces/form-field-file';
 import {UploaderOptions, UploadFile, UploadInput, UploadOutput} from 'ngx-uploader';
 import {ApiService} from '../../../../../api/api.service';
+import {ToastrService} from 'ngx-toastr';
+import {environment} from '../../../../../../environments/environment';
+import {UtilsService} from '../../../../../services/utils.service';
 
 @Component({
     selector: 'app-file-upload',
@@ -22,7 +29,13 @@ export class FileUploadComponent implements OnInit {
         concurrency: 1,
         allowedContentTypes: []
     };
+
+    /* Files to upload */
     files: UploadFile[];
+
+    /* Files already uploaded */
+    uploadedFiles: UploadedFile[] = [];
+
     uploadInput: EventEmitter<UploadInput>;
 
     rejected: boolean = false;
@@ -31,13 +44,40 @@ export class FileUploadComponent implements OnInit {
 
     @ViewChild('fileUpload') _fileUpload: ElementRef;
 
-    constructor(private _renderer: Renderer) {
+    static composeFileUrl(response: GoogleCloudStorageResponse | LocalStorageResponse): string {
+        if (isLocalStorageResponse(response)) {
+            const name = response.name ? response.name : response.hash + '.' + response.extension;
+            return environment.api.baseFilesUrl + response.container + '/' + name;
+        } else if (isGoogleCloudStorageResponse(response)) {
+            if (!response.url) {
+                if (response.thumbnails) {
+                    return response.thumbnails.small;
+                } else {
+
+                }
+            } else {
+                return response.url;
+            }
+        }
+    }
+
+    constructor(private _renderer: Renderer,
+                private _toastService: ToastrService,
+                private _apiService: ApiService) {
     }
 
     ngOnInit() {
         this.files = []; // local uploading files array
         this.uploadInput = new EventEmitter<UploadInput>(); // input events, we use this to emit data to ngx-uploader
         this.createAllowedContentTypes();
+    }
+
+    get isValid() {
+        if (this.form.controls[this.field.key].value === null || this.form.controls[this.field.key].value === []) {
+            return true;
+        } else {
+            return this.form.controls[this.field.key].valid;
+        }
     }
 
     private createAllowedContentTypes(): void {
@@ -89,8 +129,14 @@ export class FileUploadComponent implements OnInit {
         return false;
     }
 
+    /** Sometimes, Google Cloud takes a few seconds to make the image accessible */
+    private retryUrl($event: any, url: string): void {
+        setTimeout(() => {
+            $event.target.src = url;
+        }, 2000);
+    }
+
     private onUploadOutput(output: UploadOutput): void {
-        console.log(output.file);
         switch (output.type) {
             case 'allAddedToQueue': {
                 // Call this.startUpload() if files must be uploaded immediately after being selected
@@ -133,7 +179,7 @@ export class FileUploadComponent implements OnInit {
                 break;
             case 'done': {
                 this.isLoading = false;
-                this.removeAllFiles();
+                this.removeFile(output.file.id);
                 this.handleResponse(output.file.response);
             }
                 break;
@@ -167,11 +213,49 @@ export class FileUploadComponent implements OnInit {
     }
 
     private handleResponse(response: any): void {
-        console.log(response);
+        if (response.error) {
+            this._toastService.error(response.error.message, 'Error');
+        } else {
+            if (isLocalStorageResponse(response)) {
+                this.addToUpdatedFiles({
+                    id: response.id,
+                    container: response.container,
+                    url: FileUploadComponent.composeFileUrl(response),
+                    name: response.originalName,
+                    type: response.type
+                });
+            } else if (isGoogleCloudStorageResponse(response)) {
+                this.addToUpdatedFiles({
+                    id: response.media.id,
+                    container: response.file.container,
+                    url: FileUploadComponent.composeFileUrl(response),
+                    name: response.media.originalName,
+                    type: response.media.mimeType
+                });
+            }
+        }
     }
 
-    updateFormValue(): void {
-        // TODO: update form value when files are updated (with IDs)
-        // this.form.controls[this.field.key].setValue(this.uploadedFiles.length > 0 ? this.uploadedFiles : null);
+    private addToUpdatedFiles(file: UploadedFile): void {
+        this.uploadedFiles.push(file);
+        this.updateFormValue();
+    }
+
+    private updateFormValue(): void {
+        this.form.controls[this.field.key].setValue(this.uploadedFiles.length > 0 ? this.uploadedFiles : null);
+    }
+
+    private removeUploadedFile(file: UploadedFile): void {
+        if (this.field.options.api.delete) {
+            this._apiService.delete(this.field.options.api.delete + '/' + file.id)
+                .then((response) => {
+                    this._toastService.success(file.name + ' deleted successfully');
+                    this.uploadedFiles = UtilsService.removeObjectFromArray(file, this.uploadedFiles);
+                    this.updateFormValue();
+                })
+                .catch((response) => {
+                    this._toastService.error('Can\'t delete ' + file.name + ', try again later');
+                });
+        }
     }
 }

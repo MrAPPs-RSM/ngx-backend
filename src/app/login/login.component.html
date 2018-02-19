@@ -1,5 +1,4 @@
 <div class="container">
-    <h3>{{ environment.name }}</h3>
     <app-form [config]="environment.auth.login.form" (response)="onSubmit($event)" [isLoginLoading]="isLoading"></app-form>
 </div>
 

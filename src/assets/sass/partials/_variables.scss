@@ -4,10 +4,10 @@ $sidebar: #2a363d;
 $sidebarDark: #222b31;
 $sidebarLight: #48565d;
 
-$error: #F44336;
-$success: #4CAF50;
-$warning: #FFC107;
-$info: #2196F3;
+$error: #f66d6e;
+$success: #52bc76;
+$warning: #fdc02f;
+$info: #67c2dd;
 $default: #8b9ca4;
 
 $grey: #c6c6c6;
@@ -15,6 +15,10 @@ $lightGrey: #dddddd;
 
 /* Sizes */
 $borderRadius: 0;
+$cardPaddingY: 20px;
+$cardPaddingX: 30px;
+$defaultFontSize: 16px;
+$defaultLineHeight: 1.7;
 
 /* Font weights */
 $light: 300;

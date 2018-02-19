@@ -1,19 +1,16 @@
 <div [formGroup]="form" [class]="field.class ? field.class : 'col-sm-12'">
-    <div class="form-group">
+    <div class="form-group" [ngClass]="{'has-error': !isValid}">
 
-        <!-- Label -->
         <label>
             {{field.label}}
             <span *ngIf="field.validators && field.validators.required">*</span>
         </label>
-        <span   *ngIf="field.options?.allowedContentTypes"
-                class="pull-right"
-                [ngClass]="{'error': rejected}">
-            Allowed file types
-                (<span *ngFor="let type of field.options.allowedContentTypes; let last = last">
+        <label *ngIf="field.options?.allowedContentTypes"
+               [ngClass]="{'error': rejected}">
+            (<span *ngFor="let type of field.options.allowedContentTypes; let last = last">
                     {{type}}<span *ngIf="!last">, </span>
                 </span>)
-        </span>
+        </label>
 
         <div class="drop-container"
              ngFileDrop
@@ -52,6 +49,35 @@
                 (click)="startUpload()">
             Upload
         </button>
+
+        <div class="uploaded-files-container"
+             *ngIf="uploadedFiles.length > 0">
+            <label class="uploaded-files-label">Uploaded file(s)</label>
+            <ul>
+                <li *ngFor="let file of uploadedFiles">
+                    <div class="file-wrapper">
+                        <div [ngSwitch]="file.type">
+                            <i *ngSwitchCase="'text/plain'" class="fa fa-file-text-o txt"></i>
+                            <i *ngSwitchCase="'application/msword'" class="fa fa-file-text-o txt"></i>
+                            <i *ngSwitchCase="'text/csv'" class="fa fa-file-code-o code"></i>
+                            <i *ngSwitchCase="'application/pdf'" class="fa fa-file-pdf-o pdf"></i>
+                            <i *ngSwitchCase="'application/zip'" class="fa fa-file-zip-o zip"></i>
+                            <i *ngSwitchDefault class="fa fa-file-o default"></i>
+                            <img *ngSwitchCase="'image/jpeg'" [src]="file.url" (error)="retryUrl($event, file.url)"/>
+                            <img *ngSwitchCase="'image/jpg'" [src]="file.url" (error)="retryUrl($event, file.url)"/>
+                            <img *ngSwitchCase="'jpeg'" [src]="file.url" (error)="retryUrl($event, file.url)"/>
+                            <img *ngSwitchCase="'jpg'" [src]="file.url" (error)="retryUrl($event, file.url)"/>
+                            <img *ngSwitchCase="'image/png'" [src]="file.url" (error)="retryUrl($event, file.url)"/>
+                            <img *ngSwitchCase="'png'" [src]="file.url" (error)="retryUrl($event, file.url)"/>
+                        </div>
+                    </div>
+                    <span class="file-name">
+                        <span *ngIf="this.field.options.api.delete" class="remove" (click)="removeUploadedFile(file)">×</span>
+                        <span>{{file.name}}</span>
+                    </span>
+                </li>
+            </ul>
+        </div>
 
         <!-- Others -->
         <span *ngIf="field.description" class="help-block">{{field.description}}</span>

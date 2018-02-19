@@ -16,6 +16,7 @@ export const environment = {
         login: {
             endpoint: 'persons/login',
             form: {
+                title: 'Ngx Backend - Login',
                 fields: [
                     {
                         key: 'username',

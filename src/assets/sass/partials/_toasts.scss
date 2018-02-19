@@ -2,7 +2,6 @@ div.toast-container {
   top: 20px;
   right: 20px;
   > div.toast {
-    @include _transition(all 0.3s);
     @include box-shadow();
     &:hover {
       @include box-shadow(5px, 5px, 10px, 0, rgba(0, 0, 0, 0.3));
@@ -25,10 +24,12 @@ div.toast-container {
 
     }
     > .toast-title {
+      font-weight: $regular;
       text-transform: uppercase;
       font-size: 16px;
     }
     > .toast-message {
+      font-weight: $light;
       font-size: 14px;
     }
   }

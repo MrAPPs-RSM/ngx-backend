@@ -1,133 +1,129 @@
-<form *ngIf="form" [formGroup]="form" (keyup.enter)="onSubmit()">
-    <header [ngClass]="{'loading': isLoading}" *ngIf="!config.isLoginForm && config.title">
-        <span *ngIf="config.title">{{ config.title }}</span>
-        <!--<div *ngIf="isLoading" class="progress">
+<form *ngIf="form" [formGroup]="form" (keyup.enter)="onSubmit()" [ngClass]="{'loading': isLoading || isLoginLoading}" >
+    <header>
+        <h3 *ngIf="config.title">{{ config.title }}</h3>
+        <div class="progress">
             <div class="indeterminate"></div>
-        </div>-->
+        </div>
     </header>
-    <div class="row">
-        <div *ngFor="let field of config.fields">
+    <div class="fields-wrapper">
+        <div class="row">
+            <div *ngFor="let field of config.fields">
 
-            <div [ngSwitch]="field.type">
+                <div [ngSwitch]="field.type">
 
-                <app-separator
-                        *ngSwitchCase="formConfig.noInputTypes.SEPARATOR"
-                        [field]="field">
-                </app-separator>
+                    <app-separator
+                            *ngSwitchCase="formConfig.noInputTypes.SEPARATOR"
+                            [field]="field">
+                    </app-separator>
 
-                <app-input-text
-                        *ngSwitchCase="formConfig.types.TEXT"
-                        [form]="form"
-                        [field]="field">
-                </app-input-text>
+                    <app-input-text
+                            *ngSwitchCase="formConfig.types.TEXT"
+                            [form]="form"
+                            [field]="field">
+                    </app-input-text>
 
-                <app-input-password
-                        *ngSwitchCase="formConfig.types.PASSWORD"
-                        [form]="form"
-                        [field]="field">
-                </app-input-password>
+                    <app-input-password
+                            *ngSwitchCase="formConfig.types.PASSWORD"
+                            [form]="form"
+                            [field]="field">
+                    </app-input-password>
 
-                <app-input-url
-                        *ngSwitchCase="formConfig.types.URL"
-                        [form]="form"
-                        [field]="field">
-                </app-input-url>
+                    <app-input-url
+                            *ngSwitchCase="formConfig.types.URL"
+                            [form]="form"
+                            [field]="field">
+                    </app-input-url>
 
-                <app-input-number
-                        *ngSwitchCase="formConfig.types.NUMBER"
-                        [form]="form"
-                        [field]="field">
-                </app-input-number>
+                    <app-input-number
+                            *ngSwitchCase="formConfig.types.NUMBER"
+                            [form]="form"
+                            [field]="field">
+                    </app-input-number>
 
-                <app-input-color
-                        *ngSwitchCase="formConfig.types.COLOR"
-                        [form]="form"
-                        [field]="field"
-                        [isEdit]="config.isEdit"
-                ></app-input-color>
+                    <app-input-color
+                            *ngSwitchCase="formConfig.types.COLOR"
+                            [form]="form"
+                            [field]="field"
+                            [isEdit]="config.isEdit"
+                    ></app-input-color>
 
-                <app-input-textarea
-                        *ngSwitchCase="formConfig.types.TEXTAREA"
-                        [form]="form"
-                        [field]="field">
-                </app-input-textarea>
+                    <app-input-textarea
+                            *ngSwitchCase="formConfig.types.TEXTAREA"
+                            [form]="form"
+                            [field]="field">
+                    </app-input-textarea>
 
-                <app-select
-                        *ngSwitchCase="formConfig.types.SELECT"
-                        [form]="form"
-                        [field]="field"
-                        [isEdit]="isEdit">
-                </app-select>
+                    <app-select
+                            *ngSwitchCase="formConfig.types.SELECT"
+                            [form]="form"
+                            [field]="field"
+                            [isEdit]="isEdit">
+                    </app-select>
 
-                 <app-input-email
-                         *ngSwitchCase="formConfig.types.EMAIL"
-                         [form]="form"
-                         [field]="field">
-                 </app-input-email>
+                    <app-input-email
+                            *ngSwitchCase="formConfig.types.EMAIL"
+                            [form]="form"
+                            [field]="field">
+                    </app-input-email>
 
-                 <app-checkbox
-                         *ngSwitchCase="formConfig.types.CHECKBOX"
-                         [form]="form"
-                         [field]="field">
-                 </app-checkbox>
+                    <app-checkbox
+                            *ngSwitchCase="formConfig.types.CHECKBOX"
+                            [form]="form"
+                            [field]="field">
+                    </app-checkbox>
 
-                <app-date-time
-                        *ngSwitchCase="formConfig.types.DATE"
-                        [form]="form"
-                        [field]="field"
-                ></app-date-time>
+                    <app-date-time
+                            *ngSwitchCase="formConfig.types.DATE"
+                            [form]="form"
+                            [field]="field"
+                    ></app-date-time>
 
-                <app-date-time-range
-                        *ngSwitchCase="formConfig.types.DATE_RANGE"
-                        [form]="form"
-                        [field]="field"
-                ></app-date-time-range>
+                    <app-date-time-range
+                            *ngSwitchCase="formConfig.types.DATE_RANGE"
+                            [form]="form"
+                            [field]="field"
+                    ></app-date-time-range>
 
-                <app-file-upload
-                        *ngSwitchCase="formConfig.types.FILE"
-                        [form]="form"
-                        [field]="field"
-                ></app-file-upload>
+                    <app-file-upload
+                            *ngSwitchCase="formConfig.types.FILE"
+                            [form]="form"
+                            [field]="field"
+                    ></app-file-upload>
 
-<!--
+                    <!--
 
-                 <lat-lng
-                         *ngSwitchCase="formConfig.types.LAT_LNG"
-                         [form]="form"
-                         [field]="field">
-                 </lat-lng>
+                                     <lat-lng
+                                             *ngSwitchCase="formConfig.types.LAT_LNG"
+                                             [form]="form"
+                                             [field]="field">
+                                     </lat-lng>
 
-                 <file-uploader
-                         *ngSwitchCase="formConfig.types.FILE"
-                         [form]="form"
-                         [field]="field">
-                 </file-uploader>
 
-                 <list-details
-                         *ngSwitchCase="formConfig.types.LIST_DETAILS"
-                         [form]="form"
-                         [field]="field"
-                         [isEdit]="isEdit">
-                 </list-details>
+                                     <list-details
+                                             *ngSwitchCase="formConfig.types.LIST_DETAILS"
+                                             [form]="form"
+                                             [field]="field"
+                                             [isEdit]="isEdit">
+                                     </list-details>
 
-                 <calendar
-                         *ngSwitchCase="formConfig.types.CALENDAR"
-                         [form]="form"
-                         [field]="field">
-                 </calendar> -->
+                                     <calendar
+                                             *ngSwitchCase="formConfig.types.CALENDAR"
+                                             [form]="form"
+                                             [field]="field">
+                                     </calendar> -->
+
+                </div>
 
             </div>
-
         </div>
-    </div>
 
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="pull-right">
-                <button type="button" (click)="onSubmit()" class="btn btn-primary"
-                        [ngClass]="{'loading':isLoading || isLoginLoading}"
-                        [disabled]="!form.valid || isLoading"> {{ config.submit?.label ? config.submit.label : 'Save'}}
-                </button>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="pull-right">
+                    <button type="button" (click)="onSubmit()" class="btn btn-primary"
+                            [disabled]="!form.valid || isLoading"> {{ config.submit?.label ? config.submit.label : 'Save'}}
+                    </button>
+                </div>
             </div>
         </div>
     </div>

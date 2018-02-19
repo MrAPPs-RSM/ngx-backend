@@ -3,18 +3,20 @@
 app-file-upload {
   > div {
     > div.form-group {
-      > span {
-        font-size: 13px;
-        color: $default;
+      > label {
         &.error {
           color: $error;
           font-weight: $regular;
         }
+        &.uploaded-files-label {
+          display: block;
+        }
       }
       > div.drop-container {
+        @include clearfix();
         background-color: #f5f5f5;
         border: 1px solid $lightGrey;
-        padding: 20px 30px;
+        padding: $cardPaddingY $cardPaddingX;
         position: relative;
         text-align: center;
 
@@ -46,6 +48,9 @@ app-file-upload {
             margin-right: 5px;
             > span.remove {
               cursor: pointer;
+              &:hover {
+                color: $sidebarDark;
+              }
             }
             &.add {
               cursor: pointer;
@@ -68,7 +73,82 @@ app-file-upload {
         }
       }
       > button {
-        margin-top: 10px;
+        margin: 10px 0;
+      }
+      > div.uploaded-files-container {
+        position: relative;
+        > label {
+          font-size: 13px;
+          font-weight: $light;
+          color: $default;
+        }
+        > ul {
+          border: 1px solid $lightGrey;
+          padding: $cardPaddingY $cardPaddingX 5px;
+          background-color: #f5f5f5;
+          margin: 0;
+          list-style: none;
+          > li {
+            text-align: center;
+            $fileSize: 70px;
+            width: $fileSize;
+            display: inline-block;
+            &:not(:last-child) {
+              margin-right: 20px;
+            }
+            > div.file-wrapper {
+              > div {
+                > img {
+                  width: $fileSize;
+                }
+                > i {
+                  height: 65px;
+                  font-size: 60px;
+                  &.txt {
+                    color: $info;
+                  }
+                  &.pdf {
+                    color: $error;
+                  }
+                  &.zip  {
+                    color: $warning;
+                  }
+                  &.code {
+                    color: $success;
+                  }
+                  &.default {
+                    color: $default;
+                  }
+                }
+              }
+            }
+            > span.file-name {
+              margin-top: -1px;
+              font-size: 13px;
+              text-align: center;
+              width: $fileSize;
+              display: block;
+              overflow: hidden;
+              color: darken($default, 10);
+              border: 1px solid #ddd;
+              padding: 2px 3px;
+              background-color: #ffffff;
+              margin-right: 5px;
+              > span{
+                &:not(.remove) {
+                  max-width: 50px;
+                  display: inline-block;
+                }
+                &.remove {
+                  cursor: pointer;
+                  &:hover {
+                    color: $sidebarDark;
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
   }

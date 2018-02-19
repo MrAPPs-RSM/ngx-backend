@@ -8,10 +8,6 @@ app-login {
     margin: 0 auto;
     @include _transform(translateY(50%));
     max-width: 600px;
-    padding: 20px 40px;
-    > h3 {
-      text-align: center;
-      margin-bottom: 25px;
-    }
+    padding: $cardPaddingY $cardPaddingX;
   }
 }

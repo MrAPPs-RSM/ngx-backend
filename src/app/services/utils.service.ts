@@ -36,4 +36,17 @@ export class UtilsService {
         });
         return false;
     }
+
+    public static removeObjectFromArray(obj: any, list: any[]): any[] {
+        let index = -1;
+        list.forEach((item, i) => {
+            if (obj === item) {
+                index = i;
+            }
+        });
+        if (index !== -1) {
+            list.splice(index, 1);
+        }
+        return list;
+    }
 }

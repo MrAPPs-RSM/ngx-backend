@@ -47,10 +47,9 @@ app-panel {
               cursor: pointer;
               &.logout {
                 font-weight: $regular;
-                background-color: $error;
-                color: #ffffff;
+                color: $primary;
                 &:hover {
-                  background-color: darken($error, 20);
+                  background-color: $lightGrey;
                 }
               }
             }

@@ -7,7 +7,7 @@ app-form-page {
       > div {
         background-color: #ffffff;
         border-radius: $borderRadius;
-        padding: 20px 30px;
+        padding: $cardPaddingY $cardPaddingX;
         margin: 20px 0;
         border: 1px solid $grey;
       }
