@@ -6,6 +6,14 @@
             {{field.label}}
             <span *ngIf="field.validators && field.validators.required">*</span>
         </label>
+        <span   *ngIf="field.options?.allowedContentTypes"
+                class="pull-right"
+                [ngClass]="{'error': rejected}">
+            Allowed file types
+                (<span *ngFor="let type of field.options.allowedContentTypes; let last = last">
+                    {{type}}<span *ngIf="!last">, </span>
+                </span>)
+        </span>
 
         <div class="drop-container"
              ngFileDrop
@@ -16,10 +24,14 @@
             <span class="drag" *ngIf="files.length <= 0">Drag &amp; drop or <span class="choose"
                                                                                   (click)="bringFileSelector()">choose file(s)</span></span>
             <div *ngIf="files.length > 0" class="files-container">
-                <span *ngFor="let file of files; let last = last">
+                <span *ngFor="let file of files;">
                     <span class="remove" (click)="removeFile(file.id)">×</span>
                     {{ file.name }}
                 </span>
+
+                <!-- Add more files button if multiple allowed -->
+                <span class="add" *ngIf="field.options?.multiple && files.length > 0"
+                      (click)="bringFileSelector()">+</span>
             </div>
             <span *ngIf="files.length > 1" (click)="removeAllFiles()" class="remove-all">×</span>
         </div>

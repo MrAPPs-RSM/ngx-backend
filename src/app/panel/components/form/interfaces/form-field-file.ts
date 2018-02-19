@@ -7,5 +7,6 @@ export interface FormFieldFile extends FormField {
             delete?: string;
         },
         multiple?: boolean;
+        allowedContentTypes?: string[];
     };
 }
