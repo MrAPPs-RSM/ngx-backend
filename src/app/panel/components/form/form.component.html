@@ -44,7 +44,6 @@
                             *ngSwitchCase="formConfig.types.COLOR"
                             [form]="form"
                             [field]="field"
-                            [isEdit]="config.isEdit"
                     ></app-input-color>
 
                     <app-input-textarea
@@ -56,8 +55,7 @@
                     <app-select
                             *ngSwitchCase="formConfig.types.SELECT"
                             [form]="form"
-                            [field]="field"
-                            [isEdit]="isEdit">
+                            [field]="field">
                     </app-select>
 
                     <app-input-email

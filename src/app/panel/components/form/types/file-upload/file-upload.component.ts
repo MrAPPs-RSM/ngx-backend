@@ -70,6 +70,20 @@ export class FileUploadComponent implements OnInit {
         this.files = []; // local uploading files array
         this.uploadInput = new EventEmitter<UploadInput>(); // input events, we use this to emit data to ngx-uploader
         this.createAllowedContentTypes();
+
+        /** Load entity image (if edit) */
+        this.form.controls[this.field.key].valueChanges
+            .first()
+            .subscribe(
+                data => {
+                    if (data instanceof Array) {
+                        data.forEach((item) => {
+                            this.handleResponse(item);
+                        })
+                    } else {
+                        this.handleResponse(data);
+                    }
+                });
     }
 
     get isValid() {

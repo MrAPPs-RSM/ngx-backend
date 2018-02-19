@@ -1,6 +1,7 @@
 export interface FormConfiguration {
     api: {
-        endpoint: string
+        endpoint: string,
+        filter?: string;
     };
     fields: any[];
     isEdit?: boolean;

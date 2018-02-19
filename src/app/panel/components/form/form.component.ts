@@ -46,7 +46,15 @@ export class FormComponent implements OnInit {
     loadData(): void {
         if (this._route.snapshot.params && this._route.snapshot.params['id']) {
             this.isLoading = true;
-            this._apiService.get(this.config.api.endpoint + '/' + this._route.snapshot.params['id'])
+
+            let params = {};
+            if (this.config.api.filter) {
+                params = {
+                    filter: this.config.api.filter
+                };
+            }
+            this._apiService.get(
+                this.config.api.endpoint + '/' + this._route.snapshot.params['id'], params)
                 .then((response) => {
                     this.isLoading = false;
                     Object.keys(response).forEach((key) => {

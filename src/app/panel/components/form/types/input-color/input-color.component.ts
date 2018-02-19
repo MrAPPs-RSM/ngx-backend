@@ -12,7 +12,6 @@ export class InputColorComponent implements OnInit {
 
     @Input() form: FormGroup;
     @Input() field: FormField;
-    @Input() isEdit: boolean;
 
     color: any = null;
 
@@ -28,17 +27,14 @@ export class InputColorComponent implements OnInit {
     }
 
     ngOnInit() {
-        if (this.isEdit) {
-            this.form.controls[this.field.key].valueChanges
-                .first()
-                .subscribe(
-                    value => {
-                        this.onColorChange(value);
-                    }
-                );
-        } else {
-            this.onColorChange(null);
-        }
+        this.onColorChange(null);
+        this.form.controls[this.field.key].valueChanges
+            .first()
+            .subscribe(
+                value => {
+                    this.onColorChange(value);
+                }
+            );
     }
 
     onColorChange(color: any): void {

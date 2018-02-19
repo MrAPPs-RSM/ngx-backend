@@ -44,7 +44,7 @@ const routes: Routes = [
         LoginComponent
     ],
     imports: [
-        RouterModule.forRoot(routes),
+        RouterModule.forRoot(routes, {useHash: true}),
         ReactiveFormsModule,
         BrowserModule,
         ToastNoAnimationModule,

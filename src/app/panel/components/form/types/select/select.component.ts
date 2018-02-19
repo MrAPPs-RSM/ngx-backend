@@ -15,7 +15,6 @@ export class SelectComponent implements OnInit {
 
     @Input() form: FormGroup;
     @Input() field: FormFieldSelect;
-    @Input() isEdit: boolean;
 
     public options: SelectData[] = [];
 
@@ -43,12 +42,10 @@ export class SelectComponent implements OnInit {
         }
     }
 
+    // TODO: handle multiple select
     private loadData(): void {
         this.loadOptions()
-            .then(() => {
-            // TODO: If this.isEdit == true, load pre-selected data, changing this.form.controls[this.field.key].value
-                console.log('LOAD DATA if edit');
-            })
+            .then(() => {})
             .catch((error) => {
                 console.log(error);
             });
