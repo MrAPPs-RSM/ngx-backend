@@ -88,15 +88,13 @@
                             [field]="field"
                     ></app-file-upload>
 
+                    <app-map
+                            *ngSwitchCase="formConfig.types.MAP"
+                            [form]="form"
+                            [field]="field">
+                    </app-map>
+
                     <!--
-
-                                     <lat-lng
-                                             *ngSwitchCase="formConfig.types.LAT_LNG"
-                                             [form]="form"
-                                             [field]="field">
-                                     </lat-lng>
-
-
                                      <list-details
                                              *ngSwitchCase="formConfig.types.LIST_DETAILS"
                                              [form]="form"

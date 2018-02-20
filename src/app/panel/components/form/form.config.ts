@@ -11,7 +11,7 @@ export let formConfig = {
         SELECT: 'select',
         DATE: 'date',
         DATE_RANGE: 'date_range',
-        LAT_LNG: 'lat_lng',
+        MAP: 'map',
         FILE: 'file',
         LIST_DETAILS: 'list_details',
         CALENDAR: 'calendar'

@@ -10,49 +10,55 @@ export class FormGeneratorService {
     constructor() {
     }
 
+    private getValidators(validators: Object): Array<any> {
+        const output = [];
+        Object.keys(validators).forEach((key) => {
+            switch (key) {
+                case formConfig.validators.REQUIRED: {
+                    if (validators[key] === true) {
+                        output.push(Validators.required);
+                    }
+                }
+                    break;
+                case formConfig.validators.MIN_LENGTH: {
+                    output.push(Validators.minLength(validators[key]));
+                }
+                    break;
+                case formConfig.validators.MAX_LENGTH: {
+                    output.push(Validators.maxLength(validators[key]));
+                }
+                    break;
+                case formConfig.validators.PATTERN: {
+                    output.push(Validators.pattern(validators[key]));
+                }
+                    break;
+                case formConfig.validators.MIN: {
+                    output.push(CustomValidators.min(validators[key]));
+                }
+                    break;
+                case formConfig.validators.MAX: {
+                    output.push(CustomValidators.max(validators[key]));
+                }
+                    break;
+                default: {
+                }
+                    break;
+            }
+        });
+        return output;
+    }
+
     public generate(fields: any[]): FormGroup | any {
         const group: any = {};
 
         if (fields && fields.length > 0) {
             fields.forEach((field) => {
-                const validators = [];
+                let validators = [];
                 /**
                  * Adding validators if defined as field properties
                  */
                 if (field.validators) {
-                    Object.keys(field.validators).forEach(key => {
-                        switch (key) {
-                            case formConfig.validators.REQUIRED: {
-                                if (field.validators[key] === true) {
-                                    validators.push(Validators.required);
-                                }
-                            }
-                                break;
-                            case formConfig.validators.MIN_LENGTH: {
-                                validators.push(Validators.minLength(field.validators[key]));
-                            }
-                                break;
-                            case formConfig.validators.MAX_LENGTH: {
-                                validators.push(Validators.maxLength(field.validators[key]));
-                            }
-                                break;
-                            case formConfig.validators.PATTERN: {
-                                validators.push(Validators.pattern(field.validators[key]));
-                            }
-                                break;
-                            case formConfig.validators.MIN: {
-                                validators.push(CustomValidators.min(field.validators[key]));
-                            }
-                                break;
-                            case formConfig.validators.MAX: {
-                                validators.push(CustomValidators.max(field.validators[key]));
-                            }
-                                break;
-                            default: {
-                            }
-                                break;
-                        }
-                    });
+                    validators = this.getValidators(field.validators);
                 }
 
                 /**
@@ -101,24 +107,28 @@ export class FormGeneratorService {
                     }
                         break;
                     case formConfig.types.DATE_RANGE: {
+                        const startValidators = this.getValidators(field['startDate'].validators);
                         group[field['startDate'].key] = new FormControl(
                             null,
-                            validators.length > 0 ? Validators.compose(validators) : null
+                            startValidators ? Validators.compose(startValidators) : null
                         );
+                        const endValidators = this.getValidators(field['endDate'].validators);
                         group[field['endDate'].key] = new FormControl(
                             null,
-                            validators.length > 0 ? Validators.compose(validators) : null
+                            endValidators ? Validators.compose(endValidators) : null
                         );
                     }
                         break;
-                    case formConfig.types.LAT_LNG: {
+                    case formConfig.types.MAP: {
+                        const latValidators = this.getValidators(field['lat'].validators);
                         group[field['lat'].key] = new FormControl(
                             null,
-                            validators.length > 0 ? Validators.compose(validators) : null
+                            latValidators ? Validators.compose(latValidators) : null
                         );
+                        const lngValidators = this.getValidators(field['lng'].validators);
                         group[field['lng'].key] = new FormControl(
                             null,
-                            validators.length > 0 ? Validators.compose(validators) : null
+                            lngValidators ? Validators.compose(lngValidators) : null
                         );
                     }
                         break;

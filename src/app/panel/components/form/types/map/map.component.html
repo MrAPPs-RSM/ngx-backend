@@ -1,0 +1,63 @@
+<div [formGroup]="form" [class]="field.class ? field.class : 'col-sm-12'">
+    <div class="form-group">
+        <div class="form-wrapper">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group no-margin" [ngClass]="{'has-error': !isValid(field.lat.key)}">
+                        <label for="{{field.lat.key}}">
+                            {{field.lat.label}}
+                            <span *ngIf="field.lat.validators && field.lat.validators.required">*</span>
+                        </label>
+                        <!-- Input -->
+                        <input
+                                type="number"
+                                [attr.disabled]="field.lat.disabled ? '' : null"
+                                formControlName="{{field.lat.key}}"
+                                class="form-control"
+                                id="{{field.lat.key}}"
+                                placeholder="{{field.lat.placeholder}}"
+                                value="{{lat}}"
+                        >
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group no-margin" [ngClass]="{'has-error': !isValid(field.lng.key)}">
+                        <label for="{{field.lng.key}}">
+                            {{field.lng.label}}
+                            <span *ngIf="field.lng.validators && field.lng.validators.required">*</span>
+                        </label>
+                        <!-- Input -->
+                        <input
+                                type="number"
+                                [attr.disabled]="field.lng.disabled ? '' : null"
+                                formControlName="{{field.lng.key}}"
+                                class="form-control"
+                                id="{{field.lng.key}}"
+                                placeholder="{{field.lng.placeholder}}"
+                                value="{{lng}}"
+                        >
+                    </div>
+                </div>
+            </div>
+
+            <!-- Others -->
+            <span *ngIf="field.description" class="help-block">{{field.description}}</span>
+        </div>
+
+        <agm-map
+                [zoom]="8"
+                [latitude]="lat"
+                [longitude]="lng"
+                [scrollwheel]="false"
+                (mapClick)="onMarkerChanged($event)">
+            <agm-marker
+                    [latitude]="lat"
+                    [longitude]="lng"
+                    [label]="options.marker.label"
+                    [markerDraggable]="options.marker.draggable"
+                    (dragEnd)="onMarkerChanged($event)">
+            </agm-marker>
+        </agm-map>
+    </div>
+</div>
+

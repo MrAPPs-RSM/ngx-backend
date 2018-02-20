@@ -33,6 +33,7 @@ export class DateTimeRangeComponent implements OnInit {
     }
 
     get isValid() {
+        // TODO: review this code, probably some parts are not necessary after editing FormGenerator
         if (this.isDateValid('startDate') && this.isDateValid('endDate')) {
             if ((this.form.controls[this.field.startDate.key].value !== null
                 && this.form.controls[this.field.startDate.key].value !== '')

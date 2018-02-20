@@ -7,6 +7,8 @@ import {EditorModule} from '@tinymce/tinymce-angular';
 import {NgSelectModule} from '@ng-select/ng-select';
 import {NguiDatetimePickerModule} from '@ngui/datetime-picker';
 import {NgUploaderModule} from 'ngx-uploader';
+import {AgmCoreModule} from '@agm/core';
+
 
 import {AuthGuard} from '../auth/auth.guard';
 import {PanelComponent} from './panel.component';
@@ -32,6 +34,7 @@ import {CheckboxComponent} from './components/form/types/checkbox/checkbox.compo
 import {DateTimeComponent} from './components/form/types/date-time/date-time.component';
 import {DateTimeRangeComponent} from './components/form/types/date-time-range/date-time-range.component';
 import {FileUploadComponent} from './components/form/types/file-upload/file-upload.component';
+import {MapComponent} from './components/form/types/map/map.component';
 
 const routes: Routes = [
     {
@@ -60,7 +63,10 @@ const routes: Routes = [
         EditorModule,
         NgSelectModule,
         NguiDatetimePickerModule,
-        NgUploaderModule
+        NgUploaderModule,
+        AgmCoreModule.forRoot({
+            apiKey: 'AIzaSyAP1chVIcUZSeLzRhRhXYbo20SBj7bryfM'
+        })
     ],
     exports: [
         FormComponent,
@@ -86,7 +92,8 @@ const routes: Routes = [
         CheckboxComponent,
         DateTimeComponent,
         DateTimeRangeComponent,
-        FileUploadComponent
+        FileUploadComponent,
+        MapComponent
     ],
     providers: [
         AuthGuard,
