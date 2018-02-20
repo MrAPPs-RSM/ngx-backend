@@ -7,7 +7,10 @@ import {UtilsService} from '../../services/utils.service';
 @Injectable()
 export class FormGeneratorService {
 
+    public contentLanguages: any[];
+
     constructor() {
+        this.contentLanguages = [];
     }
 
     private getValidators(validators: Object): Array<any> {

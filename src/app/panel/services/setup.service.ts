@@ -30,6 +30,7 @@ export class SetupService {
                 .then((data) => {
 
                     if ('contentLanguages' in data) {
+                        this._formGeneratorService.contentLanguages = data.contentLanguages;
                     }
 
                     this.loadRoutes(data);

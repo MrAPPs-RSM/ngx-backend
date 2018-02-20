@@ -23,7 +23,9 @@ export class FormComponent implements OnInit {
     public form: FormGroup;
     public formConfig = formConfig;
     public isLoading = false;
-    public currentLang: string = null;
+    public previousLang: any = null;
+    public currentLang: any = null;
+    public formGroupModels: any;
 
     constructor(private _formGenerator: FormGeneratorService,
                 private _modal: ModalService,
@@ -31,19 +33,87 @@ export class FormComponent implements OnInit {
                 private _route: ActivatedRoute) {
     }
 
+    setupForms(): FormGroup {
+
+        let currentForm: FormGroup;
+
+        if (this._formGenerator.contentLanguages.length > 0) {
+            this.formGroupModels = {};
+
+            for (const contentLanguage of this._formGenerator.contentLanguages) {
+
+                const model = {};
+
+                for (const field of this.config.fields) {
+
+                    if (field.type === 'lat_lng') {
+                        model[field['lng'].key] = 0.0;
+                        model[field['lat'].key] = 0.0;
+                    } else {
+                        model[field.key] = null;
+                    }
+                }
+
+                this.formGroupModels[contentLanguage.isoCode] = model;
+
+                if (contentLanguage.isDefault) {
+                    this.previousLang = contentLanguage;
+                    this.currentLang = contentLanguage;
+                }
+            }
+        }
+
+        currentForm = this._formGenerator.generate(this.config.fields);
+
+        return currentForm;
+    }
+
+    isMultiLangEnabled() {
+       return this._formGenerator.contentLanguages.length > 0;
+    }
+
+    getLanguageForIsoCode(isoCode: string): any {
+        for (const language of this._formGenerator.contentLanguages) {
+            if (language.isoCode === isoCode) {
+                return language;
+            }
+        }
+    }
+
+    onLanguageChange(newValue) {
+
+        this.formGroupModels[this.previousLang.isoCode] = this.form.getRawValue();
+
+        this.currentLang = this.getLanguageForIsoCode(newValue);
+        this.previousLang = this.currentLang;
+
+        this.form.patchValue(this.formGroupModels[this.currentLang.isoCode]);
+    }
+
+    getLanguages(){
+        return this._formGenerator.contentLanguages;
+    }
+
     ngOnInit() {
-        this.form = this._formGenerator.generate(this.config.fields);
+
+        for (const language of this._formGenerator.contentLanguages) {
+            if (language.isDefault) {
+                this.currentLang = language;
+                break;
+            }
+        }
+
+        this.form = this.setupForms();
         this.form.valueChanges.subscribe(
             data => {
                 console.log(data);
                 // console.log(this.form);
-            }
-        );
+            });
+
         if (this.config.isEdit) {
             this.loadData();
         }
     }
-
 
 
     loadData(): void {
