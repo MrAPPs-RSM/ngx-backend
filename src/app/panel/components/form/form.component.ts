@@ -22,7 +22,8 @@ export class FormComponent implements OnInit {
 
     public form: FormGroup;
     public formConfig = formConfig;
-    public isLoading: boolean = false;
+    public isLoading = false;
+    public currentLang: string = null;
 
     constructor(private _formGenerator: FormGeneratorService,
                 private _modal: ModalService,
@@ -42,6 +43,8 @@ export class FormComponent implements OnInit {
             this.loadData();
         }
     }
+
+
 
     loadData(): void {
         if (this._route.snapshot.params && this._route.snapshot.params['id']) {
