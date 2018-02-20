@@ -8,6 +8,7 @@ import {NgSelectModule} from '@ng-select/ng-select';
 import {NguiDatetimePickerModule} from '@ngui/datetime-picker';
 import {NgUploaderModule} from 'ngx-uploader';
 import {AgmCoreModule} from '@agm/core';
+import {Ng2SmartTableModule} from './modules/ng2-smart-table/ng2-smart-table.module';
 
 
 import {AuthGuard} from '../auth/auth.guard';
@@ -65,8 +66,9 @@ const routes: Routes = [
         NguiDatetimePickerModule,
         NgUploaderModule,
         AgmCoreModule.forRoot({
-            apiKey: 'AIzaSyAP1chVIcUZSeLzRhRhXYbo20SBj7bryfM'
-        })
+            apiKey: 'AIzaSyAP1chVIcUZSeLzRhRhXYbo20SBj7bryfM' // TODO: set gmaps api key
+        }),
+        Ng2SmartTableModule
     ],
     exports: [
         FormComponent,
