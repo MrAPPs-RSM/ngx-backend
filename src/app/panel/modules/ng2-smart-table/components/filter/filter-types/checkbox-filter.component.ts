@@ -7,10 +7,21 @@ import 'rxjs/add/operator/debounceTime';
 @Component({
   selector: 'checkbox-filter',
   template: `
-    <input type="checkbox" [formControl]="inputControl" [ngClass]="inputClass" class="form-control">
+      <label class="checkbox">
+          <input type="checkbox"
+                 [formControl]="inputControl"
+                 class="form-control"
+                 [ngClass]="inputClass">
+          <span>
+          </span>
+      </label>
     <a href="#" *ngIf="filterActive"
-                (click)="resetFilter($event)">{{column.getFilterConfig()?.resetText || 'reset'}}</a>
+                (click)="resetFilter($event)">×</a>
   `,
+    styles: [
+        'label.checkbox > span { width: 0;}',
+        'label.checkbox + a { font-weight: 300; }'
+    ]
 })
 export class CheckboxFilterComponent extends DefaultFilter implements OnInit {
 
@@ -22,7 +33,7 @@ export class CheckboxFilterComponent extends DefaultFilter implements OnInit {
   }
 
   ngOnInit() {
-    this.changesSubscription = this.inputControl.valueChanges
+    this.changesSubscription = (this.inputControl.valueChanges as any)
       .debounceTime(this.delay)
       .subscribe((checked: boolean) => {
         this.filterActive = true;

@@ -47,7 +47,7 @@ export class Ng2SmartTableComponent implements OnChanges {
       edit: true,
       delete: true,
       custom: [],
-      position: 'left', // left|right
+      position: 'right', // left|right
     },
     filter: {
       inputClass: '',

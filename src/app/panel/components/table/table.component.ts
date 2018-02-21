@@ -20,6 +20,17 @@ export class TableComponent implements OnInit {
             },
             email: {
                 title: 'Email'
+            },
+            visible: {
+                title: 'Visible',
+                filter: {
+                    type: 'checkbox',
+                    config: {
+                        true: 'true',
+                        false: 'false',
+                        resetText: 'clear',
+                    },
+                },
             }
         }
     };
@@ -29,13 +40,15 @@ export class TableComponent implements OnInit {
             id: 1,
             name: "Leanne Graham",
             username: "Bret",
-            email: "Sincere@april.biz"
+            email: "Sincere@april.biz",
+            visible: true
         },
         {
             id: 2,
             name: "Ervin Howell",
             username: "Antonette",
-            email: "Shanna@melissa.tv"
+            email: "Shanna@melissa.tv",
+            visible: false
         },
 
         // ... list of items
@@ -44,7 +57,8 @@ export class TableComponent implements OnInit {
             id: 11,
             name: "Nicholas DuBuque",
             username: "Nicholas.Stanton",
-            email: "Rey.Padberg@rosamond.biz"
+            email: "Rey.Padberg@rosamond.biz",
+            visible: true
         }
     ];
 

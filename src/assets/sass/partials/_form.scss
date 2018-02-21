@@ -68,63 +68,62 @@
       color: $success;
     }
   }
+}
 
-  > div.checkbox {
-    padding-left: 20px;
-    > input[type="checkbox"] {
-      opacity: 0;
-      z-index: 1;
-      cursor: pointer;
-
-      &:checked + label::after{
-        background-color: $primary;
-      }
-
-      &:disabled{
-        cursor: not-allowed;
-      }
-
-      &:disabled + label{
-        opacity: 0.65;
-
-        &::before{
-          cursor: not-allowed;
+label.checkbox {
+  padding-right: 0;
+  padding-left: 0;
+  margin-bottom: 0;
+  & > input {
+    height: 0;
+    z-index: -100 !important;
+    opacity: 0;
+    &:checked {
+      & + span {
+        &:before {
+          font: normal normal normal 17px/1 FontAwesome;
+          text-decoration: inherit;
+          text-rendering: optimizeLegibility;
+          text-transform: none;
+          -moz-osx-font-smoothing: grayscale;
+          -webkit-font-smoothing: antialiased;
+          font-smoothing: antialiased;
+          border-color: $primary;
+          background-color: $primary;
+          color: #ffffff;
+          content: "\f17b";
+          font-size: 16px;
         }
       }
     }
-    > label{
+  }
+  & > span {
+    $size: 18px;
+    position: relative;
+    display: inline-block;
+    margin: 0;
+    line-height: $size;
+    cursor: pointer;
+    padding-left: 22px;
+    width: 100%;
+    &:before {
+      color: $primary;
+      cursor: pointer;
+      font-size: 17px;
+      line-height: 17px;
+      height: $size;
+      width: $size;
+      content: '';
+      background-color: transparent;
+      border: 1px solid $lightGrey;
+      border-radius: 0;
       display: inline-block;
-      vertical-align: middle;
+      text-align: center;
+      margin-right: 6px;
       position: relative;
-      padding-left: 5px;
-      color: $default;
-      font-size: 13px;
-      font-weight: $light;
-
-      &::before{
-        content: "";
-        display: inline-block;
-        position: absolute;
-        width: 17px;
-        height: 17px;
-        left: 0;
-        margin-left: -20px;
-        border: 1px solid $lightGrey;
-        border-radius: $borderRadius;
-        background-color: #ffffff;
-      }
-
-      &::after{
-        @include _transition(all 0.3s);
-        content: '';
-        display: inline-block;
-        position: absolute;
-        width: 13px;
-        height: 13px;
-        left: 2px;
-        top: 2px;
-        margin-left: -20px;
-      }
+      top: 0;
+      margin-left: -22px;
+      float: left;
     }
   }
 }

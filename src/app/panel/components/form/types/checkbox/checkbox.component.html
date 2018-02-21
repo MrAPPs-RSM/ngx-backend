@@ -1,14 +1,14 @@
 <div [formGroup]="form" [class]="field.class ? field.class : 'col-sm-12'">
     <div class="form-group" [ngClass]="{'has-error': !isValid}">
-        <div class="checkbox">
+        <label class="checkbox" for="{{field.key}}">
             <input type="checkbox"
                    id="{{field.key}}"
                    formControlName="{{field.key}}"
                    class="styled"
                    [checked]=field.checked>
-            <label for="{{field.key}}">
+            <span>
                 {{field.label}}
-            </label>
-        </div>
+            </span>
+        </label>
     </div>
 </div>
