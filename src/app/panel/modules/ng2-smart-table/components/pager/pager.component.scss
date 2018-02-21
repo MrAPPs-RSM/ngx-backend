@@ -1,5 +1,39 @@
-.ng2-smart-pagination {
-  display: inline-flex;
+@import '../../../../../../assets/sass/partials/imports';
+
+ng2-smart-table-pager {
+  > div {
+    > nav.ng2-smart-pagination-nav {
+      > ul.pagination {
+        margin-bottom: 0;
+        > li {
+          &.active {
+            > span, a {
+              border-color: $primary;
+              background-color: $primary;
+              color: #ffffff;
+              &:hover {
+                border-color: darken($primary, 10);
+                background-color: darken($primary, 10);
+                color: #ffffff;
+              }
+              > span {
+                color: #ffffff;
+              }
+            }
+          }
+          > a, span {
+            cursor: pointer;
+            color: $primary;
+            border-radius: $borderRadius;
+          }
+        }
+      }
+    }
+  }
+}
+
+/*.ng2-smart-pagination {
+  display: inline-block;
   font-size: .875em;
   padding: 0;
 
@@ -16,5 +50,15 @@
 
   .ng2-smart-page-item {
     display: inline;
+
+    .per-page-changer{
+      cursor: pointer;
+    }
+
+    &.active{
+      .ng2-smart-page-link{
+        background-color: $primary !important;
+      }
+    }
   }
-}
+}*/

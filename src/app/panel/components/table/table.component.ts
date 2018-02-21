@@ -32,6 +32,26 @@ export class TableComponent implements OnInit {
                     },
                 },
             }
+        },
+        actions: {
+            columnTitle: 'Actions',
+            add: {
+                content: 'Add new'
+            },
+            list: [
+                {
+                    name: 'edit',
+                    content: 'Edit'
+                },
+                {
+                    name: 'delete',
+                    content: 'Delete'
+                },
+                {
+                    name: 'custom',
+                    content: 'Custom'
+                }
+            ]
         }
     };
 
@@ -50,11 +70,71 @@ export class TableComponent implements OnInit {
             email: "Shanna@melissa.tv",
             visible: false
         },
-
-        // ... list of items
-
         {
-            id: 11,
+            id: 3,
+            name: "Ervin Howell",
+            username: "Antonette",
+            email: "Shanna@melissa.tv",
+            visible: false
+        },
+        {
+            id: 4,
+            name: "Ervin Howell",
+            username: "Antonette",
+            email: "Shanna@melissa.tv",
+            visible: false
+        },
+        {
+            id: 5,
+            name: "Ervin Howell",
+            username: "Antonette",
+            email: "Shanna@melissa.tv",
+            visible: false
+        },
+        {
+            id: 6,
+            name: "Nicholas DuBuque",
+            username: "Nicholas.Stanton",
+            email: "Rey.Padberg@rosamond.biz",
+            visible: true
+        },
+        {
+            id: 1,
+            name: "Leanne Graham",
+            username: "Bret",
+            email: "Sincere@april.biz",
+            visible: true
+        },
+        {
+            id: 2,
+            name: "Ervin Howell",
+            username: "Antonette",
+            email: "Shanna@melissa.tv",
+            visible: false
+        },
+        {
+            id: 3,
+            name: "Ervin Howell",
+            username: "Antonette",
+            email: "Shanna@melissa.tv",
+            visible: false
+        },
+        {
+            id: 4,
+            name: "Ervin Howell",
+            username: "Antonette",
+            email: "Shanna@melissa.tv",
+            visible: false
+        },
+        {
+            id: 5,
+            name: "Ervin Howell",
+            username: "Antonette",
+            email: "Shanna@melissa.tv",
+            visible: false
+        },
+        {
+            id: 6,
             name: "Nicholas DuBuque",
             username: "Nicholas.Stanton",
             email: "Rey.Padberg@rosamond.biz",
@@ -66,6 +146,16 @@ export class TableComponent implements OnInit {
     }
 
     ngOnInit() {
+    }
+
+    onAction(event: any) {
+        console.log('ON Action');
+        console.log(event);
+    }
+
+    onCreate(event: any) {
+        console.log('ON Create');
+        console.log(event);
     }
 
 }

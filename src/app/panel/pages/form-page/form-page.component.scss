@@ -2,6 +2,6 @@
 
 app-form-page {
   > div.container-fluid {
-    @include card();
+    @include card($cardPaddingY, $cardPaddingX, none);
   }
 }

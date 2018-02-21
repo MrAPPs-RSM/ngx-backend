@@ -58,6 +58,6 @@ export class CustomViewComponent implements OnInit, OnDestroy {
     return {
       value: this.cell.getValue(),
       rowData: this.cell.getRow().getData()
-    }
+    };
   }
 }

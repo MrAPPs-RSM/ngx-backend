@@ -1,7 +1,7 @@
 import {Component, Input, Output, EventEmitter, OnChanges} from '@angular/core';
 
-import { Grid } from '../../lib/grid';
-import { DataSource } from '../../lib/data-source/data-source';
+import {Grid} from '../../lib/grid';
+import {DataSource} from '../../lib/data-source/data-source';
 
 @Component({
     selector: '[ng2-st-thead]',
@@ -12,7 +12,6 @@ export class Ng2SmartTableTheadComponent implements OnChanges {
     @Input() grid: Grid;
     @Input() source: DataSource;
     @Input() isAllSelected: boolean;
-    @Input() createConfirm: EventEmitter<any>;
 
     @Output() sort = new EventEmitter<any>();
     @Output() selectAllRows = new EventEmitter<any>();
@@ -22,8 +21,8 @@ export class Ng2SmartTableTheadComponent implements OnChanges {
     isHideHeader: boolean;
     isHideSubHeader: boolean;
 
-  ngOnChanges() {
-      this.isHideHeader = this.grid.getSetting('hideHeader');
-      this.isHideSubHeader = this.grid.getSetting('hideSubHeader');
+    ngOnChanges() {
+        this.isHideHeader = this.grid.getSetting('hideHeader');
+        this.isHideSubHeader = this.grid.getSetting('hideSubHeader');
     }
 }

@@ -21,14 +21,4 @@ export class CellComponent {
     @Input() inputClass: string = '';
     @Input() mode: string = 'inline';
     @Input() isInEditing: boolean = false;
-
-    @Output() edited = new EventEmitter<any>();
-
-    onEdited(event: any) {
-        if (this.isNew) {
-            this.grid.create(this.grid.getNewRow(), this.createConfirm);
-        } else {
-            this.grid.save(this.row, this.editConfirm);
-        }
-    }
 }

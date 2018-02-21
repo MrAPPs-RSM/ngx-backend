@@ -4,8 +4,7 @@
            [grid]="grid"
            [isAllSelected]="isAllSelected"
            [source]="source"
-           [createConfirm]="createConfirm"
-           (create)="create.emit($event)"
+           (create)="create.emit()"
            (selectAllRows)="onSelectAllRows($event)"
            (sort)="sort($event)"
            (filter)="filter($event)">
@@ -13,12 +12,8 @@
 
     <tbody ng2-st-tbody [grid]="grid"
            [source]="source"
-           [deleteConfirm]="deleteConfirm"
-           [editConfirm]="editConfirm"
            [rowClassFunction]="rowClassFunction"
-           (edit)="edit.emit($event)"
-           (delete)="delete.emit($event)"
-           (custom)="custom.emit($event)"
+           (action)="action.emit($event)"
            (userSelectRow)="onUserSelectRow($event)"
            (editRowSelect)="editRowSelect($event)"
            (multipleSelectRow)="multipleSelectRow($event)"
@@ -29,5 +24,6 @@
 
 <ng2-smart-table-pager *ngIf="isPagerDisplay"
                        [source]="source"
-                       (changePage)="changePage($event)">
+                       (changePage)="changePage($event)"
+                       (changePerPage)="changePerPage($event)">
 </ng2-smart-table-pager>
