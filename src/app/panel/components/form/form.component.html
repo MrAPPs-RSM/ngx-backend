@@ -7,7 +7,7 @@
     </header>
     <div class="fields-wrapper">
         <div class="row">
-            <div *ngIf="isMultiLangEnabled()">
+            <div [hidden]="!isMultiLangEnabled">
                 <select (change)="onLanguageChange($event.target.value)">
                     <option *ngFor="let language of getLanguages()" [(selected)]=" language == currentLang " value="{{language.isoCode}}">
                         {{language.name}}
