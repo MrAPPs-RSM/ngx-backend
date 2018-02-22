@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="row">
-        <div class="col-sm-12">
-            <app-table></app-table>
+        <div *ngFor="let table of params.tables" [class]="table.class ? table.class : 'col-sm-12'">
+            <app-table [settings]="table"></app-table>
         </div>
     </div>
 </div>

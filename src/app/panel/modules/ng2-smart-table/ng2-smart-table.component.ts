@@ -140,6 +140,7 @@ export class Ng2SmartTableComponent implements OnChanges {
         } else {
             delete this.filters[$event.column];
         }
+
         this.filter.emit(this.filters);
         this.resetAllSelector();
     }

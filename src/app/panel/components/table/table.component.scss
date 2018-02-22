@@ -1,0 +1,42 @@
+@import '../../../../assets/sass/partials/imports';
+
+app-table {
+  > div {
+    &.loading {
+      > header {
+        > .progress {
+          display: block;
+        }
+      }
+      > div.table-wrapper {
+        &:after {
+          display: block;
+        }
+      }
+    }
+    > header {
+      background: #f5f5f5;
+      margin: -#{$cardPaddingY} -#{$cardPaddingY} $cardPaddingY;
+      > h3 {
+        margin: 0;
+        padding: 15px 30px;
+        font-size: 18px;
+        border-bottom: 1px solid $lightGrey;
+      }
+    }
+    > div.table-wrapper {
+      position: relative;
+      &:after {
+        display: none;
+        content: '';
+        position: absolute;
+        top: -#{$cardPaddingY};
+        left: -#{$cardPaddingY};
+        width: calc(100% + (#{$cardPaddingY}*2));
+        height: calc(100% + (#{$cardPaddingY}*2));
+        background: #4c4c4c;
+        opacity: 0.2;
+      }
+    }
+  }
+}

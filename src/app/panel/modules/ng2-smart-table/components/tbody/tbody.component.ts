@@ -36,4 +36,11 @@ export class Ng2SmartTableTbodyComponent implements OnChanges {
         $event.stopPropagation();
         this.multipleSelectRow.emit(row);
     }
+
+    getColspan(): number {
+        let result: number = this.grid.getColumns().length;
+        result += this.isActionAdd ? 1 : 0;
+        result += this.isMultiSelectVisible ? 1 : 0;
+        return result;
+    }
 }

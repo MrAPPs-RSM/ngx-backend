@@ -21,7 +21,6 @@ export class TablePageComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.params = this._route.snapshot.data;
-        console.log(this.params);
         this._pageTitle.set(this._route);
     }
 
