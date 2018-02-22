@@ -6,7 +6,6 @@ import {Subscription} from 'rxjs/Subscription';
 
 @Component({
     selector: 'ng2-smart-table-filter',
-    styleUrls: ['./filter.component.scss'],
     template: `
         <div class="ng2-smart-filter" *ngIf="column.isFilterable" [ngSwitch]="column.getFilterType()">
             <select-filter *ngSwitchCase="'list'"

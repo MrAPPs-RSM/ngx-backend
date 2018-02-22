@@ -27,7 +27,18 @@ export class TableComponent implements OnInit {
             },
             email: {
                 title: 'Email',
-                type: 'email'
+                type: 'email',
+                filter: {
+                    type: 'list',
+                    config: {
+                        selectText: 'Select...',
+                        list: [
+                            { value: 'Glenna Reichert', title: 'Glenna Reichert' },
+                            { value: 'Kurtis Weissnat', title: 'Kurtis Weissnat' },
+                            { value: 'Chelsey Dietrich', title: 'Chelsey Dietrich' },
+                        ],
+                    },
+                },
             },
             image: {
                 title: 'Image',
@@ -111,6 +122,90 @@ export class TableComponent implements OnInit {
             email: "Shanna@melissa.tv",
             link: "http://www.value.com",
             visible: false
+        },
+        {
+            id: 1,
+            name: "Leanne Graham",
+            color: "black",
+            email: "Sincere@april.biz",
+            link: "www.value.com",
+            image: "http://via.placeholder.com/350x150",
+            visible: true
+        },
+        {
+            id: 2,
+            name: "Ervin Howell",
+            color: "red",
+            email: "Shanna@melissa.tv",
+            link: "www.value.com",
+            image: "http://via.placeholder.com/250/red/white",
+            visible: false
+        },
+        {
+            id: 3,
+            name: "Ervin Howell",
+            color: "green",
+            email: "Shanna@melissa.tv",
+            link: "https://www.value.com",
+            visible: true
+        },
+        {
+            id: 4,
+            name: "Ervin Howell",
+            color: "yellow",
+            email: "Shanna@melissa.tv",
+            link: "www.value.com",
+            visible: false
+        },
+        {
+            id: 5,
+            name: "Ervin Howell",
+            color: "grey",
+            email: "Shanna@melissa.tv",
+            link: "http://www.value.com",
+            visible: false
+        },
+        {
+            id: 1,
+            name: "Leanne Graham",
+            color: "black",
+            email: "Sincere@april.biz",
+            link: "www.value.com",
+            image: "http://via.placeholder.com/350x150",
+            visible: true
+        },
+        {
+            id: 2,
+            name: "Ervin Howell",
+            color: "red",
+            email: "Shanna@melissa.tv",
+            link: "www.value.com",
+            image: "http://via.placeholder.com/250/red/white",
+            visible: false
+        },
+        {
+            id: 3,
+            name: "Ervin Howell",
+            color: "green",
+            email: "Shanna@melissa.tv",
+            link: "https://www.value.com",
+            visible: true
+        },
+        {
+            id: 4,
+            name: "Ervin Howell",
+            color: "yellow",
+            email: "Shanna@melissa.tv",
+            link: "www.value.com",
+            visible: false
+        },
+        {
+            id: 5,
+            name: "Ervin Howell",
+            color: "grey",
+            email: "Shanna@melissa.tv",
+            link: "http://www.value.com",
+            visible: false
         }
     ];
 
@@ -135,4 +230,18 @@ export class TableComponent implements OnInit {
         console.log(event);
     }
 
+    onFilter(event: any) {
+        console.log('ON filter');
+        console.log(event);
+    }
+
+    onPagination(event: {page: number, perPage: number}) {
+        console.log('ON pagination');
+        console.log(event);
+    }
+
+    onSort(event: {column: string, direction: string}) {
+        console.log('ON sort');
+        console.log(event);
+    }
 }

@@ -6,8 +6,8 @@
            [source]="source"
            (create)="create.emit()"
            (selectAllRows)="onSelectAllRows($event)"
-           (sort)="sort($event)"
-           (filter)="filter($event)">
+           (sort)="onSort($event)"
+           (filter)="onFilter($event)">
     </thead>
 
     <tbody ng2-st-tbody [grid]="grid"
@@ -22,6 +22,5 @@
 
 <ng2-smart-table-pager *ngIf="isPagerDisplay"
                        [source]="source"
-                       (changePage)="changePage($event)"
-                       (changePerPage)="changePerPage($event)">
+                       (pagination)="onPagination($event)">
 </ng2-smart-table-pager>

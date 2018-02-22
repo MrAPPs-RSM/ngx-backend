@@ -16,8 +16,7 @@ export class PagerComponent implements OnChanges {
 
     @Input() source: DataSource;
 
-    @Output() changePage = new EventEmitter<any>();
-    @Output() changePerPage = new EventEmitter<any>();
+    @Output() pagination = new EventEmitter<any>();
 
     protected pages: Array<any>;
     protected page: number;
@@ -73,7 +72,7 @@ export class PagerComponent implements OnChanges {
     paginate(page: number): boolean {
         // this.source.setPage(page);
         this.page = page;
-        this.changePage.emit({page});
+        this.pagination.emit({page: this.page, perPage: this.perPage});
         return false;
     }
 
@@ -125,9 +124,10 @@ export class PagerComponent implements OnChanges {
     }
 
     perPageChange(perPage: number): boolean {
+        this.page = 1;
         this.perPage = perPage;
         // this.source.setPaging(1, this.perPage);
-        this.changePerPage.emit({perPage});
+        this.pagination.emit({page: 1, perPage: perPage});
         return false;
     }
 }

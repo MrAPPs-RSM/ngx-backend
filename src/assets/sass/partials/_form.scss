@@ -70,6 +70,74 @@
   }
 }
 
+ng-select.ng-select.bottom {
+  &.opened, &.focused {
+    > div.ng-control {
+      background-color: #f5f5f5;
+      @include box-shadow(none);
+      border-radius: $borderRadius;
+      border: 1px solid $lightGrey;
+    }
+  }
+  > div.ng-control {
+    height: 45px;
+    border-radius: $borderRadius;
+    border: 1px solid $lightGrey;
+    > span.ng-clear-zone {
+      &:hover {
+        > span {
+          color: $sidebar;
+        }
+      }
+    }
+
+    > div.ng-value-container {
+      > div.ng-value {
+        overflow: hidden;
+        border-radius: $borderRadius;
+        border-color: $lightGrey;
+        font-size: 13px;
+        padding: 2px 5px;
+        > span.ng-value-icon.left {
+          border: none;
+          padding: 0;
+          &:hover {
+            background-color: #f5f5f5;
+          }
+        }
+        > span.ng-value-label {
+          padding: 0;
+        }
+      }
+    }
+  }
+
+  &[ng-reflect-multiple="true"] {
+    > div.ng-control {
+      > div.ng-value-container {
+        > div.ng-value {
+          background-color: #f5f5f5;
+        }
+      }
+    }
+  }
+  > div.ng-select-dropdown-outer {
+    margin-top: 0;
+    border-radius: $borderRadius;
+    border: 1px solid $lightGrey;
+    > ng-select-virtual-scroll.ng-select-dropdown {
+      > div {
+        > div.ng-option {
+          border-radius: $borderRadius;
+          &.marked {
+            background-color: #f5f5f5;
+          }
+        }
+      }
+    }
+  }
+}
+
 label.checkbox {
   padding-right: 0;
   padding-left: 0;

@@ -5,6 +5,7 @@ import {DataSource} from './lib/data-source/data-source';
 import {Row} from './lib/data-set/row';
 import {deepExtend} from './lib/helpers';
 import {LocalDataSource} from './lib/data-source/local/local.data-source';
+import {isNullOrUndefined} from "util";
 
 @Component({
     selector: 'ng2-smart-table',
@@ -20,8 +21,11 @@ export class Ng2SmartTableComponent implements OnChanges {
     @Output() userRowSelect = new EventEmitter<any>();
     @Output() rowHover: EventEmitter<any> = new EventEmitter<any>();
 
-    @Output() create = new EventEmitter<any>();
+    @Output() create: EventEmitter<any> = new EventEmitter<any>();
     @Output() action: EventEmitter<any> = new EventEmitter<any>();
+    @Output() sort: EventEmitter<any> = new EventEmitter<any>();
+    @Output() filter: EventEmitter<any> = new EventEmitter<any>();
+    @Output() paginate: EventEmitter<any> = new EventEmitter<any>();
 
     tableClass: string;
     tableId: string;
@@ -29,6 +33,10 @@ export class Ng2SmartTableComponent implements OnChanges {
     isHideSubHeader: boolean;
     isPagerDisplay: boolean;
     rowClassFunction: Function;
+
+    // Objects to emit
+    pagination: any = {};
+    filters: any = {};
 
     grid: Grid;
     defaultSettings: Object = {
@@ -116,27 +124,23 @@ export class Ng2SmartTableComponent implements OnChanges {
         return deepExtend({}, this.defaultSettings, this.settings);
     }
 
-    changePage($event: any) {
-        console.log('[CHANGE PAGE EVENT]');
-        console.log($event);
+    onPagination($event: {page: number, perPage: number}) {
+        this.paginate.emit($event);
         this.resetAllSelector();
     }
 
-    changePerPage($event: any) {
-        console.log('[CHANGE PER PAGE EVENT]');
-        console.log($event);
+    onSort($event: {column: string, direction: string}) {
+        this.sort.emit($event);
         this.resetAllSelector();
     }
 
-    sort($event: any) {
-        console.log('[SORT EVENT]');
-        console.log($event);
-        this.resetAllSelector();
-    }
-
-    filter($event: any) {
-        console.log('[FILTER EVENT]');
-        console.log($event);
+    onFilter($event: {column: string, value: any}) {
+        if ($event.value !== '' && !isNullOrUndefined($event.value)) {
+            this.filters[$event.column] = $event.value;
+        } else {
+            delete this.filters[$event.column];
+        }
+        this.filter.emit(this.filters);
         this.resetAllSelector();
     }
 

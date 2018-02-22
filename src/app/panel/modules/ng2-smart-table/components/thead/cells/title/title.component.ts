@@ -46,13 +46,13 @@ export class TitleComponent implements OnChanges {
     _sort(event: any) {
         event.preventDefault();
         this.changeSortDirection();
-        /*this.source.setSort([
+        this.source.setSort([
             {
                 field: this.column.id,
                 direction: this.currentDirection,
                 compare: this.column.getCompareFunction(),
             },
-        ]);*/
+        ]);
         this.sort.emit({column: this.column.id, direction: this.currentDirection});
     }
 
