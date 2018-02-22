@@ -71,12 +71,21 @@
                 }
               }
             }
+            > label.checkbox {
+              > span {
+                margin-top: -5px;
+                padding-left: 28px;
+              }
+            }
           }
         }
       }
 
       > tbody {
         > tr {
+          &.selected {
+            background-color: #f2f2f2;
+          }
           &:hover {
             background-color: #f5f5f5;
           }
@@ -95,6 +104,12 @@
             vertical-align: middle;
             text-align: center;
             white-space: nowrap;
+            > label.checkbox {
+              > span {
+                margin-top: -5px;
+                padding-left: 28px;
+              }
+            }
           }
         }
       }

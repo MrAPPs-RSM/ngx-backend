@@ -1,6 +1,6 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
 import {Row} from '../../../lib/data-set/row';
-import {Grid} from "../../../lib/grid";
+import {Grid} from '../../../lib/grid';
 
 @Component({
     selector: 'ng2-st-tbody-actions',

@@ -64,10 +64,10 @@
   }
 
   &.btn-danger {
-    background-color: $error;
+    background-color: $danger;
     color: #FFF;
     &:hover, &:active, &:focus {
-      background-color: darken($error, 20);
+      background-color: darken($danger, 20);
     }
   }
 
@@ -127,13 +127,13 @@
       }
     }
     &.btn-danger {
-      border: 5px solid $error;
-      border-bottom-color: lighten($error, 40);
-      border-left-color: lighten($error, 40);
+      border: 5px solid $danger;
+      border-bottom-color: lighten($danger, 40);
+      border-left-color: lighten($danger, 40);
       &:hover {
-        border: 5px solid $error;
-        border-bottom-color: lighten($error, 40);
-        border-left-color: lighten($error, 40);
+        border: 5px solid $danger;
+        border-bottom-color: lighten($danger, 40);
+        border-left-color: lighten($danger, 40);
       }
     }
     &.btn-warning {

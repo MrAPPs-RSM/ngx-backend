@@ -1,4 +1,4 @@
-import {Component, Input, Output, SimpleChange, EventEmitter, OnChanges, OnInit} from '@angular/core';
+import {Component, Input, Output, SimpleChange, EventEmitter, OnChanges} from '@angular/core';
 
 import {Grid} from './lib/grid';
 import {DataSource} from './lib/data-source/data-source';
@@ -41,8 +41,7 @@ export class Ng2SmartTableComponent implements OnChanges {
         pager: {
             display: true,
             perPage: 5,
-        },
-        rowClassFunction: () => ''
+        }
     };
 
     isAllSelected: boolean = false;
@@ -68,14 +67,6 @@ export class Ng2SmartTableComponent implements OnChanges {
         this.rowClassFunction = this.grid.getSetting('rowClassFunction');
     }
 
-    editRowSelect(row: Row) {
-        if (this.grid.getSetting('selectMode') === 'multi') {
-            this.onMultipleSelectRow(row);
-        } else {
-            this.onSelectRow(row);
-        }
-    }
-
     onUserSelectRow(row: Row) {
         if (this.grid.getSetting('selectMode') !== 'multi') {
             this.grid.selectRow(row);
@@ -95,20 +86,14 @@ export class Ng2SmartTableComponent implements OnChanges {
     }
 
     onSelectAllRows($event: any) {
+        $event.preventDefault();
+        $event.stopPropagation();
+
         this.isAllSelected = !this.isAllSelected;
         this.grid.selectAllRows(this.isAllSelected);
 
         this.emitUserSelectRow(null);
         this.emitSelectRow(null);
-    }
-
-    onSelectRow(row: Row) {
-        this.grid.selectRow(row);
-        this.emitSelectRow(row);
-    }
-
-    onMultipleSelectRow(row: Row) {
-        this.emitSelectRow(row);
     }
 
     initGrid() {
@@ -161,11 +146,9 @@ export class Ng2SmartTableComponent implements OnChanges {
 
     private emitUserSelectRow(row: Row) {
         const selectedRows = this.grid.getSelectedRows();
-
         this.userRowSelect.emit({
-            data: row ? row.getData() : null,
-            isSelected: row ? row.getIsSelected() : null,
-            source: this.source,
+            // data: row ? row.getData() : null,
+            // isSelected: row ? row.getIsSelected() : null,
             selected: selectedRows && selectedRows.length ? selectedRows.map((r: Row) => r.getData()) : [],
         });
     }
@@ -174,7 +157,6 @@ export class Ng2SmartTableComponent implements OnChanges {
         this.rowSelect.emit({
             data: row ? row.getData() : null,
             isSelected: row ? row.getIsSelected() : null,
-            source: this.source,
         });
     }
 

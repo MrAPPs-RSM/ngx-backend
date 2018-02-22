@@ -2,6 +2,7 @@ import {Component, Input, Output, EventEmitter, OnChanges} from '@angular/core';
 
 import {Grid} from '../../lib/grid';
 import {DataSource} from '../../lib/data-source/data-source';
+import {Row} from "../../lib/data-set/row";
 
 @Component({
     selector: '[ng2-st-tbody]',
@@ -12,11 +13,9 @@ export class Ng2SmartTableTbodyComponent implements OnChanges {
 
     @Input() grid: Grid;
     @Input() source: DataSource;
-    @Input() rowClassFunction: Function;
 
     @Output() action = new EventEmitter<any>();
     @Output() userSelectRow = new EventEmitter<any>();
-    @Output() editRowSelect = new EventEmitter<any>();
     @Output() multipleSelectRow = new EventEmitter<any>();
     @Output() rowHover = new EventEmitter<any>();
 
@@ -30,5 +29,11 @@ export class Ng2SmartTableTbodyComponent implements OnChanges {
         this.mode = this.grid.getSetting('mode');
         this.isActionAdd = this.grid.getSetting('actions.add');
         this.noDataMessage = this.grid.getSetting('noDataMessage');
+    }
+
+    onMultipleSelectRow($event: any, row: Row): void {
+        $event.preventDefault();
+        $event.stopPropagation();
+        this.multipleSelectRow.emit(row);
     }
 }

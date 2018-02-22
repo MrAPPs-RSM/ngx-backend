@@ -10,19 +10,33 @@ export class TableComponent implements OnInit {
     public settings: any = {
         columns: {
             id: {
-                title: 'ID'
+                title: 'ID',
+                type: 'number'
             },
             name: {
-                title: 'Full Name'
+                title: 'Full Name',
+                type: 'string'
             },
-            username: {
-                title: 'User Name'
+            color: {
+                title: 'Color',
+                type: 'color'
+            },
+            link: {
+                title: 'Link',
+                type: 'url'
             },
             email: {
-                title: 'Email'
+                title: 'Email',
+                type: 'email'
+            },
+            image: {
+                title: 'Image',
+                type: 'image',
+                filter: false
             },
             visible: {
                 title: 'Visible',
+                type: 'boolean',
                 filter: {
                     type: 'checkbox',
                     config: {
@@ -59,86 +73,44 @@ export class TableComponent implements OnInit {
         {
             id: 1,
             name: "Leanne Graham",
-            username: "Bret",
+            color: "black",
             email: "Sincere@april.biz",
+            link: "www.value.com",
+            image: "http://via.placeholder.com/350x150",
             visible: true
         },
         {
             id: 2,
             name: "Ervin Howell",
-            username: "Antonette",
+            color: "red",
             email: "Shanna@melissa.tv",
+            link: "www.value.com",
+            image: "http://via.placeholder.com/250/red/white",
             visible: false
         },
         {
             id: 3,
             name: "Ervin Howell",
-            username: "Antonette",
+            color: "green",
             email: "Shanna@melissa.tv",
-            visible: false
+            link: "https://www.value.com",
+            visible: true
         },
         {
             id: 4,
             name: "Ervin Howell",
-            username: "Antonette",
+            color: "yellow",
             email: "Shanna@melissa.tv",
+            link: "www.value.com",
             visible: false
         },
         {
             id: 5,
             name: "Ervin Howell",
-            username: "Antonette",
+            color: "grey",
             email: "Shanna@melissa.tv",
+            link: "http://www.value.com",
             visible: false
-        },
-        {
-            id: 6,
-            name: "Nicholas DuBuque",
-            username: "Nicholas.Stanton",
-            email: "Rey.Padberg@rosamond.biz",
-            visible: true
-        },
-        {
-            id: 1,
-            name: "Leanne Graham",
-            username: "Bret",
-            email: "Sincere@april.biz",
-            visible: true
-        },
-        {
-            id: 2,
-            name: "Ervin Howell",
-            username: "Antonette",
-            email: "Shanna@melissa.tv",
-            visible: false
-        },
-        {
-            id: 3,
-            name: "Ervin Howell",
-            username: "Antonette",
-            email: "Shanna@melissa.tv",
-            visible: false
-        },
-        {
-            id: 4,
-            name: "Ervin Howell",
-            username: "Antonette",
-            email: "Shanna@melissa.tv",
-            visible: false
-        },
-        {
-            id: 5,
-            name: "Ervin Howell",
-            username: "Antonette",
-            email: "Shanna@melissa.tv",
-            visible: false
-        },
-        {
-            id: 6,
-            name: "Nicholas DuBuque",
-            username: "Nicholas.Stanton",
-            email: "Rey.Padberg@rosamond.biz",
-            visible: true
         }
     ];
 
@@ -155,6 +127,11 @@ export class TableComponent implements OnInit {
 
     onCreate(event: any) {
         console.log('ON Create');
+        console.log(event);
+    }
+
+    onRowSelect(event: any) {
+        console.log('ON Select row(s)');
         console.log(event);
     }
 

@@ -22,4 +22,25 @@ body {
   .container {
     max-width: 100%;
   }
+
+  h1, h2, h3, h4, h5, h6, a, i, p, span, small {
+    &.primary {
+      color: $primary;
+    }
+    &.success {
+      color: $success;;
+    }
+    &.danger {
+      color: $danger;
+    }
+    &.info {
+      color: $info;
+    }
+    &.warning {
+      color: $warning;
+    }
+    &.default {
+      color: $default;
+    }
+  }
 }

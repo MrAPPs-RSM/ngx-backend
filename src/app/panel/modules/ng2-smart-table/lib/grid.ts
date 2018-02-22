@@ -1,16 +1,13 @@
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
-import {EventEmitter} from '@angular/core';
 
-import {Deferred, getDeepFromObject} from './helpers';
+import {getDeepFromObject} from './helpers';
 import {Column} from './data-set/column';
 import {Row} from './data-set/row';
 import {DataSet} from './data-set/data-set';
 import {DataSource} from './data-source/data-source';
 
 export class Grid {
-
-    createFormShown: boolean = false;
 
     source: DataSource;
     settings: any;
@@ -32,7 +29,8 @@ export class Grid {
     }
 
     isActionsVisible(): boolean {
-        return this.getSetting('actions.add') || this.getSetting('actions.edit') || this.getSetting('actions.delete') || this.getSetting('actions.custom').length;
+        return this.getSetting('actions.add')
+            || this.getSetting('actions.list').length;
     }
 
     isMultiSelectVisible(): boolean {
@@ -91,86 +89,6 @@ export class Grid {
         return this.onSelectRowSource.asObservable();
     }
 
-    edit(row: Row) {
-        row.isInEditing = true;
-    }
-
-    create(row: Row, confirmEmitter: EventEmitter<any>) {
-
-        const deferred = new Deferred();
-        deferred.promise.then((newData) => {
-            newData = newData ? newData : row.getNewData();
-            if (deferred.resolve.skipAdd) {
-                this.createFormShown = false;
-            } else {
-                this.source.prepend(newData).then(() => {
-                    this.createFormShown = false;
-                    this.dataSet.createNewRow();
-                });
-            }
-        }).catch((err) => {
-            // doing nothing
-        });
-
-        if (this.getSetting('add.confirmCreate')) {
-            confirmEmitter.emit({
-                newData: row.getNewData(),
-                source: this.source,
-                confirm: deferred,
-            });
-        } else {
-            deferred.resolve();
-        }
-    }
-
-    save(row: Row, confirmEmitter: EventEmitter<any>) {
-
-        const deferred = new Deferred();
-        deferred.promise.then((newData) => {
-            newData = newData ? newData : row.getNewData();
-            if (deferred.resolve.skipEdit) {
-                row.isInEditing = false;
-            } else {
-                this.source.update(row.getData(), newData).then(() => {
-                    row.isInEditing = false;
-                });
-            }
-        }).catch((err) => {
-            // doing nothing
-        });
-
-        if (this.getSetting('edit.confirmSave')) {
-            confirmEmitter.emit({
-                data: row.getData(),
-                newData: row.getNewData(),
-                source: this.source,
-                confirm: deferred,
-            });
-        } else {
-            deferred.resolve();
-        }
-    }
-
-    delete(row: Row, confirmEmitter: EventEmitter<any>) {
-
-        const deferred = new Deferred();
-        deferred.promise.then(() => {
-            this.source.remove(row.getData());
-        }).catch((err) => {
-            // doing nothing
-        });
-
-        if (this.getSetting('delete.confirmDelete')) {
-            confirmEmitter.emit({
-                data: row.getData(),
-                source: this.source,
-                confirm: deferred,
-            });
-        } else {
-            deferred.resolve();
-        }
-    }
-
     processDataChange(changes: any) {
         if (this.shouldProcessChange(changes)) {
             this.dataSet.setData(changes['elements']);
@@ -196,7 +114,6 @@ export class Grid {
 
     // TODO: move to selectable? Separate directive
     determineRowToSelect(changes: any): Row {
-
         if (['load', 'page', 'filter', 'sort', 'refresh'].indexOf(changes['action']) !== -1) {
             return this.dataSet.select();
         }

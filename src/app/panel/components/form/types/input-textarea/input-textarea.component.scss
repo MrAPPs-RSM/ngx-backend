@@ -13,7 +13,7 @@ app-input-textarea {
     &.has-error {
       > editor {
         > div.mce-tinymce {
-          border-color: $error;
+          border-color: $danger;
         }
       }
     }

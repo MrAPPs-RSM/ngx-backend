@@ -12,10 +12,8 @@
 
     <tbody ng2-st-tbody [grid]="grid"
            [source]="source"
-           [rowClassFunction]="rowClassFunction"
            (action)="action.emit($event)"
            (userSelectRow)="onUserSelectRow($event)"
-           (editRowSelect)="editRowSelect($event)"
            (multipleSelectRow)="multipleSelectRow($event)"
            (rowHover)="onRowHover($event)">
     </tbody>

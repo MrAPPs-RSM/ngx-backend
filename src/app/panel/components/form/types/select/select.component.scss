@@ -73,14 +73,14 @@ app-select {
 
       &.has-error {
         > label {
-          color: $error;
+          color: $danger;
           + span {
-            color: $error;
+            color: $danger;
           }
         }
         > ng-select.ng-select {
           > div.ng-control {
-            border-color: $error;
+            border-color: $danger;
           }
         }
       }

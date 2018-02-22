@@ -37,20 +37,20 @@
 
   &.has-error {
     > label {
-      color: $error;
+      color: $danger;
       + input {
-        border-color: $error;
+        border-color: $danger;
         &:focus {
-          border-color: $error;
+          border-color: $danger;
         }
       }
 
       /* Date picker */
       + div.ngui-datetime-picker-wrapper {
         > input {
-          border-color: $error;
+          border-color: $danger;
           &:focus {
-            border-color: $error;
+            border-color: $danger;
           }
         }
       }
@@ -62,7 +62,7 @@
     font-size: 13px;
 
     &.danger {
-      color: $error;
+      color: $danger;
     }
     &.success {
       color: $success;
