@@ -39,25 +39,9 @@ export class PagerComponent implements OnChanges {
                     this.source.setPage(--this.page);
                 }
 
-                this.processPageChange(dataChanges);
                 this.initPages();
                 this.initPerPage();
             });
-        }
-    }
-
-    /**
-     * We change the page here depending on the action performed against data source
-     * if a new element was added to the end of the table - then change the page to the last
-     * if a new element was added to the beginning of the table - then to the first page
-     * @param changes
-     */
-    processPageChange(changes: any) {
-        if (changes['action'] === 'prepend') {
-            this.source.setPage(1);
-        }
-        if (changes['action'] === 'append') {
-            this.source.setPage(this.getLast());
         }
     }
 

@@ -20,25 +20,8 @@ export class Grid {
         this.setSource(source);
     }
 
-    showActionColumn(position: string): boolean {
-        return this.isCurrentActionsPosition(position) && this.isActionsVisible();
-    }
-
-    isCurrentActionsPosition(position: string): boolean {
-        return position === this.getSetting('actions.position');
-    }
-
-    isActionsVisible(): boolean {
-        return this.getSetting('actions.add')
-            || this.getSetting('actions.list').length;
-    }
-
     isMultiSelectVisible(): boolean {
         return this.getSetting('selectMode') === 'multi';
-    }
-
-    getNewRow(): Row {
-        return this.dataSet.newRow;
     }
 
     setSettings(settings: Object) {
@@ -50,12 +33,12 @@ export class Grid {
         }
     }
 
-    getDataSet(): DataSet {
-        return this.dataSet;
-    }
-
     setSource(source: DataSource) {
-        this.source = this.prepareSource(source);
+        if (this.source) {
+            this.source = source;
+        } else {
+            this.source = this.prepareSource(source);
+        }
 
         this.source.onChanged().subscribe((changes) => this.processDataChange(changes));
 
@@ -92,54 +75,17 @@ export class Grid {
     processDataChange(changes: any) {
         if (this.shouldProcessChange(changes)) {
             this.dataSet.setData(changes['elements']);
-            if (this.getSetting('selectMode') !== 'multi') {
-                const row = this.determineRowToSelect(changes);
-
-                if (row) {
-                    this.onSelectRowSource.next(row);
-                }
-            }
         }
     }
 
     shouldProcessChange(changes: any): boolean {
         if (['filter', 'sort', 'page', 'remove', 'refresh', 'load', 'paging'].indexOf(changes['action']) !== -1) {
             return true;
-        } else if (['prepend', 'append'].indexOf(changes['action']) !== -1 && !this.getSetting('pager.display')) {
+        } else if (!this.getSetting('pager.display')) {
             return true;
         }
 
         return false;
-    }
-
-    // TODO: move to selectable? Separate directive
-    determineRowToSelect(changes: any): Row {
-        if (['load', 'page', 'filter', 'sort', 'refresh'].indexOf(changes['action']) !== -1) {
-            return this.dataSet.select();
-        }
-        if (changes['action'] === 'remove') {
-            if (changes['elements'].length === 0) {
-                // we have to store which one to select as the data will be reloaded
-                this.dataSet.willSelectLastRow();
-            } else {
-                return this.dataSet.selectPreviousRow();
-            }
-        }
-        if (changes['action'] === 'append') {
-            // we have to store which one to select as the data will be reloaded
-            this.dataSet.willSelectLastRow();
-        }
-        if (changes['action'] === 'add') {
-            return this.dataSet.selectFirstRow();
-        }
-        if (changes['action'] === 'update') {
-            return this.dataSet.selectFirstRow();
-        }
-        if (changes['action'] === 'prepend') {
-            // we have to store which one to select as the data will be reloaded
-            this.dataSet.willSelectFirstRow();
-        }
-        return null;
     }
 
     prepareSource(source: any): DataSource {
@@ -176,13 +122,4 @@ export class Grid {
         this.dataSet.getRows()
             .forEach(r => r.isSelected = status);
     }
-
-    getFirstRow(): Row {
-        return this.dataSet.getFirstRow();
-    }
-
-    getLastRow(): Row {
-        return this.dataSet.getLastRow();
-    }
-
 }

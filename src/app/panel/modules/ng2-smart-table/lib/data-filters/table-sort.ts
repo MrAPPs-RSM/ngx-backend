@@ -1,4 +1,4 @@
 export interface TableSort {
-    column: string;
+    field: string;
     direction: string;
 }

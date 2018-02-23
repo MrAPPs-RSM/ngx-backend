@@ -5,7 +5,11 @@ import {DataSource} from './lib/data-source/data-source';
 import {Row} from './lib/data-set/row';
 import {deepExtend} from './lib/helpers';
 import {LocalDataSource} from './lib/data-source/local/local.data-source';
-import {isNullOrUndefined} from "util";
+import {isNullOrUndefined} from 'util';
+import {TablePagination} from './lib/data-filters/table-pagination';
+import {TableSort} from './lib/data-filters/table-sort';
+import {TableFilter} from './lib/data-filters/table-filter';
+import {TableActiveFilters} from './lib/data-filters/table-active-filters';
 
 @Component({
     selector: 'ng2-smart-table',
@@ -14,8 +18,10 @@ import {isNullOrUndefined} from "util";
 })
 export class Ng2SmartTableComponent implements OnChanges {
 
+    @Input() count: number;
     @Input() source: any;
     @Input() settings: Object = {};
+    @Input() activeFilters: TableActiveFilters;
 
     @Output() rowSelect = new EventEmitter<any>();
     @Output() userRowSelect = new EventEmitter<any>();
@@ -34,8 +40,7 @@ export class Ng2SmartTableComponent implements OnChanges {
     isPagerDisplay: boolean;
     rowClassFunction: Function;
 
-    // Objects to emit
-    pagination: any = {};
+    // Object to emit
     filters: any = {};
 
     grid: Grid;
@@ -111,30 +116,30 @@ export class Ng2SmartTableComponent implements OnChanges {
     }
 
     prepareSource(): DataSource {
-        if (this.source instanceof DataSource) {
-            return this.source;
-        } else if (this.source instanceof Array) {
-            return new LocalDataSource(this.source);
+        const source = new LocalDataSource(this.source);
+        source.setCount(this.count);
+        if (this.activeFilters) {
+            source.setSort(this.activeFilters.sort);
+            source.setPaging(this.activeFilters.pagination.page, this.activeFilters.pagination.perPage);
         }
-
-        return new LocalDataSource();
+        return source;
     }
 
     prepareSettings(): Object {
         return deepExtend({}, this.defaultSettings, this.settings);
     }
 
-    onPagination($event: {page: number, perPage: number}) {
+    onPagination($event: TablePagination) {
         this.paginate.emit($event);
         this.resetAllSelector();
     }
 
-    onSort($event: {column: string, direction: string}) {
+    onSort($event: TableSort) {
         this.sort.emit($event);
         this.resetAllSelector();
     }
 
-    onFilter($event: {column: string, value: any}) {
+    onFilter($event: TableFilter) {
         if ($event.value !== '' && !isNullOrUndefined($event.value)) {
             this.filters[$event.column] = $event.value;
         } else {

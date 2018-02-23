@@ -1,5 +1,5 @@
 import {TableAction} from './table-action';
-import {TableColumn} from './table-column';
+import {TableColumns} from './table-column';
 
 export interface TableSettings {
     title?: string;
@@ -7,7 +7,9 @@ export interface TableSettings {
         endpoint: string;
         sortEndpoint?: string;
     };
-    enableDrag?: boolean;
+    drag?: {
+        sortField?: string;
+    };
     noDataLabel?: string;
     messages?: any;
     actions?: {
@@ -15,7 +17,7 @@ export interface TableSettings {
         add?: TableAction,
         list?: TableAction[];
     };
-    columns: TableColumn[];
+    columns: TableColumns;
     pager?: {
         perPage?: number;
     };

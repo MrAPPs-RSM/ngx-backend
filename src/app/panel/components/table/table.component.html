@@ -7,13 +7,16 @@
     </header>
 
     <div class="table-wrapper">
-        <ng2-smart-table [settings]="settings" [source]="data"
+        <ng2-smart-table [settings]="settings"
+                         [source]="data"
+                         [count]="count"
                          (action)="onAction($event)"
                          (create)="onCreate($event)"
                          (userRowSelect)="onRowSelect($event)"
                          (filter)="onFilter($event)"
                          (paginate)="onPagination($event)"
                          (sort)="onSort($event)"
+                         [activeFilters]="activeFilters"
         ></ng2-smart-table>
     </div>
 </div>

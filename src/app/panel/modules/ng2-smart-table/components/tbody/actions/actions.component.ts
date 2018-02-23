@@ -5,7 +5,6 @@ import {Grid} from '../../../lib/grid';
 @Component({
     selector: 'ng2-st-tbody-actions',
     templateUrl: './actions.component.html',
-    styleUrls: ['./actions.component.scss']
 })
 export class ActionsComponent implements OnChanges {
 

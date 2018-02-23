@@ -33,7 +33,6 @@ export class TitleComponent implements OnChanges {
             }
             this.dataChangedSub = this.source.onChanged().subscribe((dataChanges) => {
                 const sortConf = this.source.getSort();
-
                 if (sortConf.length > 0 && sortConf[0]['field'] === this.column.id) {
                     this.currentDirection = sortConf[0]['direction'];
                 } else {
@@ -53,7 +52,7 @@ export class TitleComponent implements OnChanges {
                 compare: this.column.getCompareFunction(),
             },
         ]);
-        this.sort.emit({column: this.column.id, direction: this.currentDirection});
+        this.sort.emit({field: this.column.id, direction: this.currentDirection});
     }
 
     changeSortDirection(): string {
