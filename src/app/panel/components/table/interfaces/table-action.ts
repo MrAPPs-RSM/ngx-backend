@@ -5,5 +5,8 @@ export interface TableAction {
         path?: string; // redirect to
         titleField?: string; // to avoid only id in page title
         endpoint?: string; // api call
+        method?: string; // post | patch | put | delete
+        body?: any;
+        refreshAfter?: boolean;
     };
 }

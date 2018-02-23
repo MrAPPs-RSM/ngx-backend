@@ -9,6 +9,8 @@ import {TableActiveFilters} from '../../modules/ng2-smart-table/lib/data-filters
 import {HttpErrorResponse} from '@angular/common/http';
 import {TableAction} from './interfaces/table-action';
 import {Router} from '@angular/router';
+import {ToastrService} from 'ngx-toastr';
+import {isNullOrUndefined} from "util";
 
 @Component({
     selector: 'app-table',
@@ -40,7 +42,8 @@ export class TableComponent implements OnInit, OnDestroy {
     private pagination: TablePagination;
 
     constructor(private _apiService: ApiService,
-                private _router: Router) {
+                private _router: Router,
+                private _toast: ToastrService) {
     }
 
     ngOnInit() {
@@ -111,7 +114,7 @@ export class TableComponent implements OnInit, OnDestroy {
         }
 
         /** Filters */
-        if (filter) {
+        if (!isNullOrUndefined(filter)) {
             Object.keys(filter).forEach((key) => {
                 const condition = {};
                 if (this.settings.columns[key].type === 'boolean') {
@@ -123,6 +126,8 @@ export class TableComponent implements OnInit, OnDestroy {
                 }
                 params.where.and.push(condition);
             });
+
+            params.skip = 0; // reset pagination if filters
         }
 
         return {
@@ -132,7 +137,7 @@ export class TableComponent implements OnInit, OnDestroy {
 
     private composeCountParams(filter?: TableFilter): Object {
         const params = {
-            filter: {
+            where: {
                 and: []
             }
         };
@@ -148,11 +153,11 @@ export class TableComponent implements OnInit, OnDestroy {
                         like: '%' + filter[key] + '%'
                     };
                 }
-                params.filter.and.push(condition);
+                params.where.and.push(condition);
             });
         }
 
-        params.filter = JSON.stringify(params.filter);
+        params.where = JSON.stringify(params.where);
 
         return params;
     }
@@ -171,6 +176,40 @@ export class TableComponent implements OnInit, OnDestroy {
                 }
                 this._router.navigate(['panel/' + path]);
             }
+        }
+
+        if (action.config.endpoint) {
+            let endpoint = action.config.endpoint;
+            if (endpoint.indexOf(':id') !== -1) {
+                endpoint = endpoint.replace(':id', data.id);
+            }
+
+            if (action.config.method) {
+                switch (action.config.method) {
+                    case 'post': {
+                        if (action.config.body) {} // TODO: future support if necessary
+                    } break;
+                    case 'put': {
+                        if (action.config.body) {} // TODO: future support if necessary
+                    } break;
+                    case 'patch': {
+                        if (action.config.body) {} // TODO: future support if necessary
+                    } break;
+                    case 'delete': {
+                        this._apiService.delete(endpoint)
+                            .then((response) => {
+                                this._toast.success('message', 'Success');
+                            })
+                            .catch((response: HttpErrorResponse) => {
+                                this._toast.error(response.error);
+                            });
+                    } break;
+                }
+            }
+        }
+
+        if (action.config.refreshAfter !== false) {
+            this.getData();
         }
     }
 
