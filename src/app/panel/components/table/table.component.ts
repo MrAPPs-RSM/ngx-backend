@@ -10,7 +10,8 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {TableAction} from './interfaces/table-action';
 import {Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
-import {isNullOrUndefined} from "util";
+import {isNullOrUndefined} from 'util';
+import * as _ from 'lodash';
 
 @Component({
     selector: 'app-table',
@@ -114,7 +115,7 @@ export class TableComponent implements OnInit, OnDestroy {
         }
 
         /** Filters */
-        if (!isNullOrUndefined(filter)) {
+        if (!_.isEmpty(filter) && !isNullOrUndefined(filter)) {
             Object.keys(filter).forEach((key) => {
                 const condition = {};
                 if (this.settings.columns[key].type === 'boolean') {
