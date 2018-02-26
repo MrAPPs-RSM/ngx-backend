@@ -19,7 +19,7 @@ import * as _ from 'lodash';
     styleUrls: ['./table.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class TableComponent implements OnInit, OnDestroy {
+export class TableComponent implements OnInit {
 
     @Input() settings: TableSettings;
 
@@ -54,13 +54,6 @@ export class TableComponent implements OnInit, OnDestroy {
             perPage: this.settings.pager && this.settings.pager.perPage ? this.settings.pager.perPage : this.DEFAULTS.pager.perPage,
         };
         this.getData();
-    }
-
-    ngOnDestroy() {
-        // Reset everything
-        this.activeFilters = {};
-        this.data = [];
-        this.count = 0;
     }
 
     private getData(): void {
@@ -158,9 +151,9 @@ export class TableComponent implements OnInit, OnDestroy {
             });
         }
 
-        params.where = JSON.stringify(params.where);
-
-        return params;
+        return {
+            where: JSON.stringify(params.where)
+        };
     }
 
     private parseAction(action: TableAction, data?: any): void {
