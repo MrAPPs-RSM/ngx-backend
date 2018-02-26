@@ -10,7 +10,9 @@
            (filter)="onFilter($event)">
     </thead>
 
-    <tbody ng2-st-tbody [grid]="grid"
+    <tbody ng2-st-tbody
+           *ngIf="drag"
+           [grid]="grid"
            [source]="source"
            (action)="action.emit($event)"
            (userSelectRow)="onUserSelectRow($event)"
@@ -19,6 +21,16 @@
            [dragula]="drag"
            [dragulaModel]="grid.getRows()"
            [dragulaOptions]="{}">
+    </tbody>
+
+    <tbody ng2-st-tbody
+           *ngIf="!drag"
+           [grid]="grid"
+           [source]="source"
+           (action)="action.emit($event)"
+           (userSelectRow)="onUserSelectRow($event)"
+           (multipleSelectRow)="multipleSelectRow($event)"
+           (rowHover)="onRowHover($event)">
     </tbody>
 
 </table>

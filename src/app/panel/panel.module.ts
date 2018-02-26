@@ -36,6 +36,7 @@ import {DateTimeComponent} from './components/form/types/date-time/date-time.com
 import {DateTimeRangeComponent} from './components/form/types/date-time-range/date-time-range.component';
 import {FileUploadComponent} from './components/form/types/file-upload/file-upload.component';
 import {MapComponent} from './components/form/types/map/map.component';
+import {ContentTopComponent} from './components/content-top/content-top.component';
 
 const routes: Routes = [
     {
@@ -95,7 +96,8 @@ const routes: Routes = [
         DateTimeComponent,
         DateTimeRangeComponent,
         FileUploadComponent,
-        MapComponent
+        MapComponent,
+        ContentTopComponent
     ],
     providers: [
         AuthGuard,

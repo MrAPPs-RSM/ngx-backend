@@ -15,14 +15,10 @@ declare const $: any;
 })
 export class PanelComponent implements OnInit {
 
-    public title = environment.name;
-    public menu: any[] = [];
+    private title = environment.name;
+    private menu: any[] = [];
 
-    public activePage: string;
-    public breadcrumb: any[] = [];
-
-    constructor(private _state: GlobalState,
-                private _router: Router,
+    constructor(private _router: Router,
                 private _tokenService: TokenService,
                 private _route: ActivatedRoute,
                 private _pageRefresh: PageRefreshService) {
@@ -30,7 +26,6 @@ export class PanelComponent implements OnInit {
 
     ngOnInit() {
         this.menu = this._route.snapshot.data['params'];
-        this.loadBreadcrumb();
         if (this._pageRefresh.getLastPath() !== null) {
             if (this._pageRefresh.getLastPath() !== '/panel'
             && this._pageRefresh.getLastPath() !== '/login') {
@@ -41,37 +36,6 @@ export class PanelComponent implements OnInit {
         } else {
             this._router.navigate(['panel/dashboard']);
         }
-    }
-
-    loadBreadcrumb(): void {
-        this._state.subscribe('activePage', (activeLink) => {
-            if (activeLink) {
-                this.activePage = activeLink.title;
-                if (activeLink.route) {
-                    if (activeLink.breadcrumbLevel === 1) {
-                        this.breadcrumb = [];
-                        this.breadcrumb.push(activeLink);
-                    } else {
-                        const indexesToDelete = [];
-                        this.breadcrumb.forEach((link, index) => {
-                            if (link.breadcrumbLevel > activeLink.breadcrumbLevel) {
-                                indexesToDelete.push(index);
-                            }
-                        });
-
-                        if (indexesToDelete.length) {
-                            indexesToDelete.forEach((index) => {
-                                this.breadcrumb.splice(index, 1);
-                            });
-                        } else {
-                            this.breadcrumb.push(activeLink);
-                        }
-                    }
-                } else {
-                    this.breadcrumb = [];
-                }
-            }
-        });
     }
 
     logout(): void {

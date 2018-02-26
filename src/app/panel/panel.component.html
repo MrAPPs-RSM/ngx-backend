@@ -32,20 +32,7 @@
         </div>
     </div>
     <div class="content">
-        <div class="breadcrumbs">
-            <div class="row">
-                <div class="col-sm-4">
-                    <h3 class="page-title">{{ activePage }}</h3>
-                </div>
-                <div class="col-sm-8">
-                    <ul class="breadcrumb" *ngIf="breadcrumb.length > 1">
-                        <li *ngFor="let item of breadcrumb">
-                            <a [routerLink]="item.route" routerLinkActive="active">{{ item.title }}</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+        <app-content-top></app-content-top>
         <router-outlet></router-outlet>
     </div>
 </div>

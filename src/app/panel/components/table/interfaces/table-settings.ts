@@ -19,6 +19,7 @@ export interface TableSettings {
         list?: TableAction[];
     };
     columns: TableColumns;
+    selectMode?: string; // multi || single
     pager?: {
         perPage?: number;
     };

@@ -51,7 +51,7 @@ export class Ng2SmartTableComponent implements OnChanges, OnInit {
     grid: Grid;
     defaultSettings: Object = {
         mode: 'inline', // inline|external|click-to-edit
-        selectMode: 'multi', // single|multi
+        selectMode: 'single', // single|multi
         hideHeader: false,
         hideSubHeader: false,
         noDataMessage: 'No data found',

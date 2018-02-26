@@ -161,53 +161,6 @@ app-panel {
       width: calc(100% - #{$sidebarWidth});
       float: right;
       @include _transition(all 0.5s);
-      > .breadcrumbs {
-        background-color: #ffffff;
-        border-bottom: 1px solid $grey;
-        padding: 15px;
-        > div.row {
-          > div {
-            &:first-child {
-              float: left;
-              > h3 {
-                color: $primary;
-                margin: 0;
-                font-size: 15px;
-                font-weight: $regular;
-              }
-            }
-            &:last-child {
-              float: right;
-              text-align: right;
-              > ul.breadcrumb {
-                padding: 0;
-                margin: 0;
-                background-color: inherit;
-                > li {
-                  + li {
-                    &:before {
-                      content: '\f112';
-                      display: inline-block;
-                      font: normal normal normal 14px/1 FontAwesome;
-                      font-size: inherit;
-                      text-rendering: auto;
-                      -webkit-font-smoothing: antialiased;
-                    }
-                  }
-                  > a {
-                    font-weight: $light;
-                    color: $default;
-                    &.active {
-                      color: $primary;
-                      font-weight: $regular;
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     }
   }
 }
