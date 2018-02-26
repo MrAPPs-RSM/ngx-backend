@@ -8,7 +8,7 @@ import {Subscription} from 'rxjs/Subscription';
     selector: 'ng2-smart-table-filter',
     template: `
         <div class="ng2-smart-filter" *ngIf="column.isFilterable" [ngSwitch]="column.getFilterType()">
-            <select-filter *ngSwitchCase="'list'"
+            <select-filter *ngSwitchCase="'select'"
                            [query]="query"
                            [ngClass]="inputClass"
                            [column]="column"
@@ -65,11 +65,6 @@ export class FilterComponent implements OnChanges {
     }
 
     onFilter(query: string) {
-        /*this.source.addFilter({
-            field: this.column.id,
-            search: query,
-            filter: this.column.getFilterFunction(),
-        });*/
         this.filter.emit({column: this.column.id, value: query});
     }
 }
