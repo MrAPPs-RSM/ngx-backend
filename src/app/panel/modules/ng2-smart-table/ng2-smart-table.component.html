@@ -15,7 +15,10 @@
            (action)="action.emit($event)"
            (userSelectRow)="onUserSelectRow($event)"
            (multipleSelectRow)="multipleSelectRow($event)"
-           (rowHover)="onRowHover($event)">
+           (rowHover)="onRowHover($event)"
+           [dragula]="drag"
+           [dragulaModel]="grid.getRows()"
+           [dragulaOptions]="{}">
     </tbody>
 
 </table>

@@ -1,11 +1,13 @@
-import {Component, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {TableSettings} from './interfaces/table-settings';
 import {ApiService} from '../../../api/api.service';
+import {ModalService} from '../../services/modal.service';
 import {TableFilter} from '../../modules/ng2-smart-table/lib/data-filters/table-filter';
 import {TableSort} from '../../modules/ng2-smart-table/lib/data-filters/table-sort';
 import {TablePagination} from '../../modules/ng2-smart-table/lib/data-filters/table-pagination';
 import {TableSelection} from '../../modules/ng2-smart-table/lib/data-filters/table-selection';
 import {TableActiveFilters} from '../../modules/ng2-smart-table/lib/data-filters/table-active-filters';
+import {TableDrop} from '../../modules/ng2-smart-table/lib/data-filters/table-drop';
 import {HttpErrorResponse} from '@angular/common/http';
 import {TableAction} from './interfaces/table-action';
 import {Router} from '@angular/router';
@@ -44,7 +46,8 @@ export class TableComponent implements OnInit {
 
     constructor(private _apiService: ApiService,
                 private _router: Router,
-                private _toast: ToastrService) {
+                private _toast: ToastrService,
+                private _modal: ModalService) {
     }
 
     ngOnInit() {
@@ -179,32 +182,64 @@ export class TableComponent implements OnInit {
             }
 
             if (action.config.method) {
-                switch (action.config.method) {
-                    case 'post': {
-                        if (action.config.body) {} // TODO: future support if necessary
-                    } break;
-                    case 'put': {
-                        if (action.config.body) {} // TODO: future support if necessary
-                    } break;
-                    case 'patch': {
-                        if (action.config.body) {} // TODO: future support if necessary
-                    } break;
-                    case 'delete': {
+                this.handleActionApi(action, endpoint, data)
+                    .then(() => {
+                        if (action.config.refreshAfter !== false) {
+                            this.getData();
+                        }
+                    })
+                    .catch(() => {
+                    });
+            }
+        }
+    }
+
+    private handleActionApi(action: TableAction, endpoint: string, data?: any): Promise<any> {
+        return new Promise((resolve, reject) => {
+            switch (action.config.method) {
+                case 'post': { // TODO (only if necessary)
+                    resolve();
+                }
+                    break;
+                case 'put': { // TODO (only if necessary)
+                    resolve();
+                }
+                    break;
+                case 'patch': { // TODO (only if necessary)
+                    resolve();
+                }
+                    break;
+                case 'delete': {
+                    if (action.config.confirm) {
+                        this._modal.confirm()
+                            .then(() => {
+                                this._apiService.delete(endpoint)
+                                    .then((response) => {
+                                        this._toast.success('message', 'Success');
+                                        resolve();
+                                    })
+                                    .catch((response: HttpErrorResponse) => {
+                                        this._toast.error(response.error);
+                                        reject();
+                                    });
+                            })
+                            .catch(() => {
+                            });
+                    } else {
                         this._apiService.delete(endpoint)
                             .then((response) => {
                                 this._toast.success('message', 'Success');
+                                resolve();
                             })
                             .catch((response: HttpErrorResponse) => {
                                 this._toast.error(response.error);
+                                reject();
                             });
-                    } break;
+                    }
                 }
+                    break;
             }
-        }
-
-        if (action.config.refreshAfter !== false) {
-            this.getData();
-        }
+        });
     }
 
     onAction(event: { action: TableAction, data: any }) {
@@ -218,6 +253,25 @@ export class TableComponent implements OnInit {
     onRowSelect(event: TableSelection) {
         console.log('ON Select row(s)');
         console.log(event);
+    }
+
+    onRowDrop(event: TableDrop) {
+        if (this.settings.drag) {
+            const endpoint = this.settings.drag.endpoint ?
+                this.settings.drag.endpoint : this.settings.api.endpoint + '/sort';
+
+            if (this.settings.drag.method) {
+                // TODO: support if necessary
+            } else {
+                this._apiService.patch(endpoint, event)
+                    .then(() => {
+                        this.getData(); // Refresh table
+                    })
+                    .catch((response: HttpErrorResponse) => {
+                        this._toast.error(response.error);
+                    });
+            }
+        }
     }
 
     onFilter(filter: TableFilter) {

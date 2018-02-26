@@ -1,4 +1,4 @@
-import {Component, Input, Output, SimpleChange, EventEmitter, OnChanges} from '@angular/core';
+import {Component, Input, Output, SimpleChange, EventEmitter, OnChanges, OnInit} from '@angular/core';
 
 import {Grid} from './lib/grid';
 import {DataSource} from './lib/data-source/data-source';
@@ -10,22 +10,27 @@ import {TablePagination} from './lib/data-filters/table-pagination';
 import {TableSort} from './lib/data-filters/table-sort';
 import {TableFilter} from './lib/data-filters/table-filter';
 import {TableActiveFilters} from './lib/data-filters/table-active-filters';
+import {DragulaService} from 'ng2-dragula';
 
 @Component({
     selector: 'ng2-smart-table',
     styleUrls: ['./ng2-smart-table.component.scss'],
     templateUrl: './ng2-smart-table.component.html',
 })
-export class Ng2SmartTableComponent implements OnChanges {
+export class Ng2SmartTableComponent implements OnChanges, OnInit {
 
     @Input() count: number;
     @Input() source: any;
     @Input() settings: Object = {};
     @Input() activeFilters: TableActiveFilters;
 
+    @Input() drag: boolean;
+    private oldRowIndex: number | null = null;
+
     @Output() rowSelect = new EventEmitter<any>();
     @Output() userRowSelect = new EventEmitter<any>();
     @Output() rowHover: EventEmitter<any> = new EventEmitter<any>();
+    @Output() rowDrop: EventEmitter<any> = new EventEmitter();
 
     @Output() create: EventEmitter<any> = new EventEmitter<any>();
     @Output() action: EventEmitter<any> = new EventEmitter<any>();
@@ -58,6 +63,22 @@ export class Ng2SmartTableComponent implements OnChanges {
     };
 
     isAllSelected: boolean = false;
+
+    constructor(private _dragulaService: DragulaService) {
+    }
+
+    ngOnInit() {
+        if (this.drag) {
+            this._dragulaService.drag.subscribe((value) => {
+                this.onDrag(value.slice(1));
+            });
+            this._dragulaService.drop.subscribe((value) => {
+                this.onDrop(value.slice(1));
+            });
+        } else {
+            this._dragulaService = null;
+        }
+    }
 
     ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
         if (this.grid) {
@@ -170,4 +191,21 @@ export class Ng2SmartTableComponent implements OnChanges {
         });
     }
 
+    /** ---------------- DRAG & DROP ------------------ */
+    private onDrag(args) {
+        const [e, el] = args;
+        this.oldRowIndex = this.getDomIndexOf(e, el);
+    }
+
+    private onDrop(args) {
+        const [e, el] = args;
+        this.rowDrop.emit({
+            oldIndex: this.oldRowIndex,
+            newIndex: this.getDomIndexOf(e, el)
+        });
+    }
+
+    private getDomIndexOf(child: any, parent: any) {
+        return Array.prototype.indexOf.call(parent.children, child);
+    }
 }

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {DragulaModule} from 'ng2-dragula';
 
 import { CellModule } from './components/cell/cell.module';
 import { FilterModule } from './components/filter/filter.module';
@@ -20,6 +21,7 @@ import { Ng2SmartTableComponent } from './ng2-smart-table.component';
         PagerModule,
         TBodyModule,
         THeadModule,
+        DragulaModule
     ],
     declarations: [
         Ng2SmartTableComponent,

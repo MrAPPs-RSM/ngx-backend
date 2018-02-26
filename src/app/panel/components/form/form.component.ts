@@ -77,47 +77,20 @@ export class FormComponent implements OnInit {
         } else {
             if (this.form.valid) {
                 if (this.config.confirm) {
-                    this.modalSubmit();
+                    this._modal.confirm()
+                        .then(() => {
+                            this.submit();
+                        })
+                        .catch(() => {
+                        });
                 } else {
-                    this.directSubmit();
+                    this.submit();
                 }
             }
         }
     }
 
-    modalSubmit(): void {
-        this._modal.confirm()
-            .then(() => {
-                this.isLoading = true;
-                if (this.config.isEdit) {
-                    this._apiService.patch(this.config.api.endpoint + '/' + this._route.snapshot.params['id'], this.form.value)
-                        .then((response) => {
-                            this.isLoading = false;
-                            this.response.emit(response);
-                        })
-                        .catch((response: HttpErrorResponse) => {
-                            this.isLoading = false;
-                            this.response.emit(response);
-                        });
-                } else {
-                    setTimeout(() => {
-                        this._apiService.put(this.config.api.endpoint, this.form.value)
-                            .then((response) => {
-                                this.isLoading = false;
-                                this.response.emit(response);
-                            })
-                            .catch((response: HttpErrorResponse) => {
-                                this.isLoading = false;
-                                this.response.emit(response);
-                            });
-                    }, 5000);
-                }
-            })
-            .catch(() => {
-            });
-    }
-
-    directSubmit(): void {
+    submit(): void {
         this.isLoading = true;
         if (this.config.isEdit) {
             this._apiService.patch(this.config.api.endpoint + '/' + this._route.snapshot.params['id'], this.form.value)

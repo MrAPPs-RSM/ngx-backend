@@ -13,6 +13,7 @@ export class Ng2SmartTableTbodyComponent implements OnChanges {
 
     @Input() grid: Grid;
     @Input() source: DataSource;
+    @Input() dragula: any;
 
     @Output() action = new EventEmitter<any>();
     @Output() userSelectRow = new EventEmitter<any>();

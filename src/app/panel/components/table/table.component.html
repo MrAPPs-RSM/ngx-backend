@@ -10,13 +10,15 @@
         <ng2-smart-table [settings]="settings"
                          [source]="data"
                          [count]="count"
+                         [activeFilters]="activeFilters"
+                         [drag]="!!settings.drag"
                          (action)="onAction($event)"
                          (create)="onCreate($event)"
                          (userRowSelect)="onRowSelect($event)"
                          (filter)="onFilter($event)"
                          (paginate)="onPagination($event)"
                          (sort)="onSort($event)"
-                         [activeFilters]="activeFilters"
+                         (rowDrop)="onRowDrop($event)"
         ></ng2-smart-table>
     </div>
 </div>
