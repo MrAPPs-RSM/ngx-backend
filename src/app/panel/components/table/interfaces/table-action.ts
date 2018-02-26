@@ -7,7 +7,7 @@ export interface TableAction {
         endpoint?: string; // api call
         confirm?: boolean; // if true opens confirmation modal before api
         method?: string; // post | patch | put | delete
-        body?: any;
-        refreshAfter?: boolean;
+        body?: any; // body for post | patch | put
+        refreshAfter?: boolean; // default = true, determines what to do after api
     };
 }

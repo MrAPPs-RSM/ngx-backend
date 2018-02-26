@@ -6,7 +6,7 @@ div.modal-content {
   border-radius: $borderRadius;
   > modal-content {
     > modal-title {
-      > .modal-header-custom {
+      > .modal-header {
         padding: 10px 20px;
         border-bottom: 1px solid $lightGrey;
         > h3.modal-title {
@@ -15,12 +15,12 @@ div.modal-content {
       }
     }
     > modal-body {
-      > .modal-body-custom {
+      > .modal-body {
         padding: 10px 20px;
       }
     }
     > modal-footer {
-      > .modal-footer-custom {
+      > .modal-footer {
         padding: 10px 20px;
         text-align: right;
         border-top: 1px solid $lightGrey;
