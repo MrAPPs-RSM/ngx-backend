@@ -1,6 +1,7 @@
 .form-group {
   @include clearfix;
 
+  margin-top: 0;
   /* Layout */
   &.no-margin {
     margin-bottom: 0;

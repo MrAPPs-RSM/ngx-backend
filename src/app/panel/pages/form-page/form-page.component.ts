@@ -40,7 +40,14 @@ export class FormPageComponent implements OnInit, OnDestroy {
     onResponse(form: FormSettings, response: any | HttpErrorResponse): void {
         switch (form.responseType) {
             case 'terminal': {
-
+                /** In this case, response is almost always custom,
+                 * so don't need to check if error o success, just display it in a terminal like div
+                 */
+                this._modalService.alert(
+                    'Response',
+                    '<pre>' + response + '</pre>',
+                    'terminal'
+                );
             }
                 break;
             case 'inline': {
@@ -58,12 +65,7 @@ export class FormPageComponent implements OnInit, OnDestroy {
             }
                 break;
             case 'alert': {
-                if (response instanceof HttpErrorResponse) {
-                    // TODO: create HTML structure of errors
-                    this._modalService.alert();
-                } else {
-                    this._modalService.alert();
-                }
+                // TODO: future support
             }
                 break;
             default: {

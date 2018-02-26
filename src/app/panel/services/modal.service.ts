@@ -26,13 +26,14 @@ export class ModalService {
         });
     }
 
-    public alert(title?: string, body?: string): Promise<any> {
+    public alert(title?: string, body?: string, bodyClass?: string): Promise<any> {
         return new Promise((resolve, reject) => {
             const dialog = this._modal.alert()
                 .size('lg')
                 .showClose(true)
                 .title(title ? title : 'Alert')
                 .body(body ? body : '')
+                .bodyClass(bodyClass)
                 .open();
 
             dialog.result
