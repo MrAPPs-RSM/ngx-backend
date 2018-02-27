@@ -78,12 +78,14 @@ export class FileUploadComponent implements OnInit {
                 .first()
                 .subscribe(
                     data => {
-                        if (data instanceof Array) {
-                            data.forEach((item) => {
-                                this.handleResponse(item);
-                            });
-                        } else {
-                            this.handleResponse(data);
+                        if (this.uploadedFiles.length === 0) {
+                            if (data instanceof Array) {
+                                data.forEach((item) => {
+                                    this.handleResponse(item);
+                                });
+                            } else {
+                                this.handleResponse(data);
+                            }
                         }
                     });
         }

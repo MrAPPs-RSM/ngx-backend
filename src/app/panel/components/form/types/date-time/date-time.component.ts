@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {FormFieldDate} from '../../interfaces/form-field-date';
+import {NguiDatetime} from '@ngui/datetime-picker';
 
 @Component({
     selector: 'app-date-time',
@@ -16,6 +17,14 @@ export class DateTimeComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.form.controls[this.field.key].valueChanges
+            .subscribe(value => {
+                if (value && !isNaN(value)) {
+                    this.form.controls[this.field.key].setValue(
+                        NguiDatetime.formatDate(new Date(value))
+                    );
+                }
+            });
     }
 
     get isValid() {

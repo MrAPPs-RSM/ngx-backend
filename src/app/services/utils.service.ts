@@ -26,7 +26,7 @@ export class UtilsService {
         min = UtilsService.addLeadingZero(min);
         sec = UtilsService.addLeadingZero(sec);
 
-        return date + '-' + month + '-' + year + ' ' + hour + ':' + min + ':' + sec;
+        return year + '-' + month + '-' + date + ' ' + hour + ':' + min + ':' + sec;
     }
 
     public static isValidURL(str) {
