@@ -24,6 +24,22 @@ export class SelectComponent implements OnInit {
 
     ngOnInit() {
         this.loadData();
+        const params = {};
+        if (this.field.dependsOn) {
+            this.field.dependsOn.forEach((key) => {
+                if (this.form.controls[key]) {
+                    this.form.controls[key].valueChanges.subscribe((value) => {
+                        params[key] = value;
+                        this.loadOptions(params)
+                            .then(() => {
+                            })
+                            .catch((error) => {
+                                console.log(error);
+                            });
+                    });
+                }
+            });
+        }
     }
 
     get isValid() {
@@ -45,13 +61,14 @@ export class SelectComponent implements OnInit {
     // TODO: handle multiple select
     private loadData(): void {
         this.loadOptions()
-            .then(() => {})
+            .then(() => {
+            })
             .catch((error) => {
                 console.log(error);
             });
     }
 
-    private loadOptions(): Promise<any> {
+    private loadOptions(params?: any): Promise<any> {
         return new Promise((resolve, reject) => {
             if (this.field.options) {
                 if (this.field.options instanceof Array) {
@@ -63,7 +80,7 @@ export class SelectComponent implements OnInit {
                         endpoint = endpoint.replace(':id', this._route.params['value'].id);
                     }
 
-                    this._apiService.get(endpoint)
+                    this._apiService.get(endpoint, params)
                         .then((response) => {
                             this.options = response;
                         })

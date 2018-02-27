@@ -50,10 +50,10 @@ const routes: Routes = [
         ToastNoAnimationModule,
         ToastrModule.forRoot({
             maxOpened: 1,
-            timeOut: 200000,
+            timeOut: 3000,
             closeButton: true,
             preventDuplicates: true,
-            tapToDismiss: false,
+            tapToDismiss: true,
             toastComponent: ToastNoAnimation,
         }),
         HttpClientModule,

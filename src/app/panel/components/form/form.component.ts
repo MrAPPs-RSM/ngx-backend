@@ -6,7 +6,7 @@ import {FormGeneratorService} from '../../services/form-generator.service';
 import {HttpErrorResponse} from '@angular/common/http';
 import {ModalService} from '../../services/modal.service';
 import {ApiService} from '../../../api/api.service';
-import {FormConfiguration} from './interfaces/form-configuration';
+import {FormSettings} from './interfaces/form-settings';
 
 @Component({
     selector: 'app-form',
@@ -16,7 +16,7 @@ import {FormConfiguration} from './interfaces/form-configuration';
 })
 export class FormComponent implements OnInit {
 
-    @Input() config: FormConfiguration;
+    @Input() settings: FormSettings;
     @Input() isLoginLoading: boolean;
     @Output() response: EventEmitter<any> = new EventEmitter<any>();
 
@@ -44,7 +44,7 @@ export class FormComponent implements OnInit {
 
         let isMultiLang = false;
 
-        for (const field of this.config.fields) {
+        for (const field of this.settings.fields) {
             if (!('multiLang' in field) || !field.multiLang) {
                 if (field.type === 'lat_lng') {
                     model[field['lng'].key] = 0.0;
@@ -69,7 +69,7 @@ export class FormComponent implements OnInit {
 
                 model = {};
 
-                for (const field of this.config.fields) {
+                for (const field of this.settings.fields) {
 
                     if (('multiLang' in field) && field.multiLang) {
                         if (field.type === 'lat_lng') {
@@ -90,7 +90,7 @@ export class FormComponent implements OnInit {
             }
         }
 
-        currentForm = this._formGenerator.generate(this.config.fields);
+        currentForm = this._formGenerator.generate(this.settings.fields);
 
         return currentForm;
     }
@@ -142,30 +142,40 @@ export class FormComponent implements OnInit {
         }
 
         this.form = this.setupForms();
+
         this.form.valueChanges.subscribe(
             data => {
                 console.log(data);
                 // console.log(this.form);
-            });
+            }
+        );
+        if (this.settings.isEdit) {
 
-        if (this.config.isEdit) {
             this.loadData();
         }
     }
 
 
-    loadData(): void {
+    loadData(entity?: any): void {
+        let id = null;
+
         if (this._route.snapshot.params && this._route.snapshot.params['id']) {
+            id = this._route.snapshot.params['id'];
+        } else {
+            id = entity ? entity.id : null;
+        }
+
+        if (id !== null) {
             this.isLoading = true;
 
             let params = {};
-            if (this.config.api.filter) {
+            if (this.settings.api.filter) {
                 params = {
-                    filter: this.config.api.filter
+                    filter: this.settings.api.filter
                 };
             }
             this._apiService.get(
-                this.config.api.endpoint + '/' + this._route.snapshot.params['id'], params)
+                this.settings.api.endpoint + '/' + id, params)
                 .then((response) => {
                     this.isLoading = false;
                     Object.keys(response).forEach((key) => {
@@ -182,76 +192,61 @@ export class FormComponent implements OnInit {
     }
 
     onSubmit(): void {
-        if (this.config.isLoginForm) {
+        if (this.settings.isLoginForm) {
             /** If is login form, the login component will handle the request */
             this.response.emit(this.form.value);
         } else {
             this.updateForms();
 
             if (this.form.valid) {
-                if (this.config.confirm) {
-                    this.modalSubmit();
+                if (this.settings.submit.confirm) {
+                    this._modal.confirm()
+                        .then(() => {
+                            this.submit();
+                        })
+                        .catch(() => {
+                        });
                 } else {
-                    this.directSubmit();
+                    this.submit();
                 }
             }
         }
     }
 
-    modalSubmit(): void {
-        this._modal.confirm()
-            .then(() => {
-                this.isLoading = true;
-                if (this.config.isEdit) {
-                    this._apiService.patch(this.config.api.endpoint + '/' + this._route.snapshot.params['id'], this.form.value)
-                        .then((response) => {
-                            this.isLoading = false;
-                            this.response.emit(response);
-                        })
-                        .catch((response: HttpErrorResponse) => {
-                            this.isLoading = false;
-                            this.response.emit(response);
-                        });
-                } else {
-                    setTimeout(() => {
-                        this._apiService.put(this.config.api.endpoint, this.form.value)
-                            .then((response) => {
-                                this.isLoading = false;
-                                this.response.emit(response);
-                            })
-                            .catch((response: HttpErrorResponse) => {
-                                this.isLoading = false;
-                                this.response.emit(response);
-                            });
-                    }, 5000);
-                }
-            })
-            .catch(() => {
-            });
-    }
-
-    directSubmit(): void {
+    submit(): void {
         this.isLoading = true;
-        if (this.config.isEdit) {
-            this._apiService.patch(this.config.api.endpoint + '/' + this._route.snapshot.params['id'], this.form.value)
+        if (this.settings.isEdit) {
+            this._apiService.patch(this.settings.api.endpoint + '/' + this._route.snapshot.params['id'], this.form.value)
                 .then((response) => {
                     this.isLoading = false;
                     this.response.emit(response);
+
+                    if (this.settings.submit.refreshAfter === true) {
+                        this.loadData(response);
+                    }
                 })
                 .catch((response: HttpErrorResponse) => {
                     this.isLoading = false;
                     this.response.emit(response);
                 });
         } else {
-            this._apiService.put(this.config.api.endpoint, this.form.value)
+            this._apiService.put(this.settings.api.endpoint, this.form.value)
                 .then((response) => {
                     this.isLoading = false;
                     this.response.emit(response);
+
+                    if (this.settings.submit.refreshAfter) {
+                        this.loadData(response);
+                    }
                 })
                 .catch((response: HttpErrorResponse) => {
                     this.isLoading = false;
                     this.response.emit(response);
                 });
         }
+    }
+
+    closeErrors(): void {
+        this.settings.errors = [];
     }
 }

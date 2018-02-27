@@ -1,0 +1,202 @@
+@import '../../../../assets/sass/partials/imports';
+
+:host {
+  font-size: 14px;
+
+  /deep/ {
+    * {
+      box-sizing: border-box;
+    }
+
+    button,
+    input,
+    optgroup,
+    select,
+    textarea {
+      color: inherit;
+      font: inherit;
+      margin: 0;
+    }
+
+    table {
+      margin: 0;
+      border-collapse: separate;
+      border: 1px solid $lightGrey;
+      border-bottom: none;
+      border-spacing: 0;
+      display: table;
+      width: 100%;
+      max-width: 100%;
+      overflow: auto;
+      word-break: keep-all;
+
+      > thead {
+        > tr {
+          &:first-child {
+            /* Header row */
+            height: 45px;
+            background-color: #f5f5f5;
+            color: $default;
+          }
+          > th {
+            border: none;
+            border-bottom: 1px solid $lightGrey;
+            &:not(:last-child) {
+              border-right: 1px solid $lightGrey;
+            }
+            font-size: 14px;
+            margin: 0;
+            padding: 5px 10px;
+            line-height: 20px;
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+            font-weight: $regular;
+            a {
+              color: $default;
+              &:hover {
+                color: darken($default, 10);
+              }
+            }
+            > ng2-smart-table-filter {
+              > div.ng2-smart-filter {
+                > input-filter {
+                  > input.form-control {
+                    @include _form-input();
+                    height: 40px;
+                    font-weight: $light;
+                    border: none;
+                    background-color: #f9f9f9;
+                    margin: 5px 0;
+                  }
+                }
+                > select-filter {
+                  > div {
+                    > ng-select.ng-select.bottom {
+                      > div.ng-control {
+                        min-width: 150px;
+                        height: 40px;
+                        font-weight: $light;
+                      }
+                      > div.ng-select-dropdown-outer {
+                        > ng-select-virtual-scroll.ng-select-dropdown {
+                          > div {
+                            > div.ng-option {
+                              font-weight: $light;
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            > label.checkbox {
+              margin: 3px -2px 0 1px;
+              > span {
+                width: 18px;
+              }
+            }
+          }
+        }
+      }
+
+      > tbody {
+        > tr {
+          &.gu-transit {
+            opacity: 0.2;
+            -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
+            filter: alpha(opacity=20);
+          }
+          &.selected {
+            background-color: #f2f2f2;
+          }
+          &:hover {
+            background-color: #f5f5f5;
+          }
+          > td {
+            border: none;
+            border-bottom: 1px solid $lightGrey;
+            &:not(:last-child) {
+              border-right: 1px solid $lightGrey;
+            }
+            font-weight: $light;
+            height: 40px;
+            color: $default;
+            font-size: 14px;
+            margin: 0;
+            padding: 5px 10px;
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+            > label.checkbox {
+              margin: 3px -2px 0 1px;
+              > span {
+                width: 18px;
+              }
+            }
+
+            &.ng2-smart-actions {
+              > ng2-st-tbody-actions {
+                > a {
+                  &:not(:last-child) {
+                    margin-right: 10px;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      a.ng2-smart-action {
+        font-weight: $light;
+        padding: 5px 8px;
+        color: #ffffff;
+        border: 1px solid $primary;
+        background-color: $primary;
+        &:hover {
+          color: #ffffff;
+          background-color: darken($primary, 10);
+        }
+        &.success {
+          border: 1px solid $success;
+          background-color: $success;
+          &:hover {
+            background-color: darken($success, 10);
+          }
+        }
+        &.danger {
+          border: 1px solid $danger;
+          background-color: $danger;
+          &:hover {
+            background-color: darken($danger, 10);
+          }
+        }
+        &.info {
+          border: 1px solid $info;
+          background-color: $info;
+          &:hover {
+            background-color: darken($info, 10);
+
+          }
+        }
+        &.warning {
+          border: 1px solid $warning;
+          background-color: $warning;
+          &:hover {
+            background-color: darken($warning, 10);
+          }
+        }
+        &.default {
+          border: 1px solid $default;
+          background-color: $default;
+          &:hover {
+            background-color: darken($default, 10);
+          }
+        }
+      }
+    }
+  }
+}

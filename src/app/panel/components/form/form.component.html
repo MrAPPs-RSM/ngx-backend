@@ -1,10 +1,20 @@
-<form *ngIf="form" [formGroup]="form" (keyup.enter)="onSubmit()" [ngClass]="{'loading': isLoading || isLoginLoading}" >
+<form *ngIf="form" [formGroup]="form" (keyup.enter)="onSubmit()" [ngClass]="{'loading': isLoading || isLoginLoading}">
     <header>
-        <h3 *ngIf="config.title">{{ config.title }}</h3>
+        <h3 *ngIf="settings.title">{{ settings.title }}</h3>
         <div class="progress">
             <div class="indeterminate"></div>
         </div>
     </header>
+
+    <div class="errors" [ngClass]="{'visible': settings.errors && settings.errors.length > 0}">
+        <ul>
+            <li *ngFor="let error of settings.errors">
+                {{error}}
+            </li>
+        </ul>
+        <span (click)="closeErrors()">×</span>
+    </div>
+
     <div class="fields-wrapper">
         <div class="row">
             <div [hidden]="!isMultiLangEnabled">
@@ -14,7 +24,8 @@
                     </option>
                 </select>
             </div>
-            <div *ngFor="let field of config.fields">
+            <div *ngFor="let field of settings.fields">
+
                 <div [ngSwitch]="field.type">
 
                     <app-separator
@@ -92,6 +103,7 @@
                             *ngSwitchCase="formConfig.types.FILE"
                             [form]="form"
                             [field]="field"
+                            [isEdit]="isEdit"
                     ></app-file-upload>
 
                     <app-map
@@ -123,7 +135,8 @@
             <div class="col-sm-12">
                 <div class="pull-right">
                     <button type="button" (click)="onSubmit()" class="btn btn-primary"
-                            [disabled]="!form.valid || isLoading"> {{ config.submit?.label ? config.submit.label : 'Save'}}
+                            [disabled]="!form.valid || isLoading"> {{ settings.submit?.label ? settings.submit.label :
+                        'Save'}}
                     </button>
                 </div>
             </div>

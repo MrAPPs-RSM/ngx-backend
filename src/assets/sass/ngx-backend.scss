@@ -22,4 +22,93 @@ body {
   .container {
     max-width: 100%;
   }
+
+  h1, h2, h3, h4, h5, h6, a, i, p, span, small {
+    &.primary {
+      color: $primary;
+    }
+    &.success {
+      color: $success;;
+    }
+    &.danger {
+      color: $danger;
+    }
+    &.info {
+      color: $info;
+    }
+    &.warning {
+      color: $warning;
+    }
+    &.default {
+      color: $default;
+    }
+  }
+}
+
+/* Drag & Drop table */
+.gu-mirror {
+  width: auto !important;
+  position: fixed !important;
+  margin: 0 !important;
+  z-index: 9999 !important;
+  border: 1px solid $grey;
+  > td {
+    text-align: center !important;
+    border-bottom: 1px solid $grey;
+    font-size: 14px;
+    color: $default;
+    font-weight: $light;
+    padding: 5px 10px;
+    background: #ffffff;
+    width: 10%;
+    &:not(:last-child) {
+      border-right: 1px solid $grey;
+    }
+
+    &.ng2-smart-actions {
+      > ng2-st-tbody-actions {
+        > a {
+          &:not(:last-child) {
+            margin-right: 10px;
+          }
+          font-weight: $light;
+          padding: 5px 8px;
+          color: #ffffff;
+          border: 1px solid $primary;
+          background-color: $primary;
+          &.success {
+            border: 1px solid $success;
+            background-color: $success;
+          }
+          &.danger {
+            border: 1px solid $danger;
+            background-color: $danger;
+          }
+          &.info {
+            border: 1px solid $info;
+            background-color: $info;
+          }
+          &.warning {
+            border: 1px solid $warning;
+            background-color: $warning;
+          }
+          &.default {
+            border: 1px solid $default;
+            background-color: $default;
+          }
+        }
+      }
+    }
+  }
+}
+
+.gu-hide {
+  display: none !important;
+}
+
+.gu-unselectable {
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
 }

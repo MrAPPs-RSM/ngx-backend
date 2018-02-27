@@ -5,7 +5,7 @@ app-file-upload {
     > div.form-group {
       > label {
         &.error {
-          color: $error;
+          color: $danger;
           font-weight: $regular;
         }
         &.uploaded-files-label {
@@ -108,7 +108,7 @@ app-file-upload {
                     color: $info;
                   }
                   &.pdf {
-                    color: $error;
+                    color: $danger;
                   }
                   &.zip  {
                     color: $warning;

@@ -24,6 +24,7 @@ export class FileUploadComponent implements OnInit {
 
     @Input() form: FormGroup;
     @Input() field: FormFieldFile;
+    @Input() isEdit: boolean;
 
     options: UploaderOptions = {
         concurrency: 1,
@@ -72,11 +73,11 @@ export class FileUploadComponent implements OnInit {
         this.createAllowedContentTypes();
 
         /** Load entity image (if edit) */
-        this.form.controls[this.field.key].valueChanges
-            .first()
-            .subscribe(
-                data => {
-                    if (data != null) {
+        if (this.isEdit) {
+            this.form.controls[this.field.key].valueChanges
+                .first()
+                .subscribe(
+                    data => {
                         if (data instanceof Array) {
                             data.forEach((item) => {
                                 this.handleResponse(item);
@@ -84,8 +85,8 @@ export class FileUploadComponent implements OnInit {
                         } else {
                             this.handleResponse(data);
                         }
-                    }
-                });
+                    });
+        }
     }
 
     get isValid() {

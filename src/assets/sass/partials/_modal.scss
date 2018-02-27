@@ -1,13 +1,16 @@
 /* Modals */
 
 div.modal-content {
+  padding: 0 15px;
+  max-width: calc(100% - 30px);
+  margin: 30px auto;
   box-shadow: none;
   border: 0;
   border-radius: $borderRadius;
   > modal-content {
     > modal-title {
-      > .modal-header-custom {
-        padding: 10px 20px;
+      > .modal-header {
+        padding: 15px 0;
         border-bottom: 1px solid $lightGrey;
         > h3.modal-title {
           font-size: 18px;
@@ -15,13 +18,29 @@ div.modal-content {
       }
     }
     > modal-body {
-      > .modal-body-custom {
-        padding: 10px 20px;
+      > .modal-body {
+        padding: 15px 0;
+      }
+      > .terminal {
+        padding: 15px 0;
+        > div {
+          padding: 15px 20px;
+          background-color: #000000;
+          border-radius: 5px;
+          border-top: 10px solid $grey;
+          > pre {
+            padding: 0;
+            background: none;
+            border: none;
+            margin: 0;
+            color: #fff;
+          }
+        }
       }
     }
     > modal-footer {
-      > .modal-footer-custom {
-        padding: 10px 20px;
+      > .modal-footer {
+        padding: 15px 0;
         text-align: right;
         border-top: 1px solid $lightGrey;
         button {

@@ -18,14 +18,26 @@ export class ModalService {
                 .okBtnClass('btn btn-sm btn-primary')
                 .cancelBtn(dismiss ? dismiss : 'Dismiss')
                 .cancelBtnClass('btn btn-sm btn-link')
-                .headerClass('modal-header-custom')
-                .bodyClass('modal-body-custom')
-                .footerClass('modal-footer-custom')
                 .open();
 
             dialog.result
                 .then(() => resolve()) // Confirm
                 .catch(() => reject()); // Dismiss
+        });
+    }
+
+    public alert(title?: string, body?: string, bodyClass?: string): Promise<any> {
+        return new Promise((resolve, reject) => {
+            const dialog = this._modal.alert()
+                .size('lg')
+                .showClose(true)
+                .title(title ? title : 'Alert')
+                .body(body ? body : '')
+                .bodyClass(bodyClass)
+                .open();
+
+            dialog.result
+                .then(() => resolve());
         });
     }
 }

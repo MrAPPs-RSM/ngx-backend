@@ -21,7 +21,7 @@ export class PageTitleService {
                 }
             }
             const activeLink = {
-                title: title,
+                title: decodeURIComponent(title),
                 route: this._router.url,
                 breadcrumbLevel: route.snapshot.data['menu'].breadcrumbLevel
             };

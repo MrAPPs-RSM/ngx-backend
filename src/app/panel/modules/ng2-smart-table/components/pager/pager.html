@@ -1,0 +1,41 @@
+<div style="clear: both;">
+    <nav *ngIf="shouldShowPerPage()" class="ng2-smart-pagination-nav pull-left">
+        <ul class="ng2-smart-pagination pagination">
+            <li *ngFor="let number of perPageOptions" class="ng2-smart-page-item page-item"
+                [ngClass]="{active: number == perPage}">
+            <span class="ng2-smart-page-link page-link per-page-changer"
+                  (click)="perPageChange(number)">
+                <span>{{number}}</span>
+            </span>
+            </li>
+        </ul>
+    </nav>
+
+    <nav *ngIf="shouldShowPagination()" class="ng2-smart-pagination-nav pull-right">
+        <ul class="ng2-smart-pagination pagination">
+            <li class="ng2-smart-page-item page-item" [ngClass]="{disabled: getPage() == 1}">
+                <a class="ng2-smart-page-link page-link" href="#"
+                   (click)="getPage() == 1 ? false : paginate(1)" aria-label="First">
+                    <span aria-hidden="true">&laquo;</span>
+                    <span class="sr-only">First</span>
+                </a>
+            </li>
+            <li class="ng2-smart-page-item page-item"
+                [ngClass]="{active: getPage() == page}" *ngFor="let page of getPages()">
+          <span class="ng2-smart-page-link page-link"
+                *ngIf="getPage() == page">{{ page }} <span class="sr-only">(current)</span></span>
+                <a class="ng2-smart-page-link page-link" href="#"
+                   (click)="paginate(page)" *ngIf="getPage() != page">{{ page }}</a>
+            </li>
+
+            <li class="ng2-smart-page-item page-item"
+                [ngClass]="{disabled: getPage() == getLast()}">
+                <a class="ng2-smart-page-link page-link" href="#"
+                   (click)="getPage() == getLast() ? false : paginate(getLast())" aria-label="Last">
+                    <span aria-hidden="true">&raquo;</span>
+                    <span class="sr-only">Last</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>

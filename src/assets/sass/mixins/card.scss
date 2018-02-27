@@ -1,0 +1,12 @@
+@mixin card($paddingY: $cardPaddingY, $paddingX: $cardPaddingX, $border: 1px solid $grey) {
+  > div.row {
+    margin: 0;
+    > div {
+      background-color: #ffffff;
+      border-radius: $borderRadius;
+      padding: $paddingY $paddingX;
+      margin: 20px 0;
+      border: $border;
+    }
+  }
+}

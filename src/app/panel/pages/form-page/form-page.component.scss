@@ -2,15 +2,6 @@
 
 app-form-page {
   > div.container-fluid {
-    > div.row {
-      margin: 0;
-      > div {
-        background-color: #ffffff;
-        border-radius: $borderRadius;
-        padding: $cardPaddingY $cardPaddingX;
-        margin: 20px 0;
-        border: 1px solid $grey;
-      }
-    }
+    @include card($cardPaddingY, $cardPaddingX, none);
   }
 }

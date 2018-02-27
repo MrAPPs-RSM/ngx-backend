@@ -1,0 +1,39 @@
+<tr *ngFor="let row of grid.getRows()"
+    (click)="userSelectRow.emit(row)"
+    (mouseover)="rowHover.emit(row)"
+    [style.cursor]="dragula ? 'move' : 'auto'"
+    class="ng2-smart-row"
+    [ngClass]="{selected: row.isSelected}">
+    <td *ngIf="isMultiSelectVisible" class="ng2-smart-actions ng2-smart-action-multiple-select"
+        (click)="onMultipleSelectRow($event, row)">
+        <label class="checkbox">
+            <input type="checkbox"
+                   [ngModel]="row.isSelected"
+                   class="form-control">
+            <span></span>
+        </label>
+    </td>
+
+    <td *ngFor="let cell of row.cells">
+        <ng2-smart-table-cell [cell]="cell"
+                              [grid]="grid"
+                              [row]="row"
+                              [isNew]="false"
+                              [mode]="mode">
+        </ng2-smart-table-cell>
+    </td>
+
+    <td *ngIf="!row.isInEditing" class="ng2-smart-actions">
+        <ng2-st-tbody-actions
+                [row]="row"
+                [grid]="grid"
+                (action)="action.emit($event)"
+        ></ng2-st-tbody-actions>
+    </td>
+</tr>
+
+<tr *ngIf="grid.getRows().length == 0">
+    <td [attr.colspan]="getColspan()">
+        {{ noDataMessage }}
+    </td>
+</tr>

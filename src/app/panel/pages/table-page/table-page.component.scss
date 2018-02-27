@@ -1,0 +1,7 @@
+@import '../../../../assets/sass/partials/imports';
+
+app-table-page {
+  > div.container-fluid {
+    @include card($cardPaddingY, $cardPaddingY, none);
+  }
+}

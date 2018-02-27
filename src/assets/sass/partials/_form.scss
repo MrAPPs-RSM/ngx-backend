@@ -1,6 +1,7 @@
 .form-group {
   @include clearfix;
 
+  margin-top: 0;
   /* Layout */
   &.no-margin {
     margin-bottom: 0;
@@ -37,20 +38,20 @@
 
   &.has-error {
     > label {
-      color: $error;
+      color: $danger;
       + input {
-        border-color: $error;
+        border-color: $danger;
         &:focus {
-          border-color: $error;
+          border-color: $danger;
         }
       }
 
       /* Date picker */
       + div.ngui-datetime-picker-wrapper {
         > input {
-          border-color: $error;
+          border-color: $danger;
           &:focus {
-            border-color: $error;
+            border-color: $danger;
           }
         }
       }
@@ -62,69 +63,136 @@
     font-size: 13px;
 
     &.danger {
-      color: $error;
+      color: $danger;
     }
     &.success {
       color: $success;
     }
   }
+}
 
-  > div.checkbox {
-    padding-left: 20px;
-    > input[type="checkbox"] {
-      opacity: 0;
-      z-index: 1;
-      cursor: pointer;
-
-      &:checked + label::after{
-        background-color: $primary;
-      }
-
-      &:disabled{
-        cursor: not-allowed;
-      }
-
-      &:disabled + label{
-        opacity: 0.65;
-
-        &::before{
-          cursor: not-allowed;
+ng-select.ng-select.bottom {
+  &.opened, &.focused {
+    > div.ng-control {
+      background-color: #f5f5f5;
+      @include box-shadow(none);
+      border-radius: $borderRadius;
+      border: 1px solid $lightGrey;
+    }
+  }
+  > div.ng-control {
+    height: 45px;
+    border-radius: $borderRadius;
+    border: 1px solid $lightGrey;
+    > span.ng-clear-zone {
+      &:hover {
+        > span {
+          color: $sidebar;
         }
       }
     }
-    > label{
-      display: inline-block;
-      vertical-align: middle;
-      position: relative;
-      padding-left: 5px;
-      color: $default;
-      font-size: 13px;
-      font-weight: $light;
 
-      &::before{
-        content: "";
-        display: inline-block;
-        position: absolute;
-        width: 17px;
-        height: 17px;
-        left: 0;
-        margin-left: -20px;
-        border: 1px solid $lightGrey;
+    > div.ng-value-container {
+      > div.ng-value {
+        overflow: hidden;
         border-radius: $borderRadius;
-        background-color: #ffffff;
+        border-color: $lightGrey;
+        font-size: 13px;
+        padding: 2px 5px;
+        > span.ng-value-icon.left {
+          border: none;
+          padding: 0;
+          &:hover {
+            background-color: #f5f5f5;
+          }
+        }
+        > span.ng-value-label {
+          padding: 0;
+        }
       }
+    }
+  }
 
-      &::after{
-        @include _transition(all 0.3s);
-        content: '';
-        display: inline-block;
-        position: absolute;
-        width: 13px;
-        height: 13px;
-        left: 2px;
-        top: 2px;
-        margin-left: -20px;
+  &[ng-reflect-multiple="true"] {
+    > div.ng-control {
+      > div.ng-value-container {
+        > div.ng-value {
+          background-color: #f5f5f5;
+        }
       }
+    }
+  }
+  > div.ng-select-dropdown-outer {
+    margin-top: 0;
+    border-radius: $borderRadius;
+    border: 1px solid $lightGrey;
+    > ng-select-virtual-scroll.ng-select-dropdown {
+      > div {
+        > div.ng-option {
+          border-radius: $borderRadius;
+          &.marked {
+            background-color: #f5f5f5;
+          }
+        }
+      }
+    }
+  }
+}
+
+label.checkbox {
+  padding-right: 0;
+  padding-left: 0;
+  margin-bottom: 0;
+  & > input {
+    height: 0;
+    z-index: -100 !important;
+    opacity: 0;
+    &:checked {
+      & + span {
+        &:before {
+          font: normal normal normal 17px/1 FontAwesome;
+          text-decoration: inherit;
+          text-rendering: optimizeLegibility;
+          text-transform: none;
+          -moz-osx-font-smoothing: grayscale;
+          -webkit-font-smoothing: antialiased;
+          font-smoothing: antialiased;
+          border-color: $primary;
+          background-color: $primary;
+          color: #ffffff;
+          content: "\f17b";
+          font-size: 16px;
+        }
+      }
+    }
+  }
+  & > span {
+    $size: 18px;
+    position: relative;
+    display: inline-block;
+    margin: 0;
+    line-height: $size;
+    cursor: pointer;
+    padding-left: 22px;
+    width: 100%;
+    &:before {
+      color: $primary;
+      cursor: pointer;
+      font-size: 17px;
+      line-height: 17px;
+      height: $size;
+      width: $size;
+      content: '';
+      background-color: transparent;
+      border: 1px solid $lightGrey;
+      border-radius: 0;
+      display: inline-block;
+      text-align: center;
+      margin-right: 6px;
+      position: relative;
+      top: 0;
+      margin-left: -22px;
+      float: left;
     }
   }
 }

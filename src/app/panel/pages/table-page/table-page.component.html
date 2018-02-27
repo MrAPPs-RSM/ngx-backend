@@ -1,3 +1,7 @@
-<p>
-  table-page works!
-</p>
+<div class="container-fluid">
+    <div class="row">
+        <div *ngFor="let table of params.tables" [class]="table.class ? table.class : 'col-sm-12'">
+            <app-table [settings]="table"></app-table>
+        </div>
+    </div>
+</div>
