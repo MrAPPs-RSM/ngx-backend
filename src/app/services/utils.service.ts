@@ -7,6 +7,28 @@ export class UtilsService {
     constructor() {
     }
 
+    private static addLeadingZero(value: any): any {
+        return value < 10 ? '0' + value : value;
+    }
+
+    public static timeConverter(timestamp: number) {
+        const a = new Date(timestamp);
+        const year = a.getUTCFullYear();
+        let month = a.getUTCMonth() + 1;
+        let date = a.getUTCDate();
+        let hour = a.getUTCHours();
+        let min = a.getUTCMinutes();
+        let sec = a.getUTCSeconds();
+
+        month = UtilsService.addLeadingZero(month);
+        date = UtilsService.addLeadingZero(date);
+        hour = UtilsService.addLeadingZero(hour);
+        min = UtilsService.addLeadingZero(min);
+        sec = UtilsService.addLeadingZero(sec);
+
+        return date + '-' + month + '-' + year + ' ' + hour + ':' + min + ':' + sec;
+    }
+
     public static isValidURL(str) {
         const pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
             '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|' + // domain name
