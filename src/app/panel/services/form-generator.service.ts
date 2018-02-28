@@ -7,7 +7,10 @@ import {UtilsService} from '../../services/utils.service';
 @Injectable()
 export class FormGeneratorService {
 
+    public contentLanguages: any[];
+
     constructor() {
+        this.contentLanguages = [];
     }
 
     private getValidators(validators: Object): Array<any> {
@@ -48,11 +51,12 @@ export class FormGeneratorService {
         return output;
     }
 
-    public generate(fields: any[]): FormGroup | any {
-        const group: any = {};
+    private generateFormFields(fields: any[]): any | any {
 
         if (fields && fields.length > 0) {
-            fields.forEach((field) => {
+            const group: any = {};
+
+            for (const field of fields) {
                 let validators = [];
                 /**
                  * Adding validators if defined as field properties
@@ -120,6 +124,7 @@ export class FormGeneratorService {
                     }
                         break;
                     case formConfig.types.MAP: {
+
                         const latValidators = this.getValidators(field['lat'].validators);
                         group[field['lat'].key] = new FormControl(
                             null,
@@ -142,7 +147,28 @@ export class FormGeneratorService {
                     }
                         break;
                 }
-            });
+            }
+
+            return group;
+        }
+
+        return null;
+    }
+
+    public generate(fields: any): FormGroup | any {
+
+        if (fields instanceof Array && fields.length > 0) {
+            return new FormGroup(this.generateFormFields(fields));
+        } else if (fields instanceof Object) {
+            const group = this.generateFormFields(fields['base']);
+
+            for (const key of Object.keys(fields)) {
+
+                if (key !== 'base') {
+                    const subFields = fields[key];
+                    group[key] = new FormGroup(this.generateFormFields(subFields));
+                }
+            }
 
             return new FormGroup(group);
         } else {

@@ -1,30 +1,18 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FormGroup} from '@angular/forms';
 import 'rxjs/add/operator/first';
 import {FormField} from '../../interfaces/form-field';
+import {BaseInputComponent} from '../base-input/base-input.component';
 
 @Component({
     selector: 'app-input-color',
     templateUrl: './input-color.component.html',
     styleUrls: ['./input-color.component.scss']
 })
-export class InputColorComponent implements OnInit {
+export class InputColorComponent extends BaseInputComponent implements OnInit {
 
-    @Input() form: FormGroup;
     @Input() field: FormField;
 
     color: any = null;
-
-    constructor() {
-    }
-
-    get isValid() {
-        if (this.form.controls[this.field.key].value === null || this.form.controls[this.field.key].value === '') {
-            return true;
-        } else {
-            return this.form.controls[this.field.key].valid;
-        }
-    }
 
     ngOnInit() {
         this.onColorChange(null);

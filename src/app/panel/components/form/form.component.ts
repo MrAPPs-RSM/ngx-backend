@@ -21,8 +21,14 @@ export class FormComponent implements OnInit {
     @Output() response: EventEmitter<any> = new EventEmitter<any>();
 
     public form: FormGroup;
-    public formConfig = formConfig;
-    public isLoading: boolean = false;
+    public isLoading = false;
+    public previousLang: any = null;
+    public currentLang: any = null;
+    public isMultiLangEnabled = false;
+    objectKeys = Object.keys;
+    valueOfSettingsField(key: string) {
+        return this.settings.fields[key];
+    }
 
     constructor(private _formGenerator: FormGeneratorService,
                 private _modal: ModalService,
@@ -30,21 +36,74 @@ export class FormComponent implements OnInit {
                 private _route: ActivatedRoute) {
     }
 
+    setupForms(): FormGroup {
+        this.isMultiLangEnabled = 'en' in this.settings.fields && this._formGenerator.contentLanguages.length > 0;
+
+        if (this.isMultiLangEnabled) {
+            for (const contentLanguage of this._formGenerator.contentLanguages) {
+
+                if (contentLanguage.isDefault) {
+                    this.previousLang = contentLanguage;
+                    this.currentLang = contentLanguage;
+                }
+            }
+        }
+
+        return this._formGenerator.generate(this.settings.fields);
+    }
+
+    getLanguageForIsoCode(isoCode: string): any {
+        for (const language of this._formGenerator.contentLanguages) {
+            if (language.isoCode === isoCode) {
+                return language;
+            }
+        }
+
+        return null;
+    }
+    isMultiLangField(key: string): boolean {
+        return this.getLanguageForIsoCode(key) !== null;
+    }
+
+    onLanguageChange(newValue) {
+
+        this.currentLang = this.getLanguageForIsoCode(newValue);
+        this.previousLang = this.currentLang;
+    }
+
+    getLanguages() {
+        return this._formGenerator.contentLanguages;
+    }
+
     ngOnInit() {
-        this.form = this._formGenerator.generate(this.settings.fields);
+
+        for (const language of this._formGenerator.contentLanguages) {
+            if (language.isDefault) {
+                this.currentLang = language;
+                break;
+            }
+        }
+
+        this.form = this.setupForms();
+
+        console.log(this.form);
+
         this.form.valueChanges.subscribe(
             data => {
                 console.log(data);
-                // console.log(this.form);
+                 console.log(this.form);
             }
         );
         if (this.settings.isEdit) {
+
             this.loadData();
         }
     }
 
+
     loadData(entity?: any): void {
         let id = null;
+
         if (this._route.snapshot.params && this._route.snapshot.params['id']) {
             id = this._route.snapshot.params['id'];
         } else {
@@ -83,6 +142,8 @@ export class FormComponent implements OnInit {
             /** If is login form, the login component will handle the request */
             this.response.emit(this.form.value);
         } else {
+           // this.updateForms();
+
             if (this.form.valid) {
                 if (this.settings.submit.confirm) {
                     this._modal.confirm()

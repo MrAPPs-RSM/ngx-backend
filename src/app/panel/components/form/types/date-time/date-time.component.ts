@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FormGroup} from '@angular/forms';
 import {FormFieldDate} from '../../interfaces/form-field-date';
+import {BaseInputComponent} from '../base-input/base-input.component';
 import {NguiDatetime} from '@ngui/datetime-picker';
 
 @Component({
@@ -8,13 +8,9 @@ import {NguiDatetime} from '@ngui/datetime-picker';
     templateUrl: './date-time.component.html',
     styleUrls: ['./date-time.component.scss']
 })
-export class DateTimeComponent implements OnInit {
+export class DateTimeComponent extends BaseInputComponent implements OnInit {
 
-    @Input() form: FormGroup;
     @Input() field: FormFieldDate;
-
-    constructor() {
-    }
 
     ngOnInit() {
         this.form.controls[this.field.key].valueChanges

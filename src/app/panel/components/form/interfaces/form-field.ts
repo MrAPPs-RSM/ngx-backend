@@ -1,5 +1,6 @@
 export interface FormField {
     type: string;
+    multiLang: boolean;
     label: string;
     key?: string;
     disabled?: string;

@@ -21,6 +21,7 @@ import {SetupService} from './services/setup.service';
 import {DashboardPageComponent} from './pages/dashboard-page/dashboard-page.component';
 import {PageTitleService} from './services/page-title.service';
 import {FormComponent} from './components/form/form.component';
+import {BaseInputComponent} from './components/form/types/base-input/base-input.component';
 import {InputPasswordComponent} from './components/form/types/input-password/input-password.component';
 import {InputTextComponent} from './components/form/types/input-text/input-text.component';
 import {ModalService} from './services/modal.service';
@@ -37,6 +38,7 @@ import {DateTimeRangeComponent} from './components/form/types/date-time-range/da
 import {FileUploadComponent} from './components/form/types/file-upload/file-upload.component';
 import {MapComponent} from './components/form/types/map/map.component';
 import {ContentTopComponent} from './components/content-top/content-top.component';
+import {FormTypeSwitcherComponent} from './components/form/form-type-switcher/form-type-switcher.component';
 
 const routes: Routes = [
     {
@@ -82,6 +84,7 @@ const routes: Routes = [
         FormComponent,
         TableComponent,
         DashboardPageComponent,
+        BaseInputComponent,
         InputTextComponent,
         InputPasswordComponent,
         FormPageComponent,
@@ -89,6 +92,7 @@ const routes: Routes = [
         InputUrlComponent,
         InputNumberComponent,
         SeparatorComponent,
+        FormTypeSwitcherComponent,
         InputColorComponent,
         InputTextareaComponent,
         SelectComponent,

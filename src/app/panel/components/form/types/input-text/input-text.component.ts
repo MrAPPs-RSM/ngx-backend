@@ -1,27 +1,14 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {BaseInputComponent} from '../base-input/base-input.component';
 
 @Component({
     selector: 'app-input-text',
     templateUrl: './input-text.component.html',
     styleUrls: ['./input-text.component.scss']
 })
-export class InputTextComponent implements OnInit {
-
-    @Input() form: FormGroup;
-    @Input() field: any = {};
-
-    constructor() {
-    }
+export class InputTextComponent extends BaseInputComponent implements OnInit {
 
     ngOnInit() {
     }
 
-    get isValid() {
-        if (this.form.controls[this.field.key].value === null || this.form.controls[this.field.key].value === '') {
-            return true;
-        } else {
-            return this.form.controls[this.field.key].valid;
-        }
-    }
 }

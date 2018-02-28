@@ -6,6 +6,7 @@ import {DashboardPageComponent} from '../pages/dashboard-page/dashboard-page.com
 import {TablePageComponent} from '../pages/table-page/table-page.component';
 import {FormPageComponent} from '../pages/form-page/form-page.component';
 import {UtilsService} from '../../services/utils.service';
+import {FormGeneratorService} from './form-generator.service';
 
 const TYPES = {
     dashboard: DashboardPageComponent,
@@ -17,13 +18,20 @@ const TYPES = {
 export class SetupService {
 
     constructor(private _router: Router,
-                private _apiService: ApiService) {
+                private _apiService: ApiService,
+                private _formGeneratorService: FormGeneratorService) {
+      
     }
 
     public setup(): Promise<any> {
         return new Promise<any>((resolve, reject) => {
             this._apiService.get(environment.api.setupEndpoint)
                 .then((data) => {
+
+                    if ('contentLanguages' in data) {
+                        this._formGeneratorService.contentLanguages = data.contentLanguages;
+                    }
+
                     this.loadRoutes(data);
                     const menu = this.prepareMenu(data);
                     resolve(menu);
@@ -34,14 +42,18 @@ export class SetupService {
         });
     }
 
-    private remapRoutesData(data: any,): Array<any> {
+    private remapRoutesData(data: any): Array<any> {
         let routes = [];
 
-        for (const item of data) {
-            if ('children' in item) {
-                routes = routes.concat(this.remapRoutesData(item.children));
-            } else {
-                routes.push(item);
+        if ('pages' in data) {
+            routes = routes.concat(this.remapRoutesData(data.pages));
+        } else {
+            for (const item of data) {
+                if ('children' in item) {
+                    routes = routes.concat(this.remapRoutesData(item.children));
+                } else {
+                    routes.push(item);
+                }
             }
         }
 
@@ -73,7 +85,7 @@ export class SetupService {
     private remapMenu(data: any): any[] {
         let menu = [];
 
-        for (const item of data) {
+        for (const item of ('pages' in data) ? data.pages : data) {
             if ('type' in item) {
                 // Is a component
                 if (item.type === 'group') {

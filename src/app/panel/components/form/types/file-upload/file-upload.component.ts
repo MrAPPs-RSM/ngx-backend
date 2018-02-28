@@ -2,7 +2,6 @@ import {
     Component, ElementRef, EventEmitter, Input, OnInit, Renderer, ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import {FormGroup} from '@angular/forms';
 import {
     FormFieldFile, GoogleCloudStorageResponse, isGoogleCloudStorageResponse, isLocalStorageResponse,
     LocalStorageResponse,
@@ -13,6 +12,7 @@ import {ApiService} from '../../../../../api/api.service';
 import {ToastrService} from 'ngx-toastr';
 import {environment} from '../../../../../../environments/environment';
 import {UtilsService} from '../../../../../services/utils.service';
+import {BaseInputComponent} from '../base-input/base-input.component';
 
 @Component({
     selector: 'app-file-upload',
@@ -20,11 +20,9 @@ import {UtilsService} from '../../../../../services/utils.service';
     styleUrls: ['./file-upload.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class FileUploadComponent implements OnInit {
+export class FileUploadComponent extends BaseInputComponent implements OnInit {
 
-    @Input() form: FormGroup;
     @Input() field: FormFieldFile;
-    @Input() isEdit: boolean;
 
     options: UploaderOptions = {
         concurrency: 1,
@@ -39,9 +37,9 @@ export class FileUploadComponent implements OnInit {
 
     uploadInput: EventEmitter<UploadInput>;
 
-    rejected: boolean = false;
-    dragOver: boolean = false;
-    isLoading: boolean = false;
+    rejected = false;
+    dragOver = false;
+    isLoading = false;
 
     @ViewChild('fileUpload') _fileUpload: ElementRef;
 
@@ -65,6 +63,7 @@ export class FileUploadComponent implements OnInit {
     constructor(private _renderer: Renderer,
                 private _toastService: ToastrService,
                 private _apiService: ApiService) {
+        super();
     }
 
     ngOnInit() {
