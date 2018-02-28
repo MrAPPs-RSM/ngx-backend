@@ -10,6 +10,7 @@ import {EmailViewComponent} from './cell-view-mode/types/email-view.component';
 import {UrlViewComponent} from './cell-view-mode/types/url-view.component';
 import {ImageViewComponent} from './cell-view-mode/types/image-view.component';
 import {ColorViewComponent} from './cell-view-mode/types/color-view.component';
+import {DateViewComponent} from './cell-view-mode/types/date-view.component';
 
 const CELL_COMPONENTS = [
     CellComponent,
@@ -19,7 +20,8 @@ const CELL_COMPONENTS = [
     EmailViewComponent,
     UrlViewComponent,
     ImageViewComponent,
-    ColorViewComponent
+    ColorViewComponent,
+    DateViewComponent
 ];
 
 @NgModule({

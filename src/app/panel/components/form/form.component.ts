@@ -137,6 +137,7 @@ export class FormComponent implements OnInit {
     }
 
     onSubmit(): void {
+        console.log('ON SUBMIT');
         if (this.settings.isLoginForm) {
             /** If is login form, the login component will handle the request */
             this.response.emit(this.form.value);

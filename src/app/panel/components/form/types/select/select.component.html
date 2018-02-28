@@ -5,12 +5,24 @@
         <label class="select-label">{{field.label}}</label>
         <span *ngIf="field.validators && field.validators.required">*</span>
 
-        <ng-select [items]="options"
-                   [multiple]="!!field.multiple"
-                   formControlName="{{field.key}}"
+        <ng-select *ngIf="field.multiple"
+                   [items]="options"
+                   [multiple]="true"
                    bindLabel="text"
-                   bindValue="id"
                    placeholder="{{field.placeholder}}"
+                   [(ngModel)]="selected"
+                   (change)="onChange($event)"
+                   [ngModelOptions]="{standalone: true}"
+        >
+        </ng-select>
+
+        <ng-select *ngIf="!field.multiple"
+                   [items]="options"
+                   [multiple]="false"
+                   bindValue="id"
+                   bindLabel="text"
+                   placeholder="{{field.placeholder}}"
+                   formControlName="{{field.key}}"
         >
         </ng-select>
 

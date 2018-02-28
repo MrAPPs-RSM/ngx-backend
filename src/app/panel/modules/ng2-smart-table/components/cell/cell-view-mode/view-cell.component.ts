@@ -7,6 +7,7 @@ import {Cell} from '../../../lib/data-set/cell';
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <div [ngSwitch]="cell.getColumn().type">
+            <date-view-component *ngSwitchCase="'date'" [cell]="cell"></date-view-component>
             <color-view-component *ngSwitchCase="'color'" [cell]="cell"></color-view-component>
             <image-view-component *ngSwitchCase="'image'" [cell]="cell"></image-view-component>
             <url-view-component *ngSwitchCase="'url'" [cell]="cell"></url-view-component>

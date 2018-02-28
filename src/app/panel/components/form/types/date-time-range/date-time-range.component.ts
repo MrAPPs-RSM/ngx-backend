@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormFieldDateRange} from '../../interfaces/form-field-date-range';
 import {BaseInputComponent} from '../base-input/base-input.component';
+import {NguiDatetime} from '@ngui/datetime-picker';
 
 @Component({
     selector: 'app-date-time-range',
@@ -12,6 +13,23 @@ export class DateTimeRangeComponent extends BaseInputComponent implements OnInit
     @Input() field: FormFieldDateRange;
 
     ngOnInit() {
+        this.form.controls[this.field.startDate.key].valueChanges
+            .subscribe(value => {
+                if (value && !isNaN(value)) {
+                    this.form.controls[this.field.startDate.key].setValue(
+                        NguiDatetime.formatDate(new Date(value))
+                    );
+                }
+            });
+        this.form.controls[this.field.endDate.key].valueChanges
+            .first()
+            .subscribe(value => {
+                if (value && !isNaN(value)) {
+                    this.form.controls[this.field.endDate.key].setValue(
+                        NguiDatetime.formatDate(new Date(value))
+                    );
+                }
+            });
     }
 
     isDateValid(type: string) {

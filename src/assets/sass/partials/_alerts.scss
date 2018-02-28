@@ -1,0 +1,29 @@
+.alert {
+  padding: 15px 20px;
+  border-radius: $borderRadius;
+
+  &.alert-default {
+    background-color: lighten($default, 20);
+    color: darken($default, 20);
+  }
+  &.alert-primary {
+    background-color: lighten($primary, 20);
+    color: darken($primary, 20);
+  }
+  &.alert-success {
+    background-color: lighten($success, 20);
+    color: darken($success, 20);
+  }
+  &.alert-warning {
+    background-color: lighten($warning, 20);
+    color: darken($warning, 20);
+  }
+  &.alert-info {
+    background-color: lighten($info, 20);
+    color: darken($info, 20);
+  }
+  &.alert-danger {
+    background-color: lighten($danger, 20);
+    color: darken($danger, 20);
+  }
+}
