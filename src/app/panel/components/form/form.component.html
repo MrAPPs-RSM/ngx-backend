@@ -65,7 +65,9 @@
                     <app-select
                             *ngSwitchCase="formConfig.types.SELECT"
                             [form]="form"
-                            [field]="field">
+                            [field]="field"
+                            [isEdit]="settings.isEdit"
+                    >
                     </app-select>
 
                     <app-input-email

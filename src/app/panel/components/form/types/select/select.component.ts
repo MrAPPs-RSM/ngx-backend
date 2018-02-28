@@ -15,8 +15,11 @@ export class SelectComponent implements OnInit {
 
     @Input() form: FormGroup;
     @Input() field: FormFieldSelect;
+    @Input() isEdit: boolean;
 
     public options: SelectData[] = [];
+
+    public selected: any; // Array or object
 
     constructor(private _apiService: ApiService,
                 private _route: ActivatedRoute) {
@@ -25,6 +28,8 @@ export class SelectComponent implements OnInit {
     ngOnInit() {
         this.loadData();
         const params = {};
+        this.selected = this.field.multiple === true ? [] : {};
+
         if (this.field.dependsOn) {
             this.field.dependsOn.forEach((key) => {
                 if (this.form.controls[key]) {
@@ -58,14 +63,27 @@ export class SelectComponent implements OnInit {
         }
     }
 
-    // TODO: handle multiple select
     private loadData(): void {
-        this.loadOptions()
-            .then(() => {
-            })
-            .catch((error) => {
-                console.log(error);
+        if (this.isEdit && this.field.multiple) {
+            this.form.controls[this.field.key].valueChanges.first().subscribe((value) => {
+                this.loadOptions().then(() => {
+                    if (value instanceof Array) {
+                        value.forEach((item) => {
+                            this.selected.push({
+                                id: item.id,
+                                text: item.nome
+                            });
+                            this.selected = [...this.selected];
+                        });
+                    }
+                    this.refreshFormValue();
+                }).catch((err) => {
+                    console.log(err);
+                });
             });
+        } else {
+            this.loadOptions().catch((err) => console.log(err));
+        }
     }
 
     private loadOptions(params?: any): Promise<any> {
@@ -83,6 +101,7 @@ export class SelectComponent implements OnInit {
                     this._apiService.get(endpoint, params)
                         .then((response) => {
                             this.options = response;
+                            resolve();
                         })
                         .catch((response: HttpErrorResponse) => {
                             // TODO: decide what to do if select options can't be loaded (back to prev page?, alert?, message?)
@@ -93,6 +112,25 @@ export class SelectComponent implements OnInit {
                 reject();
             }
         });
+    }
+
+    onChange($event): void {
+        this.selected = $event;
+        this.refreshFormValue();
+    }
+
+    private refreshFormValue(): void {
+        if (this.selected) {
+            if (this.selected instanceof Array) {
+                const ids = [];
+                this.selected.forEach((item) => {
+                    ids.push(item.id);
+                });
+                this.form.controls[this.field.key].setValue(ids);
+            }
+        } else {
+            this.form.controls[this.field.key].setValue(null);
+        }
     }
 }
 

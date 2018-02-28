@@ -38,6 +38,8 @@ export class FormPageComponent implements OnInit, OnDestroy {
     }
 
     onResponse(form: FormSettings, response: any | HttpErrorResponse): void {
+        console.log('ON RESPONSE');
+        console.log(response);
         switch (form.responseType) {
             case 'terminal': {
                 /** In this case, response is almost always custom,

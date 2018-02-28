@@ -81,7 +81,7 @@ ng-select.ng-select.bottom {
     }
   }
   > div.ng-control {
-    height: 45px;
+    min-height: 45px;
     border-radius: $borderRadius;
     border: 1px solid $lightGrey;
     > span.ng-clear-zone {
