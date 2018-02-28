@@ -26,6 +26,7 @@ export class FormComponent implements OnInit {
     public currentLang: any = null;
     public isMultiLangEnabled = false;
     objectKeys = Object.keys;
+
     valueOfSettingsField(key: string) {
         return this.settings.fields[key];
     }
@@ -61,13 +62,13 @@ export class FormComponent implements OnInit {
 
         return null;
     }
+
     isMultiLangField(key: string): boolean {
         return this.getLanguageForIsoCode(key) !== null;
     }
 
-    onLanguageChange(newValue) {
-
-        this.currentLang = this.getLanguageForIsoCode(newValue);
+    onLanguageChange(value: {isoCode: string}) {
+        this.currentLang = this.getLanguageForIsoCode(value.isoCode);
         this.previousLang = this.currentLang;
     }
 
@@ -86,12 +87,12 @@ export class FormComponent implements OnInit {
 
         this.form = this.setupForms();
 
-        console.log(this.form);
+        // console.log(this.form);
 
         this.form.valueChanges.subscribe(
             data => {
                 console.log(data);
-                 console.log(this.form);
+                console.log(this.form);
             }
         );
         if (this.settings.isEdit) {
@@ -142,7 +143,7 @@ export class FormComponent implements OnInit {
             /** If is login form, the login component will handle the request */
             this.response.emit(this.form.value);
         } else {
-           // this.updateForms();
+            // this.updateForms();
 
             if (this.form.valid) {
                 if (this.settings.submit.confirm) {

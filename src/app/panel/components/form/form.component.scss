@@ -67,10 +67,20 @@ app-form {
         position: absolute;
         top: -#{$cardPaddingY};
         left: -#{$cardPaddingX};
-        width: calc(100% + (#{$cardPaddingX}*2));
-        height: calc(100% + (#{$cardPaddingY}*2));
+        width: calc(100% + (#{$cardPaddingX} * 2));
+        height: calc(100% + (#{$cardPaddingY} * 2));
         background: #4c4c4c;
         opacity: 0.1;
+      }
+
+      div.multilang {
+        max-width: 130px;
+        margin-bottom: 25px;
+        > ng-select.ng-select {
+          > div.ng-control {
+            min-height: 35px;
+          }
+        }
       }
     }
   }

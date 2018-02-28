@@ -17,27 +17,29 @@ export const environment = {
             endpoint: 'persons/login',
             form: {
                 title: 'Ngx Backend - Login',
-                fields: [
-                    {
-                        key: 'username',
-                        type: 'text',
-                        label: 'Username',
-                        placeholder: 'Username',
-                        validators: {
-                            required: true
+                fields: {
+                    base: [
+                        {
+                            key: 'username',
+                            type: 'text',
+                            label: 'Username',
+                            placeholder: 'Username',
+                            validators: {
+                                required: true
+                            }
+                        },
+                        {
+                            key: 'password',
+                            type: 'password',
+                            label: 'Password',
+                            placeholder: 'Password',
+                            validators: {
+                                required: true,
+                                minLength: 4
+                            }
                         }
-                    },
-                    {
-                        key: 'password',
-                        type: 'password',
-                        label: 'Password',
-                        placeholder: 'Password',
-                        validators: {
-                            required: true,
-                            minLength: 4
-                        }
-                    }
-                ],
+                    ],
+                },
                 submit: {
                     label: 'Login'
                 },

@@ -17,12 +17,15 @@
 
     <div class="fields-wrapper">
         <div class="row">
-            <div [hidden]="!isMultiLangEnabled">
-                <select (change)="onLanguageChange($event.target.value)">
-                    <option *ngFor="let language of getLanguages()" [(selected)]=" language == currentLang " value="{{language.isoCode}}">
-                        {{language.name}}
-                    </option>
-                </select>
+            <div class="col-sm-12 multilang" *ngIf="isMultiLangEnabled">
+                <ng-select [items]="getLanguages()"
+                           [clearable]="false"
+                           [searchable]="false"
+                           [(ngModel)]="currentLang"
+                           [ngModelOptions]="{standalone: true}"
+                           (change)="onLanguageChange($event)"
+                           bindLabel="name">
+                </ng-select>
             </div>
 
             <div *ngFor="let field of settings.fields.base">
