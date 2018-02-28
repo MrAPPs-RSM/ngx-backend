@@ -17,11 +17,4 @@ export class InputTextComponent implements OnInit {
     ngOnInit() {
     }
 
-    get isValid() {
-        if (this.form.controls[this.field.key].value === null || this.form.controls[this.field.key].value === '') {
-            return true;
-        } else {
-            return this.form.controls[this.field.key].valid;
-        }
-    }
 }

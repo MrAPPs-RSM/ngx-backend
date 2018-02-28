@@ -1,0 +1,101 @@
+<div [ngSwitch]="field.type">
+
+  <app-separator
+          *ngSwitchCase="formConfig.noInputTypes.SEPARATOR"
+          [field]="field">
+  </app-separator>
+
+  <app-input-text
+          *ngSwitchCase="formConfig.types.TEXT"
+          [form]="form"
+          [field]="field">
+  </app-input-text>
+
+  <app-input-password
+          *ngSwitchCase="formConfig.types.PASSWORD"
+          [form]="form"
+          [field]="field">
+  </app-input-password>
+
+  <app-input-url
+          *ngSwitchCase="formConfig.types.URL"
+          [form]="form"
+          [field]="field">
+  </app-input-url>
+
+  <app-input-number
+          *ngSwitchCase="formConfig.types.NUMBER"
+          [form]="form"
+          [field]="field">
+  </app-input-number>
+
+  <app-input-color
+          *ngSwitchCase="formConfig.types.COLOR"
+          [form]="form"
+          [field]="field"
+  ></app-input-color>
+
+  <app-input-textarea
+          *ngSwitchCase="formConfig.types.TEXTAREA"
+          [form]="form"
+          [field]="field">
+  </app-input-textarea>
+
+  <app-select
+          *ngSwitchCase="formConfig.types.SELECT"
+          [form]="form"
+          [field]="field">
+  </app-select>
+
+  <app-input-email
+          *ngSwitchCase="formConfig.types.EMAIL"
+          [form]="form"
+          [field]="field">
+  </app-input-email>
+
+  <app-checkbox
+          *ngSwitchCase="formConfig.types.CHECKBOX"
+          [form]="form"
+          [field]="field">
+  </app-checkbox>
+
+  <app-date-time
+          *ngSwitchCase="formConfig.types.DATE"
+          [form]="form"
+          [field]="field"
+  ></app-date-time>
+
+  <app-date-time-range
+          *ngSwitchCase="formConfig.types.DATE_RANGE"
+          [form]="form"
+          [field]="field"
+  ></app-date-time-range>
+
+  <app-file-upload
+          *ngSwitchCase="formConfig.types.FILE"
+          [form]="form"
+          [field]="field"
+          [isEdit]="isEdit"
+  ></app-file-upload>
+
+  <app-map
+          *ngSwitchCase="formConfig.types.MAP"
+          [form]="form"
+          [field]="field">
+  </app-map>
+
+  <!--
+                   <list-details
+                           *ngSwitchCase="formConfig.types.LIST_DETAILS"
+                           [form]="form"
+                           [field]="field"
+                           [isEdit]="isEdit">
+                   </list-details>
+
+                   <calendar
+                           *ngSwitchCase="formConfig.types.CALENDAR"
+                           [form]="form"
+                           [field]="field">
+                   </calendar> -->
+
+</div>

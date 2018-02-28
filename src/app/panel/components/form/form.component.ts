@@ -25,8 +25,11 @@ export class FormComponent implements OnInit {
     public isLoading = false;
     public previousLang: any = null;
     public currentLang: any = null;
-    public formGroupModels: any;
     public isMultiLangEnabled = false;
+    objectKeys = Object.keys;
+    valueOfSettingsField(key: string) {
+        return this.settings.fields[key];
+    }
 
     constructor(private _formGenerator: FormGeneratorService,
                 private _modal: ModalService,
@@ -35,53 +38,10 @@ export class FormComponent implements OnInit {
     }
 
     setupForms(): FormGroup {
+        this.isMultiLangEnabled = '1' in this.settings.fields && this._formGenerator.contentLanguages.length > 0;
 
-        let currentForm: FormGroup;
-
-        this.formGroupModels = {};
-
-        let model = {};
-
-        let isMultiLang = false;
-
-        for (const field of this.settings.fields) {
-            if (!('multiLang' in field) || !field.multiLang) {
-                if (field.type === 'lat_lng') {
-                    model[field['lng'].key] = 0.0;
-                    model[field['lat'].key] = 0.0;
-                } else {
-                    model[field.key] = null;
-                }
-            } else {
-                isMultiLang = true;
-            }
-        }
-
-        this.isMultiLangEnabled = isMultiLang && this._formGenerator.contentLanguages.length > 0;
-
-
-        if (Object.keys(model).length > 0) {
-            this.formGroupModels['base'] = model;
-        }
-
-        if (isMultiLang) {
+        if (this.isMultiLangEnabled) {
             for (const contentLanguage of this._formGenerator.contentLanguages) {
-
-                model = {};
-
-                for (const field of this.settings.fields) {
-
-                    if (('multiLang' in field) && field.multiLang) {
-                        if (field.type === 'lat_lng') {
-                            model[field['lng'].key] = 0.0;
-                            model[field['lat'].key] = 0.0;
-                        } else {
-                            model[field.key] = null;
-                        }
-                    }
-                }
-
-                this.formGroupModels[contentLanguage.isoCode] = model;
 
                 if (contentLanguage.isDefault) {
                     this.previousLang = contentLanguage;
@@ -90,9 +50,7 @@ export class FormComponent implements OnInit {
             }
         }
 
-        currentForm = this._formGenerator.generate(this.settings.fields);
-
-        return currentForm;
+        return this._formGenerator.generate(this.settings.fields);
     }
 
     getLanguageForIsoCode(isoCode: string): any {
@@ -103,29 +61,16 @@ export class FormComponent implements OnInit {
         }
     }
 
-    updateForms() {
-
-        const modelValue = this.form.getRawValue();
-
-        if ('base' in this.formGroupModels) {
-            for (const key of Object.keys(this.formGroupModels['base'])) {
-                this.formGroupModels.base[key] = modelValue[key];
-                delete modelValue[key];
-            }
-        }
-
-        this.formGroupModels[this.previousLang.isoCode] = modelValue;
-    }
-
     onLanguageChange(newValue) {
 
         // TODO: check if current form is valid to store in language model (if (this.form.valid))
-        this.updateForms();
+       /* this.updateForms();
 
         this.currentLang = this.getLanguageForIsoCode(newValue);
         this.previousLang = this.currentLang;
 
         this.form.patchValue(this.formGroupModels[this.currentLang.isoCode]);
+        */
     }
 
     getLanguages() {
@@ -196,7 +141,7 @@ export class FormComponent implements OnInit {
             /** If is login form, the login component will handle the request */
             this.response.emit(this.form.value);
         } else {
-            this.updateForms();
+           // this.updateForms();
 
             if (this.form.valid) {
                 if (this.settings.submit.confirm) {

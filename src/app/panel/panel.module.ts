@@ -37,6 +37,7 @@ import {DateTimeRangeComponent} from './components/form/types/date-time-range/da
 import {FileUploadComponent} from './components/form/types/file-upload/file-upload.component';
 import {MapComponent} from './components/form/types/map/map.component';
 import {ContentTopComponent} from './components/content-top/content-top.component';
+import {FormTypeSwitcherComponent} from './components/form/form-type-switcher/form-type-switcher.component';
 
 const routes: Routes = [
     {
@@ -88,6 +89,7 @@ const routes: Routes = [
         InputUrlComponent,
         InputNumberComponent,
         SeparatorComponent,
+        FormTypeSwitcherComponent,
         InputColorComponent,
         InputTextareaComponent,
         SelectComponent,
