@@ -25,7 +25,10 @@ export class PanelComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.menu = this._route.snapshot.data['params'];
+        if (this._route.snapshot.data['params'] && this._route.snapshot.data['params'].length > 0) {
+            this.menu = this._route.snapshot.data['params'];
+        }
+
         if (this._pageRefresh.getLastPath() !== null) {
             if (this._pageRefresh.getLastPath() !== '/panel'
             && this._pageRefresh.getLastPath() !== '/login') {

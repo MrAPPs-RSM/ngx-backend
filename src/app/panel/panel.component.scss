@@ -160,6 +160,10 @@ app-panel {
       width: calc(100% - #{$sidebarWidth});
       float: right;
       @include _transition(all 0.5s);
+
+      div.warnings {
+        margin-top: 15px;
+      }
     }
   }
 }

@@ -8,16 +8,20 @@ div.toast-container {
 
     }
     &.toast-error {
-      background-color: $danger;
+      background-color: lighten($danger, 20);
+      color: darken($danger, 20);
     }
     &.toast-success {
-      background-color: $success;
+      background-color: lighten($success, 20);
+      color: darken($success, 20);
     }
     &.toast-warning {
-      background-color: $warning;
+      background-color: lighten($warning, 20);
+      color: darken($warning, 20);
     }
     &.toast-info {
-      background-color: $info;
+      background-color: lighten($info, 20);
+      color: darken($info, 20);
     }
 
     > button.toast-close-button {

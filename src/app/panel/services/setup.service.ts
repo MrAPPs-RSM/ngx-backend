@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {ApiService} from '../../api/api.service';
 import {Router} from '@angular/router';
-import {TokenService} from '../../auth/token.service';
 import {environment} from '../../../environments/environment';
 import {DashboardPageComponent} from '../pages/dashboard-page/dashboard-page.component';
 import {TablePageComponent} from '../pages/table-page/table-page.component';
@@ -18,7 +17,6 @@ const TYPES = {
 export class SetupService {
 
     constructor(private _router: Router,
-                private _tokenService: TokenService,
                 private _apiService: ApiService) {
     }
 
@@ -31,15 +29,12 @@ export class SetupService {
                     resolve(menu);
                 })
                 .catch((error) => {
-                    // Might never happen, in case, logout the user
-                    this._tokenService.removeToken();
-                    this._router.navigate(['login']);
                     reject(error);
                 });
         });
     }
 
-    private remapRoutesData(data: any, ): Array<any> {
+    private remapRoutesData(data: any,): Array<any> {
         let routes = [];
 
         for (const item of data) {
@@ -74,7 +69,6 @@ export class SetupService {
         routerConfig[1].children = routes;
         this._router.resetConfig(routerConfig);
     }
-
 
     private remapMenu(data: any): any[] {
         let menu = [];
