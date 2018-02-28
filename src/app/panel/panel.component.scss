@@ -2,7 +2,7 @@
 
 app-panel {
   $navbarHeight: 50px;
-  $sidebarWidth: 200px;
+  $sidebarWidth: 280px;
   > nav.navbar {
     border: none;
     border-bottom: 1px solid $grey;
@@ -60,8 +60,6 @@ app-panel {
   }
 
   > .wrapper {
-    margin-top: $navbarHeight;
-
     @include clearfix();
 
     &.sidebar-closed {
@@ -76,14 +74,14 @@ app-panel {
       overflow-y: scroll;
       height: 100%;
       position: fixed;
-      z-index: 1031;
-      top: $navbarHeight;
+      z-index: 1029;
       left: 0;
       background-color: $sidebar;
       width: $sidebarWidth;
       @include _transition(all 0.5s);
 
       > .menu {
+        margin-top: $navbarHeight;
         > ul {
           margin: 0;
           padding: 0;
@@ -158,6 +156,7 @@ app-panel {
     }
 
     > .content {
+      margin-top: $navbarHeight;
       width: calc(100% - #{$sidebarWidth});
       float: right;
       @include _transition(all 0.5s);
