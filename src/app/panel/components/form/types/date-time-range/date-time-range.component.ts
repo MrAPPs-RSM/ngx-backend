@@ -1,19 +1,15 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FormGroup} from '@angular/forms';
 import {FormFieldDateRange} from '../../interfaces/form-field-date-range';
+import {BaseInputComponent} from '../base-input/base-input.component';
 
 @Component({
     selector: 'app-date-time-range',
     templateUrl: './date-time-range.component.html',
     styleUrls: ['./date-time-range.component.scss']
 })
-export class DateTimeRangeComponent implements OnInit {
+export class DateTimeRangeComponent extends BaseInputComponent implements OnInit {
 
-    @Input() form: FormGroup;
     @Input() field: FormFieldDateRange;
-
-    constructor() {
-    }
 
     ngOnInit() {
     }

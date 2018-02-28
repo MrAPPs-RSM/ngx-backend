@@ -3,7 +3,7 @@
         <div class="form-wrapper">
             <div class="row">
                 <div class="col-sm-6">
-                    <div class="form-group no-margin" [ngClass]="{'has-error': !isValid(field.lat.key)}">
+                    <div class="form-group no-margin" [ngClass]="{'has-error': !isValidKey(field.lat.key)}">
                         <label for="{{field.lat.key}}">
                             {{field.lat.label}}
                             <span *ngIf="field.lat.validators && field.lat.validators.required">*</span>
@@ -21,7 +21,7 @@
                     </div>
                 </div>
                 <div class="col-sm-6">
-                    <div class="form-group no-margin" [ngClass]="{'has-error': !isValid(field.lng.key)}">
+                    <div class="form-group no-margin" [ngClass]="{'has-error': !isValidKey(field.lng.key)}">
                         <label for="{{field.lng.key}}">
                             {{field.lng.label}}
                             <span *ngIf="field.lng.validators && field.lng.validators.required">*</span>

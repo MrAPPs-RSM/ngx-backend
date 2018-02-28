@@ -124,6 +124,7 @@ export class FormGeneratorService {
                     }
                         break;
                     case formConfig.types.MAP: {
+
                         const latValidators = this.getValidators(field['lat'].validators);
                         group[field['lat'].key] = new FormControl(
                             null,
@@ -162,6 +163,7 @@ export class FormGeneratorService {
             const group = this.generateFormFields(fields['base']);
 
             for (const key of Object.keys(fields)) {
+
                 if (key !== 'base') {
                     const subFields = fields[key];
                     group[key] = new FormGroup(this.generateFormFields(subFields));

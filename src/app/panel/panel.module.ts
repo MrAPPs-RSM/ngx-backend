@@ -21,6 +21,7 @@ import {SetupService} from './services/setup.service';
 import {DashboardPageComponent} from './pages/dashboard-page/dashboard-page.component';
 import {PageTitleService} from './services/page-title.service';
 import {FormComponent} from './components/form/form.component';
+import {BaseInputComponent} from './components/form/types/base-input/base-input.component';
 import {InputPasswordComponent} from './components/form/types/input-password/input-password.component';
 import {InputTextComponent} from './components/form/types/input-text/input-text.component';
 import {ModalService} from './services/modal.service';
@@ -82,6 +83,7 @@ const routes: Routes = [
         FormComponent,
         TableComponent,
         DashboardPageComponent,
+        BaseInputComponent,
         InputTextComponent,
         InputPasswordComponent,
         FormPageComponent,

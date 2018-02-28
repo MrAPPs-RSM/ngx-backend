@@ -24,10 +24,18 @@
                     </option>
                 </select>
             </div>
+
+            <div *ngFor="let field of settings.fields.base">
+                <app-form-type-switcher [form]="form" [field]="field" [isEdit]="settings.isEdit"></app-form-type-switcher>
+            </div>
+
             <div *ngFor="let key of objectKeys(settings.fields)">
-                <div [formGroupName]="key" *ngFor="let field of valueOfSettingsField(key)">
-                    <app-form-type-switcher [form]="form" [field]="field"></app-form-type-switcher>
+                <div *ngIf="key!='base'">
+                <div [formGroupName]="key" [hidden]="currentLang.isoCode != key" *ngFor="let field of valueOfSettingsField(key)">
+                    <app-form-type-switcher [groupName]="key" [form]="form.get(key)" [field]="field" [isEdit]="settings.isEdit"></app-form-type-switcher>
                 </div>
+                </div>
+
             </div>
         </div>
 

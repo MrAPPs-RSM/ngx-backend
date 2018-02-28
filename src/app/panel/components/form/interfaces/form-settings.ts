@@ -3,7 +3,7 @@ export interface FormSettings {
         endpoint: string,
         filter?: string;
     };
-    fields: any[];
+    fields: any;
     isEdit?: boolean;
     submit?: {
         label?: string; // if not set: "Save"

@@ -1,20 +1,15 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FormGroup} from '@angular/forms';
 import {FormFieldCheckbox} from '../../interfaces/form-field-checkbox';
+import {BaseInputComponent} from '../base-input/base-input.component';
 
 @Component({
     selector: 'app-checkbox',
     templateUrl: './checkbox.component.html',
     styleUrls: ['./checkbox.component.scss']
 })
-export class CheckboxComponent implements OnInit {
+export class CheckboxComponent extends BaseInputComponent implements OnInit {
 
-    @Input() form: FormGroup;
     @Input() field: FormFieldCheckbox;
-    @Input() isEdit: boolean;
-
-    constructor() {
-    }
 
     ngOnInit() {
         if (!this.isEdit) {

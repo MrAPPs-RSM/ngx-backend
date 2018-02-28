@@ -21,7 +21,6 @@ export class FormComponent implements OnInit {
     @Output() response: EventEmitter<any> = new EventEmitter<any>();
 
     public form: FormGroup;
-    public formConfig = formConfig;
     public isLoading = false;
     public previousLang: any = null;
     public currentLang: any = null;
@@ -38,7 +37,7 @@ export class FormComponent implements OnInit {
     }
 
     setupForms(): FormGroup {
-        this.isMultiLangEnabled = '1' in this.settings.fields && this._formGenerator.contentLanguages.length > 0;
+        this.isMultiLangEnabled = 'en' in this.settings.fields && this._formGenerator.contentLanguages.length > 0;
 
         if (this.isMultiLangEnabled) {
             for (const contentLanguage of this._formGenerator.contentLanguages) {
@@ -59,18 +58,17 @@ export class FormComponent implements OnInit {
                 return language;
             }
         }
+
+        return null;
+    }
+    isMultiLangField(key: string): boolean {
+        return this.getLanguageForIsoCode(key) !== null;
     }
 
     onLanguageChange(newValue) {
 
-        // TODO: check if current form is valid to store in language model (if (this.form.valid))
-       /* this.updateForms();
-
         this.currentLang = this.getLanguageForIsoCode(newValue);
         this.previousLang = this.currentLang;
-
-        this.form.patchValue(this.formGroupModels[this.currentLang.isoCode]);
-        */
     }
 
     getLanguages() {
@@ -88,10 +86,12 @@ export class FormComponent implements OnInit {
 
         this.form = this.setupForms();
 
+        console.log(this.form);
+
         this.form.valueChanges.subscribe(
             data => {
                 console.log(data);
-                // console.log(this.form);
+                 console.log(this.form);
             }
         );
         if (this.settings.isEdit) {

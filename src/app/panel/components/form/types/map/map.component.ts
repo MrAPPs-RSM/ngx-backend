@@ -1,6 +1,6 @@
 import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
-import {FormGroup} from '@angular/forms';
 import {FormFieldMap} from '../../interfaces/form-field-map';
+import {BaseInputComponent} from '../base-input/base-input.component';
 
 @Component({
     selector: 'app-map',
@@ -8,18 +8,14 @@ import {FormFieldMap} from '../../interfaces/form-field-map';
     styleUrls: ['./map.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class MapComponent implements OnInit {
+export class MapComponent extends BaseInputComponent implements OnInit {
 
-    @Input() form: FormGroup;
     @Input() field: FormFieldMap;
 
     options: any;
 
     lat: number;
     lng: number;
-
-    constructor() {
-    }
 
     ngOnInit() {
         this.options = this.field.options ? this.field.options : {
@@ -50,7 +46,7 @@ export class MapComponent implements OnInit {
             );
     }
 
-    private isValid(key: string): boolean {
+    private isValidKey(key: string): boolean {
         if (this.form.controls[key].value === null || this.form.controls[key].value === '') {
             return true;
         } else {

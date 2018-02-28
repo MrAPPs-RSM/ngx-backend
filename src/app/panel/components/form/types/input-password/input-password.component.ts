@@ -1,29 +1,17 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FormGroup} from '@angular/forms';
 import {FormFieldPassword} from '../../interfaces/form-field-password';
+import {BaseInputComponent} from '../base-input/base-input.component';
 
 @Component({
     selector: 'app-input-password',
     templateUrl: './input-password.component.html',
     styleUrls: ['./input-password.component.scss']
 })
-export class InputPasswordComponent implements OnInit {
+export class InputPasswordComponent extends BaseInputComponent implements OnInit {
 
-    @Input() form: FormGroup;
     @Input() field: FormFieldPassword;
 
-    constructor() {
-    }
-
     ngOnInit() {
-    }
-
-    get isValid() {
-        if (this.form.controls[this.field.key].value === null || this.form.controls[this.field.key].value === '') {
-            return true;
-        } else {
-            return this.form.controls[this.field.key].valid;
-        }
     }
 
     // TODO: do password match logic

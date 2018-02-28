@@ -1,9 +1,9 @@
 import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
-import {FormGroup} from '@angular/forms';
 import {ApiService} from '../../../../../api/api.service';
 import {ActivatedRoute} from '@angular/router';
 import {HttpErrorResponse} from '@angular/common/http';
 import {FormFieldSelect} from '../../interfaces/form-field-select';
+import {BaseInputComponent} from '../base-input/base-input.component';
 
 @Component({
     selector: 'app-select',
@@ -11,15 +11,15 @@ import {FormFieldSelect} from '../../interfaces/form-field-select';
     styleUrls: ['./select.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class SelectComponent implements OnInit {
+export class SelectComponent extends BaseInputComponent implements OnInit {
 
-    @Input() form: FormGroup;
     @Input() field: FormFieldSelect;
 
     public options: SelectData[] = [];
 
     constructor(private _apiService: ApiService,
                 private _route: ActivatedRoute) {
+        super();
     }
 
     ngOnInit() {

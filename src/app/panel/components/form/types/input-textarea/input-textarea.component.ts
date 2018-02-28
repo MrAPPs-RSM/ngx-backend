@@ -1,6 +1,6 @@
 import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
-import {FormGroup} from '@angular/forms';
 import {FormFieldTextarea} from '../../interfaces/form-field-textarea';
+import {BaseInputComponent} from '../base-input/base-input.component';
 
 
 @Component({
@@ -9,22 +9,10 @@ import {FormFieldTextarea} from '../../interfaces/form-field-textarea';
     styleUrls: ['./input-textarea.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class InputTextareaComponent implements OnInit {
+export class InputTextareaComponent extends BaseInputComponent implements OnInit {
 
-    @Input() form: FormGroup;
     @Input() field: FormFieldTextarea;
 
-    constructor() {
-    }
-
     ngOnInit() {
-    }
-
-    get isValid() {
-        if (this.form.controls[this.field.key].value === null || this.form.controls[this.field.key].value === '') {
-            return true;
-        } else {
-            return this.form.controls[this.field.key].valid;
-        }
     }
 }

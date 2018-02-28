@@ -1,21 +1,21 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FormGroup} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 import {FormField} from '../../interfaces/form-field';
+import {BaseInputComponent} from '../base-input/base-input.component';
 
 @Component({
     selector: 'app-input-number',
     templateUrl: './input-number.component.html',
     styleUrls: ['./input-number.component.scss']
 })
-export class InputNumberComponent implements OnInit {
+export class InputNumberComponent extends BaseInputComponent implements OnInit {
 
-    @Input() form: FormGroup;
     @Input() field: FormField;
 
     public calculatedValue: number = null;
 
     constructor(private _route: ActivatedRoute) {
+        super();
     }
 
     ngOnInit() {
@@ -28,14 +28,6 @@ export class InputNumberComponent implements OnInit {
                     this.calculatedValue = this.field.value;
                 }
             }
-        }
-    }
-
-    get isValid() {
-        if (this.form.controls[this.field.key].value === null || this.form.controls[this.field.key].value === '') {
-            return true;
-        } else {
-            return this.form.controls[this.field.key].valid;
         }
     }
 }

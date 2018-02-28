@@ -10,10 +10,14 @@ import {formConfig} from '../form.config';
 export class FormTypeSwitcherComponent implements OnInit {
 
     @Input() form: FormGroup;
+    @Input() groupName: string;
     @Input() field: any;
+    @Input() isEdit: boolean;
+
     public formConfig = formConfig;
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
   }

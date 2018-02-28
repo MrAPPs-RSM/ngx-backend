@@ -2,77 +2,102 @@
 
   <app-separator
           *ngSwitchCase="formConfig.noInputTypes.SEPARATOR"
-          [field]="field">
+          [groupName]="groupName"
+          [field]="field"
+          [isEdit]="isEdit">
   </app-separator>
 
   <app-input-text
           *ngSwitchCase="formConfig.types.TEXT"
           [form]="form"
-          [field]="field">
+          [groupName]="groupName"
+          [field]="field"
+          [isEdit]="isEdit">
   </app-input-text>
 
   <app-input-password
           *ngSwitchCase="formConfig.types.PASSWORD"
+          [groupName]="groupName"
           [form]="form"
-          [field]="field">
+          [field]="field"
+          [isEdit]="isEdit">
   </app-input-password>
 
   <app-input-url
           *ngSwitchCase="formConfig.types.URL"
+          [groupName]="groupName"
           [form]="form"
-          [field]="field">
+          [field]="field"
+          [isEdit]="isEdit">
   </app-input-url>
 
   <app-input-number
           *ngSwitchCase="formConfig.types.NUMBER"
+          [groupName]="groupName"
           [form]="form"
-          [field]="field">
+          [field]="field"
+          [isEdit]="isEdit">
   </app-input-number>
 
   <app-input-color
           *ngSwitchCase="formConfig.types.COLOR"
+          [groupName]="groupName"
           [form]="form"
           [field]="field"
+          [isEdit]="isEdit"
   ></app-input-color>
 
   <app-input-textarea
           *ngSwitchCase="formConfig.types.TEXTAREA"
+          [groupName]="groupName"
           [form]="form"
-          [field]="field">
+          [field]="field"
+          [isEdit]="isEdit">
   </app-input-textarea>
 
   <app-select
           *ngSwitchCase="formConfig.types.SELECT"
+          [groupName]="groupName"
           [form]="form"
-          [field]="field">
+          [field]="field"
+          [isEdit]="isEdit">
   </app-select>
 
   <app-input-email
           *ngSwitchCase="formConfig.types.EMAIL"
+          [groupName]="groupName"
           [form]="form"
-          [field]="field">
+          [field]="field"
+          [isEdit]="isEdit">
   </app-input-email>
 
   <app-checkbox
           *ngSwitchCase="formConfig.types.CHECKBOX"
+          [groupName]="groupName"
           [form]="form"
           [field]="field">
+          [isEdit]="isEdit"
   </app-checkbox>
 
   <app-date-time
           *ngSwitchCase="formConfig.types.DATE"
+          [groupName]="groupName"
           [form]="form"
           [field]="field"
+          [isEdit]="isEdit"
   ></app-date-time>
 
   <app-date-time-range
           *ngSwitchCase="formConfig.types.DATE_RANGE"
+          [groupName]="groupName"
           [form]="form"
           [field]="field"
+          [isEdit]="isEdit"
   ></app-date-time-range>
 
   <app-file-upload
           *ngSwitchCase="formConfig.types.FILE"
+          [groupName]="groupName"
           [form]="form"
           [field]="field"
           [isEdit]="isEdit"
@@ -80,8 +105,10 @@
 
   <app-map
           *ngSwitchCase="formConfig.types.MAP"
+          [groupName]="groupName"
           [form]="form"
-          [field]="field">
+          [field]="field"
+          [isEdit]="isEdit">
   </app-map>
 
   <!--
