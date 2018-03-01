@@ -110,6 +110,13 @@
           [field]="field"
           [isEdit]="isEdit">
   </app-map>
+  <app-list-details
+          *ngSwitchCase="formConfig.types.LIST_DETAILS"
+          [form]="form"
+          [groupName]="groupName"
+          [field]="field"
+          [isEdit]="isEdit">
+  </app-list-details>
 
   <!--
                    <list-details
