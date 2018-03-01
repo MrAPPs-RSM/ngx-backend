@@ -12,12 +12,12 @@ import {BootstrapModalModule} from 'ngx-modialog/plugins/bootstrap';
 
 import {GlobalState} from './global.state';
 import {ApiService} from './api/api.service';
-import {TokenService} from './auth/token.service';
 import {LoginGuard} from './auth/login.guard';
 import {UtilsService} from './services/utils.service';
 import {FormGeneratorService} from './panel/services/form-generator.service';
 import {PageRefreshService} from './services/page-refresh.service';
 import {StorageService} from './services/storage.service';
+import {UserService} from './auth/user.service';
 
 const routes: Routes = [
     {
@@ -65,7 +65,7 @@ const routes: Routes = [
     providers: [
         GlobalState,
         ApiService,
-        TokenService,
+        UserService,
         LoginGuard,
         UtilsService,
         FormGeneratorService,

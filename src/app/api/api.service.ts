@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {environment} from '../../environments/environment';
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from '@angular/common/http';
-import {TokenService} from '../auth/token.service';
+import {UserService} from '../auth/user.service';
 import {Router} from '@angular/router';
 
 const API_URL = environment.api.baseUrl;
@@ -20,7 +20,9 @@ export class ApiService {
         return API_URL + endpoint;
     }
 
-    constructor(private _http: HttpClient, private _tokenService: TokenService, private _router: Router) {
+    constructor(private _http: HttpClient,
+                private _userService: UserService,
+                private _router: Router) {
     }
 
     /**
@@ -153,7 +155,7 @@ export class ApiService {
     private handleError(error: HttpErrorResponse): void {
         switch (error.status) {
             case 401: {
-                this._tokenService.removeToken();
+                this._userService.removeToken();
                 this._router.navigate(['login']);
             }
                 break;
@@ -189,14 +191,14 @@ export class ApiService {
      * @returns {HttpParams}
      */
     private setAuth(params: Object | null): HttpParams {
-        if (this._tokenService.getToken() !== null) {
+        if (this._userService.getToken() !== null) {
             const obj = {};
             if (params) {
                 Object.keys(params).forEach((key) => {
                     obj[key] = params[key];
                 });
             }
-            obj[this._tokenService.key] = this._tokenService.getToken();
+            obj[this._userService.tokenKey] = this._userService.getToken();
             return new HttpParams({
                 fromObject: obj
             });

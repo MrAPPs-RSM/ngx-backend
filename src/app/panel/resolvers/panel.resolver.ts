@@ -3,14 +3,14 @@ import {ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot} from '@ang
 import {PanelComponent} from '../panel.component';
 import {Observable} from 'rxjs/Observable';
 import {SetupService} from '../services/setup.service';
-import {TokenService} from '../../auth/token.service';
+import {UserService} from '../../auth/user.service';
 
 @Injectable()
 export class PanelResolver implements Resolve<PanelComponent> {
 
     constructor(private _router: Router,
                 private _setupService: SetupService,
-                private _tokenService: TokenService) {
+                private _userService: UserService) {
     }
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> | Promise<any> | any {
@@ -20,7 +20,8 @@ export class PanelResolver implements Resolve<PanelComponent> {
                     resolve(data);
                 })
                 .catch((error) => {
-                    this._tokenService.removeToken();
+                    this._userService.removeToken();
+                    this._userService.removeUser();
                     this._router.navigate(['login']);
                 });
         });
