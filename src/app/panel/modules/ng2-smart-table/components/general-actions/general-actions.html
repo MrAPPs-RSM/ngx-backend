@@ -1,6 +1,7 @@
 <div class="general-actions">
     <a *ngFor="let action of actions"
        href="#"
+       title="{{action.name}}"
        [class]="'ng2-smart-action ' + action.class"
        [innerHTML]="action.content"
        (click)="onAction($event, action)">

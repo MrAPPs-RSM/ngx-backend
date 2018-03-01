@@ -15,7 +15,8 @@ import {ToastrService} from 'ngx-toastr';
 import {isNullOrUndefined} from 'util';
 import * as _ from 'lodash';
 import * as FileSaver from 'file-saver';
-import {UtilsService} from "../../../services/utils.service";
+import {UtilsService} from '../../../services/utils.service';
+import {StorageService} from '../../../services/storage.service';
 
 @Component({
     selector: 'app-table',
@@ -49,7 +50,8 @@ export class TableComponent implements OnInit {
     constructor(private _apiService: ApiService,
                 private _router: Router,
                 private _toast: ToastrService,
-                private _modal: ModalService) {
+                private _modal: ModalService,
+                private _storageService: StorageService) {
     }
 
     ngOnInit() {
@@ -163,7 +165,6 @@ export class TableComponent implements OnInit {
 
     private parseAction(action: TableAction, data?: any): void {
         if (action.config.path) {
-            console.log('test');
             if (!data) {
                 this._router.navigate(['panel/' + action.config.path]);
             } else {
@@ -174,11 +175,20 @@ export class TableComponent implements OnInit {
                 if (path.indexOf(':title') !== -1 && action.config.titleField) {
                     path = path.replace(':title', data[action.config.titleField]);
                 }
+
+                if (action.config.params) {
+                    Object.keys(action.config.params).forEach((key) => {
+                        if (key === 'id' && action.config.params[key] === true) {
+                            action.config.params[key] = data.id;
+                        }
+                    });
+
+                    this._storageService.setValue('formParameters', action.config.params);
+                }
+
                 this._router.navigate(['panel/' + path]);
             }
-        }
-
-        if (action.config.endpoint) {
+        } else if (action.config.endpoint) {
             let endpoint = action.config.endpoint;
             if (endpoint.indexOf(':id') !== -1) {
                 endpoint = endpoint.replace(':id', data.id);

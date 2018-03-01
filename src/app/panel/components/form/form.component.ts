@@ -7,6 +7,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {ModalService} from '../../services/modal.service';
 import {ApiService} from '../../../api/api.service';
 import {FormSettings} from './interfaces/form-settings';
+import {StorageService} from '../../../services/storage.service';
 
 @Component({
     selector: 'app-form',
@@ -34,7 +35,8 @@ export class FormComponent implements OnInit {
     constructor(private _formGenerator: FormGeneratorService,
                 private _modal: ModalService,
                 private _apiService: ApiService,
-                private _route: ActivatedRoute) {
+                private _route: ActivatedRoute,
+                private _storageService: StorageService) {
     }
 
     setupForms(): FormGroup {
@@ -67,7 +69,7 @@ export class FormComponent implements OnInit {
         return this.getLanguageForIsoCode(key) !== null;
     }
 
-    onLanguageChange(value: {isoCode: string}) {
+    onLanguageChange(value: { isoCode: string }) {
         this.currentLang = this.getLanguageForIsoCode(value.isoCode);
         this.previousLang = this.currentLang;
     }
@@ -95,20 +97,37 @@ export class FormComponent implements OnInit {
                 console.log(this.form);
             }
         );
-        if (this.settings.isEdit) {
 
+        if (this.settings.isEdit) {
             this.loadData();
+        }
+
+        const formParameters = this._storageService.getValue('formParameters');
+        if (formParameters) {
+            if (formParameters.loadData) {
+                this.loadData(null, formParameters.id, formParameters.endpoint);
+            }
+            this._storageService.clearValue('formParameters');
         }
     }
 
 
-    loadData(entity?: any): void {
+    /**
+     * Loads entity into the form
+     *
+     * @param entity Useful for GET after submit if entity has changed in server
+     * @param _id Useful for duplication
+     * @param _endpoint Useful for duplication if edit endpoint different than create
+     */
+    loadData(entity?: any, _id?: any, _endpoint?: string): void {
         let id = null;
 
         if (this._route.snapshot.params && this._route.snapshot.params['id']) {
             id = this._route.snapshot.params['id'];
-        } else {
+        } else if (entity) {
             id = entity ? entity.id : null;
+        } else if (_id) {
+            id = _id;
         }
 
         if (id !== null) {
@@ -120,8 +139,11 @@ export class FormComponent implements OnInit {
                     filter: this.settings.api.filter
                 };
             }
+
+            const endpoint = _endpoint ? _endpoint : this.settings.api.endpoint;
+
             this._apiService.get(
-                this.settings.api.endpoint + '/' + id, params)
+                endpoint + '/' + id, params)
                 .then((response) => {
                     this.isLoading = false;
                     Object.keys(response).forEach((key) => {

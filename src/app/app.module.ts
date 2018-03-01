@@ -17,6 +17,7 @@ import {LoginGuard} from './auth/login.guard';
 import {UtilsService} from './services/utils.service';
 import {FormGeneratorService} from './panel/services/form-generator.service';
 import {PageRefreshService} from './services/page-refresh.service';
+import {StorageService} from './services/storage.service';
 
 const routes: Routes = [
     {
@@ -68,7 +69,8 @@ const routes: Routes = [
         LoginGuard,
         UtilsService,
         FormGeneratorService,
-        PageRefreshService
+        PageRefreshService,
+        StorageService
     ],
     bootstrap: [AppComponent]
 })

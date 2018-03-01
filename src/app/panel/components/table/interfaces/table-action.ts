@@ -4,6 +4,7 @@ export interface TableAction {
     config: {
         path?: string; // redirect to
         titleField?: string; // to avoid only id in page title
+        params?: any; // query params to pass to path
         endpoint?: string; // api call
         confirm?: boolean; // if true opens confirmation modal before api
         method?: string; // post | patch | put | delete
