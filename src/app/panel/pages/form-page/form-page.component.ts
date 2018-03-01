@@ -6,7 +6,7 @@ import {ToastrService} from 'ngx-toastr';
 import {HttpErrorResponse} from '@angular/common/http';
 import {FormSettings} from '../../components/form/interfaces/form-settings';
 import {ModalService} from '../../services/modal.service';
-import {UtilsService} from "../../../services/utils.service";
+import {UtilsService} from '../../../services/utils.service';
 
 @Component({
     selector: 'app-form-page',
