@@ -14,8 +14,9 @@ app-file-upload {
       }
       > div.drop-container {
         @include clearfix();
+        max-width: 300px;
         background-color: #f5f5f5;
-        border: 1px solid $lightGrey;
+        border: 1px dotted $lightGrey;
         padding: $cardPaddingY $cardPaddingX;
         position: relative;
         text-align: center;
@@ -71,9 +72,6 @@ app-file-upload {
             color: $sidebarDark;
           }
         }
-      }
-      > button {
-        margin: 10px 0;
       }
       > div.uploaded-files-container {
         position: relative;

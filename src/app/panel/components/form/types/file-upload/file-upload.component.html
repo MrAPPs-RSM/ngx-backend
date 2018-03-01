@@ -42,14 +42,6 @@
                (uploadOutput)="onUploadOutput($event)"
                [multiple]="field.options?.multiple">
 
-        <button type="button"
-                class="btn btn-sm btn-default"
-                [ngClass]="{'loading':isLoading}"
-                [disabled]="files.length <= 0"
-                (click)="startUpload()">
-            Upload
-        </button>
-
         <div class="uploaded-files-container"
              *ngIf="uploadedFiles.length > 0">
             <label class="uploaded-files-label">Uploaded file(s)</label>

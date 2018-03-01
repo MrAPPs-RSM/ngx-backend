@@ -125,9 +125,12 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit {
     }
 
     private onUploadOutput(output: UploadOutput): void {
+        console.log(output.type);
         switch (output.type) {
             case 'allAddedToQueue': {
-                // Call this.startUpload() if files must be uploaded immediately after being selected
+                if (this.files.length > 0) {
+                    this.startUpload();
+                }
             }
                 break;
             case 'addedToQueue': {
