@@ -43,7 +43,6 @@ app-panel {
               padding: 15px;
               cursor: pointer;
               &.logout {
-                font-weight: $regular;
                 color: $primary;
                 &:hover {
                   background-color: $lightGrey;

@@ -5,42 +5,37 @@
             {{field.label}}
             <span *ngIf="field.validators && field.validators.required">*</span>
         </label>
-        <label *ngIf="field.options?.allowedContentTypes"
+        <label *ngIf="field.options.allowedContentTypes"
                [ngClass]="{'error': rejected}">
             (<span *ngFor="let type of field.options.allowedContentTypes; let last = last">
                     {{type}}<span *ngIf="!last">, </span>
                 </span>)
         </label>
 
+        <div class="progress" [ngClass]="{'visible': isLoading}">
+            <div class="indeterminate"></div>
+        </div>
         <div class="drop-container"
              ngFileDrop
              [options]="options"
              (uploadOutput)="onUploadOutput($event)"
              [uploadInput]="uploadInput"
              [ngClass]="{ 'is-drop-over': dragOver }">
-            <span class="drag" *ngIf="files.length <= 0">Drag &amp; drop or <span class="choose"
-                                                                                  (click)="bringFileSelector()">choose file(s)</span></span>
-            <div *ngIf="files.length > 0" class="files-container">
-                <span *ngFor="let file of files;">
-                    <span class="remove" (click)="removeFile(file.id)">×</span>
-                    {{ file.name }}
-                </span>
-
-                <!-- Add more files button if multiple allowed -->
-                <span class="add" *ngIf="field.options?.multiple && files.length > 0"
-                      (click)="bringFileSelector()">+</span>
-            </div>
-            <span *ngIf="files.length > 1" (click)="removeAllFiles()" class="remove-all">×</span>
+            <div>
+                <span *ngIf="isLoading">Uploading, please wait</span>
+                <span *ngIf="(maxFiles > 0 && uploadedFiles.length >= maxFiles) && !isLoading">Max files: {{maxFiles}}</span>
+                <span *ngIf="(uploadedFiles.length === 0 || (maxFiles > 0 && uploadedFiles.length < maxFiles)) && !isLoading">Drag &amp; drop or <span class="choose" (click)="bringFileSelector()">choose file(s)</span></span></div>
         </div>
 
         <input type="file"
                class="hidden"
                #fileUpload
                ngFileSelect
+               [disabled]="(uploadedFiles.length >= maxFiles)"
                [options]="options"
                [uploadInput]="uploadInput"
                (uploadOutput)="onUploadOutput($event)"
-               [multiple]="field.options?.multiple">
+               [multiple]="!!field.options.multiple">
 
         <div class="uploaded-files-container"
              *ngIf="uploadedFiles.length > 0">
@@ -64,7 +59,8 @@
                         </div>
                     </div>
                     <span class="file-name">
-                        <span *ngIf="this.field.options.api.delete" class="remove" (click)="removeUploadedFile(file)">×</span>
+                        <span *ngIf="this.field.options.api.delete" class="remove"
+                              (click)="removeUploadedFile(file)">×</span>
                         <span>{{file.name}}</span>
                     </span>
                 </li>

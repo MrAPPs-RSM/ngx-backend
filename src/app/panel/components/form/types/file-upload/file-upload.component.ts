@@ -1,5 +1,5 @@
 import {
-    Component, ElementRef, EventEmitter, Input, OnInit, Renderer, ViewChild,
+    Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Renderer, ViewChild,
     ViewEncapsulation
 } from '@angular/core';
 import {
@@ -20,7 +20,7 @@ import {BaseInputComponent} from '../base-input/base-input.component';
     styleUrls: ['./file-upload.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class FileUploadComponent extends BaseInputComponent implements OnInit {
+export class FileUploadComponent extends BaseInputComponent implements OnInit, OnDestroy {
 
     @Input() field: FormFieldFile;
 
@@ -31,6 +31,9 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit {
 
     /* Files to upload */
     files: UploadFile[];
+
+    /* Max num of files to upload */
+    maxFiles: number;
 
     /* Files already uploaded */
     uploadedFiles: UploadedFile[] = [];
@@ -67,6 +70,13 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit {
     }
 
     ngOnInit() {
+
+        if (this.field.options.multiple) {
+            this.maxFiles = this.field.options.maxFiles ? this.field.options.maxFiles : 0;
+        } else {
+            this.maxFiles = 1;
+        }
+
         this.files = []; // local uploading files array
         this.uploadInput = new EventEmitter<UploadInput>(); // input events, we use this to emit data to ngx-uploader
         this.createAllowedContentTypes();
@@ -88,6 +98,11 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit {
                         }
                     });
         }
+    }
+
+    ngOnDestroy() {
+        this.removeAllFiles();
+        this.uploadedFiles = [];
     }
 
     get isValid() {
@@ -125,7 +140,6 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit {
     }
 
     private onUploadOutput(output: UploadOutput): void {
-        console.log(output.type);
         switch (output.type) {
             case 'allAddedToQueue': {
                 if (this.files.length > 0) {
@@ -134,11 +148,13 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit {
             }
                 break;
             case 'addedToQueue': {
-                this.files.push(output.file);
+                if (this.uploadedFiles.length < this.maxFiles) {
+                    this.files.push(output.file);
+                }
             }
                 break;
             case 'uploading': {
-                // update current data in files array for uploading file
+                /* update current data in files array for uploading file */
                 const index = this.files.findIndex(file => typeof output.file !== 'undefined' && file.id === output.file.id);
                 this.files[index] = output.file;
             }
@@ -162,6 +178,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit {
                 break;
             case 'rejected': {
                 // File type not allowed, highlight allowed extensions
+                this.isLoading = false;
                 this.rejected = true;
                 setTimeout(() => {
                     this.rejected = false;
@@ -201,6 +218,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit {
         this.files.forEach((file) => {
             this.removeFile(file.id);
         });
+        this._fileUpload.nativeElement.files = null;
     }
 
     private handleResponse(response: any): void {
