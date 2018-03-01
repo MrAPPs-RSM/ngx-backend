@@ -4,8 +4,9 @@
             <a class="navbar-brand" [routerLink]="'/panel/dashboard'">{{ title }}</a>
             <span class="toggler" (click)="toggleSidebar()"><i class="fa fa-bars"></i></span>
         </div>
-        <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav navbar-right">
+        <div class="navbar-menu">
+            <ul class="nav navbar-nav">
+                <li><a class="user"><i class="fa fa-user"></i> {{user.username}}</a></li>
                 <li><a (click)="logout()" class="logout"><i class="fa fa-power-off"></i> <span
                         class="hidden-xs">Logout</span></a></li>
             </ul>

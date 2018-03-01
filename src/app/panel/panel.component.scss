@@ -2,7 +2,7 @@
 
 app-panel {
   $navbarHeight: 50px;
-  $sidebarWidth: 280px;
+  $sidebarWidth: 320px;
   > nav.navbar {
     border: none;
     border-bottom: 1px solid $grey;
@@ -10,6 +10,7 @@ app-panel {
     > div.container-fluid {
       margin-right: 0;
       > div.navbar-header {
+        float: left;
         width: $sidebarWidth;
         margin-left: -15px;
         position: relative;
@@ -29,19 +30,15 @@ app-panel {
           padding: 4px;
         }
       }
-      > div.navbar-collapse {
-        @include respond-to(xs) {
-          margin-top: -1px;
+      > div.navbar-menu {
+        @include respond-to(xxs) {
+          display: none;
         }
-        &.collapse {
-          display: block;
-        }
-        > ul.navbar-nav {
+        float: right;
+        > ul {
           margin: 0 -15px;
-          float: right;
-          max-width: 100px;
           > li {
-            float: none;
+            display: inline-block;
             > a {
               padding: 15px;
               cursor: pointer;

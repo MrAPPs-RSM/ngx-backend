@@ -76,11 +76,11 @@ export class TableComponent implements OnInit {
                     })
                     .catch((response: HttpErrorResponse) => {
                         this.isLoading = false;
-                        console.log(response.error);
+                        console.log(response.message);
                     });
             })
             .catch((response: HttpErrorResponse) => {
-                console.log(response.error);
+                console.log(response.message);
             });
     }
 
@@ -360,7 +360,7 @@ export class TableComponent implements OnInit {
                         this.getData(); // Refresh table
                     })
                     .catch((response: HttpErrorResponse) => {
-                        this._toast.error(response.error);
+                        this._toast.error(response.message);
                     });
             }
         }

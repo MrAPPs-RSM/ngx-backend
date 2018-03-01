@@ -1,8 +1,7 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {TokenService} from '../auth/token.service';
+import {UserService} from '../auth/user.service';
 import {environment} from '../../environments/environment';
 import {ActivatedRoute, Router} from '@angular/router';
-import {GlobalState} from '../global.state';
 import {PageRefreshService} from '../services/page-refresh.service';
 
 declare const $: any;
@@ -17,9 +16,10 @@ export class PanelComponent implements OnInit {
 
     private title = environment.name;
     private menu: any[] = [];
+    private user: any;
 
     constructor(private _router: Router,
-                private _tokenService: TokenService,
+                private _userService: UserService,
                 private _route: ActivatedRoute,
                 private _pageRefresh: PageRefreshService) {
     }
@@ -39,10 +39,13 @@ export class PanelComponent implements OnInit {
         } else {
             this._router.navigate(['panel/dashboard']);
         }
+
+        this.user = this._userService.getUser();
     }
 
     logout(): void {
-        this._tokenService.removeToken();
+        this._userService.removeToken();
+        this._userService.removeUser();
         this._pageRefresh.reset();
         this._router.navigate(['login']);
     }
