@@ -1,7 +1,6 @@
 import {Component, Input, OnInit, Output, EventEmitter, ViewEncapsulation} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
-import {formConfig} from './form.config';
 import {FormGeneratorService} from '../../services/form-generator.service';
 import {HttpErrorResponse} from '@angular/common/http';
 import {ModalService} from '../../services/modal.service';
@@ -91,8 +90,8 @@ export class FormComponent implements OnInit {
 
         this.form.valueChanges.subscribe(
             data => {
-                console.log(data);
-                console.log(this.form);
+               // console.log(data);
+               // console.log(this.form);
             }
         );
         if (this.settings.isEdit) {
@@ -124,11 +123,7 @@ export class FormComponent implements OnInit {
                 this.settings.api.endpoint + '/' + id, params)
                 .then((response) => {
                     this.isLoading = false;
-                    Object.keys(response).forEach((key) => {
-                        if (this.form.controls[key]) {
-                            this.form.controls[key].setValue(response[key]);
-                        }
-                    });
+                    this.form.patchValue(response);
                 })
                 .catch((response: HttpErrorResponse) => {
                     this.isLoading = false;
