@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { InputArrayComponent } from './list-details.component';
+import { ListDetailsComponent } from './list-details.component';
 
 describe('InputArrayComponent', () => {
-  let component: InputArrayComponent;
-  let fixture: ComponentFixture<InputArrayComponent>;
+  let component: ListDetailsComponent;
+  let fixture: ComponentFixture<ListDetailsComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ InputArrayComponent ]
+      declarations: [ ListDetailsComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(InputArrayComponent);
+    fixture = TestBed.createComponent(ListDetailsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
