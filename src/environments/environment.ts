@@ -45,6 +45,7 @@ export const environment = {
                 },
                 isLoginForm: true
             }
-        }
+        },
+        passwordResetEndpoint: 'test'
     }
 };

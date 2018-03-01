@@ -9,5 +9,11 @@ app-login {
     @include _transform(translateY(50%));
     max-width: 600px;
     padding: $cardPaddingY $cardPaddingX;
+
+    > a.forgot-password {
+      margin-top: -30px;
+      margin-bottom: 10px;
+      display: block;
+    }
   }
 }
