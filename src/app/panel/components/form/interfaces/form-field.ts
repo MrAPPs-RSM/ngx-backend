@@ -3,6 +3,7 @@ export interface FormField {
     multiLang: boolean;
     label: string;
     key?: string;
+    hidden?: boolean;
     disabled?: string;
     placeholder?: string;
     value?: any;
