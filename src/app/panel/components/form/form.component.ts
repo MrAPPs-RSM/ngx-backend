@@ -1,7 +1,6 @@
 import {Component, Input, OnInit, Output, EventEmitter, ViewEncapsulation} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
-import {formConfig} from './form.config';
 import {FormGeneratorService} from '../../services/form-generator.service';
 import {HttpErrorResponse} from '@angular/common/http';
 import {ModalService} from '../../services/modal.service';
@@ -93,8 +92,8 @@ export class FormComponent implements OnInit {
 
         this.form.valueChanges.subscribe(
             data => {
-                console.log(data);
-                console.log(this.form);
+               // console.log(data);
+               // console.log(this.form);
             }
         );
 
@@ -146,11 +145,7 @@ export class FormComponent implements OnInit {
                 endpoint + '/' + id, params)
                 .then((response) => {
                     this.isLoading = false;
-                    Object.keys(response).forEach((key) => {
-                        if (this.form.controls[key]) {
-                            this.form.controls[key].setValue(response[key]);
-                        }
-                    });
+                    this.form.patchValue(response);
                 })
                 .catch((response: HttpErrorResponse) => {
                     this.isLoading = false;
@@ -160,7 +155,7 @@ export class FormComponent implements OnInit {
     }
 
     onSubmit(): void {
-        console.log('ON SUBMIT');
+        // console.log('ON SUBMIT');
         if (this.settings.isLoginForm) {
             /** If is login form, the login component will handle the request */
             this.response.emit(this.form.value);
