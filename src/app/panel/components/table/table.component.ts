@@ -340,7 +340,14 @@ export class TableComponent implements OnInit {
         console.log(event);
     }
 
-    onRowDrop(event: TableDrop) {
+    onRowDrop(event: any) {
+
+        const dragDropSettings: TableDrop = {
+            data: event.data,
+            page: this.activeFilters.pagination.page,
+            perPage: this.activeFilters.pagination.perPage
+        };
+
         if (this.settings.drag) {
             const endpoint = this.settings.drag.endpoint ?
                 this.settings.drag.endpoint : this.settings.api.endpoint + '/sort';
@@ -348,7 +355,7 @@ export class TableComponent implements OnInit {
             if (this.settings.drag.method) {
                 // TODO: support if necessary
             } else {
-                this._apiService.patch(endpoint, event)
+                this._apiService.patch(endpoint, dragDropSettings)
                     .then(() => {
                         this.getData(); // Refresh table
                     })

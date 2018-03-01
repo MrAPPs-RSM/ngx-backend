@@ -25,7 +25,6 @@ export class Ng2SmartTableComponent implements OnChanges, OnInit {
     @Input() activeFilters: TableActiveFilters;
 
     @Input() drag: boolean;
-    private oldRowIndex: number | null = null;
 
     @Output() rowSelect = new EventEmitter<any>();
     @Output() userRowSelect = new EventEmitter<any>();
@@ -69,11 +68,8 @@ export class Ng2SmartTableComponent implements OnChanges, OnInit {
 
     ngOnInit() {
         if (this.drag) {
-            this._dragulaService.drag.subscribe((value) => {
-                this.onDrag(value.slice(1));
-            });
             this._dragulaService.drop.subscribe((value) => {
-                this.onDrop(value.slice(1));
+                this.onDrop();
             });
         } else {
             this._dragulaService = null;
@@ -192,20 +188,14 @@ export class Ng2SmartTableComponent implements OnChanges, OnInit {
     }
 
     /** ---------------- DRAG & DROP ------------------ */
-    private onDrag(args) {
-        const [e, el] = args;
-        this.oldRowIndex = this.getDomIndexOf(e, el);
-    }
 
-    private onDrop(args) {
-        const [e, el] = args;
-        this.rowDrop.emit({
-            oldIndex: this.oldRowIndex,
-            newIndex: this.getDomIndexOf(e, el)
+    private onDrop() {
+        const data = [];
+        this.grid.getRows().forEach((row: Row) => {
+            data.push(row.getData());
         });
-    }
-
-    private getDomIndexOf(child: any, parent: any) {
-        return Array.prototype.indexOf.call(parent.children, child);
+        this.rowDrop.emit({
+            data: data
+        });
     }
 }

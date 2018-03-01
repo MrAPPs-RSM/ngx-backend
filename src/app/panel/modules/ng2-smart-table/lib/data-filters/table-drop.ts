@@ -1,4 +1,5 @@
 export interface TableDrop {
-    oldIndex: number;
-    newIndex: number;
+    data: any[];
+    page: number;
+    perPage: number;
 }
