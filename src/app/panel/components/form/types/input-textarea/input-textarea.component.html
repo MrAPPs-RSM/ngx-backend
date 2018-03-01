@@ -10,9 +10,9 @@
         <!-- Input -->
         <!-- TODO: apiKey -->
         <editor
-                *ngIf="field.options && field.options.tinyMce == true"
+                *ngIf="field.options && field.options.tinyMce"
                 apiKey="test"
-                [init]="{plugins: 'link'}"
+                [init]="field.options.tinyMce.init"
                 id="{{field.key}}"
                 formControlName="{{field.key}}">
         </editor>
