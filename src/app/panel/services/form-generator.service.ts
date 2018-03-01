@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
 import {formConfig} from '../components/form/form.config';
 import {CustomValidators} from '../components/form/validators';
 import {UtilsService} from '../../services/utils.service';
@@ -51,7 +51,7 @@ export class FormGeneratorService {
         return output;
     }
 
-    private generateFormFields(fields: any[]): any | any {
+    public generateFormFields(fields: any[]): any | any {
 
         if (fields && fields.length > 0) {
             const group: any = {};
@@ -86,6 +86,13 @@ export class FormGeneratorService {
                  */
                 switch (field.type) {
 
+                    case formConfig.types.LIST_DETAILS: {
+                        group[field.key] = new FormArray(
+                            [ new FormGroup(this.generateFormFields(field.fields)) ],
+                            validators.length > 0 ? Validators.compose(validators) : null
+                        );
+                    }
+                        break;
                     case formConfig.types.CHECKBOX: {
                         group[field.key] = new FormControl({value: null, disabled: field.disabled}, null);
                     }
@@ -169,6 +176,8 @@ export class FormGeneratorService {
                     group[key] = new FormGroup(this.generateFormFields(subFields));
                 }
             }
+
+            console.log(group);
 
             return new FormGroup(group);
         } else {

@@ -1,1 +1,17 @@
+<div [formGroup]="form" [class]="field.class ? field.class : 'col-sm-12'">
+<div [formArrayName]="field.key">
+    <!-- Label -->
+    <label>
+        {{field.label}}
+        <span *ngIf="field.validators && field.validators.required">*</span>
+    </label>
 
+    <div *ngFor="let control of getControl().controls; let i = index" [formGroupName]="i">
+        <div *ngFor="let controlField of field.fields">
+            <app-form-type-switcher [form]="form" [field]="controlField" [isEdit]="isEdit"></app-form-type-switcher>
+        </div>
+        <button (click)="deleteDetail(i)" class="btn btn-danger">Delete</button>
+    </div>
+    <button type="button" (click)="addDetail()" class="btn btn-primary">Add</button>
+</div>
+</div>
