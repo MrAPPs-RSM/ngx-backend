@@ -71,7 +71,7 @@ app-panel {
       }
     }
     > .sidebar {
-      overflow-y: scroll;
+      overflow-y: auto;
       height: 100%;
       position: fixed;
       z-index: 1029;

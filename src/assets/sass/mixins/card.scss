@@ -2,6 +2,7 @@
   > div.row {
     margin: 0;
     > div {
+      overflow-x: auto;
       background-color: #ffffff;
       border-radius: $borderRadius;
       padding: $paddingY $paddingX;
