@@ -21,9 +21,9 @@ export class ActionsComponent implements OnChanges {
         this.actions = this.grid.getSetting('actions.list');
     }
 
-    onAction(action: any): void {
-        event.preventDefault();
-        event.stopPropagation();
+    onAction($event: any, action: any): void {
+        $event.preventDefault();
+        $event.stopPropagation();
         this.action.emit({
             action: action,
             data: this.row.getData()

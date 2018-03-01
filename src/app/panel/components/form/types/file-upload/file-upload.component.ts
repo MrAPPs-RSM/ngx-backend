@@ -101,37 +101,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit {
     private createAllowedContentTypes(): void {
         if (this.field.options && this.field.options.allowedContentTypes) {
             this.field.options.allowedContentTypes.forEach((type) => {
-                let correctTypeName = '';
-
-                switch (type) {
-                    case '.jpg':
-                    case '.jpeg':
-                    case '.png': {
-                        correctTypeName = 'image/' + type.split('.')[1];
-                    }
-                        break;
-                    case '.json':
-                    case '.zip':
-                    case '.pdf': {
-                        correctTypeName = 'application/' + type.split('.')[1];
-                    }
-                        break;
-                    case '.xml':
-                    case '.csv': {
-                        correctTypeName = 'text/' + type.split('.')[1];
-                    }
-                        break;
-                    case '.txt': {
-                        correctTypeName = 'text/plain';
-                    }
-                        break;
-                    default: {
-                        correctTypeName = type;
-                    }
-                        break;
-                }
-
-                this.options.allowedContentTypes.push(correctTypeName);
+                this.options.allowedContentTypes.push(UtilsService.getFileType(type));
             });
         } else {
             this.options.allowedContentTypes = null;

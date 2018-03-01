@@ -7,12 +7,13 @@ export interface TableSettings {
         endpoint: string;
     };
     drag?: {
-        sortField?: string;
+        sortField?: string; // if not defined, will be weight
         endpoint?: string; // if not defined, will be "endpoint/sort"
         method?: string; // if not defined, will be PATCH
     };
     noDataLabel?: string;
     messages?: any; // TODO
+    generalActions?: TableAction[]; // General actions (export csv...)
     actions?: {
         columnTitle?: string;
         add?: TableAction,

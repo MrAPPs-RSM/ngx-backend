@@ -7,6 +7,43 @@ export class UtilsService {
     constructor() {
     }
 
+    public static getFileType(extension: string): string {
+        let response = '';
+
+        if (extension.indexOf('.') !== -1) {
+            extension = extension.split('.')[1];
+        }
+
+        switch (extension) {
+            case '.jpg':
+            case '.jpeg':
+            case '.png': {
+                response = 'image/' + extension;
+            }
+                break;
+            case '.json':
+            case '.zip':
+            case '.pdf': {
+                response = 'application/' + extension;
+            }
+                break;
+            case '.xml':
+            case '.csv': {
+                response = 'text/' + extension;
+            }
+                break;
+            case '.txt': {
+                response = 'text/plain';
+            }
+                break;
+            default: {
+                response = extension;
+            }
+                break;
+        }
+        return response;
+    }
+
     private static addLeadingZero(value: any): any {
         return value < 10 ? '0' + value : value;
     }

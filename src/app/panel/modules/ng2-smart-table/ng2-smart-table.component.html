@@ -39,3 +39,11 @@
                        [source]="source"
                        (pagination)="onPagination($event)">
 </ng2-smart-table-pager>
+
+
+<ng2-smart-table-general-actions
+        *ngIf="settings.generalActions"
+        (action)="action.emit($event)"
+        [source]="source"
+        [grid]="grid">
+</ng2-smart-table-general-actions>

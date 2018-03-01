@@ -14,6 +14,8 @@ import {Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
 import {isNullOrUndefined} from 'util';
 import * as _ from 'lodash';
+import * as FileSaver from 'file-saver';
+import {UtilsService} from "../../../services/utils.service";
 
 @Component({
     selector: 'app-table',
@@ -161,6 +163,7 @@ export class TableComponent implements OnInit {
 
     private parseAction(action: TableAction, data?: any): void {
         if (action.config.path) {
+            console.log('test');
             if (!data) {
                 this._router.navigate(['panel/' + action.config.path]);
             } else {
@@ -188,7 +191,12 @@ export class TableComponent implements OnInit {
                             this.getData();
                         }
                     })
-                    .catch(() => {
+                    .catch((response: any) => {
+                        if (response instanceof HttpErrorResponse) {
+                            this._toast.error(response.message);
+                        } else {
+                            this._toast.error(response);
+                        }
                     });
             }
         }
@@ -209,18 +217,47 @@ export class TableComponent implements OnInit {
                     resolve();
                 }
                     break;
+
+                case 'get': {
+                    if (action.config.confirm) {
+                        this._modal.confirm()
+                            .then(() => {
+                                this._apiService.get(endpoint)
+                                    .then((response) => {
+                                        this.handleResponseApi(action, response)
+                                            .then(() => resolve())
+                                            .catch((error) => reject(error));
+                                    })
+                                    .catch((response: HttpErrorResponse) => {
+                                        reject(response);
+                                    });
+                            }).catch(() => {
+                        });
+                    } else {
+                        this._apiService.get(endpoint)
+                            .then((response) => {
+                                this.handleResponseApi(action, response)
+                                    .then(() => resolve())
+                                    .catch((error) => reject(error));
+                            })
+                            .catch((response: HttpErrorResponse) => {
+                                reject(response);
+                            });
+                    }
+                }
+                    break;
                 case 'delete': {
                     if (action.config.confirm) {
                         this._modal.confirm()
                             .then(() => {
                                 this._apiService.delete(endpoint)
                                     .then((response) => {
-                                        this._toast.success('message', 'Success');
-                                        resolve();
+                                        this.handleResponseApi(action, response)
+                                            .then(() => resolve())
+                                            .catch((error) => reject(error));
                                     })
                                     .catch((response: HttpErrorResponse) => {
-                                        this._toast.error(response.error);
-                                        reject();
+                                        reject(response);
                                     });
                             })
                             .catch(() => {
@@ -228,12 +265,12 @@ export class TableComponent implements OnInit {
                     } else {
                         this._apiService.delete(endpoint)
                             .then((response) => {
-                                this._toast.success('message', 'Success');
-                                resolve();
+                                this.handleResponseApi(action, response)
+                                    .then(() => resolve())
+                                    .catch((error) => reject(error));
                             })
                             .catch((response: HttpErrorResponse) => {
-                                this._toast.error(response.error);
-                                reject();
+                                reject(response);
                             });
                     }
                 }
@@ -242,7 +279,45 @@ export class TableComponent implements OnInit {
         });
     }
 
-    onAction(event: { action: TableAction, data: any }) {
+    private handleResponseApi(action: TableAction, response: any): Promise<any> {
+        return new Promise((resolve, reject) => {
+            if (action.config.responseType && action.config.responseType !== 'default') {
+                switch (action.config.responseType) {
+                    // TODO: implemented in a switch case to easily future support for new response types
+                    case 'file_download': {
+
+                        if (action.config.file) {
+                            const now = new Date();
+
+                            const name = (action.config.file.name) ? action.config.file.name : 'table';
+
+                            const fileName = name + '_' + now.toISOString().substring(0, 19) + '.' + action.config.file.extension;
+                            const fileType = UtilsService.getFileType(action.config.file.extension);
+
+                            const blob = new Blob([response], {type: fileType});
+                            const file = new File([blob], fileName, {type: fileType});
+                            (FileSaver as any).saveAs(file);
+
+                            resolve();
+                        } else {
+                            reject('File configuration not defined');
+                        }
+
+                    }
+                        break;
+                    default: {
+
+                    }
+                        break;
+                }
+            } else {
+                this._toast.success('message', 'Success');
+                resolve();
+            }
+        });
+    }
+
+    onAction(event: { action: TableAction, data?: any }) {
         this.parseAction(event.action, event.data);
     }
 

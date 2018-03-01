@@ -149,52 +149,52 @@
           }
         }
       }
+    }
 
-      a.ng2-smart-action {
-        font-weight: $light;
-        padding: 5px 8px;
+    a.ng2-smart-action {
+      font-weight: $light;
+      padding: 5px 8px;
+      color: #ffffff;
+      border: 1px solid $primary;
+      background-color: $primary;
+      &:hover {
         color: #ffffff;
-        border: 1px solid $primary;
-        background-color: $primary;
+        background-color: darken($primary, 10);
+      }
+      &.success {
+        border: 1px solid $success;
+        background-color: $success;
         &:hover {
-          color: #ffffff;
-          background-color: darken($primary, 10);
+          background-color: darken($success, 10);
         }
-        &.success {
-          border: 1px solid $success;
-          background-color: $success;
-          &:hover {
-            background-color: darken($success, 10);
-          }
+      }
+      &.danger {
+        border: 1px solid $danger;
+        background-color: $danger;
+        &:hover {
+          background-color: darken($danger, 10);
         }
-        &.danger {
-          border: 1px solid $danger;
-          background-color: $danger;
-          &:hover {
-            background-color: darken($danger, 10);
-          }
-        }
-        &.info {
-          border: 1px solid $info;
-          background-color: $info;
-          &:hover {
-            background-color: darken($info, 10);
+      }
+      &.info {
+        border: 1px solid $info;
+        background-color: $info;
+        &:hover {
+          background-color: darken($info, 10);
 
-          }
         }
-        &.warning {
-          border: 1px solid $warning;
-          background-color: $warning;
-          &:hover {
-            background-color: darken($warning, 10);
-          }
+      }
+      &.warning {
+        border: 1px solid $warning;
+        background-color: $warning;
+        &:hover {
+          background-color: darken($warning, 10);
         }
-        &.default {
-          border: 1px solid $default;
-          background-color: $default;
-          &:hover {
-            background-color: darken($default, 10);
-          }
+      }
+      &.default {
+        border: 1px solid $default;
+        background-color: $default;
+        &:hover {
+          background-color: darken($default, 10);
         }
       }
     }

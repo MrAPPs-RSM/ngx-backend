@@ -2,5 +2,5 @@
    href="#"
    [class]="'ng2-smart-action ' + action.class"
    [innerHTML]="action.content"
-   (click)="onAction(action)">
+   (click)="onAction($event, action)">
 </a>
