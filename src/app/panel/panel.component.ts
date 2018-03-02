@@ -31,9 +31,9 @@ export class PanelComponent implements OnInit {
 
         /** Search for home page */
         let homePage = 'panel/dashboard';
-        (this._router.config as Array).every((item: Route) => {
+        (this._router.config as any).every((item: Route) => {
             if (item.path === 'panel') {
-                (item.children as Array).every((child) => {
+                (item.children as any).every((child) => {
                     if (child.data['isHomePage']) {
                         homePage = child.path;
                         return false;
