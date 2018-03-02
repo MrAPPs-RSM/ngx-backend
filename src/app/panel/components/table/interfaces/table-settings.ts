@@ -5,6 +5,7 @@ export interface TableSettings {
     title?: string;
     api: {
         endpoint: string;
+        filter: string;
     };
     drag?: {
         sortField?: string; // if not defined, will be weight

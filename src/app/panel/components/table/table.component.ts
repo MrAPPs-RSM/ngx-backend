@@ -115,6 +115,11 @@ export class TableComponent implements OnInit {
         }
 
         /** Filters */
+
+        if (this.settings.api.filter) {
+            params.where = JSON.parse(this.settings.api.filter)['where'];
+        }
+
         if (!_.isEmpty(filter) && !isNullOrUndefined(filter)) {
             Object.keys(filter).forEach((key) => {
                 const condition = {};
@@ -142,6 +147,10 @@ export class TableComponent implements OnInit {
                 and: []
             }
         };
+
+        if (this.settings.api.filter) {
+            params.where = JSON.parse(this.settings.api.filter)['where'];
+        }
 
         /** Filters */
         if (filter) {
