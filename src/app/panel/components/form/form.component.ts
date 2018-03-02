@@ -1,12 +1,13 @@
 import {Component, Input, OnInit, Output, EventEmitter, ViewEncapsulation} from '@angular/core';
 import {FormGroup} from '@angular/forms';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {FormGeneratorService} from '../../services/form-generator.service';
 import {HttpErrorResponse} from '@angular/common/http';
 import {ModalService} from '../../services/modal.service';
 import {ApiService} from '../../../api/api.service';
 import {FormSettings} from './interfaces/form-settings';
 import {StorageService} from '../../../services/storage.service';
+import {FormButton} from './interfaces/form-button';
 
 @Component({
     selector: 'app-form',
@@ -17,7 +18,8 @@ import {StorageService} from '../../../services/storage.service';
 export class FormComponent implements OnInit {
 
     @Input() settings: FormSettings;
-    @Input() isLoginLoading: boolean;
+    @Input() isExternalForm: boolean;
+    @Input() isExternalLoading: boolean;
     @Output() response: EventEmitter<any> = new EventEmitter<any>();
 
     public form: FormGroup;
@@ -33,6 +35,7 @@ export class FormComponent implements OnInit {
 
     constructor(private _formGenerator: FormGeneratorService,
                 private _modal: ModalService,
+                private _router: Router,
                 private _apiService: ApiService,
                 private _route: ActivatedRoute,
                 private _storageService: StorageService) {
@@ -156,8 +159,8 @@ export class FormComponent implements OnInit {
 
     onSubmit(): void {
         // console.log('ON SUBMIT');
-        if (this.settings.isLoginForm) {
-            /** If is login form, the login component will handle the request */
+        if (this.isExternalForm) {
+            /** If is external form, the component will handle the request */
             this.response.emit(this.form.value);
         } else {
             // this.updateForms();
@@ -213,4 +216,20 @@ export class FormComponent implements OnInit {
     closeErrors(): void {
         this.settings.errors = [];
     }
+
+    onButton(button: FormButton): void {
+        this.parseButton(button);
+    }
+
+    private parseButton(button: FormButton): void {
+        if (button.config.path) {
+            let path = button.config.path;
+            if (path.charAt(0) !== '/') {
+                path = 'panel/' + path;
+            }
+            this._router.navigate([path]);
+        }
+        // TODO: if necessary, implement same logic like action parsing in table.component.ts
+    }
+
 }

@@ -47,12 +47,44 @@ export const environment = {
                     {
                         class: 'btn-sm btn-link no-padding',
                         content: 'Forgot password?',
-                        path: '/password-reset'
+                        config: {
+                            path: '/password-reset'
+                        }
                     }
                 ],
                 isLoginForm: true
             }
         },
-        passwordResetEndpoint: 'test'
+        passwordReset: {
+            endpoint: 'password_reset',
+            form: {
+                title: 'Ngx Backend - Password reset',
+                fields: {
+                    base: [
+                        {
+                            key: 'username',
+                            type: 'text',
+                            label: 'Username',
+                            placeholder: 'Username',
+                            validators: {
+                                required: true
+                            }
+                        }
+                    ],
+                },
+                submit: {
+                    label: 'Reset password'
+                },
+                buttons: [
+                    {
+                        class: 'btn-sm btn-link no-padding',
+                        content: 'Back to login',
+                        config: {
+                            path: '/login'
+                        }
+                    }
+                ]
+            }
+        }
     }
 };

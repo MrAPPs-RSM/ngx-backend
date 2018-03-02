@@ -1,4 +1,4 @@
-<form *ngIf="form" [formGroup]="form" (keyup.enter)="onSubmit()" [ngClass]="{'loading': isLoading || isLoginLoading}">
+<form *ngIf="form" [formGroup]="form" (keyup.enter)="onSubmit()" [ngClass]="{'loading': isLoading || isExternalLoading}">
     <header>
         <h3 *ngIf="settings.title">{{ settings.title }}</h3>
         <div class="progress">
@@ -49,7 +49,7 @@
             <div class="col-sm-12">
                 <div class="pull-left" *ngIf="settings.buttons && settings.buttons.length > 0">
                     <button *ngFor="let button of settings.buttons"
-                            type="button" (click)="onButton()"
+                            type="button" (click)="onButton(button)"
                             [class]="'btn ' + button.class"> {{ button.content }}
                     </button>
                 </div>

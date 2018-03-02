@@ -11,7 +11,7 @@
   @include _transition(all 0.3s);
   font-size: 15px;
 
-  &:focus {
+  &:focus, &:active {
     outline: none;
     -webkit-box-shadow: none;
     -moz-box-shadow: none;

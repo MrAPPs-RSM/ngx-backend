@@ -44,6 +44,17 @@ body {
       color: $default;
     }
   }
+
+  div.form-center {
+    background-color: #ffffff;
+    border: 1px solid $lightGrey;
+    border-radius: $borderRadius;
+    margin: 0 auto;
+    @include _transform(translateY(50%));
+    max-width: 600px;
+    padding: $cardPaddingY $cardPaddingX;
+  }
+
 }
 
 /* Drag & Drop table */

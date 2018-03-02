@@ -1,4 +1,5 @@
 div.toast-container {
+  border-radius: $borderRadius;
   top: 20px;
   right: 20px;
   > div.toast {
