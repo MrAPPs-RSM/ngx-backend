@@ -1,24 +1,26 @@
 <div [formGroup]="form" [class]="field.class ? field.class : 'col-sm-12'">
-    <div [formArrayName]="field.key">
-        <!-- Label -->
+    <div [formArrayName]="field.key" class="form-group" [ngClass]="{'has-error': !isValid}">
+
         <label>
             {{field.label}}
             <span *ngIf="field.validators && field.validators.required">*</span>
         </label>
 
-        <button type="button" (click)="addDetail()" class="btn btn-primary">Add</button>
-
-        <div [dragula]="!!field.drag"
-             [dragulaModel]="getControl().controls">
-            <div class="details-wrapper"
-                 [formGroupName]="i"
-                 *ngFor="let control of getControl().controls; let i = index">
-                <div *ngFor="let controlField of field.fields">
-                    <app-form-type-switcher [form]="control" [field]="controlField"
-                                            [isEdit]="isEdit"></app-form-type-switcher>
+        <div class="wrapper">
+            <div [dragula]="!!field.drag"
+                 [dragulaModel]="getControl().controls">
+                <div [formGroupName]="i"
+                     class="detail"
+                     *ngFor="let control of getControl().controls; let i = index">
+                    <div *ngFor="let controlField of field.fields" class="row">
+                        <app-form-type-switcher [form]="control"
+                                                [field]="controlField"
+                                                [isEdit]="isEdit"></app-form-type-switcher>
+                    </div>
+                    <span (click)="deleteDetail(i)" class="delete danger">×</span>
                 </div>
-                <button (click)="deleteDetail(i)" class="btn btn-danger">Delete</button>
             </div>
+            <button type="button" (click)="addDetail()" class="add btn btn-sm btn-primary">Add</button>
         </div>
     </div>
 </div>
