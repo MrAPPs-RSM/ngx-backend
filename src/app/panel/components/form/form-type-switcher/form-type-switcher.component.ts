@@ -13,7 +13,7 @@ export class FormTypeSwitcherComponent implements OnInit {
     @Input() groupName: string;
     @Input() field: any;
     @Input() isEdit: boolean;
-    @Input() unique = false;
+    @Input() unique?: Function;
 
     public formConfig = formConfig;
 

@@ -89,7 +89,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit {
 
     private filterOptionsIfNeeded(options: SelectData[]): SelectData[] {
         if (this.unique) {
-            return this.unique(options);
+            return this.unique(this, options);
         }
 
         return options;
