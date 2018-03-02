@@ -15,6 +15,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit {
 
     @Input() field: FormFieldSelect;
     @Input() isEdit: boolean;
+    @Input() unique?: Function;
 
     public options: SelectData[] = [];
 
@@ -86,11 +87,19 @@ export class SelectComponent extends BaseInputComponent implements OnInit {
         }
     }
 
+    private filterOptionsIfNeeded(options: SelectData[]): SelectData[] {
+        if (this.unique) {
+            return this.unique(options);
+        }
+
+        return options;
+    }
+
     private loadOptions(params?: any): Promise<any> {
         return new Promise((resolve, reject) => {
             if (this.field.options) {
                 if (this.field.options instanceof Array) {
-                    this.options = this.field.options;
+                    this.options = this.filterOptionsIfNeeded(this.field.options);
                     resolve();
                 } else {
                     let endpoint = this.field.options;
@@ -100,7 +109,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit {
 
                     this._apiService.get(endpoint, params)
                         .then((response) => {
-                            this.options = response;
+                            this.options = this.filterOptionsIfNeeded(response);
                             resolve();
                         })
                         .catch((response: HttpErrorResponse) => {

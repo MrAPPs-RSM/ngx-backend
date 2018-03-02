@@ -8,7 +8,12 @@
 
         <div *ngFor="let control of getControl().controls; let i = index" [formGroupName]="i">
             <div *ngFor="let controlField of field.fields">
-                <app-form-type-switcher [form]="control" [field]="controlField" [isEdit]="isEdit"></app-form-type-switcher>
+                <app-form-type-switcher [unique]="unique ? filterOptions : null"
+                                        [form]="control"
+                                        [field]="controlField"
+                                        [isEdit]="isEdit">
+
+                </app-form-type-switcher>
             </div>
             <button (click)="deleteDetail(i)" class="btn btn-danger">Delete</button>
         </div>

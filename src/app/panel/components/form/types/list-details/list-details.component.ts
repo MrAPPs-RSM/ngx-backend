@@ -3,6 +3,7 @@ import {BaseInputComponent} from '../base-input/base-input.component';
 import {FormFieldListDetails} from '../../interfaces/form-field-list-details';
 import {FormArray, FormGroup} from '@angular/forms';
 import {FormGeneratorService} from '../../../../services/form-generator.service';
+import {SelectData} from '../select/select.component';
 
 @Component({
   selector: 'app-list-details',
@@ -12,12 +13,27 @@ import {FormGeneratorService} from '../../../../services/form-generator.service'
 export class ListDetailsComponent extends BaseInputComponent implements OnInit {
 
     @Input() field: FormFieldListDetails;
+    @Input() unique = false;
 
     constructor(private _formGenerator: FormGeneratorService) {
       super();
     }
 
     ngOnInit() {
+
+    }
+
+    filterOptions(options: SelectData[]): SelectData[] {
+
+        const updatedOptions = [];
+
+        console.log(this.form.getRawValue());
+
+        for (const option of options) {
+
+        }
+
+        return updatedOptions;
     }
 
     public getControl(): FormArray {
