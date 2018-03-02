@@ -3,7 +3,7 @@ import {ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot} from '@ang
 import {PanelComponent} from '../panel.component';
 import {Observable} from 'rxjs/Observable';
 import {SetupService} from '../services/setup.service';
-import {UserService} from '../../auth/user.service';
+import {UserService} from '../../auth/services/user.service';
 
 @Injectable()
 export class PanelResolver implements Resolve<PanelComponent> {

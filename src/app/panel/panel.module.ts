@@ -11,7 +11,7 @@ import {AgmCoreModule} from '@agm/core';
 import {Ng2SmartTableModule} from './modules/ng2-smart-table/ng2-smart-table.module';
 
 
-import {AuthGuard} from '../auth/auth.guard';
+import {AuthGuard} from '../auth/guards/auth.guard';
 import {PanelComponent} from './panel.component';
 import {FormPageComponent} from './pages/form-page/form-page.component';
 import {TablePageComponent} from './pages/table-page/table-page.component';

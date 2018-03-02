@@ -1,3 +1,5 @@
+import {FormButton} from './form-button';
+
 export interface FormSettings {
     api: {
         endpoint: string,
@@ -11,6 +13,7 @@ export interface FormSettings {
         refreshAfter?: boolean; // default = false, determines what to do after submit
         redirectAfter?: string; // if set, redirect to a path after submit
     };
+    buttons?: FormButton[];
     responseType?: string; // 'default' | 'inline' | 'terminal' | 'alert' TODO
     isLoginForm?: boolean;
     messages?: any;
