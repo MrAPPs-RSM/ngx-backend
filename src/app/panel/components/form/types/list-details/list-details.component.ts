@@ -13,6 +13,8 @@ export class ListDetailsComponent extends BaseInputComponent implements OnInit {
 
     @Input() field: FormFieldListDetails;
 
+    private subForms: any[] = [];
+
     constructor(private _formGenerator: FormGeneratorService) {
       super();
     }
@@ -25,12 +27,14 @@ export class ListDetailsComponent extends BaseInputComponent implements OnInit {
     }
 
     addDetail() {
+        this.subForms.push('item');
         // add new formgroup
         this.getControl().push(new FormGroup(this._formGenerator.generateFormFields(this.field.fields)));
     }
 
     deleteDetail(index: number) {
         // remove the chosen row
+        this.subForms.splice(index, 1);
         this.getControl().removeAt(index);
     }
 }
