@@ -1,5 +1,6 @@
 .form-group {
   @include clearfix;
+  clear: both;
 
   margin-top: 0;
   /* Layout */
@@ -10,49 +11,50 @@
     margin-bottom: 25px;
   }
 
-  > label {
+  label {
     font-weight: inherit;
     font-size: 13px;
     color: $default;
-    + input {
-      &.form-control {
-        @include _form-input;
-      }
-    }
-    + textarea {
-      &.form-control {
-        @include _form-input;
-        resize: none;
-        height: 150px;
-        padding: 12px;
-      }
-    }
+  }
 
-    /* Date picker */
-    + div.ngui-datetime-picker-wrapper {
-      > input {
-        @include _form-input;
-      }
+  input {
+    &.form-control {
+      @include _form-input;
+    }
+  }
+  textarea {
+    &.form-control {
+      @include _form-input;
+      resize: none;
+      height: 150px;
+      padding: 12px;
+    }
+  }
+
+  /* Date picker */
+  div.ngui-datetime-picker-wrapper {
+    > input {
+      @include _form-input;
     }
   }
 
   &.has-error {
-    > label {
+    label {
       color: $danger;
-      + input {
+    }
+    input {
+      border-color: $danger;
+      &:focus {
+        border-color: $danger;
+      }
+    }
+
+    /* Date picker */
+    div.ngui-datetime-picker-wrapper {
+      > input {
         border-color: $danger;
         &:focus {
           border-color: $danger;
-        }
-      }
-
-      /* Date picker */
-      + div.ngui-datetime-picker-wrapper {
-        > input {
-          border-color: $danger;
-          &:focus {
-            border-color: $danger;
-          }
         }
       }
     }

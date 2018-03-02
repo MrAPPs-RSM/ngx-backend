@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {FormFieldListDetails} from '../../interfaces/form-field-list-details';
 import {FormArray, FormGroup} from '@angular/forms';
@@ -6,9 +6,10 @@ import {FormGeneratorService} from '../../../../services/form-generator.service'
 import {SelectData} from '../select/select.component';
 
 @Component({
-  selector: 'app-list-details',
-  templateUrl: './list-details.component.html',
-  styleUrls: ['./list-details.component.scss']
+    selector: 'app-list-details',
+    templateUrl: './list-details.component.html',
+    styleUrls: ['./list-details.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class ListDetailsComponent extends BaseInputComponent implements OnInit {
 
@@ -16,7 +17,7 @@ export class ListDetailsComponent extends BaseInputComponent implements OnInit {
     @Input() unique = false;
 
     constructor(private _formGenerator: FormGeneratorService) {
-      super();
+        super();
     }
 
     ngOnInit() {
