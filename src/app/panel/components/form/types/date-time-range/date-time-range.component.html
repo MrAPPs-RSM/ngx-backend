@@ -1,4 +1,4 @@
-<div [formGroup]="form" [class]="field.class ? field.class : 'col-sm-12'">
+<div [formGroup]="form" [class]="field.class ? field.class : 'col-sm-12'" [ngClass]="{'hidden': field.hidden}">
     <div class="form-group">
         <div class="row">
             <div class="col-sm-6">

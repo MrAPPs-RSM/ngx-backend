@@ -2,7 +2,7 @@
 
 app-panel {
   $navbarHeight: 50px;
-  $sidebarWidth: 320px;
+  $sidebarWidth: 200px;
   > nav.navbar {
     border: none;
     border-bottom: 1px solid $grey;
@@ -43,7 +43,6 @@ app-panel {
               padding: 15px;
               cursor: pointer;
               &.logout {
-                font-weight: $regular;
                 color: $primary;
                 &:hover {
                   background-color: $lightGrey;

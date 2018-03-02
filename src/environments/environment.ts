@@ -43,8 +43,16 @@ export const environment = {
                 submit: {
                     label: 'Login'
                 },
+                buttons: [
+                    {
+                        class: 'btn-sm btn-link no-padding',
+                        content: 'Forgot password?',
+                        path: '/password-reset'
+                    }
+                ],
                 isLoginForm: true
             }
-        }
+        },
+        passwordResetEndpoint: 'test'
     }
 };

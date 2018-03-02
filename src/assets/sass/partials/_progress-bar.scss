@@ -1,4 +1,7 @@
 .progress {
+  &.visible {
+    display: block !important;
+  }
   display: none;
   position: relative;
   height: 4px;

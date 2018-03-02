@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {environment} from '../../environments/environment';
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from '@angular/common/http';
-import {UserService} from '../auth/user.service';
+import {UserService} from '../auth/services/user.service';
 import {Router} from '@angular/router';
 
 const API_URL = environment.api.baseUrl;

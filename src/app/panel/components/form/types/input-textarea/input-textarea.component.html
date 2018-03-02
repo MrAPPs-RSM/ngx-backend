@@ -1,4 +1,4 @@
-<div [formGroup]="form" [class]="field.class ? field.class : 'col-sm-12'">
+<div [formGroup]="form" [class]="field.class ? field.class : 'col-sm-12'" [ngClass]="{'hidden': field.hidden}">
     <div class="form-group" [ngClass]="{'has-error': !isValid}">
 
         <!-- Label -->
@@ -10,9 +10,9 @@
         <!-- Input -->
         <!-- TODO: apiKey -->
         <editor
-                *ngIf="field.options && field.options.tinyMce == true"
+                *ngIf="field.options && field.options.tinyMce"
                 apiKey="test"
-                [init]="{plugins: 'link'}"
+                [init]="field.options.tinyMce.init"
                 id="{{field.key}}"
                 formControlName="{{field.key}}">
         </editor>

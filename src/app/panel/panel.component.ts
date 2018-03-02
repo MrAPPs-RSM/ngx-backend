@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {UserService} from '../auth/user.service';
+import {UserService} from '../auth/services/user.service';
 import {environment} from '../../environments/environment';
 import {ActivatedRoute, Router} from '@angular/router';
 import {PageRefreshService} from '../services/page-refresh.service';

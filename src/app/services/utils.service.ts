@@ -15,24 +15,24 @@ export class UtilsService {
         }
 
         switch (extension) {
-            case '.jpg':
-            case '.jpeg':
-            case '.png': {
+            case 'jpg':
+            case 'jpeg':
+            case 'png': {
                 response = 'image/' + extension;
             }
                 break;
-            case '.json':
-            case '.zip':
-            case '.pdf': {
+            case 'json':
+            case 'zip':
+            case 'pdf': {
                 response = 'application/' + extension;
             }
                 break;
-            case '.xml':
-            case '.csv': {
+            case 'xml':
+            case 'csv': {
                 response = 'text/' + extension;
             }
                 break;
-            case '.txt': {
+            case 'txt': {
                 response = 'text/plain';
             }
                 break;

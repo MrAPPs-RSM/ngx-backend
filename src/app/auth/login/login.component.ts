@@ -1,9 +1,9 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {environment} from '../../environments/environment';
-import {ApiService} from '../api/api.service';
+import {environment} from '../../../environments/environment';
+import {ApiService} from '../../api/api.service';
 import {Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
-import {UserService} from '../auth/user.service';
+import {UserService} from '../services/user.service';
 
 @Component({
     selector: 'app-login',

@@ -15,7 +15,7 @@ app-file-upload {
       > div.drop-container {
         @include clearfix();
         background-color: #f5f5f5;
-        border: 1px solid $lightGrey;
+        border: 1px dotted $lightGrey;
         padding: $cardPaddingY $cardPaddingX;
         position: relative;
         text-align: center;
@@ -23,13 +23,13 @@ app-file-upload {
         @include _transition(all 0.3s);
 
         &.is-drop-over {
-          background-color: #d8d8d8;
-          border-color: $default;
+          background-color: lighten($primary, 40);
+          border-color: lighten($primary, 20);
         }
 
-        > span.drag {
+        > div {
           color: $default;
-          > span.choose {
+          span.choose {
             font-weight: $regular;
             cursor: pointer;
             color: darken($default, 10);
@@ -38,44 +38,9 @@ app-file-upload {
             }
           }
         }
-        > div.files-container {
-          > span {
-            border: 1px solid #ddd;
-            padding: 2px 5px;
-            position: relative;
-            background-color: #ffffff;
-            color: darken($default, 10);
-            margin-right: 5px;
-            > span.remove {
-              cursor: pointer;
-              &:hover {
-                color: $sidebarDark;
-              }
-            }
-            &.add {
-              cursor: pointer;
-              &:hover {
-                background-color: #d8d8d8;
-              }
-            }
-          }
-        }
-        > span.remove-all {
-          cursor: pointer;
-          position: absolute;
-          top: 0;
-          right: 8px;
-          font-size: 18px;
-          color: $default;
-          &:hover {
-            color: $sidebarDark;
-          }
-        }
-      }
-      > button {
-        margin: 10px 0;
       }
       > div.uploaded-files-container {
+        margin-top: 10px;
         position: relative;
         > label {
           font-size: 13px;

@@ -2,6 +2,7 @@ export interface FormField {
     type: string;
     label: string;
     key?: string;
+    hidden?: boolean;
     disabled?: string;
     placeholder?: string;
     value?: any;

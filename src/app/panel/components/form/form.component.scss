@@ -26,8 +26,8 @@ app-form {
     }
 
     > div.errors {
-      color: #ffffff;
-      background-color: $danger;
+      background-color: lighten($danger, 20);
+      color: darken($danger, 20);
       > ul {
         margin: 0;
         padding: 10px 15px;

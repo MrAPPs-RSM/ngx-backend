@@ -7,6 +7,7 @@ export interface FormFieldFile extends FormField {
             upload: string;
             delete?: string;
         },
+        maxFiles?: number; // only if multiple
         multiple?: boolean;
         allowedContentTypes?: string[];
     };
