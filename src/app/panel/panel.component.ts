@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {UserService} from '../auth/services/user.service';
 import {environment} from '../../environments/environment';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, Route, Router} from '@angular/router';
 import {PageRefreshService} from '../services/page-refresh.service';
 
 declare const $: any;
@@ -29,15 +29,35 @@ export class PanelComponent implements OnInit {
             this.menu = this._route.snapshot.data['params'];
         }
 
+        /** Search for home page */
+        let homePage = 'panel/dashboard';
+        (this._router.config as Array).every((item: Route) => {
+            if (item.path === 'panel') {
+                (item.children as Array).every((child) => {
+                    if (child.data['isHomePage']) {
+                        homePage = child.path;
+                        return false;
+                    } else {
+                        return true;
+                    }
+                });
+                return false;
+            } else {
+                return true;
+            }
+        });
+
+        console.log(homePage);
+
         if (this._pageRefresh.getLastPath() !== null) {
             if (this._pageRefresh.getLastPath() !== '/panel'
             && this._pageRefresh.getLastPath() !== '/login') {
                 this._pageRefresh.renavigate();
             } else {
-                this._router.navigate(['panel/dashboard']);
+                this._router.navigate(['panel/' + homePage]);
             }
         } else {
-            this._router.navigate(['panel/dashboard']);
+            this._router.navigate(['panel/' + homePage]);
         }
 
         this.user = this._userService.getUser();
