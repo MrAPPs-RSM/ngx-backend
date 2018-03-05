@@ -1,5 +1,5 @@
 <div [formGroup]="form" [class]="field.class ? field.class : 'col-sm-12'">
-    <div [formArrayName]="field.key" class="form-group" [ngClass]="{'has-error': !isValid}">
+    <div [formArrayName]="field.key" class="form-group">
 
         <label>
             {{field.label}}
@@ -22,7 +22,9 @@
                     <span (click)="deleteDetail(i)" class="delete danger">×</span>
                 </div>
             </div>
-            <button type="button" (click)="addDetail()" class="add btn btn-sm btn-primary">Add</button>
+            <button *ngIf="addEnabled" type="button" (click)="addDetail()" class="add btn btn-sm btn-primary">
+                Add
+            </button>
         </div>
     </div>
 </div>

@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {FormFieldListDetails} from '../../interfaces/form-field-list-details';
 import {FormArray, FormGroup} from '@angular/forms';
@@ -13,17 +13,21 @@ import { Subject } from 'rxjs/Subject';
     styleUrls: ['./list-details.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class ListDetailsComponent extends BaseInputComponent implements OnInit {
+export class ListDetailsComponent extends BaseInputComponent implements OnInit, OnDestroy {
 
     @Input() field: FormFieldListDetails;
 
     observer: Subject<any>;
+    addEnabled: boolean;
 
     constructor(private _formGenerator: FormGeneratorService) {
         super();
+
+        this.addEnabled = true;
     }
 
     ngOnInit() {
+        this.filterOptions = this.filterOptions.bind(this);
 
         if (this.field.unique) {
 
@@ -43,11 +47,15 @@ export class ListDetailsComponent extends BaseInputComponent implements OnInit {
         }
     }
 
+    ngOnDestroy() {
+        this.observer.complete();
+    }
+
     filterOptions(select: SelectComponent, options: SelectData[]): SelectData[] {
 
         const updatedOptions = [];
 
-        const formArray = this.form.parent as FormArray;
+        const formArray = this.form.get(this.field.key) as FormArray;
 
         for (const option of options) {
 
@@ -62,6 +70,7 @@ export class ListDetailsComponent extends BaseInputComponent implements OnInit {
 
                     if (option.id === formGroup.get(select.field.key).value) {
                         found = true;
+                        break;
                     }
                 }
 
@@ -72,6 +81,8 @@ export class ListDetailsComponent extends BaseInputComponent implements OnInit {
                 updatedOptions.push(option);
             }
         }
+
+        this.addEnabled = updatedOptions.length > 0 && formArray.controls.length < updatedOptions.length;
 
         return updatedOptions;
     }

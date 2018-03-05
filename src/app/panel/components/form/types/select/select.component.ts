@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, Input, OnInit, ViewEncapsulation, OnDestroy} from '@angular/core';
 import {ApiService} from '../../../../../api/api.service';
 import {ActivatedRoute} from '@angular/router';
 import {HttpErrorResponse} from '@angular/common/http';
@@ -19,10 +19,9 @@ export class SelectComponent extends BaseInputComponent implements OnInit {
     @Input() unique?: Function;
     params = {};
     observable: Subject<any>;
-
     public options: SelectData[] = [];
-
     public selected: any; // Array or object
+
 
     constructor(private _apiService: ApiService,
                 private _route: ActivatedRoute) {
@@ -37,10 +36,9 @@ export class SelectComponent extends BaseInputComponent implements OnInit {
             this.field.dependsOn.forEach((key) => {
 
                 if (key instanceof Subject) {
-                    this.observable = key as Subject<any>;
-                    console.log("mah...");
-                    this.observable.subscribe((value) => {
-                        console.log("ok");
+                   this.observable = key as Subject<any>;
+                   this.observable.subscribe((value) => {
+
                         this.loadOptions(this.params)
                             .then(() => {
                             })
@@ -106,7 +104,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit {
 
     private filterOptionsIfNeeded(options: SelectData[]): SelectData[] {
         if (this.unique) {
-            return this.unique(this, options);
+            options = this.unique(this, options);
         }
 
         return options;
@@ -146,7 +144,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit {
             this.refreshFormValue();
         }
 
-        if (this.observable !== null) {
+        if (this.observable != null) {
             this.observable.next();
         }
     }
