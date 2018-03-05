@@ -1,27 +1,46 @@
 @import '../../../../assets/sass/partials/imports';
 
 app-form {
+  /*&.primary {
+    > form {
+      > header {
+        background-color: $primary;
+        color: #ffffff;
+      }
+    }
+  }
+  &.info {
+    > form {
+      > header {
+        background-color: $info;
+        color: #ffffff;
+      }
+    }
+  }
+  &.default {
+    > form {
+      > header {
+        background-color: $default;
+        color: #ffffff;
+      }
+    }
+  } */
   > form {
+    @include card();
     &.loading {
       > header {
         > .progress {
           display: block;
         }
       }
-      > div.fields-wrapper {
-        &:after {
-          display: block;
-        }
-      }
-
     }
     > header {
-      background: $lightGrey;
+      background: #efefef;
       margin: -#{$cardPaddingY} -#{$cardPaddingX} $cardPaddingY;
       > h3 {
         margin: 0;
         padding: 15px $cardPaddingX;
-        font-size: 18px;
+        font-size: 16px;
       }
     }
 
@@ -60,19 +79,6 @@ app-form {
     }
 
     > div.fields-wrapper {
-      position: relative;
-      &:after {
-        display: none;
-        content: '';
-        position: absolute;
-        top: -#{$cardPaddingY};
-        left: -#{$cardPaddingX};
-        width: calc(100% + (#{$cardPaddingX} * 2));
-        height: calc(100% + (#{$cardPaddingY} * 2));
-        background: #4c4c4c;
-        opacity: 0.1;
-      }
-
       div.multilang {
         max-width: 130px;
         margin-bottom: 25px;

@@ -1,0 +1,26 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="profile-card">
+                <ul>
+                    <li>
+                        <i class="fa fa-user"></i>
+                        {{user.username}}
+                    </li>
+                    <li>
+                        <i class="fa fa-envelope"></i>
+                        {{user.email}}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row" *ngIf="params.forms">
+        <div *ngFor="let form of params.forms" [class]="form.class ? form.class : 'col-sm-12'">
+            <app-form
+                    [settings]="form"
+                    (response)="onResponse(form, $event)">
+            </app-form>
+        </div>
+    </div>
+</div>

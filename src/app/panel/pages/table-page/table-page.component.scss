@@ -2,6 +2,14 @@
 
 app-table-page {
   > div.container-fluid {
-    @include card($cardPaddingY, $cardPaddingY);
+    > div.row {
+      > div {
+        > app-table {
+          > div {
+            @include card($cardPaddingY, $cardPaddingY);
+          }
+        }
+      }
+    }
   }
 }
