@@ -14,12 +14,13 @@ app-form {
     > div.errors {
       background-color: lighten($danger, 20);
       color: darken($danger, 20);
-      > ul {
-        margin: 0;
+      > ol {
+        margin: 0 0 0 15px;
         padding: 10px 15px;
-        list-style: none;
         > li {
-
+          > span {
+            font-weight: $regular;
+          }
         }
       }
 
@@ -41,7 +42,7 @@ app-form {
         position: absolute;
         top: 1px;
         right: 8px;
-        color: #ffffff;
+        color: darken($danger, 20);
       }
     }
 

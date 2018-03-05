@@ -66,15 +66,19 @@ export class SelectComponent extends BaseInputComponent implements OnInit {
     }
 
     get isValid() {
-        if (this.field.validators && this.field.validators.required) {
-            if (this.field.multiple) {
-                if (this.form.controls[this.field.key].value instanceof Array) {
-                    return this.form.controls[this.field.key].value.length > 0;
+        if (this.getControl().touched) {
+            if (this.field.validators && this.field.validators.required) {
+                if (this.field.multiple) {
+                    if (this.getControl().value instanceof Array) {
+                        return this.getControl().value.length > 0;
+                    } else {
+                        return this.getControl().value !== null;
+                    }
                 } else {
-                    return this.form.controls[this.field.key].value !== null;
+                    return this.getControl().value !== null;
                 }
             } else {
-                return this.form.controls[this.field.key].value !== null;
+                return true;
             }
         } else {
             return true;
@@ -83,13 +87,13 @@ export class SelectComponent extends BaseInputComponent implements OnInit {
 
     private loadData(): void {
         if (this.isEdit && this.field.multiple) {
-            this.form.controls[this.field.key].valueChanges.first().subscribe((value) => {
+            this.getControl().valueChanges.first().subscribe((value) => {
                 this.loadOptions().then(() => {
                     if (value instanceof Array) {
                         value.forEach((item) => {
                             this.selected.push({
                                 id: item.id,
-                                text: item.nome
+                                text: item.nome // TODO: make this changeable
                             });
                             this.selected = [...this.selected];
                         });
@@ -158,10 +162,10 @@ export class SelectComponent extends BaseInputComponent implements OnInit {
                 this.selected.forEach((item) => {
                     ids.push(item.id);
                 });
-                this.form.controls[this.field.key].setValue(ids);
+                this.getControl().setValue(ids);
             }
         } else {
-            this.form.controls[this.field.key].setValue(null);
+            this.getControl().setValue(null);
         }
     }
 }

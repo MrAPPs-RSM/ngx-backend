@@ -9,13 +9,24 @@
         </div>
     </header>
 
+    <!-- Validation errors, handled locally (required fields, etc) -->
+    <div class="errors" [ngClass]="{'visible': errorsList && errorsList.length > 0}">
+        <ol>
+            <li *ngFor="let error of errorsList">
+                <span>{{error.label}}</span> {{error.message}}
+            </li>
+        </ol>
+        <span (click)="closeErrors(false)">×</span>
+    </div>
+
+    <!-- Errors from API RESPONSE, handled by external components -->
     <div class="errors" [ngClass]="{'visible': settings.errors && settings.errors.length > 0}">
-        <ul>
+        <ol>
             <li *ngFor="let error of settings.errors">
                 {{error}}
             </li>
-        </ul>
-        <span (click)="closeErrors()">×</span>
+        </ol>
+        <span (click)="closeErrors(true)">×</span>
     </div>
 
     <div class="fields-wrapper">
@@ -58,7 +69,7 @@
                 </div>
                 <div class="pull-right">
                     <button type="button" (click)="onSubmit()" class="btn btn-primary"
-                            [disabled]="!form.valid || isLoading"> {{ settings.submit?.label ? settings.submit.label :
+                            [disabled]="isLoading || isExternalLoading"> {{ settings.submit?.label ? settings.submit.label :
                         'Save'}}
                     </button>
                 </div>
