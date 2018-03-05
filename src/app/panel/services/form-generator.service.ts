@@ -177,7 +177,7 @@ export class FormGeneratorService {
                 }
             }
 
-            console.log(group);
+            //console.log(group);
 
             return new FormGroup(group);
         } else {
