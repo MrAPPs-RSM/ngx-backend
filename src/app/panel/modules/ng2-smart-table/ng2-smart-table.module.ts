@@ -30,6 +30,7 @@ import {Ng2SmartTableComponent} from './ng2-smart-table.component';
     ],
     exports: [
         Ng2SmartTableComponent,
+        DragulaModule
     ],
 })
 export class Ng2SmartTableModule {

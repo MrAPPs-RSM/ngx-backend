@@ -3,5 +3,8 @@
 app-table-page {
   > div.container-fluid {
     @include card($cardPaddingY, $cardPaddingY);
+    > div.row > div {
+      overflow-x: auto;
+    }
   }
 }

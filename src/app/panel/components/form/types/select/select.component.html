@@ -19,6 +19,7 @@
         <ng-select *ngIf="!field.multiple"
                    [items]="options"
                    [multiple]="false"
+                   (change)="onChange($event)"
                    bindValue="id"
                    bindLabel="text"
                    placeholder="{{field.placeholder}}"
