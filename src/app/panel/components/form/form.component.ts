@@ -95,8 +95,8 @@ export class FormComponent implements OnInit {
 
         this.form.valueChanges.subscribe(
             data => {
-               console.log(data);
-               // console.log(this.form);
+                // console.log(data);
+                // console.log(this.form);
             }
         );
 
@@ -181,9 +181,12 @@ export class FormComponent implements OnInit {
     }
 
     submit(): void {
+        /** Using getRawValue() because form.value is not changed when FormArray order changes
+         *  Useful to support drag&drop on list detail */
+        const value = this.form.getRawValue();
         this.isLoading = true;
         if (this.settings.isEdit) {
-            this._apiService.patch(this.settings.api.endpoint + '/' + this._route.snapshot.params['id'], this.form.value)
+            this._apiService.patch(this.settings.api.endpoint + '/' + this._route.snapshot.params['id'], value)
                 .then((response) => {
                     this.isLoading = false;
                     this.response.emit(response);
@@ -197,7 +200,7 @@ export class FormComponent implements OnInit {
                     this.response.emit(response);
                 });
         } else {
-            this._apiService.put(this.settings.api.endpoint, this.form.value)
+            this._apiService.put(this.settings.api.endpoint, value)
                 .then((response) => {
                     this.isLoading = false;
                     this.response.emit(response);

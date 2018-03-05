@@ -13,8 +13,7 @@ export let formConfig = {
         DATE_RANGE: 'date_range',
         MAP: 'map',
         FILE: 'file',
-        LIST_DETAILS: 'list_details',
-        CALENDAR: 'calendar'
+        LIST_DETAILS: 'list_details'
     },
     noInputTypes: {
         SEPARATOR: 'separator'

@@ -4,6 +4,7 @@ app-table-page {
   > div.container-fluid {
     > div.row {
       > div {
+        overflow-x: auto;
         > app-table {
           > div {
             @include card($cardPaddingY, $cardPaddingY);

@@ -1,0 +1,28 @@
+<div [formGroup]="form" [class]="field.class ? field.class : 'col-sm-12'">
+    <div [formArrayName]="field.key" class="form-group" [ngClass]="{'has-error': !isValid}">
+
+        <label>
+            {{field.label}}
+            <span *ngIf="field.validators && field.validators.required">*</span>
+        </label>
+        <div class="wrapper">
+            <div [dragula]="!!field.drag"
+                 [dragulaModel]="getControl().controls">
+                <div [formGroupName]="i"
+                     class="detail"
+                     *ngFor="let control of getControl().controls; let i = index">
+                    <div *ngFor="let controlField of field.fields" class="row">
+                        <app-form-type-switcher [form]="control"
+                                                [field]="controlField"
+                                                [isEdit]="isEdit"
+                                                [unique]="field.unique ? filterOptions : null"
+                                                [index]="i">
+                        </app-form-type-switcher>
+                    </div>
+                    <span (click)="deleteDetail(i)" class="delete danger">×</span>
+                </div>
+            </div>
+            <button type="button" (click)="addDetail()" class="add btn btn-sm btn-primary">Add</button>
+        </div>
+    </div>
+</div>
