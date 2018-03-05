@@ -47,20 +47,25 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     @ViewChild('fileUpload') _fileUpload: ElementRef;
 
     static composeFileUrl(response: GoogleCloudStorageResponse | LocalStorageResponse): string {
-        if (isLocalStorageResponse(response)) {
-            const name = response.name ? response.name : response.hash + '.' + response.extension;
-            return environment.api.baseFilesUrl + response.container + '/' + name;
-        } else if (isGoogleCloudStorageResponse(response)) {
-            if (!response.url) {
-                if (response.thumbnails) {
-                    return response.thumbnails.small;
-                } else {
+        if (response.hasOwnProperty('url')) {
+            return response['url'];
+        } else {
+            if (isLocalStorageResponse(response)) {
+                const name = response.name ? response.name : response.hash + '.' + response.extension;
+                return environment.api.baseFilesUrl + response.container + '/' + name;
+            } else if (isGoogleCloudStorageResponse(response)) {
+                if (!response.url) {
+                    if (response.thumbnails) {
+                        return response.thumbnails.small;
+                    } else {
 
+                    }
+                } else {
+                    return response.url;
                 }
-            } else {
-                return response.url;
             }
         }
+
     }
 
     constructor(private _renderer: Renderer,
