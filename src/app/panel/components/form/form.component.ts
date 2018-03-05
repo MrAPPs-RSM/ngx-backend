@@ -135,6 +135,10 @@ export class FormComponent implements OnInit {
         return null;
     }
 
+    getIsoCodeForFlag(lang: any): string {
+        return lang.isoCode !== 'en' ? lang.isoCode : 'gb';
+    }
+
     isMultiLangField(key: string): boolean {
         return this.getLanguageForIsoCode(key) !== null;
     }

@@ -39,6 +39,12 @@
                            [ngModelOptions]="{standalone: true}"
                            (change)="onLanguageChange($event)"
                            bindLabel="name">
+                    <ng-template ng-label-tmp let-item="item">
+                       <i [class]="'flag-icon flag-icon-' + getIsoCodeForFlag(item)"></i> {{item.name}}
+                    </ng-template>
+                    <ng-template ng-option-tmp let-item="item">
+                        <i [class]="'flag-icon flag-icon-' + getIsoCodeForFlag(item)"></i> {{item.name}}
+                    </ng-template>
                 </ng-select>
             </div>
 
