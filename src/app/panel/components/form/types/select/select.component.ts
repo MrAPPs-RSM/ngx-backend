@@ -4,6 +4,7 @@ import {ActivatedRoute} from '@angular/router';
 import {HttpErrorResponse} from '@angular/common/http';
 import {FormFieldSelect} from '../../interfaces/form-field-select';
 import {BaseInputComponent} from '../base-input/base-input.component';
+import {Subject} from 'rxjs/Subject';
 
 @Component({
     selector: 'app-select',
@@ -16,6 +17,8 @@ export class SelectComponent extends BaseInputComponent implements OnInit {
     @Input() field: FormFieldSelect;
     @Input() isEdit: boolean;
     @Input() unique?: Function;
+    params = {};
+    observable: Subject<any>;
 
     public options: SelectData[] = [];
 
@@ -28,21 +31,35 @@ export class SelectComponent extends BaseInputComponent implements OnInit {
 
     ngOnInit() {
         this.loadData();
-        const params = {};
         this.selected = this.field.multiple === true ? [] : {};
 
         if (this.field.dependsOn) {
             this.field.dependsOn.forEach((key) => {
-                if (this.form.controls[key]) {
-                    this.form.controls[key].valueChanges.subscribe((value) => {
-                        params[key] = value;
-                        this.loadOptions(params)
+
+                if (key instanceof Subject) {
+                   this.observable = key as Subject<any>;
+                    console.log("mah...");
+                    this.observable.subscribe((value) => {
+                        console.log("ok");
+                        this.loadOptions(this.params)
                             .then(() => {
                             })
                             .catch((error) => {
                                 console.log(error);
                             });
-                    });
+                   });
+                } else {
+                    if (this.form.controls[key]) {
+                        this.form.controls[key].valueChanges.subscribe((value) => {
+                            this.params[key] = value;
+                            this.loadOptions(this.params)
+                                .then(() => {
+                                })
+                                .catch((error) => {
+                                    console.log(error);
+                                });
+                        });
+                    }
                 }
             });
         }
@@ -124,8 +141,14 @@ export class SelectComponent extends BaseInputComponent implements OnInit {
     }
 
     onChange($event): void {
-        this.selected = $event;
-        this.refreshFormValue();
+        if (this.field.multiple) {
+            this.selected = $event;
+            this.refreshFormValue();
+        }
+
+        if (this.observable !== null) {
+            this.observable.next();
+        }
     }
 
     private refreshFormValue(): void {
