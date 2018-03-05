@@ -2,26 +2,12 @@
 
 app-form {
   > form {
+    @include card();
     &.loading {
       > header {
         > .progress {
           display: block;
         }
-      }
-      > div.fields-wrapper {
-        &:after {
-          display: block;
-        }
-      }
-
-    }
-    > header {
-      background: $lightGrey;
-      margin: -#{$cardPaddingY} -#{$cardPaddingX} $cardPaddingY;
-      > h3 {
-        margin: 0;
-        padding: 15px $cardPaddingX;
-        font-size: 18px;
       }
     }
 
@@ -60,19 +46,6 @@ app-form {
     }
 
     > div.fields-wrapper {
-      position: relative;
-      &:after {
-        display: none;
-        content: '';
-        position: absolute;
-        top: -#{$cardPaddingY};
-        left: -#{$cardPaddingX};
-        width: calc(100% + (#{$cardPaddingX} * 2));
-        height: calc(100% + (#{$cardPaddingY} * 2));
-        background: #4c4c4c;
-        opacity: 0.1;
-      }
-
       div.multilang {
         max-width: 130px;
         margin-bottom: 25px;

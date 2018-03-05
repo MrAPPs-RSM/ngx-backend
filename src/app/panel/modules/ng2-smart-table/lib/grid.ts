@@ -56,6 +56,10 @@ export class Grid {
         return this.dataSet.getColumns();
     }
 
+    getVisibleColumns(): Array<Column> {
+        return this.dataSet.getVisibleColumns();
+    }
+
     getRows(): Array<Row> {
         return this.dataSet.getRows();
     }

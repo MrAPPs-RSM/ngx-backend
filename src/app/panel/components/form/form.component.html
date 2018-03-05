@@ -1,4 +1,7 @@
-<form *ngIf="form" [formGroup]="form" (keyup.enter)="onSubmit()" [ngClass]="{'loading': isLoading || isExternalLoading}">
+<form *ngIf="form"
+      [formGroup]="form"
+      (keyup.enter)="onSubmit()"
+      [ngClass]="{'loading': isLoading || isExternalLoading}">
     <header>
         <h3 *ngIf="settings.title">{{ settings.title }}</h3>
         <div class="progress">
@@ -63,4 +66,5 @@
         </div>
     </div>
 </form>
+
 

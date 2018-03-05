@@ -14,8 +14,6 @@ export class DataSet {
     constructor(data: Array<any> = [], protected columnSettings: Object) {
         this.createColumns(columnSettings);
         this.setData(data);
-
-        this.createNewRow();
     }
 
     setData(data: Array<any>) {
@@ -25,6 +23,16 @@ export class DataSet {
 
     getColumns(): Array<Column> {
         return this.columns;
+    }
+
+    getVisibleColumns(): Array<Column> {
+        const columns: Column[] = [];
+        this.getColumns().forEach((column: Column) => {
+            if (!column.hidden) {
+                columns.push(column);
+            }
+        });
+        return columns;
     }
 
     getRows(): Array<Row> {
@@ -116,11 +124,6 @@ export class DataSet {
         }
 
         return this.selectedRow;
-    }
-
-    createNewRow() {
-        this.newRow = new Row(-1, {}, this);
-        this.newRow.isInEditing = true;
     }
 
     /**

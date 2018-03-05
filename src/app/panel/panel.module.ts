@@ -39,6 +39,7 @@ import {FileUploadComponent} from './components/form/types/file-upload/file-uplo
 import {MapComponent} from './components/form/types/map/map.component';
 import {ContentTopComponent} from './components/content-top/content-top.component';
 import {FormTypeSwitcherComponent} from './components/form/form-type-switcher/form-type-switcher.component';
+import {ProfilePageComponent} from './pages/profile-page/profile-page.component';
 import {ListDetailsComponent} from './components/form/types/list-details/list-details.component';
 
 const routes: Routes = [
@@ -104,7 +105,8 @@ const routes: Routes = [
         FileUploadComponent,
         ListDetailsComponent,
         MapComponent,
-        ContentTopComponent
+        ContentTopComponent,
+        ProfilePageComponent
     ],
     providers: [
         AuthGuard,
@@ -116,7 +118,8 @@ const routes: Routes = [
     entryComponents: [
         FormPageComponent,
         TablePageComponent,
-        DashboardPageComponent
+        DashboardPageComponent,
+        ProfilePageComponent
     ]
 })
 export class PanelModule {

@@ -148,24 +148,31 @@ export class TableComponent implements OnInit {
         }
 
         /** Filters */
-        if (this.filter && this.filter.where) {
-            Object.keys(this.filter.where).forEach((key) => {
-                const condition = {};
-                if (this.settings.columns[key]) {
-                    if (this.settings.columns[key].type === 'boolean') {
-                        condition[key] = this.filter.where[key];
-                    } else {
-                        condition[key] = {
-                            like: '%' + this.filter.where[key] + '%'
-                        };
-                    }
-                } else {
-                    condition[key] = this.filter.where[key];
-                }
-                params.where.and.push(condition);
-            });
+        if (this.filter) {
 
-            params.skip = 0; // reset pagination if filters
+            if (this.filter.where) {
+                Object.keys(this.filter.where).forEach((key) => {
+                    const condition = {};
+                    if (this.settings.columns[key]) {
+                        if (this.settings.columns[key].type === 'boolean') {
+                            condition[key] = this.filter.where[key];
+                        } else {
+                            condition[key] = {
+                                like: '%' + this.filter.where[key] + '%'
+                            };
+                        }
+                    } else {
+                        condition[key] = this.filter.where[key];
+                    }
+                    params.where.and.push(condition);
+                });
+
+                params.skip = 0; // reset pagination if filters
+            }
+
+            if (this.filter.include) {
+                params['include'] = this.filter.include;
+            }
         }
 
         return {

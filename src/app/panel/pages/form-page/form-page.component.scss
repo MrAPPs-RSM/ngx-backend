@@ -1,7 +1,4 @@
 @import '../../../../assets/sass/partials/imports';
 
 app-form-page {
-  > div.container-fluid {
-    @include card($cardPaddingY, $cardPaddingX);
-  }
 }

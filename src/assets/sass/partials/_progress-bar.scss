@@ -13,7 +13,7 @@
   overflow: hidden;
 
   > .indeterminate {
-    background-color: $primary;
+    background-color: darken($primary, 5);
 
     &:before {
       content: '';

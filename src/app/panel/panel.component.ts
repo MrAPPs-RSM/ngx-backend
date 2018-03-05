@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {UserService} from '../auth/services/user.service';
+import {User, UserService} from '../auth/services/user.service';
 import {environment} from '../../environments/environment';
 import {ActivatedRoute, Route, Router} from '@angular/router';
 import {PageRefreshService} from '../services/page-refresh.service';
@@ -16,8 +16,8 @@ export class PanelComponent implements OnInit {
 
     private title = environment.name;
     private menu: any[] = [];
-    private user: any;
-    private homePage: string = 'panel/dashboard';
+    private user: User;
+    private homePage: string = '/panel/dashboard';
 
     constructor(private _router: Router,
                 private _userService: UserService,

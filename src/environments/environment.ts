@@ -17,6 +17,7 @@ export const environment = {
             endpoint: 'persons/login?include=user',
             form: {
                 title: 'Ngx Backend - Login',
+                class: 'col-sm-12 primary',
                 fields: {
                     base: [
                         {
@@ -58,6 +59,7 @@ export const environment = {
         passwordReset: {
             endpoint: 'password_reset',
             form: {
+                class: 'col-sm-12 primary',
                 title: 'Ngx Backend - Password reset',
                 fields: {
                     base: [

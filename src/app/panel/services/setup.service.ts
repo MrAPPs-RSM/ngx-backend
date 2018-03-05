@@ -5,11 +5,13 @@ import {environment} from '../../../environments/environment';
 import {DashboardPageComponent} from '../pages/dashboard-page/dashboard-page.component';
 import {TablePageComponent} from '../pages/table-page/table-page.component';
 import {FormPageComponent} from '../pages/form-page/form-page.component';
+import {ProfilePageComponent} from '../pages/profile-page/profile-page.component';
 import {UtilsService} from '../../services/utils.service';
 import {FormGeneratorService} from './form-generator.service';
 import {UserService} from '../../auth/services/user.service';
 
 const TYPES = {
+    profile: ProfilePageComponent,
     dashboard: DashboardPageComponent,
     table: TablePageComponent,
     form: FormPageComponent
@@ -22,7 +24,6 @@ export class SetupService {
                 private _userService: UserService,
                 private _apiService: ApiService,
                 private _formGeneratorService: FormGeneratorService) {
-      
     }
 
     public setup(): Promise<any> {
@@ -95,13 +96,17 @@ export class SetupService {
                 // Is a component
                 if (item.type === 'group') {
                     if ('children' in item) {
-                        item.params.menu['children'] = this.remapMenu(item.children);
-                        menu.push(item.params.menu);
+                        if (item.params.menu) {
+                            item.params.menu['children'] = this.remapMenu(item.children);
+                            menu.push(item.params.menu);
+                        }
                     }
                 } else {
-                    if (item.params.menu.sidebar === true) {
-                        item.params.menu.path = item.path;
-                        menu.push(item.params.menu);
+                    if (item.params.menu) {
+                        if (item.params.menu.sidebar === true) {
+                            item.params.menu.path = item.path;
+                            menu.push(item.params.menu);
+                        }
                     }
                 }
             } else if ('children' in item) {

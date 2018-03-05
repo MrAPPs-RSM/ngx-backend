@@ -13,7 +13,7 @@ import {Column} from "../../../lib/data-set/column";
             [isAllSelected]="isAllSelected"
             (click)="selectAllRows.emit($event)">
         </th>
-        <th *ngFor="let column of grid.getColumns()" class="ng2-smart-th {{ column.id }}" [ngClass]="column.class"
+        <th *ngFor="let column of grid.getVisibleColumns()" class="ng2-smart-th {{ column.id }}" [ngClass]="column.class"
             [style.width]="column.width">
             <ng2-st-column-title [source]="source" [column]="column" (sort)="sort.emit($event)"></ng2-st-column-title>
         </th>

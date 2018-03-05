@@ -10,11 +10,11 @@ export class UserService {
     public userKey = 'user';
     public tokenKey = environment.auth.tokenKey;
 
-    public storeUser(user: any): void {
+    public storeUser(user: User): void {
         localStorage.setItem(this.userKey, JSON.stringify(user));
     }
 
-    public getUser(): any {
+    public getUser(): User {
         return JSON.parse(localStorage.getItem(this.userKey));
     }
 
@@ -34,4 +34,11 @@ export class UserService {
         return localStorage.getItem(this.tokenKey);
     }
 
+}
+
+export interface User {
+    realm: string;
+    username: string;
+    email: string;
+    [key: string]: any;
 }

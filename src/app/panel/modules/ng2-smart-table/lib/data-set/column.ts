@@ -5,6 +5,7 @@ export class Column {
     title: string = '';
     type: string = '';
     class: string = '';
+    hidden: boolean = false;
     width: string = '';
     isSortable: boolean = false;
     isEditable: boolean = true;
@@ -58,6 +59,7 @@ export class Column {
         this.width = this.settings['width'];
         this.type = this.prepareType();
         this.editor = this.settings['editor'];
+        this.hidden = typeof this.settings['hidden'] === 'undefined' ? false : !!this.settings['hidden'];
         this.filter = this.settings['filter'];
         this.renderComponent = this.settings['renderComponent'];
 

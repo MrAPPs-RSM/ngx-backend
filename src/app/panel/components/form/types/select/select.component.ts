@@ -38,13 +38,14 @@ export class SelectComponent extends BaseInputComponent implements OnInit {
                 if (key instanceof Subject) {
                    this.observable = key as Subject<any>;
                    this.observable.subscribe((value) => {
+
                         this.loadOptions(this.params)
                             .then(() => {
                             })
                             .catch((error) => {
                                 console.log(error);
                             });
-                   });
+                    });
                 } else {
                     if (this.form.controls[key]) {
                         this.form.controls[key].valueChanges.subscribe((value) => {
