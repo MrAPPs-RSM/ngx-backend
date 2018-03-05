@@ -5,6 +5,7 @@ app-profile-page {
     > .row {
       > div {
         > div.profile-card {
+          max-width: 400px;
           @include card();
           > ul {
             list-style: none;
@@ -12,6 +13,9 @@ app-profile-page {
             padding: 0;
             > li {
               font-size: 15px;
+              &:not(:last-child) {
+                margin-bottom: 10px;
+              }
               > i {
                 width: 20px;
                 color: $primary;

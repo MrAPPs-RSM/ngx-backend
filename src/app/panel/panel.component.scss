@@ -114,6 +114,11 @@ app-panel {
                 > i {
                   color: $primary;
                 }
+                &:hover {
+                  > i {
+                    color: #ffffff;
+                  }
+                }
               }
             }
             > ul {

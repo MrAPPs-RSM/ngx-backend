@@ -1,30 +1,6 @@
 @import '../../../../assets/sass/partials/imports';
 
 app-form {
-  /*&.primary {
-    > form {
-      > header {
-        background-color: $primary;
-        color: #ffffff;
-      }
-    }
-  }
-  &.info {
-    > form {
-      > header {
-        background-color: $info;
-        color: #ffffff;
-      }
-    }
-  }
-  &.default {
-    > form {
-      > header {
-        background-color: $default;
-        color: #ffffff;
-      }
-    }
-  } */
   > form {
     @include card();
     &.loading {
@@ -32,15 +8,6 @@ app-form {
         > .progress {
           display: block;
         }
-      }
-    }
-    > header {
-      background: #efefef;
-      margin: -#{$cardPaddingY} -#{$cardPaddingX} $cardPaddingY;
-      > h3 {
-        margin: 0;
-        padding: 15px $cardPaddingX;
-        font-size: 16px;
       }
     }
 
