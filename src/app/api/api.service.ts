@@ -22,7 +22,7 @@ export class ApiService {
      * @param addAuth
      * @returns {string}
      */
-    public composeUrl(endpoint: string, addAuth?: boolean = false): string {
+    public composeUrl(endpoint: string, addAuth?: boolean): string {
         let url = API_URL + endpoint;
         if (addAuth) {
             const authorization = this._userService.tokenKey + '=' + this._userService.getToken();
