@@ -12,7 +12,6 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {TableAction} from './interfaces/table-action';
 import {Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
-import {isNullOrUndefined} from 'util';
 import * as _ from 'lodash';
 import * as FileSaver from 'file-saver';
 import {UtilsService} from '../../../services/utils.service';
@@ -25,6 +24,10 @@ import {StorageService} from '../../../services/storage.service';
     encapsulation: ViewEncapsulation.None
 })
 export class TableComponent implements OnInit {
+
+    /**
+     * Mini doc: fixed filter: pass filter without and[], just where: {key:value, key:value...}
+     */
 
     @Input() settings: TableSettings;
 
@@ -40,10 +43,10 @@ export class TableComponent implements OnInit {
     private isLoading: boolean = false;
 
     public data: any[];
-    public activeFilters: TableActiveFilters = {};
+    public activeFilters: TableActiveFilters = {}; // Need for table, not for API
     public count: number;
 
-    private filter: TableFilter;
+    private filter: any = {}; // Need for API, not for table
     private sort: TableSort;
     private pagination: TablePagination;
 
@@ -60,6 +63,36 @@ export class TableComponent implements OnInit {
             page: 1,
             perPage: this.settings.pager && this.settings.pager.perPage ? this.settings.pager.perPage : this.DEFAULTS.pager.perPage,
         };
+
+        /** Read fixed filter from settings if set */
+        if (this.settings.api.filter) {
+            this.filter = JSON.parse(this.settings.api.filter);
+        }
+
+        const tableParameters = this._storageService.getValue('tableParameters');
+
+        if (tableParameters) {
+            if (tableParameters.params.filter) {
+                const newFilters = JSON.parse(tableParameters.params.filter);
+                console.log(newFilters);
+
+                if (newFilters.where) {
+                    if (this.filter.where) {
+                        // merge objects
+                        Object.keys(newFilters.where).forEach((key) => {
+                            this.filter.where[key] = newFilters.where[key];
+                        });
+                    } else {
+                        this.filter.where = newFilters.where;
+                    }
+                }
+            }
+            this._storageService.clearValue('tableParameters');
+        }
+
+        console.log('ON INIT');
+        console.log(this.filter);
+
         this.getData();
     }
 
@@ -69,7 +102,7 @@ export class TableComponent implements OnInit {
         this.getCount()
             .then((res: { count: number }) => {
                 this.count = res.count;
-                this._apiService.get(this.settings.api.endpoint, this.composeParams(this.filter, this.sort, this.pagination))
+                this._apiService.get(this.settings.api.endpoint, this.composeParams())
                     .then((data) => {
                         this.isLoading = false;
                         this.data = data;
@@ -85,10 +118,10 @@ export class TableComponent implements OnInit {
     }
 
     private getCount(): Promise<any> {
-        return this._apiService.get(this.settings.api.endpoint + '/count', this.composeCountParams(this.filter));
+        return this._apiService.get(this.settings.api.endpoint + '/count', this.composeCountParams());
     }
 
-    private composeParams(filter?: TableFilter, sort?: TableSort, pagination?: TablePagination): Object {
+    private composeParams(): Object {
         const params = {
             where: {
                 and: []
@@ -99,9 +132,9 @@ export class TableComponent implements OnInit {
         };
 
         /** Pagination */
-        if (pagination) {
-            params.limit = pagination.perPage;
-            params.skip = (pagination.page - 1) * params.limit;
+        if (this.pagination) {
+            params.limit = this.pagination.perPage;
+            params.skip = (this.pagination.page - 1) * params.limit;
         }
 
         /** Sort (if drag enabled, always sort by weight ascending) */
@@ -109,26 +142,25 @@ export class TableComponent implements OnInit {
             params.order = this.settings.drag.sortField ? this.settings.drag.sortField : this.DEFAULTS.drag.sortField;
             params.order += ' ASC';
         } else {
-            if (sort) {
-                params.order = sort.field + ' ' + sort.direction.toUpperCase();
+            if (this.sort) {
+                params.order = this.sort.field + ' ' + this.sort.direction.toUpperCase();
             }
         }
 
         /** Filters */
-
-        if (this.settings.api.filter) {
-            params.where = JSON.parse(this.settings.api.filter)['where'];
-        }
-
-        if (!_.isEmpty(filter) && !isNullOrUndefined(filter)) {
-            Object.keys(filter).forEach((key) => {
+        if (this.filter && this.filter.where) {
+            Object.keys(this.filter.where).forEach((key) => {
                 const condition = {};
-                if (this.settings.columns[key].type === 'boolean') {
-                    condition[key] = filter[key];
+                if (this.settings.columns[key]) {
+                    if (this.settings.columns[key].type === 'boolean') {
+                        condition[key] = this.filter.where[key];
+                    } else {
+                        condition[key] = {
+                            like: '%' + this.filter.where[key] + '%'
+                        };
+                    }
                 } else {
-                    condition[key] = {
-                        like: '%' + filter[key] + '%'
-                    };
+                    condition[key] = this.filter.where[key];
                 }
                 params.where.and.push(condition);
             });
@@ -141,30 +173,30 @@ export class TableComponent implements OnInit {
         };
     }
 
-    private composeCountParams(filter?: TableFilter): Object {
+    private composeCountParams(): Object {
         const params = {
             where: {
                 and: []
             }
         };
-
-        if (this.settings.api.filter) {
-            params.where = JSON.parse(this.settings.api.filter)['where'];
-        }
-
         /** Filters */
-        if (filter) {
-            Object.keys(filter).forEach((key) => {
+        if (this.filter && this.filter.where) {
+            Object.keys(this.filter.where).forEach((key) => {
                 const condition = {};
-                if (this.settings.columns[key].type === 'boolean') {
-                    condition[key] = filter[key];
+                if (this.settings.columns[key]) {
+                    if (this.settings.columns[key].type === 'boolean') {
+                        condition[key] = this.filter.where[key];
+                    } else {
+                        condition[key] = {
+                            like: '%' + this.filter.where[key] + '%'
+                        };
+                    }
                 } else {
-                    condition[key] = {
-                        like: '%' + filter[key] + '%'
-                    };
+                    condition[key] = this.filter.where[key];
                 }
                 params.where.and.push(condition);
             });
+
         }
 
         return {
@@ -190,9 +222,13 @@ export class TableComponent implements OnInit {
                         if (key === 'id' && action.config.params[key] === true) {
                             action.config.params[key] = data.id;
                         }
+
+                        if (key === 'filter' && action.config.params[key].indexOf(':id') !== -1) {
+                            action.config.params[key].replace(':id', data.id);
+                        }
                     });
 
-                    this._storageService.setValue('formParameters', action.config.params);
+                    this._storageService.setValue(action.config.params.type, action.config.params);
                 }
 
                 this._router.navigate(['panel/' + path]);
@@ -376,9 +412,11 @@ export class TableComponent implements OnInit {
     }
 
     onFilter(filter: TableFilter) {
-        this.filter = filter;
+        if (!_.isEmpty(filter)) {
+            this.filter.where = filter;
+        }
         this.getData();
-        this.activeFilters.filter = this.filter;
+        this.activeFilters.filter = filter;
     }
 
     onPagination(pagination: TablePagination) {

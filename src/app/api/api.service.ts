@@ -33,9 +33,9 @@ export class ApiService {
      */
     public get(endpoint: string, params?: Object): Promise<any> {
         console.log('[API SERVICE] - GET ' + endpoint);
-        if (params) {
+        /*if (params) {
             console.log(params);
-        }
+        }*/
         return new Promise((resolve, reject) => {
             this._http.get(ApiService.composeUrl(endpoint), this.setOptions(params))
                 .subscribe(

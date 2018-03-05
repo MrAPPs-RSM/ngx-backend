@@ -17,6 +17,7 @@ export class PanelComponent implements OnInit {
     private title = environment.name;
     private menu: any[] = [];
     private user: any;
+    private homePage: string = 'panel/dashboard';
 
     constructor(private _router: Router,
                 private _userService: UserService,
@@ -30,12 +31,11 @@ export class PanelComponent implements OnInit {
         }
 
         /** Search for home page */
-        let homePage = 'panel/dashboard';
         (this._router.config as any).every((item: Route) => {
             if (item.path === 'panel') {
                 (item.children as any).every((child) => {
                     if (child.data['isHomePage']) {
-                        homePage = child.path;
+                        this.homePage = child.path;
                         return false;
                     } else {
                         return true;
@@ -47,17 +47,15 @@ export class PanelComponent implements OnInit {
             }
         });
 
-        console.log(homePage);
-
         if (this._pageRefresh.getLastPath() !== null) {
             if (this._pageRefresh.getLastPath() !== '/panel'
             && this._pageRefresh.getLastPath() !== '/login') {
                 this._pageRefresh.renavigate();
             } else {
-                this._router.navigate(['panel/' + homePage]);
+                this._router.navigate(['panel/' + this.homePage]);
             }
         } else {
-            this._router.navigate(['panel/' + homePage]);
+            this._router.navigate(['panel/' + this.homePage]);
         }
 
         this.user = this._userService.getUser();

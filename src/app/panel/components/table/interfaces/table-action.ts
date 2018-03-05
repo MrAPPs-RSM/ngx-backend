@@ -4,7 +4,13 @@ export interface TableAction {
     config: {
         path?: string; // redirect to
         titleField?: string; // to avoid only id in page title
-        params?: any; // query params to pass to path
+        params?: {
+            type?: string, // 'formParameters' | 'tableParameters'
+            loadData?: true, // only for forms, reload data based on id
+            filter?: string; // only if tableParameters, filter for get data
+            id?: true, // if need to pass id
+            endpoint?: string; // if endpoint call
+        }; // query params to pass to path
         endpoint?: string; // api call
         confirm?: boolean; // if true opens confirmation modal before api
         method?: string; // post | patch | put | delete
