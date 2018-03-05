@@ -27,6 +27,16 @@ export class DataSet {
         return this.columns;
     }
 
+    getVisibleColumns(): Array<Column> {
+        const columns: Column[] = [];
+        this.getColumns().forEach((column: Column) => {
+            if (!column.hidden) {
+                columns.push(column);
+            }
+        });
+        return columns;
+    }
+
     getRows(): Array<Row> {
         return this.rows;
     }

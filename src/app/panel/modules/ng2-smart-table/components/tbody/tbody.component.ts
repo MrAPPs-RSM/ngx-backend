@@ -39,7 +39,7 @@ export class Ng2SmartTableTbodyComponent implements OnChanges {
     }
 
     getColspan(): number {
-        let result: number = this.grid.getColumns().length;
+        let result: number = this.grid.getVisibleColumns().length;
         result += this.isActionAdd ? 1 : 0;
         result += this.isMultiSelectVisible ? 1 : 0;
         return result;
