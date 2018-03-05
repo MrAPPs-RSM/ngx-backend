@@ -69,6 +69,13 @@ export class TableComponent implements OnInit {
             this.filter = JSON.parse(this.settings.api.filter);
         }
 
+        // Update filters if set from storage service (another components, special buttons..)
+        this.readStorageServiceParams();
+
+        this.getData();
+    }
+
+    private readStorageServiceParams(): void {
         const tableParameters = this._storageService.getValue('tableParameters');
 
         if (tableParameters) {
@@ -89,11 +96,6 @@ export class TableComponent implements OnInit {
             }
             this._storageService.clearValue('tableParameters');
         }
-
-        console.log('ON INIT');
-        console.log(this.filter);
-
-        this.getData();
     }
 
     private getData(): void {
@@ -231,7 +233,14 @@ export class TableComponent implements OnInit {
                     this._storageService.setValue(action.config.params.type, action.config.params);
                 }
 
-                this._router.navigate(['panel/' + path]);
+                /**
+                 * If is table auto-update (sub categories for example), refresh same component
+                 */
+                if (('/panel/' + path) !== this._router.url) {
+                    this._router.navigate(['panel/' + path]);
+                } else {
+                    this.ngOnInit();
+                }
             }
         } else if (action.config.endpoint) {
             let endpoint = action.config.endpoint;
