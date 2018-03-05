@@ -123,7 +123,6 @@ export class TableComponent implements OnInit {
 
     private composeParams(): Object {
         const params = {
-            include: null,
             where: {
                 and: []
             },
@@ -172,7 +171,7 @@ export class TableComponent implements OnInit {
             }
 
             if (this.filter.include) {
-                params.include = this.filter.include;
+                params['include'] = this.filter.include;
             }
         }
 
