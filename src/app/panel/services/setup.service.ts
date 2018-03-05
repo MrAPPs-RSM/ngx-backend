@@ -7,6 +7,7 @@ import {TablePageComponent} from '../pages/table-page/table-page.component';
 import {FormPageComponent} from '../pages/form-page/form-page.component';
 import {UtilsService} from '../../services/utils.service';
 import {FormGeneratorService} from './form-generator.service';
+import {UserService} from '../../auth/services/user.service';
 
 const TYPES = {
     dashboard: DashboardPageComponent,
@@ -18,6 +19,7 @@ const TYPES = {
 export class SetupService {
 
     constructor(private _router: Router,
+                private _userService: UserService,
                 private _apiService: ApiService,
                 private _formGeneratorService: FormGeneratorService) {
       
@@ -37,7 +39,10 @@ export class SetupService {
                     resolve(menu);
                 })
                 .catch((error) => {
-                    reject(error);
+                    this._userService.removeToken();
+                    this._userService.removeUser();
+                    this._router.navigate(['login']);
+                    reject();
                 });
         });
     }

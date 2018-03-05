@@ -8,9 +8,7 @@ import {UserService} from '../../auth/services/user.service';
 @Injectable()
 export class PanelResolver implements Resolve<PanelComponent> {
 
-    constructor(private _router: Router,
-                private _setupService: SetupService,
-                private _userService: UserService) {
+    constructor(private _setupService: SetupService) {
     }
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> | Promise<any> | any {
@@ -19,12 +17,7 @@ export class PanelResolver implements Resolve<PanelComponent> {
                 .then((data) => {
                     resolve(data);
                 })
-                .catch((error) => {
-                console.log(error);
-                    this._userService.removeToken();
-                    this._userService.removeUser();
-                    this._router.navigate(['login']);
-                });
+                .catch((error) => {});
         });
     }
 }

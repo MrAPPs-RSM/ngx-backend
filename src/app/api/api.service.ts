@@ -155,6 +155,7 @@ export class ApiService {
     private handleError(error: HttpErrorResponse): void {
         switch (error.status) {
             case 401: {
+                this._userService.removeUser();
                 this._userService.removeToken();
                 this._router.navigate(['login']);
             }
