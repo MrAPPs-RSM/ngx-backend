@@ -11,18 +11,28 @@ export class ApiService {
 
     private headers = new HttpHeaders({'Content-Type': 'application/json'});
 
-    /**
-     * Return composed url based on ENV
-     * @param endpoint
-     * @returns {string}
-     */
-    public static composeUrl(endpoint: string): string {
-        return API_URL + endpoint;
-    }
-
     constructor(private _http: HttpClient,
                 private _userService: UserService,
                 private _router: Router) {
+    }
+
+    /**
+     * Return composed url based on ENV
+     * @param endpoint
+     * @param addAuth
+     * @returns {string}
+     */
+    public composeUrl(endpoint: string, addAuth?: boolean = false): string {
+        let url = API_URL + endpoint;
+        if (addAuth) {
+            const authorization = this._userService.tokenKey + '=' + this._userService.getToken();
+            if (url.indexOf('?') !== -1) {
+                url += '&' + authorization;
+            } else {
+                url += '?' + authorization;
+            }
+        }
+        return url;
     }
 
     /**
@@ -34,10 +44,10 @@ export class ApiService {
     public get(endpoint: string, params?: Object): Promise<any> {
         console.log('[API SERVICE] - GET ' + endpoint);
         /*if (params) {
-            console.log(params);
-        }*/
+         console.log(params);
+         }*/
         return new Promise((resolve, reject) => {
-            this._http.get(ApiService.composeUrl(endpoint), this.setOptions(params))
+            this._http.get(this.composeUrl(endpoint), this.setOptions(params))
                 .subscribe(
                     data => {
                         resolve(data);
@@ -63,7 +73,7 @@ export class ApiService {
         console.log('[API SERVICE] - POST ' + endpoint);
         console.log(body);
         return new Promise((resolve, reject) => {
-            this._http.post(ApiService.composeUrl(endpoint), body, this.setOptions(params))
+            this._http.post(this.composeUrl(endpoint), body, this.setOptions(params))
                 .subscribe(
                     data => {
                         resolve(data);
@@ -89,7 +99,7 @@ export class ApiService {
         console.log('[API SERVICE] - PUT ' + endpoint);
         console.log(body);
         return new Promise((resolve, reject) => {
-            this._http.put(ApiService.composeUrl(endpoint), body, this.setOptions(params))
+            this._http.put(this.composeUrl(endpoint), body, this.setOptions(params))
                 .subscribe(
                     data => {
                         resolve(data);
@@ -113,7 +123,7 @@ export class ApiService {
         console.log('[API SERVICE] - PATCH ' + endpoint);
         console.log(body);
         return new Promise((resolve, reject) => {
-            this._http.patch(ApiService.composeUrl(endpoint), body, this.setOptions(params))
+            this._http.patch(this.composeUrl(endpoint), body, this.setOptions(params))
                 .subscribe(
                     data => {
                         resolve(data);
@@ -135,7 +145,7 @@ export class ApiService {
     public delete(endpoint: string, params?: Object): Promise<any> {
         console.log('[API SERVICE] - DELETE ' + endpoint);
         return new Promise((resolve, reject) => {
-            this._http.delete(ApiService.composeUrl(endpoint), this.setOptions(params))
+            this._http.delete(this.composeUrl(endpoint), this.setOptions(params))
                 .subscribe(
                     data => {
                         resolve(data);

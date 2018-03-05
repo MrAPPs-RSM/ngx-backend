@@ -14,8 +14,6 @@ export class DataSet {
     constructor(data: Array<any> = [], protected columnSettings: Object) {
         this.createColumns(columnSettings);
         this.setData(data);
-
-        this.createNewRow();
     }
 
     setData(data: Array<any>) {
@@ -126,11 +124,6 @@ export class DataSet {
         }
 
         return this.selectedRow;
-    }
-
-    createNewRow() {
-        this.newRow = new Row(-1, {}, this);
-        this.newRow.isInEditing = true;
     }
 
     /**

@@ -37,7 +37,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit {
             this.field.dependsOn.forEach((key) => {
 
                 if (key instanceof Subject) {
-                   this.observable = key as Subject<any>;
+                    this.observable = key as Subject<any>;
                     console.log("mah...");
                     this.observable.subscribe((value) => {
                         console.log("ok");
@@ -47,7 +47,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit {
                             .catch((error) => {
                                 console.log(error);
                             });
-                   });
+                    });
                 } else {
                     if (this.form.controls[key]) {
                         this.form.controls[key].valueChanges.subscribe((value) => {

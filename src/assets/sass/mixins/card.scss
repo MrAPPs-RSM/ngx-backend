@@ -1,6 +1,4 @@
 @mixin card($paddingY: $cardPaddingY, $paddingX: $cardPaddingX, $border: 1px solid $lightGrey) {
-  overflow-x: auto;
-  overflow-y: hidden;
   background-color: #ffffff;
   border-radius: $borderRadius;
   padding: $paddingY $paddingX;
@@ -14,7 +12,7 @@
       margin: 0;
       padding: 15px $paddingY;
       font-size: 14px;
-      font-weight: 300;
+      font-weight: 400;
     }
   }
 }

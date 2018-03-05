@@ -203,7 +203,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         console.log('START UPLOAD');
         const event: UploadInput = {
             type: 'uploadAll',
-            url: ApiService.composeUrl(this.field.options.api.upload),
+            url: this._apiService.composeUrl(this.field.options.api.upload, true),
             method: 'POST'
         };
 

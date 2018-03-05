@@ -50,7 +50,22 @@ export class Row {
 
     createCell(column: Column): Cell {
         const defValue = (column as any).settings.defaultValue ? (column as any).settings.defaultValue : '';
-        const value = typeof this.data[column.id] === 'undefined' ? defValue : this.data[column.id];
+
+        let value = defValue;
+        /**
+         * Support for sub-properties
+         */
+        if (column.id.indexOf('.') !== -1) {
+            const baseField = column.id.split('.')[0];
+            const subField = column.id.split('.')[1];
+
+            if (this.data[baseField] instanceof Object && this.data[baseField].hasOwnProperty(subField)) {
+                value = this.data[baseField][subField];
+            }
+        } else {
+            value = typeof this.data[column.id] === 'undefined' ? defValue : this.data[column.id];
+        }
+
         return new Cell(value, this, column, this._dataSet);
     }
 }
