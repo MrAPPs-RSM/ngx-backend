@@ -143,7 +143,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit {
             this.refreshFormValue();
         }
 
-        if (this.observable !== null) {
+        if (this.observable != null) {
             this.observable.next();
         }
     }
