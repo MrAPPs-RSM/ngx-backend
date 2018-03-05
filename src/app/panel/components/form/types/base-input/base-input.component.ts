@@ -8,6 +8,7 @@ import {AbstractControl, FormGroup} from '@angular/forms';
 })
 export class BaseInputComponent implements OnInit {
 
+    @Input() index: number;
     @Input() groupName: string;
     @Input() form: FormGroup;
     @Input() field: any = {};

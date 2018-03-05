@@ -15,7 +15,8 @@
                         <app-form-type-switcher [form]="control"
                                                 [field]="controlField"
                                                 [isEdit]="isEdit"
-                                                [unique]="field.unique ? filterOptions : null">
+                                                [unique]="field.unique ? filterOptions : null"
+                                                [index]="i">
                         </app-form-type-switcher>
                     </div>
                     <span (click)="deleteDetail(i)" class="delete danger">×</span>

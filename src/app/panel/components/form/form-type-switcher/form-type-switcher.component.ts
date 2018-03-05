@@ -9,6 +9,7 @@ import {formConfig} from '../form.config';
 })
 export class FormTypeSwitcherComponent implements OnInit {
 
+    @Input() index = 0;
     @Input() form: FormGroup;
     @Input() groupName: string;
     @Input() field: any;

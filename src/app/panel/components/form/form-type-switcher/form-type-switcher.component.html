@@ -4,7 +4,8 @@
           *ngSwitchCase="formConfig.noInputTypes.SEPARATOR"
           [groupName]="groupName"
           [field]="field"
-          [isEdit]="isEdit">
+          [isEdit]="isEdit"
+          [index]="index">
   </app-separator>
 
   <app-input-text
@@ -12,7 +13,8 @@
           [form]="form"
           [groupName]="groupName"
           [field]="field"
-          [isEdit]="isEdit">
+          [isEdit]="isEdit"
+          [index]="index">
   </app-input-text>
 
   <app-input-password
@@ -20,7 +22,8 @@
           [groupName]="groupName"
           [form]="form"
           [field]="field"
-          [isEdit]="isEdit">
+          [isEdit]="isEdit"
+          [index]="index">
   </app-input-password>
 
   <app-input-url
@@ -28,7 +31,8 @@
           [groupName]="groupName"
           [form]="form"
           [field]="field"
-          [isEdit]="isEdit">
+          [isEdit]="isEdit"
+          [index]="index">
   </app-input-url>
 
   <app-input-number
@@ -36,7 +40,8 @@
           [groupName]="groupName"
           [form]="form"
           [field]="field"
-          [isEdit]="isEdit">
+          [isEdit]="isEdit"
+          [index]="index">
   </app-input-number>
 
   <app-input-color
@@ -45,6 +50,7 @@
           [form]="form"
           [field]="field"
           [isEdit]="isEdit"
+          [index]="index"
   ></app-input-color>
 
   <app-input-textarea
@@ -52,7 +58,8 @@
           [groupName]="groupName"
           [form]="form"
           [field]="field"
-          [isEdit]="isEdit">
+          [isEdit]="isEdit"
+          [index]="index">
   </app-input-textarea>
 
   <app-select
@@ -61,7 +68,8 @@
           [unique]="unique"
           [form]="form"
           [field]="field"
-          [isEdit]="isEdit">
+          [isEdit]="isEdit"
+          [index]="index">
   </app-select>
 
   <app-input-email
@@ -69,15 +77,17 @@
           [groupName]="groupName"
           [form]="form"
           [field]="field"
-          [isEdit]="isEdit">
+          [isEdit]="isEdit"
+          [index]="index">
   </app-input-email>
 
   <app-checkbox
           *ngSwitchCase="formConfig.types.CHECKBOX"
           [groupName]="groupName"
           [form]="form"
-          [field]="field">
+          [field]="field"
           [isEdit]="isEdit"
+          [index]="index">
   </app-checkbox>
 
   <app-date-time
@@ -86,6 +96,7 @@
           [form]="form"
           [field]="field"
           [isEdit]="isEdit"
+          [index]="index"
   ></app-date-time>
 
   <app-date-time-range
@@ -94,6 +105,7 @@
           [form]="form"
           [field]="field"
           [isEdit]="isEdit"
+          [index]="index"
   ></app-date-time-range>
 
   <app-file-upload
@@ -102,6 +114,7 @@
           [form]="form"
           [field]="field"
           [isEdit]="isEdit"
+          [index]="index"
   ></app-file-upload>
 
   <app-map
@@ -109,14 +122,16 @@
           [groupName]="groupName"
           [form]="form"
           [field]="field"
-          [isEdit]="isEdit">
+          [isEdit]="isEdit"
+          [index]="index">
   </app-map>
   <app-list-details
           *ngSwitchCase="formConfig.types.LIST_DETAILS"
           [form]="form"
           [groupName]="groupName"
           [field]="field"
-          [isEdit]="isEdit">
+          [isEdit]="isEdit"
+          [index]="index">
   </app-list-details>
 
   <!--

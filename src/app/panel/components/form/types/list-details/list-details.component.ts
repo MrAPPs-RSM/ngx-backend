@@ -26,24 +26,34 @@ export class ListDetailsComponent extends BaseInputComponent implements OnInit {
     filterOptions(select: SelectComponent, options: SelectData[]): SelectData[] {
 
         const updatedOptions = [];
-        console.log(select.selected);
-        console.log(select.field.key);
-        console.log(this.form.parent.getRawValue());
 
         const formArray = this.form.parent as FormArray;
 
-        for (const group of formArray.controls) {
-            const formGroup = group as FormGroup;
-
-         //   formGroup.controls[select.field.key].value
-
-        }
-
         for (const option of options) {
 
+            let found = false;
+
+            let index = 0;
+
+            for (const group of formArray.controls) {
+
+                if (index !== select.index) {
+                    const formGroup = group as FormGroup;
+
+                    if (option.id === formGroup.get(select.field.key).value) {
+                        found = true;
+                    }
+                }
+
+                index++;
+            }
+
+            if (!found) {
+                updatedOptions.push(option);
+            }
         }
 
-        return options;
+        return updatedOptions;
     }
 
     public getControl(): FormArray {
