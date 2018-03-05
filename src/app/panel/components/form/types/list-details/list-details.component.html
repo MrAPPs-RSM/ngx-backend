@@ -22,9 +22,9 @@
                     <span (click)="deleteDetail(i)" class="delete danger">×</span>
                 </div>
             </div>
-            <div [hidden]="!addEnabled">
-                <button type="button" (click)="addDetail()" class="add btn btn-sm btn-primary">Add</button>
-            </div>
+            <button *ngIf="addEnabled" type="button" (click)="addDetail()" class="add btn btn-sm btn-primary">
+                Add
+            </button>
         </div>
     </div>
 </div>
