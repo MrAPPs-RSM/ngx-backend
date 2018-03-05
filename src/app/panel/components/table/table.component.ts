@@ -79,10 +79,8 @@ export class TableComponent implements OnInit {
         const tableParameters = this._storageService.getValue('tableParameters');
 
         if (tableParameters) {
-            if (tableParameters.params.filter) {
-                const newFilters = JSON.parse(tableParameters.params.filter);
-                console.log(newFilters);
-
+            if (tableParameters.filter) {
+                const newFilters = JSON.parse(tableParameters.filter);
                 if (newFilters.where) {
                     if (this.filter.where) {
                         // merge objects
@@ -220,15 +218,13 @@ export class TableComponent implements OnInit {
                 }
 
                 if (action.config.params) {
-                    Object.keys(action.config.params).forEach((key) => {
-                        if (key === 'id' && action.config.params[key] === true) {
-                            action.config.params[key] = data.id;
-                        }
+                    if (action.config.params.id && action.config.params.id === true) {
+                        action.config.params.id = data.id;
+                    }
 
-                        if (key === 'filter' && action.config.params[key].indexOf(':id') !== -1) {
-                            action.config.params[key].replace(':id', data.id);
-                        }
-                    });
+                    if (action.config.params.filter && action.config.params.filter.indexOf(':id') !== -1) {
+                        action.config.params.filter = action.config.params.filter.replace(':id', data.id);
+                    }
 
                     this._storageService.setValue(action.config.params.type, action.config.params);
                 }

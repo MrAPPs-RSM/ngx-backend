@@ -20,6 +20,7 @@ export class PanelResolver implements Resolve<PanelComponent> {
                     resolve(data);
                 })
                 .catch((error) => {
+                console.log(error);
                     this._userService.removeToken();
                     this._userService.removeUser();
                     this._router.navigate(['login']);

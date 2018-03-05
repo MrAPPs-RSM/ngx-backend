@@ -6,6 +6,7 @@ export interface TableAction {
         titleField?: string; // to avoid only id in page title
         params?: {
             type?: string, // 'formParameters' | 'tableParameters'
+            filter?: string;
             loadData?: true, // only for forms, reload data based on id
             filter?: string; // only if tableParameters, filter for get data
             id?: true, // if need to pass id
