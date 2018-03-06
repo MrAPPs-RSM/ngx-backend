@@ -42,7 +42,7 @@
     label {
       color: $danger;
     }
-    input {
+    input, textarea {
       border-color: $danger;
       &:focus {
         border-color: $danger;

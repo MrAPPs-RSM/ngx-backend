@@ -233,6 +233,21 @@ export class TableComponent implements OnInit {
                         action.config.params.filter = action.config.params.filter.replace(':id', data.id);
                     }
 
+                    if (action.config.params.tableKey && data[action.config.params.tableKey]) {
+                        let key = action.config.params.tableKey;
+                        if (action.config.params.formKey) {
+                            key = action.config.params.formKey;
+                        }
+
+                        action.config.params['formValues'] = {};
+                        action.config.params['formValues'][key] = data[action.config.params.tableKey];
+
+                        delete action.config.params.tableKey;
+                        delete action.config.params.formKey;
+                    }
+
+                    console.log(action.config.params);
+
                     this._storageService.setValue(action.config.params.type, action.config.params);
                 }
 
@@ -417,7 +432,7 @@ export class TableComponent implements OnInit {
                         this.getData(); // Refresh table
                     })
                     .catch((response: HttpErrorResponse) => {
-                        this._toast.error(response.message);
+                        this._toast.error(response.message, 'Sort error');
                     });
             }
         }

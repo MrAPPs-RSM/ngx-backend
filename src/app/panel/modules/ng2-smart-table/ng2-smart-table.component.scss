@@ -104,11 +104,6 @@
 
       > tbody {
         > tr {
-          &.gu-transit {
-            opacity: 0.2;
-            -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
-            filter: alpha(opacity=20);
-          }
           &.selected {
             background-color: #f2f2f2;
           }

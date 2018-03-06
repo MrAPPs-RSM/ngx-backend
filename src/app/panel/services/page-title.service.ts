@@ -27,7 +27,10 @@ export class PageTitleService {
             };
             this._state.notifyDataChanged('activePage', activeLink);
         } else {
-            this._state.notifyDataChanged('activePage', {title: route});
+            this._state.notifyDataChanged('activePage', {
+                title: route,
+                breadcrumbLevel: 1
+            });
         }
     }
 }

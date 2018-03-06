@@ -6,11 +6,12 @@
             <span *ngIf="field.validators && field.validators.required">*</span>
         </label>
         <div class="wrapper">
-            <div [dragula]="!!field.drag"
+            <div [dragula]="'bag'"
                  [dragulaModel]="getControl().controls">
                 <div [formGroupName]="i"
-                     class="detail"
+                     class="list-detail-item"
                      *ngFor="let control of getControl().controls; let i = index">
+                    <span class="drag" *ngIf="!!field.drag"></span>
                     <div *ngFor="let controlField of field.fields" class="row">
                         <app-form-type-switcher [form]="control"
                                                 [field]="controlField"
@@ -22,9 +23,9 @@
                     <span (click)="deleteDetail(i)" class="delete danger">×</span>
                 </div>
             </div>
-            <button *ngIf="addEnabled" type="button" (click)="addDetail()" class="add btn btn-sm btn-primary">
-                Add
-            </button>
+            <span *ngIf="addEnabled" (click)="addDetail()" class="add ng2-smart-action primary">
+                <i class="fa fa-plus"></i>
+            </span>
         </div>
     </div>
 </div>

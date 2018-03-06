@@ -89,9 +89,13 @@ export class SelectComponent extends BaseInputComponent implements OnInit {
                 this.loadOptions().then(() => {
                     if (value instanceof Array) {
                         value.forEach((item) => {
-                            this.selected.push({
-                                id: item.id,
-                                text: item.nome // TODO: make this changeable
+                            this.options.forEach((option) => {
+                                if (option.id === item.id) {
+                                    this.selected.push({
+                                        id: item.id,
+                                        text: option.text
+                                    });
+                                }
                             });
                             this.selected = [...this.selected];
                         });

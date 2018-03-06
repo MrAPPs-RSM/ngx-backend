@@ -26,6 +26,8 @@ div.toast-container {
     }
 
     > button.toast-close-button {
+      cursor: pointer;
+      outline: none;
       background-color: inherit;
       border: none;
       position: absolute;
@@ -43,6 +45,8 @@ div.toast-container {
     > .toast-message {
       font-weight: $light;
       font-size: 14px;
+      white-space: normal;
+      word-wrap: break-word;
     }
   }
 }
