@@ -6,6 +6,7 @@ import {FormGeneratorService} from '../../../../services/form-generator.service'
 import {SelectComponent, SelectData} from '../select/select.component';
 import {formConfig} from '../../form.config';
 import { Subject } from 'rxjs/Subject';
+import {DragulaService} from 'ng2-dragula';
 
 @Component({
     selector: 'app-list-details',
@@ -20,13 +21,21 @@ export class ListDetailsComponent extends BaseInputComponent implements OnInit, 
     observer: Subject<any>;
     addEnabled: boolean;
 
-    constructor(private _formGenerator: FormGeneratorService) {
+    constructor(private _dragulaService: DragulaService,
+                private _formGenerator: FormGeneratorService) {
         super();
 
         this.addEnabled = true;
     }
 
     ngOnInit() {
+
+        this._dragulaService.setOptions('bag', {
+            moves: function (el, container, handle) {
+                return handle.className === 'drag';
+            }
+        });
+
         this.filterOptions = this.filterOptions.bind(this);
 
         if (this.field.unique) {

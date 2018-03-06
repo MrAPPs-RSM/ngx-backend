@@ -3,18 +3,16 @@
 app-list-details {
   > div {
     > div.form-group {
-
       > .wrapper {
-        overflow: auto;
-        clear: both;
         padding: 0;
+        margin-top: 5px;
         .detail {
           position: relative;
           border: 1px dotted $lightGrey;
-          padding: 10px 15px 25px;
+          padding: 15px 15px 5px;
           background-color: #fafafa;
           &:not(:first-child) {
-            margin-top: 8px;
+            margin-top: 15px;
           }
           > span.delete {
             cursor: pointer;
@@ -25,11 +23,27 @@ app-list-details {
             font-size: 18px;
           }
 
-          div.form-group {
-            margin: 0;
+          > span.drag {
+            cursor: move;
+            position: absolute;
+            top: -8px;
+            left: -8px;
+            background-color: $lightGrey;
+            color: #000000;
+            padding: 0 3px;
+            font-size: 16px;
+            &:before {
+              content: '\f126';
+              display: inline-block;
+              font: normal normal normal 14px/1 FontAwesome;
+              font-size: inherit;
+              text-rendering: auto;
+              -webkit-font-smoothing: antialiased;
+            }
           }
         }
-        > button.add {
+        > span.add {
+          float: left;
           margin-top: 10px;
         }
       }
