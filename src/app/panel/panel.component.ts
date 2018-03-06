@@ -15,10 +15,10 @@ declare const $: any;
 })
 export class PanelComponent implements OnInit {
 
-    private title = environment.name;
-    private menu: any[] = [];
+    title = environment.name;
+    menu: any[] = [];
+    homePage = 'dashboard';
     private user: User;
-    private homePage: string = 'dashboard';
 
     private currentLang: Language;
 

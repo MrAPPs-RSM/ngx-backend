@@ -15,16 +15,29 @@
         <div class="progress" [ngClass]="{'visible': isLoading}">
             <div class="indeterminate"></div>
         </div>
-        <div class="drop-container"
-             ngFileDrop
-             [options]="options"
-             (uploadOutput)="onUploadOutput($event)"
-             [uploadInput]="uploadInput"
-             [ngClass]="{ 'is-drop-over': dragOver }">
+
+        <!-- TODO: add this part to re-enable drag&drop -->
+        <!--        <div class="drop-container"
+                     [options]="options"
+                     (uploadOutput)="onUploadOutput($event)"
+                     [uploadInput]="uploadInput"
+                     [ngClass]="{ 'is-drop-over': dragOver }">
+                     <div>
+                <span *ngIf="isLoading">{{'forms.inputs.uploading_files' | translate}}</span>
+                <span *ngIf="(maxFiles > 0 && uploadedFiles.length >= maxFiles) && !isLoading">{{'forms.inputs.max_files' | translate}} {{maxFiles}}</span>
+                <span *ngIf="(uploadedFiles.length === 0 || (maxFiles > 0 && uploadedFiles.length < maxFiles)) && !isLoading">{{'forms.inputs.drag_drop' | translate}} <span
+                        class="choose" (click)="bringFileSelector()">{{'forms.inputs.choose_files' | translate}}</span></span>
+            </div>
+                    <div> -->
+
+        <!-- TODO: remove this part to re-enable drag&drop -->
+        <div class="drop-container">
             <div>
                 <span *ngIf="isLoading">{{'forms.inputs.uploading_files' | translate}}</span>
                 <span *ngIf="(maxFiles > 0 && uploadedFiles.length >= maxFiles) && !isLoading">{{'forms.inputs.max_files' | translate}} {{maxFiles}}</span>
-                <span *ngIf="(uploadedFiles.length === 0 || (maxFiles > 0 && uploadedFiles.length < maxFiles)) && !isLoading">{{'forms.inputs.drag_drop' | translate}} <span class="choose" (click)="bringFileSelector()">{{'forms.inputs.choose_files' | translate}}</span></span></div>
+                <span *ngIf="(uploadedFiles.length === 0 || (maxFiles > 0 && uploadedFiles.length < maxFiles)) && !isLoading"><span
+                        class="choose" (click)="bringFileSelector()">{{'forms.inputs.choose_files' | translate}}</span></span>
+            </div>
         </div>
 
         <input type="file"
@@ -61,7 +74,6 @@
                     <span class="file-name">
                         <span *ngIf="this.field.options.api.delete" class="remove"
                               (click)="removeUploadedFile(file)">×</span>
-                        <span>{{file.name}}</span>
                     </span>
                 </li>
             </ul>
