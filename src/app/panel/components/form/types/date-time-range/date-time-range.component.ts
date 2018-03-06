@@ -10,6 +10,10 @@ import {NguiDatetime} from '@ngui/datetime-picker';
 })
 export class DateTimeRangeComponent extends BaseInputComponent implements OnInit {
 
+    /**
+     * TODO: review this component validation logic when it will be used!!!
+     */
+
     @Input() field: FormFieldDateRange;
 
     ngOnInit() {
@@ -33,9 +37,7 @@ export class DateTimeRangeComponent extends BaseInputComponent implements OnInit
     }
 
     isDateValid(type: string) {
-        if (this.form.controls[this.field[type].key].value === null || this.form.controls[this.field[type].key].value === '') {
-            return true;
-        } else {
+        if (this.form.controls[this.field[type].key].touched) {
             if (!isNaN(Date.parse(this.form.controls[this.field[type].key].value))) {
                 this.form.controls[this.field[type].key].setErrors(null);
                 return this.form.controls[this.field[type].key].valid;
@@ -43,27 +45,20 @@ export class DateTimeRangeComponent extends BaseInputComponent implements OnInit
                 this.form.controls[this.field[type].key].setErrors({isNotDate: true});
                 return false;
             }
+        } else {
+            return true;
         }
     }
 
     get isValid() {
-        // TODO: review this code, probably some parts are not necessary after editing FormGenerator
         if (this.isDateValid('startDate') && this.isDateValid('endDate')) {
-            if ((this.form.controls[this.field.startDate.key].value !== null
-                && this.form.controls[this.field.startDate.key].value !== '')
-                && (this.form.controls[this.field.endDate.key].value !== null
-                && this.form.controls[this.field.endDate.key].value !== '')) {
-                if (Date.parse(this.form.controls[this.field.startDate.key].value)
-                    <= Date.parse(this.form.controls[this.field.endDate.key].value)) {
-                    this.form.controls[this.field.endDate.key].setErrors(null);
-                    return true;
-                } else {
-                    this.form.controls[this.field.endDate.key].setErrors({invalidRange: true});
-                    return false;
-                }
-            } else {
+            if (Date.parse(this.form.controls[this.field.startDate.key].value)
+                <= Date.parse(this.form.controls[this.field.endDate.key].value)) {
                 this.form.controls[this.field.endDate.key].setErrors(null);
                 return true;
+            } else {
+                this.form.controls[this.field.endDate.key].setErrors({invalidRange: true});
+                return false;
             }
         } else {
             return false;

@@ -10,7 +10,6 @@ import {NgUploaderModule} from 'ngx-uploader';
 import {AgmCoreModule} from '@agm/core';
 import {Ng2SmartTableModule} from './modules/ng2-smart-table/ng2-smart-table.module';
 
-
 import {AuthGuard} from '../auth/guards/auth.guard';
 import {PanelComponent} from './panel.component';
 import {FormPageComponent} from './pages/form-page/form-page.component';
@@ -41,13 +40,9 @@ import {ContentTopComponent} from './components/content-top/content-top.componen
 import {FormTypeSwitcherComponent} from './components/form/form-type-switcher/form-type-switcher.component';
 import {ProfilePageComponent} from './pages/profile-page/profile-page.component';
 import {ListDetailsComponent} from './components/form/types/list-details/list-details.component';
+import {NotfoundPageComponent} from './pages/notfound-page/notfound-page.component';
 
 const routes: Routes = [
-    {
-        path: '',
-        redirectTo: 'panel',
-        pathMatch: 'full'
-    },
     {
         path: 'panel',
         component: PanelComponent,
@@ -57,6 +52,11 @@ const routes: Routes = [
         resolve: {
             params: PanelResolver
         }
+    },
+    {
+        path: '',
+        redirectTo: 'panel',
+        pathMatch: 'full'
     }
 ];
 
@@ -106,7 +106,8 @@ const routes: Routes = [
         ListDetailsComponent,
         MapComponent,
         ContentTopComponent,
-        ProfilePageComponent
+        ProfilePageComponent,
+        NotfoundPageComponent
     ],
     providers: [
         AuthGuard,
@@ -119,7 +120,8 @@ const routes: Routes = [
         FormPageComponent,
         TablePageComponent,
         DashboardPageComponent,
-        ProfilePageComponent
+        ProfilePageComponent,
+        NotfoundPageComponent
     ]
 })
 export class PanelModule {

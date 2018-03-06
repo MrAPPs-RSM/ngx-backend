@@ -9,13 +9,24 @@
         </div>
     </header>
 
-    <div class="errors" [ngClass]="{'visible': settings.errors && settings.errors.length > 0}">
-        <ul>
+    <!-- Validation errors, handled locally (required fields, etc) -->
+    <div class="alert alert-danger errors" [ngClass]="{'visible': errorsList && errorsList.length > 0}">
+        <ol>
+            <li *ngFor="let error of errorsList">
+                <span>{{error.label}}</span> {{error.message}}
+            </li>
+        </ol>
+        <span class="close-alert" (click)="closeErrors(false)">×</span>
+    </div>
+
+    <!-- Errors from API RESPONSE, handled by external components -->
+    <div class="alert alert-danger errors" [ngClass]="{'visible': settings.errors && settings.errors.length > 0}">
+        <ol>
             <li *ngFor="let error of settings.errors">
                 {{error}}
             </li>
-        </ul>
-        <span (click)="closeErrors()">×</span>
+        </ol>
+        <span class="close-alert" (click)="closeErrors(true)">×</span>
     </div>
 
     <div class="fields-wrapper">
@@ -28,6 +39,12 @@
                            [ngModelOptions]="{standalone: true}"
                            (change)="onLanguageChange($event)"
                            bindLabel="name">
+                    <ng-template ng-label-tmp let-item="item">
+                       <i [class]="'flag-icon flag-icon-' + getIsoCodeForFlag(item)"></i> {{item.name}}
+                    </ng-template>
+                    <ng-template ng-option-tmp let-item="item">
+                        <i [class]="'flag-icon flag-icon-' + getIsoCodeForFlag(item)"></i> {{item.name}}
+                    </ng-template>
                 </ng-select>
             </div>
 
@@ -58,7 +75,7 @@
                 </div>
                 <div class="pull-right">
                     <button type="button" (click)="onSubmit()" class="btn btn-primary"
-                            [disabled]="!form.valid || isLoading"> {{ settings.submit?.label ? settings.submit.label :
+                            [disabled]="isLoading || isExternalLoading"> {{ settings.submit?.label ? settings.submit.label :
                         'Save'}}
                     </button>
                 </div>

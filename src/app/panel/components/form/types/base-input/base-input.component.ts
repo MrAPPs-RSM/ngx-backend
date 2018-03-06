@@ -2,9 +2,9 @@ import {Component, Input, OnInit} from '@angular/core';
 import {AbstractControl, FormGroup} from '@angular/forms';
 
 @Component({
-  selector: 'app-base-input',
-  templateUrl: './base-input.component.html',
-  styleUrls: ['./base-input.component.scss']
+    selector: 'app-base-input',
+    templateUrl: './base-input.component.html',
+    styleUrls: ['./base-input.component.scss']
 })
 export class BaseInputComponent implements OnInit {
 
@@ -25,10 +25,10 @@ export class BaseInputComponent implements OnInit {
     }
 
     get isValid() {
-        if (this.getControl().value === null || this.getControl().value === '') {
-            return true;
-        } else {
+        if (this.getControl().touched) {
             return this.getControl().valid;
+        } else {
+            return true;
         }
     }
 

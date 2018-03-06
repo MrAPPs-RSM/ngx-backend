@@ -1,12 +1,16 @@
 div.toast-container {
+  z-index: 1030;
+  position: absolute;
   border-radius: $borderRadius;
   top: 20px;
   right: 20px;
+  width: 300px;
   > div.toast {
+    color: #ffffff;
+    padding: 15px 20px;
     @include box-shadow();
     &:hover {
       @include box-shadow(5px, 5px, 10px, 0, rgba(0, 0, 0, 0.3));
-
     }
     &.toast-error {
       background-color: $danger;
@@ -22,7 +26,14 @@ div.toast-container {
     }
 
     > button.toast-close-button {
-
+      background-color: inherit;
+      border: none;
+      position: absolute;
+      right: 0;
+      top: 0;
+      > span {
+        font-size: 16px;
+      }
     }
     > .toast-title {
       font-weight: $regular;

@@ -111,10 +111,10 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     }
 
     get isValid() {
-        if (this.form.controls[this.field.key].value === null || this.form.controls[this.field.key].value === []) {
-            return true;
+        if (this.getControl().touched) {
+            return this.getControl().valid;
         } else {
-            return this.form.controls[this.field.key].valid;
+            return true;
         }
     }
 
@@ -256,14 +256,13 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     }
 
     private updateFormValue(): void {
-
         const formFiles = [];
 
         for (const uploadedFile of this.uploadedFiles) {
             formFiles.push(uploadedFile.id);
         }
 
-        this.form.controls[this.field.key].setValue(formFiles.length > 0 ? formFiles : null);
+        this.getControl().setValue(formFiles.length > 0 ? formFiles : null);
     }
 
     private removeUploadedFile(file: UploadedFile): void {
