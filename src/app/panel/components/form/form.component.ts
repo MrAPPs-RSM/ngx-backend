@@ -8,7 +8,6 @@ import {ApiService} from '../../../api/api.service';
 import {FormSettings} from './interfaces/form-settings';
 import {StorageService} from '../../../services/storage.service';
 import {FormButton} from './interfaces/form-button';
-import {TranslatePipe} from '../../../pipes/translate/translate.pipe';
 import {Language, LanguageService} from '../../services/language.service';
 
 @Component({
@@ -46,8 +45,7 @@ export class FormComponent implements OnInit {
                 private _router: Router,
                 private _apiService: ApiService,
                 private _route: ActivatedRoute,
-                private _storageService: StorageService,
-                private _translatePipe: TranslatePipe) {
+                private _storageService: StorageService) {
     }
 
     private _extractErrors(form: FormGroup, parentKey?: string): void {
@@ -88,13 +86,13 @@ export class FormComponent implements OnInit {
         // TODO: handle different errors if necessary
 
         if (obj.required) {
-            message = this._translatePipe.transform('forms.errors.required');
+            message = this._languageService.translate('forms.errors.required');
         }
         if (obj.max) {
-            message = this._translatePipe.transform('forms.errors.max') + obj.requiredValue;
+            message = this._languageService.translate('forms.errors.max') + obj.requiredValue;
         }
         if (obj.min) {
-            message = this._translatePipe.transform('forms.errors.min') + obj.requiredValue;
+            message = this._languageService.translate('forms.errors.min') + obj.requiredValue;
         }
 
         this.errorsList.push({
