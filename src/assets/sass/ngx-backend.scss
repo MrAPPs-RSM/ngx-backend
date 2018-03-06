@@ -1,6 +1,17 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500');
 @import 'partials/imports';
 
+/* Partials */
+@import 'partials/_buttons.scss';
+@import 'partials/_alerts.scss';
+@import 'partials/_modal.scss';
+@import 'partials/_progress-bar.scss';
+@import 'partials/_form.scss';
+@import 'partials/_toasts.scss';
+
+/* Externals */
+@import "~@ng-select/ng-select/themes/default.theme.css";
+
 body {
   background-color: #F1F1F1;
   font-family: 'Roboto', sans-serif;

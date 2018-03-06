@@ -10,23 +10,23 @@
     </header>
 
     <!-- Validation errors, handled locally (required fields, etc) -->
-    <div class="errors" [ngClass]="{'visible': errorsList && errorsList.length > 0}">
+    <div class="alert alert-danger errors" [ngClass]="{'visible': errorsList && errorsList.length > 0}">
         <ol>
             <li *ngFor="let error of errorsList">
                 <span>{{error.label}}</span> {{error.message}}
             </li>
         </ol>
-        <span (click)="closeErrors(false)">×</span>
+        <span class="close-alert" (click)="closeErrors(false)">×</span>
     </div>
 
     <!-- Errors from API RESPONSE, handled by external components -->
-    <div class="errors" [ngClass]="{'visible': settings.errors && settings.errors.length > 0}">
+    <div class="alert alert-danger errors" [ngClass]="{'visible': settings.errors && settings.errors.length > 0}">
         <ol>
             <li *ngFor="let error of settings.errors">
                 {{error}}
             </li>
         </ol>
-        <span (click)="closeErrors(true)">×</span>
+        <span class="close-alert" (click)="closeErrors(true)">×</span>
     </div>
 
     <div class="fields-wrapper">

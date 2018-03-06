@@ -26,4 +26,14 @@
     background-color: lighten($danger, 20);
     color: darken($danger, 20);
   }
+
+  position: relative;
+  > .close-alert {
+    font-size: 16px;
+    cursor: pointer;
+    position: absolute;
+    top: 1px;
+    right: 8px;
+    color: darken($danger, 20);
+  }
 }
