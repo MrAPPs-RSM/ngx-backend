@@ -47,6 +47,8 @@ export class PanelComponent implements OnInit {
             }
         });
 
+        console.log(this.homePage);
+
         if (this._pageRefresh.getLastPath() !== null) {
             if (this._pageRefresh.getLastPath() !== '/panel'
             && this._pageRefresh.getLastPath() !== '/login') {
