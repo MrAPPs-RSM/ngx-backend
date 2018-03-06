@@ -1,20 +1,16 @@
+/* Colors */
 @import '../../../environments/colors.scss';
-@import 'variables.scss';
-@import '../mixins/clearfix.scss';
-@import '../mixins/form-input.scss';
-@import '../mixins/responsive.scss';
-@import '../mixins/ellipsis-multiline.scss';
+
+/* Sizes, fonts */
+@import '_variables.scss';
+
+/* Mixins */
+@import '../mixins/_responsive.scss';
 @import '../mixins/_transform.scss';
-@import '../mixins/verticallyMiddleInsideBox.scss';
 @import '../mixins/_transition.scss';
-@import '../mixins/clean-nl.scss';
-@import '../mixins/box-shadow.scss';
-@import '../mixins/card.scss';
-@import "~ngx-toastr/toastr";
-@import "~@ng-select/ng-select/themes/default.theme.css";
-@import "toasts.scss";
-@import "modal.scss";
-@import "alerts.scss";
-@import 'buttons.scss';
-@import "progress-bar.scss";
-@import 'form.scss';
+@import '../mixins/_box-shadow.scss';
+@import '../mixins/_clean-nl.scss';
+@import '../mixins/_clearfix.scss';
+@import '../mixins/_ellipsis-multiline.scss';
+@import '../mixins/_card.scss';
+@import '../mixins/_form-input.scss';

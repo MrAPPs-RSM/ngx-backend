@@ -1,5 +1,5 @@
 import {Component, Input, OnInit, Output, EventEmitter, ViewEncapsulation} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {FormControl, FormGroup} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormGeneratorService} from '../../services/form-generator.service';
 import {HttpErrorResponse} from '@angular/common/http';
@@ -29,6 +29,11 @@ export class FormComponent implements OnInit {
     public isMultiLangEnabled = false;
     objectKeys = Object.keys;
 
+
+    // Local validation errors
+    private errors: any = {}; // Object that re-uses form group structure
+    private errorsList: any = []; // Array to display errors in a human-readable way
+
     valueOfSettingsField(key: string) {
         return this.settings.fields[key];
     }
@@ -39,6 +44,69 @@ export class FormComponent implements OnInit {
                 private _apiService: ApiService,
                 private _route: ActivatedRoute,
                 private _storageService: StorageService) {
+    }
+
+    private _extractErrors(form: FormGroup, parentKey?: string): void {
+        Object.keys(form.controls).forEach((key) => {
+            if (form.controls[key] instanceof FormControl) {
+                if (form.controls[key].errors) {
+                    if (parentKey) {
+                        this.errors[parentKey] = {};
+                        this.errors[parentKey][key] = form.controls[key].errors;
+                    } else {
+                        this.errors[key] = form.controls[key].errors;
+                    }
+                }
+            } else if (form.controls[key] instanceof FormGroup) {
+                this._extractErrors((form.controls[key] as FormGroup), key);
+            }
+        });
+    }
+
+    private _createErrorMessage(obj: any, fieldName: string, parentFieldName: string): void {
+        let fieldLabel = fieldName;
+        if (parentFieldName) {
+            this.settings.fields[parentFieldName].forEach((field: any) => {
+                if (field.key === fieldName && field.label) {
+                    fieldLabel = field.label;
+                }
+            });
+        } else {
+            this.settings.fields['base'].forEach((field: any) => {
+                if (field.key === fieldName && field.label) {
+                    fieldLabel = field.label;
+                }
+            });
+        }
+
+        let message = '';
+
+        // TODO: handle different errors if necessary
+
+        if (obj.required) {
+            message = 'is required';
+        }
+        if (obj.max) {
+            message = ' is too much. Max value: ' + obj.requiredValue;
+        }
+        if (obj.min) {
+            message = ' is too low. Min value: ' + obj.requiredValue;
+        }
+
+        this.errorsList.push({
+            label: fieldLabel,
+            message: message
+        });
+    }
+
+    private _composeErrors(errors: any, parentKey?: string): void {
+        Object.keys(errors).forEach((key) => {
+            if (this.isMultiLangField(key)) {
+                this._composeErrors(errors[key], key);
+            } else {
+                this._createErrorMessage(errors[key], key, parentKey);
+            }
+        });
     }
 
     setupForms(): FormGroup {
@@ -65,6 +133,10 @@ export class FormComponent implements OnInit {
         }
 
         return null;
+    }
+
+    getIsoCodeForFlag(lang: any): string {
+        return lang.isoCode !== 'en' ? lang.isoCode : 'gb';
     }
 
     isMultiLangField(key: string): boolean {
@@ -158,13 +230,11 @@ export class FormComponent implements OnInit {
     }
 
     onSubmit(): void {
-        // console.log('ON SUBMIT');
+        this.closeErrors(false);
         if (this.isExternalForm) {
             /** If is external form, the component will handle the request */
             this.response.emit(this.form.value);
         } else {
-            // this.updateForms();
-
             if (this.form.valid) {
                 if (this.settings.submit.confirm) {
                     this._modal.confirm()
@@ -176,6 +246,9 @@ export class FormComponent implements OnInit {
                 } else {
                     this.submit();
                 }
+            } else {
+                this._extractErrors(this.form);
+                this._composeErrors(this.errors);
             }
         }
     }
@@ -216,8 +289,13 @@ export class FormComponent implements OnInit {
         }
     }
 
-    closeErrors(): void {
-        this.settings.errors = [];
+    closeErrors(apiErrors?: boolean): void {
+        if (apiErrors) {
+            this.settings.errors = [];
+        } else {
+            this.errors = {};
+            this.errorsList = [];
+        }
     }
 
     onButton(button: FormButton): void {

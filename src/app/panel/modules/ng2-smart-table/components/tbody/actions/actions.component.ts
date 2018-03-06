@@ -19,6 +19,16 @@ export class ActionsComponent implements OnChanges {
 
     ngOnChanges() {
         this.actions = this.grid.getSetting('actions.list');
+
+        const dataRow = this.row.getData();
+
+        for (const action of this.actions) {
+            if ('dependsOn' in action) {
+               action['enabled'] = dataRow[action['dependsOn']];
+            } else {
+                action['enabled'] = true;
+            }
+        }
     }
 
     onAction($event: any, action: any): void {

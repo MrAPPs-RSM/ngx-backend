@@ -24,14 +24,14 @@ export class DateTimeComponent extends BaseInputComponent implements OnInit {
     }
 
     get isValid() {
-        if (this.form.controls[this.field.key].value === null || this.form.controls[this.field.key].value === '') {
-            return true;
-        } else {
+        if (this.getControl().touched) {
             if (!isNaN(Date.parse(this.form.controls[this.field.key].value))) {
                 return this.form.controls[this.field.key].valid;
             } else {
                 return false;
             }
+        } else {
+            return true;
         }
     }
 }

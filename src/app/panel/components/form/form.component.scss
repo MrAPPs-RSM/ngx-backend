@@ -12,14 +12,15 @@ app-form {
     }
 
     > div.errors {
-      background-color: lighten($danger, 20);
-      color: darken($danger, 20);
-      > ul {
-        margin: 0;
+      margin: 0;
+      padding: 0;
+      > ol {
+        margin: 0 0 0 15px;
         padding: 10px 15px;
-        list-style: none;
         > li {
-
+          > span {
+            font-weight: $regular;
+          }
         }
       }
 
@@ -34,24 +35,19 @@ app-form {
         visibility: visible;
         opacity: 1;
       }
-      position: relative;
-      > span {
-        font-size: 16px;
-        cursor: pointer;
-        position: absolute;
-        top: 1px;
-        right: 8px;
-        color: #ffffff;
-      }
     }
 
     > div.fields-wrapper {
       div.multilang {
-        max-width: 130px;
+        max-width: 155px;
         margin-bottom: 25px;
         > ng-select.ng-select {
           > div.ng-control {
             min-height: 35px;
+          }
+
+          i {
+            margin-right: 5px;
           }
         }
       }

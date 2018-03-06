@@ -17,7 +17,7 @@ export class PanelComponent implements OnInit {
     private title = environment.name;
     private menu: any[] = [];
     private user: User;
-    private homePage: string = '/panel/dashboard';
+    private homePage: string = 'dashboard';
 
     constructor(private _router: Router,
                 private _userService: UserService,
@@ -46,6 +46,8 @@ export class PanelComponent implements OnInit {
                 return true;
             }
         });
+
+        console.log(this.homePage);
 
         if (this._pageRefresh.getLastPath() !== null) {
             if (this._pageRefresh.getLastPath() !== '/panel'
