@@ -8,8 +8,8 @@ import {FormPageComponent} from '../pages/form-page/form-page.component';
 import {ProfilePageComponent} from '../pages/profile-page/profile-page.component';
 import {NotfoundPageComponent} from '../pages/notfound-page/notfound-page.component';
 import {UtilsService} from '../../services/utils.service';
-import {FormGeneratorService} from './form-generator.service';
 import {UserService} from '../../auth/services/user.service';
+import {LanguageService} from './language.service';
 
 const TYPES = {
     profile: ProfilePageComponent,
@@ -25,7 +25,7 @@ export class SetupService {
     constructor(private _router: Router,
                 private _userService: UserService,
                 private _apiService: ApiService,
-                private _formGeneratorService: FormGeneratorService) {
+                private _languageService: LanguageService) {
     }
 
     public setup(): Promise<any> {
@@ -34,7 +34,7 @@ export class SetupService {
                 .then((data) => {
 
                     if ('contentLanguages' in data) {
-                        this._formGeneratorService.contentLanguages = data.contentLanguages;
+                        this._languageService.setLanguages(data['contentLanguages']);
                     }
 
                     this.loadRoutes(data);

@@ -5,6 +5,7 @@
 
 export const environment = {
     production: false,
+    lang: 'it',
     name: 'Ngx Backend',
     api: {
         baseFilesUrl: 'http://0.0.0.0:5555/files/output/',

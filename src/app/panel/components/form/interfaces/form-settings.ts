@@ -15,7 +15,6 @@ export interface FormSettings {
     };
     buttons?: FormButton[];
     responseType?: string; // 'default' | 'inline' | 'terminal' | 'alert' TODO
-    messages?: any;
     class?: string;
     title?: string;
     errors?: any[];

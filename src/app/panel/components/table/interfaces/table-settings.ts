@@ -13,7 +13,6 @@ export interface TableSettings {
         method?: string; // if not defined, will be PATCH
     };
     noDataLabel?: string;
-    messages?: any; // TODO
     generalActions?: TableAction[]; // General actions (export csv...)
     actions?: {
         columnTitle?: string;

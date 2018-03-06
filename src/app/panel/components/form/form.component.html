@@ -32,7 +32,7 @@
     <div class="fields-wrapper">
         <div class="row">
             <div class="col-sm-12 multilang" *ngIf="isMultiLangEnabled">
-                <ng-select [items]="getLanguages()"
+                <ng-select [items]="_languageService.getLanguages()"
                            [clearable]="false"
                            [searchable]="false"
                            [(ngModel)]="currentLang"
@@ -40,10 +40,10 @@
                            (change)="onLanguageChange($event)"
                            bindLabel="name">
                     <ng-template ng-label-tmp let-item="item">
-                       <i [class]="'flag-icon flag-icon-' + getIsoCodeForFlag(item)"></i> {{item.name}}
+                       <i [class]="'flag-icon flag-icon-' + _languageService.getIsoCodeForFlag(item)"></i> {{item.name}}
                     </ng-template>
                     <ng-template ng-option-tmp let-item="item">
-                        <i [class]="'flag-icon flag-icon-' + getIsoCodeForFlag(item)"></i> {{item.name}}
+                        <i [class]="'flag-icon flag-icon-' + _languageService.getIsoCodeForFlag(item)"></i> {{item.name}}
                     </ng-template>
                 </ng-select>
             </div>
@@ -76,7 +76,7 @@
                 <div class="pull-right">
                     <button type="button" (click)="onSubmit()" class="btn btn-primary"
                             [disabled]="isLoading || isExternalLoading"> {{ settings.submit?.label ? settings.submit.label :
-                        'Save'}}
+                        'forms.labels.submit' | translate}}
                     </button>
                 </div>
             </div>

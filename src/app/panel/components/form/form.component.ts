@@ -8,6 +8,8 @@ import {ApiService} from '../../../api/api.service';
 import {FormSettings} from './interfaces/form-settings';
 import {StorageService} from '../../../services/storage.service';
 import {FormButton} from './interfaces/form-button';
+import {TranslatePipe} from '../../../pipes/translate/translate.pipe';
+import {Language, LanguageService} from '../../services/language.service';
 
 @Component({
     selector: 'app-form',
@@ -39,11 +41,13 @@ export class FormComponent implements OnInit {
     }
 
     constructor(private _formGenerator: FormGeneratorService,
+                public _languageService: LanguageService,
                 private _modal: ModalService,
                 private _router: Router,
                 private _apiService: ApiService,
                 private _route: ActivatedRoute,
-                private _storageService: StorageService) {
+                private _storageService: StorageService,
+                private _translatePipe: TranslatePipe) {
     }
 
     private _extractErrors(form: FormGroup, parentKey?: string): void {
@@ -84,13 +88,13 @@ export class FormComponent implements OnInit {
         // TODO: handle different errors if necessary
 
         if (obj.required) {
-            message = 'is required';
+            message = this._translatePipe.transform('forms.errors.required');
         }
         if (obj.max) {
-            message = ' is too much. Max value: ' + obj.requiredValue;
+            message = this._translatePipe.transform('forms.errors.max') + obj.requiredValue;
         }
         if (obj.min) {
-            message = ' is too low. Min value: ' + obj.requiredValue;
+            message = this._translatePipe.transform('forms.errors.min') + obj.requiredValue;
         }
 
         this.errorsList.push({
@@ -110,10 +114,10 @@ export class FormComponent implements OnInit {
     }
 
     setupForms(): FormGroup {
-        this.isMultiLangEnabled = 'en' in this.settings.fields && this._formGenerator.contentLanguages.length > 0;
+        this.isMultiLangEnabled = 'en' in this.settings.fields && this._languageService.getLanguages().length > 0;
 
         if (this.isMultiLangEnabled) {
-            for (const contentLanguage of this._formGenerator.contentLanguages) {
+            for (const contentLanguage of this._languageService.getLanguages()) {
 
                 if (contentLanguage.isDefault) {
                     this.previousLang = contentLanguage;
@@ -125,36 +129,18 @@ export class FormComponent implements OnInit {
         return this._formGenerator.generate(this.settings.fields);
     }
 
-    getLanguageForIsoCode(isoCode: string): any {
-        for (const language of this._formGenerator.contentLanguages) {
-            if (language.isoCode === isoCode) {
-                return language;
-            }
-        }
-
-        return null;
+    isMultiLangField(isoCode: string): boolean {
+        return this._languageService.getByIsoCode(isoCode) !== null;
     }
 
-    getIsoCodeForFlag(lang: any): string {
-        return lang.isoCode !== 'en' ? lang.isoCode : 'gb';
-    }
-
-    isMultiLangField(key: string): boolean {
-        return this.getLanguageForIsoCode(key) !== null;
-    }
-
-    onLanguageChange(value: { isoCode: string }) {
-        this.currentLang = this.getLanguageForIsoCode(value.isoCode);
+    onLanguageChange(language: Language) {
+        this.currentLang = language;
         this.previousLang = this.currentLang;
-    }
-
-    getLanguages() {
-        return this._formGenerator.contentLanguages;
     }
 
     ngOnInit() {
 
-        for (const language of this._formGenerator.contentLanguages) {
+        for (const language of this._languageService.getLanguages()) {
             if (language.isDefault) {
                 this.currentLang = language;
                 break;

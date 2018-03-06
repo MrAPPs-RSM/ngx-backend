@@ -41,6 +41,9 @@ import {FormTypeSwitcherComponent} from './components/form/form-type-switcher/fo
 import {ProfilePageComponent} from './pages/profile-page/profile-page.component';
 import {ListDetailsComponent} from './components/form/types/list-details/list-details.component';
 import {NotfoundPageComponent} from './pages/notfound-page/notfound-page.component';
+import {PipesModule} from '../pipes/pipes.module';
+import {TranslatePipe} from '../pipes/translate/translate.pipe';
+import {LanguageService} from './services/language.service';
 
 const routes: Routes = [
     {
@@ -74,7 +77,8 @@ const routes: Routes = [
         AgmCoreModule.forRoot({
             apiKey: 'AIzaSyAP1chVIcUZSeLzRhRhXYbo20SBj7bryfM' // TODO: set gmaps api key
         }),
-        Ng2SmartTableModule
+        Ng2SmartTableModule,
+        PipesModule
     ],
     exports: [
         FormComponent,
@@ -114,7 +118,9 @@ const routes: Routes = [
         SetupService,
         PanelResolver,
         PageTitleService,
-        ModalService
+        ModalService,
+        LanguageService,
+        TranslatePipe
     ],
     entryComponents: [
         FormPageComponent,

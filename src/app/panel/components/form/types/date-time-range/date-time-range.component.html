@@ -37,7 +37,7 @@
             </div>
         </div>
         <!-- Others -->
-        <span *ngIf="!isValid" class="help-block danger pull-right">{{field.errorMessage ? field.errorMessage : 'Invalid date range'}}</span>
+        <span *ngIf="!isValid" class="help-block danger pull-right">{{'inputs.invalid_date_range' | translate}}</span>
         <span *ngIf="field.description" class="help-block">{{field.description}}</span>
     </div>
 </div>

@@ -3,6 +3,7 @@ import {User, UserService} from '../auth/services/user.service';
 import {environment} from '../../environments/environment';
 import {ActivatedRoute, Route, Router} from '@angular/router';
 import {PageRefreshService} from '../services/page-refresh.service';
+import {Language, LanguageService} from './services/language.service';
 
 declare const $: any;
 
@@ -19,13 +20,18 @@ export class PanelComponent implements OnInit {
     private user: User;
     private homePage: string = 'dashboard';
 
+    private currentLang: Language;
+
     constructor(private _router: Router,
+                public _languageService: LanguageService,
                 private _userService: UserService,
                 private _route: ActivatedRoute,
                 private _pageRefresh: PageRefreshService) {
     }
 
     ngOnInit() {
+        this.currentLang = this._languageService.getCurrentLang();
+
         if (this._route.snapshot.data['params'] && this._route.snapshot.data['params'].length > 0) {
             this.menu = this._route.snapshot.data['params'];
         }
@@ -47,11 +53,9 @@ export class PanelComponent implements OnInit {
             }
         });
 
-        console.log(this.homePage);
-
         if (this._pageRefresh.getLastPath() !== null) {
             if (this._pageRefresh.getLastPath() !== '/panel'
-            && this._pageRefresh.getLastPath() !== '/login') {
+                && this._pageRefresh.getLastPath() !== '/login') {
                 this._pageRefresh.renavigate();
             } else {
                 this._router.navigate(['panel/' + this.homePage]);
@@ -61,6 +65,10 @@ export class PanelComponent implements OnInit {
         }
 
         this.user = this._userService.getUser();
+    }
+
+    onLanguageChange(language: Language): void {
+        this._languageService.setCurrentLang(language);
     }
 
     logout(): void {

@@ -7,10 +7,7 @@ import {UtilsService} from '../../services/utils.service';
 @Injectable()
 export class FormGeneratorService {
 
-    public contentLanguages: any[];
-
     constructor() {
-        this.contentLanguages = [];
     }
 
     private getValidators(validators: Object): Array<any> {
@@ -88,7 +85,7 @@ export class FormGeneratorService {
 
                     case formConfig.types.LIST_DETAILS: {
                         group[field.key] = new FormArray(
-                            [ new FormGroup(this.generateFormFields(field.fields)) ],
+                            [new FormGroup(this.generateFormFields(field.fields))],
                             validators.length > 0 ? Validators.compose(validators) : null
                         );
                     }
@@ -176,8 +173,6 @@ export class FormGeneratorService {
                     group[key] = new FormGroup(this.generateFormFields(subFields));
                 }
             }
-
-            //console.log(group);
 
             return new FormGroup(group);
         } else {
