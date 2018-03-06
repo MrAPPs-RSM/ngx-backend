@@ -18,9 +18,8 @@ export class PanelComponent implements OnInit {
     title = environment.name;
     menu: any[] = [];
     homePage = 'dashboard';
-    private user: User;
-
-    private currentLang: Language;
+    user: User;
+    currentLang: Language;
 
     constructor(private _router: Router,
                 public _languageService: LanguageService,

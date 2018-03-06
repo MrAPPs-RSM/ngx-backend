@@ -1,6 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {translations} from '../../../translations';
-import {environment} from '../../../environments/environment';
+import {LanguageService} from '../../panel/services/language.service';
 
 @Pipe({
     name: 'translate',
@@ -8,12 +7,11 @@ import {environment} from '../../../environments/environment';
 })
 export class TranslatePipe implements PipeTransform {
 
+    constructor(private _languageService: LanguageService) {
+
+    }
+
     transform(value: any, args?: any): any {
-        const array = value.split('.');
-        let res = translations[environment.lang];
-        array.forEach((item) => {
-            res = res[item];
-        });
-        return res;
+      return this._languageService.translate(value);
     }
 }
