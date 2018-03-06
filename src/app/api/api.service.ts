@@ -55,7 +55,13 @@ export class ApiService {
                     error => {
                         this.handleError(error, false)
                             .then(() => {
-                                return this.get(endpoint, params);
+                                this.get(endpoint, params)
+                                    .then((data) => {
+                                        resolve(data);
+                                    })
+                                    .catch((error) => {
+                                        reject(error);
+                                    });
                             })
                             .catch((error) => {
                                 reject(error);
@@ -84,17 +90,20 @@ export class ApiService {
                         resolve(data);
                     },
                     error => {
-                        if (!isLogin) {
-                            this.handleError(error, false)
-                                .then(() => {
-                                    return this.post(endpoint, body, params, false);
-                                })
-                                .catch((error) => {
-                                    reject(error);
-                                });
-                        } else {
-                            reject(error);
-                        }
+
+                        this.handleError(error, isLogin)
+                            .then(() => {
+                                this.post(endpoint, body, params, false)
+                                    .then((data) => {
+                                        resolve(data);
+                                    })
+                                    .catch((error) => {
+                                        reject(error);
+                                    });
+                            })
+                            .catch((error) => {
+                                reject(error);
+                            });
                     }
                 );
         });
@@ -119,7 +128,13 @@ export class ApiService {
                     error => {
                         this.handleError(error, false)
                             .then(() => {
-                                return this.put(endpoint, body, params);
+                                this.put(endpoint, body, params)
+                                    .then((data) => {
+                                        resolve(data);
+                                    })
+                                    .catch((error) => {
+                                        reject(error);
+                                    });
                             })
                             .catch((error) => {
                                 reject(error);
@@ -146,8 +161,19 @@ export class ApiService {
                         resolve(data);
                     },
                     error => {
-                        this.handleError(error, false);
-                        reject(error);
+                        this.handleError(error, false)
+                            .then(() => {
+                                this.patch(endpoint, body, params)
+                                    .then((data) => {
+                                        resolve(data);
+                                    })
+                                    .catch((error) => {
+                                        reject(error);
+                                    });
+                            })
+                            .catch((error) => {
+                                reject(error);
+                            });
                     }
                 );
         });
@@ -168,11 +194,28 @@ export class ApiService {
                         resolve(data);
                     },
                     error => {
-                        this.handleError(error, false);
-                        reject(error);
+                        this.handleError(error, false)
+                            .then(() => {
+                                this.delete(endpoint, params)
+                                    .then((data) => {
+                                        resolve(data);
+                                    })
+                                    .catch((error) => {
+                                        reject(error);
+                                    });
+                            })
+                            .catch((error) => {
+                                reject(error);
+                            });
                     }
                 );
         });
+    }
+
+    private redirectToLogin(): void {
+        this._userService.removeUser();
+        this._userService.removeToken();
+        this._router.navigate(['login']);
     }
 
     /**
@@ -186,18 +229,18 @@ export class ApiService {
                 case 401: {
 
                     if (fromLogin) {
-                        this._userService.removeUser();
-                        this._userService.removeToken();
-                        this._router.navigate(['login']);
+                        this.redirectToLogin();
                         reject();
                     } else {
 
                         this.login(null)
                             .then((response) => {
+                                //console.log("TOKEN CHANGED");
                                 this._userService.storeToken(response.id);
                                 resolve();
-                        })
+                            })
                             .catch((error) => {
+                                this.redirectToLogin();
                                 reject(error);
                             });
                     }
@@ -252,18 +295,18 @@ export class ApiService {
 
 
     public login(data: any): Promise<any> {
-            if (data == null) {
-                const user = this._userService.getUser();
+        if (data == null) {
+            const user = this._userService.getUser();
 
-                if (user != null) {
-                    data = {
-                        'username': user.username,
-                        'password': user.password,
-                    };
-                }
+            if (user != null) {
+                data = {
+                    'username': user.username,
+                    'password': user.password,
+                };
             }
+        }
 
-          return  this.post(LOGIN_ENDPOINT, data, null, true);
+        return this.post(LOGIN_ENDPOINT, data, null, true);
     }
 }
 

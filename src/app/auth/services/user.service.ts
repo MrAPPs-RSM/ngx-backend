@@ -35,6 +35,11 @@ export class UserService {
     public getToken(): string {
         return localStorage.getItem(TOKEN_KEY);
     }
+
+    public cleanupData(): void {
+        this.removeUser();
+        this.removeToken();
+    }
 }
 
 export interface User {
