@@ -9,7 +9,7 @@
             <div [dragula]="'bag'"
                  [dragulaModel]="getControl().controls">
                 <div [formGroupName]="i"
-                     class="detail"
+                     class="list-detail-item"
                      *ngFor="let control of getControl().controls; let i = index">
                     <span class="drag" *ngIf="!!field.drag"></span>
                     <div *ngFor="let controlField of field.fields" class="row">

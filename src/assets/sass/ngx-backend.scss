@@ -119,6 +119,96 @@ body {
   }
 }
 
+/* Drag&Drop */
+.gu-mirror {
+  padding: inherit;
+  background-color: inherit;
+  position: fixed !important;
+  margin: 0 !important;
+  z-index: 9999 !important;
+  opacity: 1 !important;
+
+  /* List detail items - COPIED FROM list-details.component.scss */
+  &.list-detail-item {
+    border: 1px dotted $lightGrey;
+    padding: 15px 15px 5px;
+    background-color: #fafafa;
+    > span.delete {
+      cursor: pointer;
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding: 2px 10px;
+      font-size: 18px;
+    }
+    > span.drag {
+      cursor: move;
+      position: absolute;
+      top: -8px;
+      left: -8px;
+      background-color: $lightGrey;
+      color: #000000;
+      padding: 0 3px;
+      font-size: 16px;
+      &:before {
+        content: '\f126';
+        display: inline-block;
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: inherit;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+      }
+    }
+  }
+
+  /* Table items - COPIED FROM ng2-smart-table.component.scss */
+  &.ng2-smart-row {
+    background: #fff;
+    border-top: 1px solid $lightGrey;
+    border-bottom: 1px solid $lightGrey;
+    border-left: 1px solid $lightGrey;
+    width: 100%;
+    display: table;
+    cursor: move;
+    > td {
+      width: auto;
+      border-right: 1px solid $lightGrey;
+      font-weight: $light;
+      height: 40px;
+      color: $default;
+      font-size: 14px;
+      margin: 0;
+      padding: 5px 10px;
+      display: table-cell;
+      vertical-align: middle;
+      text-align: center;
+      white-space: nowrap;
+      > label.checkbox {
+        margin: 3px -2px 0 1px;
+        > span {
+          width: 18px;
+        }
+      }
+
+      &.ng2-smart-actions {
+        > ng2-st-tbody-actions {
+          > a {
+            &:not(:last-child) {
+              margin-right: 10px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+.gu-transit {
+  opacity: 0.2;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
+  filter: alpha(opacity=20);
+}
+
+
 /* Drag & Drop table
 .gu-mirror {
   width: auto !important;
@@ -156,14 +246,4 @@ body {
     }
   }
 }
-
-.gu-hide {
-  display: none !important;
-}
-
-.gu-unselectable {
-  -webkit-user-select: none !important;
-  -moz-user-select: none !important;
-  -ms-user-select: none !important;
-  user-select: none !important;
-} */
+*/

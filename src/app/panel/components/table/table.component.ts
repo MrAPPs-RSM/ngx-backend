@@ -417,7 +417,7 @@ export class TableComponent implements OnInit {
                         this.getData(); // Refresh table
                     })
                     .catch((response: HttpErrorResponse) => {
-                        this._toast.error(response.message);
+                        this._toast.error(response.message, 'Sort error');
                     });
             }
         }
