@@ -53,6 +53,66 @@ body {
 
 }
 
+.ng2-smart-action {
+  font-weight: $light;
+  padding: 5px 8px;
+  color: #ffffff !important;
+  border: 1px solid darken($primary, 20);
+  background-color: $primary;
+  &:hover {
+    color: #ffffff;
+    background-color: darken($primary, 10);
+  }
+  &.success {
+    border: 1px solid darken($success, 15);
+    background-color: $success;
+    &:hover {
+      background-color: darken($success, 10);
+    }
+  }
+  &.danger {
+    border: 1px solid darken($danger, 15);
+    background-color: $danger;
+    &:hover {
+      background-color: darken($danger, 10);
+    }
+  }
+  &.info {
+    border: 1px solid darken($info, 15);
+    background-color: $info;
+    &:hover {
+      background-color: darken($info, 10);
+
+    }
+  }
+  &.warning {
+    border: 1px solid darken($warning, 15);
+    background-color: $warning;
+    &:hover {
+      background-color: darken($warning, 10);
+    }
+  }
+  &.default {
+    border: 1px solid darken($default, 15);
+    background-color: $default;
+    &:hover {
+      background-color: darken($default, 10);
+    }
+  }
+
+  &.disabled {
+    cursor: not-allowed;
+    border: 1px solid $grey;
+    background-color: $lightGrey;
+    color: $grey;
+    &:hover {
+      border: 1px solid $grey;
+      background-color: $lightGrey;
+      color: $grey;
+    }
+  }
+}
+
 /* Drag & Drop table */
 .gu-mirror {
   width: auto !important;
@@ -76,41 +136,6 @@ body {
     @include respond-to(upto-sm) {
       &:last-child {
         display: none;
-      }
-    }
-
-    &.ng2-smart-actions {
-      > ng2-st-tbody-actions {
-        > a {
-          &:not(:last-child) {
-            margin-right: 10px;
-          }
-          font-weight: $light;
-          padding: 5px 8px;
-          color: #ffffff;
-          border: 1px solid $primary;
-          background-color: $primary;
-          &.success {
-            border: 1px solid $success;
-            background-color: $success;
-          }
-          &.danger {
-            border: 1px solid $danger;
-            background-color: $danger;
-          }
-          &.info {
-            border: 1px solid $info;
-            background-color: $info;
-          }
-          &.warning {
-            border: 1px solid $warning;
-            background-color: $warning;
-          }
-          &.default {
-            border: 1px solid $default;
-            background-color: $default;
-          }
-        }
       }
     }
   }
