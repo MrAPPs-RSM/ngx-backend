@@ -34,7 +34,7 @@ export class PanelComponent implements OnInit {
         (this._router.config as any).every((item: Route) => {
             if (item.path === 'panel') {
                 (item.children as any).every((child) => {
-                    if (child.data['isHomePage']) {
+                    if ('data' in child && 'isHomePage' in child.data && child.data['isHomePage']) {
                         this.homePage = child.path;
                         return false;
                     } else {
