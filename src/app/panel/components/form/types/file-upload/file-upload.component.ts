@@ -3,14 +3,12 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import {
-    FormFieldFile, GoogleCloudStorageResponse, isGoogleCloudStorageResponse, isLocalStorageResponse,
-    LocalStorageResponse,
+    FormFieldFile,
     UploadedFile
 } from '../../interfaces/form-field-file';
 import {UploaderOptions, UploadFile, UploadInput, UploadOutput} from 'ngx-uploader';
 import {ApiService} from '../../../../../api/api.service';
 import {ToastrService} from 'ngx-toastr';
-import {environment} from '../../../../../../environments/environment';
 import {UtilsService} from '../../../../../services/utils.service';
 import {BaseInputComponent} from '../base-input/base-input.component';
 
@@ -45,28 +43,6 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     isLoading = false;
 
     @ViewChild('fileUpload') _fileUpload: ElementRef;
-
-    static composeFileUrl(response: GoogleCloudStorageResponse | LocalStorageResponse): string {
-        if (response.hasOwnProperty('url')) {
-            return response['url'];
-        } else {
-            if (isLocalStorageResponse(response)) {
-                const name = response.name ? response.name : response.hash + '.' + response.extension;
-                return environment.api.baseFilesUrl + response.container + '/' + name;
-            } else if (isGoogleCloudStorageResponse(response)) {
-                if (!response.url) {
-                    if (response.thumbnails) {
-                        return response.thumbnails.small;
-                    } else {
-
-                    }
-                } else {
-                    return response.url;
-                }
-            }
-        }
-
-    }
 
     constructor(private _renderer: Renderer,
                 private _toastService: ToastrService,
@@ -230,23 +206,11 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         if (response.error) {
             this._toastService.error(response.error.message, 'Error');
         } else {
-            if (isLocalStorageResponse(response)) {
                 this.addToUpdatedFiles({
                     id: response.id,
-                    container: response.container,
-                    url: FileUploadComponent.composeFileUrl(response),
-                    name: response.originalName,
+                    url: response.url,
                     type: response.type
                 });
-            } else if (isGoogleCloudStorageResponse(response)) {
-                this.addToUpdatedFiles({
-                    id: response.media.id,
-                    container: response.file.container,
-                    url: FileUploadComponent.composeFileUrl(response),
-                    name: response.media.originalName,
-                    type: response.media.mimeType
-                });
-            }
         }
     }
 
@@ -256,20 +220,17 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     }
 
     private updateFormValue(): void {
-        this.getControl().setValue(this.uploadedFiles.length > 0 ? this.uploadedFiles : null);
+        const formFiles = [];
+
+        for (const uploadedFile of this.uploadedFiles) {
+            formFiles.push(uploadedFile.id);
+        }
+
+        this.getControl().setValue(formFiles.length > 0 ? formFiles : null);
     }
 
     private removeUploadedFile(file: UploadedFile): void {
-        if (this.field.options.api.delete) {
-            this._apiService.delete(this.field.options.api.delete + '/' + file.id)
-                .then((response) => {
-                    this._toastService.success(file.name + ' deleted successfully');
-                    this.uploadedFiles = UtilsService.removeObjectFromArray(file, this.uploadedFiles);
-                    this.updateFormValue();
-                })
-                .catch((response) => {
-                    this._toastService.error('Can\'t delete ' + file.name + ', try again later');
-                });
-        }
+        this.uploadedFiles = UtilsService.removeObjectFromArray(file, this.uploadedFiles);
+        this.updateFormValue();
     }
 }

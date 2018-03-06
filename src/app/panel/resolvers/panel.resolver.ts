@@ -1,9 +1,8 @@
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot} from '@angular/router';
+import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
 import {PanelComponent} from '../panel.component';
 import {Observable} from 'rxjs/Observable';
 import {SetupService} from '../services/setup.service';
-import {UserService} from '../../auth/services/user.service';
 
 @Injectable()
 export class PanelResolver implements Resolve<PanelComponent> {

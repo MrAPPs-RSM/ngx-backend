@@ -15,8 +15,9 @@
         <div class="progress" [ngClass]="{'visible': isLoading}">
             <div class="indeterminate"></div>
         </div>
-        <div class="drop-container"
-             ngFileDrop
+
+        <!-- TODO: add this part to re-enable drag&drop -->
+<!--        <div class="drop-container"
              [options]="options"
              (uploadOutput)="onUploadOutput($event)"
              [uploadInput]="uploadInput"
@@ -25,6 +26,14 @@
                 <span *ngIf="isLoading">Uploading, please wait</span>
                 <span *ngIf="(maxFiles > 0 && uploadedFiles.length >= maxFiles) && !isLoading">Max files: {{maxFiles}}</span>
                 <span *ngIf="(uploadedFiles.length === 0 || (maxFiles > 0 && uploadedFiles.length < maxFiles)) && !isLoading">Drag &amp; drop or <span class="choose" (click)="bringFileSelector()">choose file(s)</span></span></div>
+        </div>-->
+
+        <!-- TODO: remove this part to re-enable drag&drop -->
+        <div class="drop-container">
+            <div>
+                <span *ngIf="isLoading">Uploading, please wait</span>
+                <span *ngIf="(maxFiles > 0 && uploadedFiles.length >= maxFiles) && !isLoading">Max files: {{maxFiles}}</span>
+                <span *ngIf="(uploadedFiles.length === 0 || (maxFiles > 0 && uploadedFiles.length < maxFiles)) && !isLoading"><span class="choose" (click)="bringFileSelector()">Choose file(s)</span></span></div>
         </div>
 
         <input type="file"
@@ -61,7 +70,6 @@
                     <span class="file-name">
                         <span *ngIf="this.field.options.api.delete" class="remove"
                               (click)="removeUploadedFile(file)">×</span>
-                        <span>{{file.name}}</span>
                     </span>
                 </li>
             </ul>

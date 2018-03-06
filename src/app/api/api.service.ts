@@ -5,6 +5,7 @@ import {UserService, TOKEN_KEY, LOGIN_ENDPOINT} from '../auth/services/user.serv
 import {Router} from '@angular/router';
 
 const API_URL = environment.api.baseUrl;
+const SETUP_ENDPOINT = environment.api.setupEndpoint;
 
 @Injectable()
 export class ApiService {
@@ -41,7 +42,7 @@ export class ApiService {
      * @param params
      * @returns {Promise<any>}
      */
-    public get(endpoint: string, params?: Object): Promise<any> {
+    public get(endpoint: string, params?: Object, fromLogin?: boolean): Promise<any> {
         console.log('[API SERVICE] - GET ' + endpoint);
         /*if (params) {
          console.log(params);
@@ -53,9 +54,9 @@ export class ApiService {
                         resolve(data);
                     },
                     error => {
-                        this.handleError(error, false)
+                        this.handleError(endpoint, error, fromLogin != null ? fromLogin : false)
                             .then(() => {
-                                this.get(endpoint, params)
+                                this.get(endpoint, params, true)
                                     .then((data) => {
                                         resolve(data);
                                     })
@@ -91,9 +92,9 @@ export class ApiService {
                     },
                     error => {
 
-                        this.handleError(error, isLogin)
+                        this.handleError(endpoint, error, isLogin)
                             .then(() => {
-                                this.post(endpoint, body, params, false)
+                                this.post(endpoint, body, params, true)
                                     .then((data) => {
                                         resolve(data);
                                     })
@@ -116,7 +117,7 @@ export class ApiService {
      * @param params
      * @returns {Promise<T>}
      */
-    public put(endpoint: string, body: any, params?: Object): Promise<any> {
+    public put(endpoint: string, body: any, params?: Object, fromLogin?: boolean): Promise<any> {
         console.log('[API SERVICE] - PUT ' + endpoint);
         console.log(body);
         return new Promise((resolve, reject) => {
@@ -126,9 +127,9 @@ export class ApiService {
                         resolve(data);
                     },
                     error => {
-                        this.handleError(error, false)
+                        this.handleError(endpoint, error, fromLogin != null ? fromLogin : false)
                             .then(() => {
-                                this.put(endpoint, body, params)
+                                this.put(endpoint, body, params, true)
                                     .then((data) => {
                                         resolve(data);
                                     })
@@ -149,9 +150,10 @@ export class ApiService {
      * @param endpoint
      * @param body
      * @param params
+     * @param fromLogin
      * @returns {Promise<T>}
      */
-    public patch(endpoint: string, body: any, params?: Object): Promise<any> {
+    public patch(endpoint: string, body: any, params?: Object, fromLogin?: boolean): Promise<any> {
         console.log('[API SERVICE] - PATCH ' + endpoint);
         console.log(body);
         return new Promise((resolve, reject) => {
@@ -161,9 +163,9 @@ export class ApiService {
                         resolve(data);
                     },
                     error => {
-                        this.handleError(error, false)
+                        this.handleError(endpoint, error, fromLogin != null ? fromLogin : false)
                             .then(() => {
-                                this.patch(endpoint, body, params)
+                                this.patch(endpoint, body, params, true)
                                     .then((data) => {
                                         resolve(data);
                                     })
@@ -185,7 +187,7 @@ export class ApiService {
      * @param params
      * @returns {Promise<T>}
      */
-    public delete(endpoint: string, params?: Object): Promise<any> {
+    public delete(endpoint: string, params?: Object, fromLogin?: boolean): Promise<any> {
         console.log('[API SERVICE] - DELETE ' + endpoint);
         return new Promise((resolve, reject) => {
             this._http.delete(this.composeUrl(endpoint), this.setOptions(params))
@@ -194,9 +196,9 @@ export class ApiService {
                         resolve(data);
                     },
                     error => {
-                        this.handleError(error, false)
+                        this.handleError(endpoint, error, fromLogin != null ? fromLogin : false)
                             .then(() => {
-                                this.delete(endpoint, params)
+                                this.delete(endpoint, params, true)
                                     .then((data) => {
                                         resolve(data);
                                     })
@@ -222,7 +224,7 @@ export class ApiService {
      * Handle error status (if 401 logout)
      * @param error
      */
-    private handleError(error: HttpErrorResponse, fromLogin: boolean): Promise<any> {
+    private handleError(endpoint: string, error: HttpErrorResponse, fromLogin: boolean): Promise<any> {
         return new Promise((resolve, reject) => {
 
             switch (error.status) {
@@ -230,12 +232,12 @@ export class ApiService {
 
                     if (fromLogin) {
                         this.redirectToLogin();
-                        reject();
+                        reject(error);
                     } else {
 
                         this.login(null)
                             .then((response) => {
-                                //console.log("TOKEN CHANGED");
+                                // console.log("TOKEN CHANGED");
                                 this._userService.storeToken(response.id);
                                 resolve();
                             })
@@ -247,7 +249,12 @@ export class ApiService {
                 }
                     break;
                 default: {
-
+                    if (endpoint === SETUP_ENDPOINT || fromLogin) {
+                        this.redirectToLogin();
+                        reject(error);
+                    } else {
+                        resolve();
+                    }
                 }
                     break;
             }
