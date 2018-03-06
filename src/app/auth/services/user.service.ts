@@ -1,44 +1,52 @@
 import {Injectable} from '@angular/core';
 import {environment} from '../../../environments/environment';
 
+export const LOGIN_ENDPOINT = environment.auth.login.endpoint;
+export const TOKEN_KEY = environment.auth.tokenKey;
+export const USER_KEY = 'user';
+
 @Injectable()
 export class UserService {
 
     constructor() {
+
     }
 
-    public userKey = 'user';
-    public tokenKey = environment.auth.tokenKey;
-
     public storeUser(user: User): void {
-        localStorage.setItem(this.userKey, JSON.stringify(user));
+        localStorage.setItem(USER_KEY, JSON.stringify(user));
     }
 
     public getUser(): User {
-        return JSON.parse(localStorage.getItem(this.userKey));
+        return JSON.parse(localStorage.getItem(USER_KEY));
     }
 
     public removeUser(): void {
-        localStorage.removeItem(this.tokenKey);
+        localStorage.removeItem(TOKEN_KEY);
     }
 
     public storeToken(token: string): void {
-        localStorage.setItem(this.tokenKey, token);
+        localStorage.setItem(TOKEN_KEY, token);
     }
 
     public removeToken(): void {
-        localStorage.removeItem(this.tokenKey);
+        localStorage.removeItem(TOKEN_KEY);
     }
 
     public getToken(): string {
-        return localStorage.getItem(this.tokenKey);
+        return localStorage.getItem(TOKEN_KEY);
     }
 
+    public cleanupData(): void {
+        this.removeUser();
+        this.removeToken();
+    }
 }
 
 export interface User {
     realm: string;
     username: string;
+    password: string;
     email: string;
+
     [key: string]: any;
 }

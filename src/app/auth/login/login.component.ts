@@ -14,7 +14,7 @@ import {UserService} from '../services/user.service';
 export class LoginComponent implements OnInit {
 
     public environment = environment;
-    public isLoading: boolean = false;
+    public isLoading = false;
 
     constructor(private _apiService: ApiService,
                 private _userService: UserService,
@@ -27,9 +27,11 @@ export class LoginComponent implements OnInit {
 
     onSubmit(data): void {
         this.isLoading = true;
-        this._apiService.post(this.environment.auth.login.endpoint, data, null, true)
+        this._apiService.login(data)
             .then((response) => {
                 this.isLoading = false;
+
+                response.user['password'] = data.password;
                 this._userService.storeUser(response.user);
                 this._userService.storeToken(response.id);
                 this._router.navigate(['panel']);

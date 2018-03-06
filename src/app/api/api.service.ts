@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {environment} from '../../environments/environment';
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from '@angular/common/http';
-import {UserService} from '../auth/services/user.service';
+import {UserService, TOKEN_KEY, LOGIN_ENDPOINT} from '../auth/services/user.service';
 import {Router} from '@angular/router';
 
 const API_URL = environment.api.baseUrl;
@@ -25,7 +25,7 @@ export class ApiService {
     public composeUrl(endpoint: string, addAuth?: boolean): string {
         let url = API_URL + endpoint;
         if (addAuth) {
-            const authorization = this._userService.tokenKey + '=' + this._userService.getToken();
+            const authorization = TOKEN_KEY + '=' + this._userService.getToken();
             if (url.indexOf('?') !== -1) {
                 url += '&' + authorization;
             } else {
@@ -53,8 +53,19 @@ export class ApiService {
                         resolve(data);
                     },
                     error => {
-                        this.handleError(error);
-                        reject(error);
+                        this.handleError(error, false)
+                            .then(() => {
+                                this.get(endpoint, params)
+                                    .then((data) => {
+                                        resolve(data);
+                                    })
+                                    .catch((error) => {
+                                        reject(error);
+                                    });
+                            })
+                            .catch((error) => {
+                                reject(error);
+                            });
                     }
                 );
         });
@@ -79,10 +90,20 @@ export class ApiService {
                         resolve(data);
                     },
                     error => {
-                        if (!isLogin) {
-                            this.handleError(error);
-                        }
-                        reject(error);
+
+                        this.handleError(error, isLogin)
+                            .then(() => {
+                                this.post(endpoint, body, params, false)
+                                    .then((data) => {
+                                        resolve(data);
+                                    })
+                                    .catch((error) => {
+                                        reject(error);
+                                    });
+                            })
+                            .catch((error) => {
+                                reject(error);
+                            });
                     }
                 );
         });
@@ -105,8 +126,19 @@ export class ApiService {
                         resolve(data);
                     },
                     error => {
-                        this.handleError(error);
-                        reject(error);
+                        this.handleError(error, false)
+                            .then(() => {
+                                this.put(endpoint, body, params)
+                                    .then((data) => {
+                                        resolve(data);
+                                    })
+                                    .catch((error) => {
+                                        reject(error);
+                                    });
+                            })
+                            .catch((error) => {
+                                reject(error);
+                            });
                     }
                 );
         });
@@ -129,8 +161,19 @@ export class ApiService {
                         resolve(data);
                     },
                     error => {
-                        this.handleError(error);
-                        reject(error);
+                        this.handleError(error, false)
+                            .then(() => {
+                                this.patch(endpoint, body, params)
+                                    .then((data) => {
+                                        resolve(data);
+                                    })
+                                    .catch((error) => {
+                                        reject(error);
+                                    });
+                            })
+                            .catch((error) => {
+                                reject(error);
+                            });
                     }
                 );
         });
@@ -151,30 +194,64 @@ export class ApiService {
                         resolve(data);
                     },
                     error => {
-                        this.handleError(error);
-                        reject(error);
+                        this.handleError(error, false)
+                            .then(() => {
+                                this.delete(endpoint, params)
+                                    .then((data) => {
+                                        resolve(data);
+                                    })
+                                    .catch((error) => {
+                                        reject(error);
+                                    });
+                            })
+                            .catch((error) => {
+                                reject(error);
+                            });
                     }
                 );
         });
+    }
+
+    private redirectToLogin(): void {
+        this._userService.removeUser();
+        this._userService.removeToken();
+        this._router.navigate(['login']);
     }
 
     /**
      * Handle error status (if 401 logout)
      * @param error
      */
-    private handleError(error: HttpErrorResponse): void {
-        switch (error.status) {
-            case 401: {
-                this._userService.removeUser();
-                this._userService.removeToken();
-                this._router.navigate(['login']);
-            }
-                break;
-            default: {
+    private handleError(error: HttpErrorResponse, fromLogin: boolean): Promise<any> {
+        return new Promise((resolve, reject) => {
 
+            switch (error.status) {
+                case 401: {
+
+                    if (fromLogin) {
+                        this.redirectToLogin();
+                        reject();
+                    } else {
+
+                        this.login(null)
+                            .then((response) => {
+                                //console.log("TOKEN CHANGED");
+                                this._userService.storeToken(response.id);
+                                resolve();
+                            })
+                            .catch((error) => {
+                                this.redirectToLogin();
+                                reject(error);
+                            });
+                    }
+                }
+                    break;
+                default: {
+
+                }
+                    break;
             }
-                break;
-        }
+        });
     }
 
     /**
@@ -209,11 +286,27 @@ export class ApiService {
                     obj[key] = params[key];
                 });
             }
-            obj[this._userService.tokenKey] = this._userService.getToken();
+            obj[TOKEN_KEY] = this._userService.getToken();
             return new HttpParams({
                 fromObject: obj
             });
         }
+    }
+
+
+    public login(data: any): Promise<any> {
+        if (data == null) {
+            const user = this._userService.getUser();
+
+            if (user != null) {
+                data = {
+                    'username': user.username,
+                    'password': user.password,
+                };
+            }
+        }
+
+        return this.post(LOGIN_ENDPOINT, data, null, true);
     }
 }
 
