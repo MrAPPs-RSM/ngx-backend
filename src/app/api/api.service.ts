@@ -232,7 +232,7 @@ export class ApiService {
 
                     if (fromLogin) {
                         this.redirectToLogin();
-                        reject();
+                        reject(error);
                     } else {
 
                         this.login(null)
@@ -249,7 +249,8 @@ export class ApiService {
                 }
                     break;
                 default: {
-                    if (endpoint === SETUP_ENDPOINT) {
+                    if (endpoint === SETUP_ENDPOINT || fromLogin) {
+                        this.redirectToLogin();
                         reject(error);
                     } else {
                         resolve();

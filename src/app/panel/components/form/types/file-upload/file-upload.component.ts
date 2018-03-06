@@ -230,16 +230,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     }
 
     private removeUploadedFile(file: UploadedFile): void {
-        if (this.field.options.api.delete) {
-            this._apiService.delete(this.field.options.api.delete + '/' + file.id)
-                .then((response) => {
-                    this._toastService.success('file deleted successfully');
-                    this.uploadedFiles = UtilsService.removeObjectFromArray(file, this.uploadedFiles);
-                    this.updateFormValue();
-                })
-                .catch((response) => {
-                    this._toastService.error('Can\'t delete file, try again later');
-                });
-        }
+        this.uploadedFiles = UtilsService.removeObjectFromArray(file, this.uploadedFiles);
+        this.updateFormValue();
     }
 }
