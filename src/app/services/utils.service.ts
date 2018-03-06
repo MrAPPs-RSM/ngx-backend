@@ -15,6 +15,14 @@ export class UtilsService {
         }
 
         switch (extension) {
+            case 'x-flv':
+            case 'x-ms-wmv':
+            case 'quicktime':
+            case 'avi':
+            case 'mp4': {
+                response = 'video/' + extension;
+            }
+                break;
             case 'jpg':
             case 'jpeg':
             case 'png': {
