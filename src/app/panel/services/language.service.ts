@@ -4,38 +4,54 @@ import {environment} from '../../../environments/environment';
 @Injectable()
 export class LanguageService {
 
-    private languages: Language[];
+    private backendLanguages: Language[];
+    private contentLanguages: Language[];
 
     constructor() {
-        this.languages = [];
+        this.backendLanguages = environment.languages;
     }
 
-    setCurrentLang(language: Language | string): void {
+    public setCurrentLang(language: Language | string): void {
+        let lang = language;
         if (typeof language === 'string') {
-            environment.lang = language;
-        } else {
-            environment.lang = language.isoCode;
+            lang = this.getBackendLanguageByIsoCode(language);
         }
+
+        environment.currentLang = (lang as Language).isoCode;
+
+        localStorage.setItem('lang', JSON.stringify(lang));
     }
 
-    getCurrentLang(): Language {
-        return this.getByIsoCode(environment.lang);
+    public getCurrentLang(): Language {
+        return JSON.parse(localStorage.getItem('lang'));
     }
 
-    setLanguages(languages: Language[]): void {
-        this.languages = languages;
+    public getBackendLanguages(): Language[] {
+        return this.backendLanguages;
     }
 
-    getLanguages(): Language[] {
-        return this.languages;
+    public setContentLanguages(languages: Language[]): void {
+        this.contentLanguages = languages;
     }
 
-    getIsoCodeForFlag(language: Language): string {
+    public getContentLanguages(): Language[] {
+        return this.contentLanguages;
+    }
+
+    public getIsoCodeForFlag(language: Language): string {
         return language.isoCode !== 'en' ? language.isoCode : 'gb';
     }
 
-    getByIsoCode(isoCode: string): Language | null {
-        for (const language of this.languages) {
+    public getBackendLanguageByIsoCode(isoCode: string): Language | null {
+        return this.getByIsoCode(this.backendLanguages, isoCode);
+    }
+
+    public getContentLanguageByIsoCode(isoCode: string): Language | null {
+        return this.getByIsoCode(this.contentLanguages, isoCode);
+    }
+
+    private getByIsoCode(languages: Language[], isoCode: string): Language | null {
+        for (const language of languages) {
             if (language.isoCode === isoCode) {
                 return language;
             }
@@ -49,5 +65,5 @@ export interface Language {
     id: number;
     name: string;
     isoCode: string;
-    isDefault: boolean;
+    isDefault?: boolean;
 }

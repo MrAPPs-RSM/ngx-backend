@@ -5,7 +5,19 @@
 
 export const environment = {
     production: false,
-    lang: 'it',
+    languages: [
+        {
+            id: 1,
+            name: 'Italiano',
+            isoCode: 'it'
+        },
+        {
+            id: 2,
+            name: 'English',
+            isoCode: 'en'
+        }
+    ],
+    currentLang: 'en',
     name: 'Ngx Backend',
     api: {
         baseFilesUrl: 'http://0.0.0.0:5555/files/output/',

@@ -10,7 +10,7 @@ export class TranslatePipe implements PipeTransform {
 
     transform(value: any, args?: any): any {
         const array = value.split('.');
-        let res = translations[environment.lang];
+        let res = translations[environment.currentLang];
         array.forEach((item) => {
             res = res[item];
         });

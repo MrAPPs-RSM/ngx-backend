@@ -3,7 +3,7 @@ import {User, UserService} from '../auth/services/user.service';
 import {environment} from '../../environments/environment';
 import {ActivatedRoute, Route, Router} from '@angular/router';
 import {PageRefreshService} from '../services/page-refresh.service';
-import {Language, LanguageService} from './services/language.service';
+import {LanguageService} from './services/language.service';
 
 declare const $: any;
 
@@ -20,17 +20,19 @@ export class PanelComponent implements OnInit {
     homePage = 'dashboard';
     private user: User;
 
-    private currentLang: Language;
 
     constructor(private _router: Router,
-                public _languageService: LanguageService,
                 private _userService: UserService,
                 private _route: ActivatedRoute,
+                private _languageService: LanguageService,
                 private _pageRefresh: PageRefreshService) {
     }
 
     ngOnInit() {
-        this.currentLang = this._languageService.getCurrentLang();
+        /** When start, if current lang not set, set it from the enviroment defaults */
+        if (!this._languageService.getCurrentLang()) {
+            this._languageService.setCurrentLang(environment.currentLang);
+        }
 
         if (this._route.snapshot.data['params'] && this._route.snapshot.data['params'].length > 0) {
             this.menu = this._route.snapshot.data['params'];
@@ -67,9 +69,6 @@ export class PanelComponent implements OnInit {
         this.user = this._userService.getUser();
     }
 
-    onLanguageChange(language: Language): void {
-        this._languageService.setCurrentLang(language);
-    }
 
     logout(): void {
         this._userService.removeToken();

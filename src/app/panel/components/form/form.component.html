@@ -32,7 +32,7 @@
     <div class="fields-wrapper">
         <div class="row">
             <div class="col-sm-12 multilang" *ngIf="isMultiLangEnabled">
-                <ng-select [items]="_languageService.getLanguages()"
+                <ng-select [items]="_languageService.getContentLanguages()"
                            [clearable]="false"
                            [searchable]="false"
                            [(ngModel)]="currentLang"

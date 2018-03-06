@@ -14,7 +14,29 @@
                         <i class="fa fa-envelope"></i>
                         {{user.email}}
                     </li>
+                    <li>
+                        <i class="fa fa-language"></i>
+                        {{currentLang.name}}
+                    </li>
                 </ul>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="language-selector">
+                <ng-select [items]="_languageService.getBackendLanguages()"
+                           [clearable]="false"
+                           [searchable]="false"
+                           [(ngModel)]="currentLang"
+                           [ngModelOptions]="{standalone: true}"
+                           (change)="onLanguageChange($event)"
+                           bindLabel="name">
+                    <ng-template ng-label-tmp let-item="item">
+                        <i [class]="'flag-icon flag-icon-' + _languageService.getIsoCodeForFlag(item)"></i> {{item.name}}
+                    </ng-template>
+                    <ng-template ng-option-tmp let-item="item">
+                        <i [class]="'flag-icon flag-icon-' + _languageService.getIsoCodeForFlag(item)"></i> {{item.name}}
+                    </ng-template>
+                </ng-select>
             </div>
         </div>
     </div>

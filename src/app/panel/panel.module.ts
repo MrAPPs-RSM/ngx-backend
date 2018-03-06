@@ -83,7 +83,7 @@ const routes: Routes = [
     exports: [
         FormComponent,
         InputTextComponent,
-        InputPasswordComponent,
+        InputPasswordComponent
     ],
     declarations: [
         PanelComponent,

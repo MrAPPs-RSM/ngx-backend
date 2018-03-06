@@ -6,22 +6,6 @@
         </div>
         <div class="navbar-menu">
             <ul class="nav navbar-nav">
-                <li class="language-selector">
-                    <ng-select [items]="_languageService.getLanguages()"
-                               [clearable]="false"
-                               [searchable]="false"
-                               [(ngModel)]="currentLang"
-                               [ngModelOptions]="{standalone: true}"
-                               (change)="onLanguageChange($event)"
-                               bindLabel="name">
-                        <ng-template ng-label-tmp let-item="item">
-                            <i [class]="'flag-icon flag-icon-' + _languageService.getIsoCodeForFlag(item)"></i> {{item.name}}
-                        </ng-template>
-                        <ng-template ng-option-tmp let-item="item">
-                            <i [class]="'flag-icon flag-icon-' + _languageService.getIsoCodeForFlag(item)"></i> {{item.name}}
-                        </ng-template>
-                    </ng-select>
-                </li>
                 <li><a class="user" [routerLink]="'/panel/profile'" routerLinkActive="active"><i class="fa fa-user"></i> {{user.username}}</a></li>
                 <li><a (click)="logout()" class="logout"><i class="fa fa-power-off"></i> <span
                         class="hidden-xs">Logout</span></a></li>

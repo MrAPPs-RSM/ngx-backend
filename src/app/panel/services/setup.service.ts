@@ -34,7 +34,7 @@ export class SetupService {
                 .then((data) => {
 
                     if ('contentLanguages' in data) {
-                        this._languageService.setLanguages(data['contentLanguages']);
+                        this._languageService.setContentLanguages(data['contentLanguages']);
                     }
 
                     this.loadRoutes(data);
