@@ -164,7 +164,8 @@ export class FormGeneratorService {
         if (fields instanceof Array && fields.length > 0) {
             return new FormGroup(this.generateFormFields(fields));
         } else if (fields instanceof Object) {
-            const group = this.generateFormFields(fields['base']);
+
+            const group = 'base' in fields ? this.generateFormFields(fields['base']) : {};
 
             for (const key of Object.keys(fields)) {
 
