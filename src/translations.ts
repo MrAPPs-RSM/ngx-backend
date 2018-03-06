@@ -39,6 +39,11 @@ export const translations = {
             logout: 'Logout',
             user_info: 'Informazioni utente',
             change_password: 'Cambia password'
+        },
+        404: {
+            oops: 'Oops! Ti sei perso.',
+            page_title: '404 - Pagina non trovata',
+            page_not_found: 'La pagina che stai cercando non è stata trovata.',
         }
     },
     en: {
@@ -80,6 +85,11 @@ export const translations = {
         profile: {
             logout: 'Logout',
             user_info: 'User information'
+        },
+        404: {
+            oops: 'Oops! You\'re lost.',
+            page_title: '404 - Page not found',
+            page_not_found: 'The page you are looking for was not found.',
         }
     }
 };

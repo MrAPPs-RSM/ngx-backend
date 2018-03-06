@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {environment} from '../../../environments/environment';
+import {translations} from '../../../translations';
 
 @Injectable()
 export class LanguageService {
@@ -58,6 +59,15 @@ export class LanguageService {
         }
 
         return null;
+    }
+
+    translate(value: any, isoCode?: string) {
+        const array = value.split('.');
+        let res = translations[isoCode ? isoCode : environment.currentLang];
+        array.forEach((item) => {
+            res = res[item];
+        });
+        return res;
     }
 }
 
