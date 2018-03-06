@@ -261,6 +261,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
 
         for (const uploadedFile of this.uploadedFiles) {
             formFiles.push(uploadedFile.id);
+            formFiles.push(uploadedFile.id);
         }
 
         this.form.controls[this.field.key].setValue(formFiles.length > 0 ? formFiles : null);
