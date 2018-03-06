@@ -1,7 +1,8 @@
 <a *ngFor="let action of actions"
    href="#"
    [title]="action.name"
+   [ngClass]="{'disabled': !action.enabled}"
    [class]="'ng2-smart-action ' + action.class"
    [innerHTML]="action.content"
-   (click)="onAction($event, action)">
+   (click)="action.enabled && onAction($event, action)">
 </a>
