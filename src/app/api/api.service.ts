@@ -5,6 +5,7 @@ import {UserService, TOKEN_KEY, LOGIN_ENDPOINT} from '../auth/services/user.serv
 import {Router} from '@angular/router';
 
 const API_URL = environment.api.baseUrl;
+const SETUP_ENDPOINT = environment.api.setupEndpoint;
 
 @Injectable()
 export class ApiService {
@@ -53,7 +54,7 @@ export class ApiService {
                         resolve(data);
                     },
                     error => {
-                        this.handleError(error, false)
+                        this.handleError(endpoint, error, false)
                             .then(() => {
                                 this.get(endpoint, params)
                                     .then((data) => {
@@ -91,7 +92,7 @@ export class ApiService {
                     },
                     error => {
 
-                        this.handleError(error, isLogin)
+                        this.handleError(endpoint, error, isLogin)
                             .then(() => {
                                 this.post(endpoint, body, params, false)
                                     .then((data) => {
@@ -126,7 +127,7 @@ export class ApiService {
                         resolve(data);
                     },
                     error => {
-                        this.handleError(error, false)
+                        this.handleError(endpoint, error, false)
                             .then(() => {
                                 this.put(endpoint, body, params)
                                     .then((data) => {
@@ -161,7 +162,7 @@ export class ApiService {
                         resolve(data);
                     },
                     error => {
-                        this.handleError(error, false)
+                        this.handleError(endpoint, error, false)
                             .then(() => {
                                 this.patch(endpoint, body, params)
                                     .then((data) => {
@@ -194,7 +195,7 @@ export class ApiService {
                         resolve(data);
                     },
                     error => {
-                        this.handleError(error, false)
+                        this.handleError(endpoint, error, false)
                             .then(() => {
                                 this.delete(endpoint, params)
                                     .then((data) => {
@@ -222,7 +223,7 @@ export class ApiService {
      * Handle error status (if 401 logout)
      * @param error
      */
-    private handleError(error: HttpErrorResponse, fromLogin: boolean): Promise<any> {
+    private handleError(endpoint: string, error: HttpErrorResponse, fromLogin: boolean): Promise<any> {
         return new Promise((resolve, reject) => {
 
             switch (error.status) {
@@ -235,7 +236,7 @@ export class ApiService {
 
                         this.login(null)
                             .then((response) => {
-                                //console.log("TOKEN CHANGED");
+                                // console.log("TOKEN CHANGED");
                                 this._userService.storeToken(response.id);
                                 resolve();
                             })
@@ -247,7 +248,11 @@ export class ApiService {
                 }
                     break;
                 default: {
-
+                    if (endpoint === SETUP_ENDPOINT) {
+                        reject(error);
+                    } else {
+                        resolve();
+                    }
                 }
                     break;
             }
