@@ -42,7 +42,7 @@ export class ApiService {
      * @param params
      * @returns {Promise<any>}
      */
-    public get(endpoint: string, params?: Object): Promise<any> {
+    public get(endpoint: string, params?: Object, fromLogin?: boolean): Promise<any> {
         console.log('[API SERVICE] - GET ' + endpoint);
         /*if (params) {
          console.log(params);
@@ -54,9 +54,9 @@ export class ApiService {
                         resolve(data);
                     },
                     error => {
-                        this.handleError(endpoint, error, false)
+                        this.handleError(endpoint, error, fromLogin != null ? fromLogin : false)
                             .then(() => {
-                                this.get(endpoint, params)
+                                this.get(endpoint, params, true)
                                     .then((data) => {
                                         resolve(data);
                                     })
@@ -94,7 +94,7 @@ export class ApiService {
 
                         this.handleError(endpoint, error, isLogin)
                             .then(() => {
-                                this.post(endpoint, body, params, false)
+                                this.post(endpoint, body, params, true)
                                     .then((data) => {
                                         resolve(data);
                                     })
@@ -117,7 +117,7 @@ export class ApiService {
      * @param params
      * @returns {Promise<T>}
      */
-    public put(endpoint: string, body: any, params?: Object): Promise<any> {
+    public put(endpoint: string, body: any, params?: Object, fromLogin?: boolean): Promise<any> {
         console.log('[API SERVICE] - PUT ' + endpoint);
         console.log(body);
         return new Promise((resolve, reject) => {
@@ -127,9 +127,9 @@ export class ApiService {
                         resolve(data);
                     },
                     error => {
-                        this.handleError(endpoint, error, false)
+                        this.handleError(endpoint, error, fromLogin != null ? fromLogin : false)
                             .then(() => {
-                                this.put(endpoint, body, params)
+                                this.put(endpoint, body, params, true)
                                     .then((data) => {
                                         resolve(data);
                                     })
@@ -150,9 +150,10 @@ export class ApiService {
      * @param endpoint
      * @param body
      * @param params
+     * @param fromLogin
      * @returns {Promise<T>}
      */
-    public patch(endpoint: string, body: any, params?: Object): Promise<any> {
+    public patch(endpoint: string, body: any, params?: Object, fromLogin?: boolean): Promise<any> {
         console.log('[API SERVICE] - PATCH ' + endpoint);
         console.log(body);
         return new Promise((resolve, reject) => {
@@ -162,9 +163,9 @@ export class ApiService {
                         resolve(data);
                     },
                     error => {
-                        this.handleError(endpoint, error, false)
+                        this.handleError(endpoint, error, fromLogin != null ? fromLogin : false)
                             .then(() => {
-                                this.patch(endpoint, body, params)
+                                this.patch(endpoint, body, params, true)
                                     .then((data) => {
                                         resolve(data);
                                     })
@@ -186,7 +187,7 @@ export class ApiService {
      * @param params
      * @returns {Promise<T>}
      */
-    public delete(endpoint: string, params?: Object): Promise<any> {
+    public delete(endpoint: string, params?: Object, fromLogin?: boolean): Promise<any> {
         console.log('[API SERVICE] - DELETE ' + endpoint);
         return new Promise((resolve, reject) => {
             this._http.delete(this.composeUrl(endpoint), this.setOptions(params))
@@ -195,9 +196,9 @@ export class ApiService {
                         resolve(data);
                     },
                     error => {
-                        this.handleError(endpoint, error, false)
+                        this.handleError(endpoint, error, fromLogin != null ? fromLogin : false)
                             .then(() => {
-                                this.delete(endpoint, params)
+                                this.delete(endpoint, params, true)
                                     .then((data) => {
                                         resolve(data);
                                     })
