@@ -167,7 +167,7 @@ export class FormComponent implements OnInit {
 
         this.form.valueChanges.subscribe(
             data => {
-                // console.log(data);
+                console.log(data);
                 // console.log(this.form);
             }
         );
@@ -181,6 +181,11 @@ export class FormComponent implements OnInit {
             if (formParameters.loadData) {
                 this.loadData(null, formParameters.id, formParameters.endpoint);
             }
+
+            if (formParameters.formValues) {
+                this.form.patchValue(formParameters.formValues);
+            }
+
             this._storageService.clearValue('formParameters');
         }
     }
