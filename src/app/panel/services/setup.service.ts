@@ -44,7 +44,6 @@ export class SetupService {
                 .catch((error) => {
                     this._userService.removeToken();
                     this._userService.removeUser();
-                    this._router.navigate(['login']);
                     reject();
                 });
         });

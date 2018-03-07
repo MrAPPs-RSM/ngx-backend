@@ -1,9 +1,9 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {environment} from '../../../environments/environment';
-import {ApiService} from '../../api/api.service';
+import {ApiService, ErrorResponse} from '../../api/api.service';
 import {Router} from '@angular/router';
-import {ToastrService} from 'ngx-toastr';
 import {UserService} from '../services/user.service';
+import {ToastsService} from '../../services/toasts.service';
 
 @Component({
     selector: 'app-login',
@@ -16,9 +16,9 @@ export class LoginComponent implements OnInit {
     public environment = environment;
     public isLoading = false;
 
-    constructor(private _apiService: ApiService,
+    constructor(private _toastsService: ToastsService,
+                private _apiService: ApiService,
                 private _userService: UserService,
-                private _toastService: ToastrService,
                 private _router: Router) {
     }
 
@@ -36,10 +36,9 @@ export class LoginComponent implements OnInit {
                 this._userService.storeToken(response.id);
                 this._router.navigate(['panel']);
             })
-            .catch((error) => {
+            .catch((response: ErrorResponse) => {
                 this.isLoading = false;
-                // TODO:
-                this._toastService.error('message', 'title');
+                this._toastsService.error(response.error);
             });
     }
 }

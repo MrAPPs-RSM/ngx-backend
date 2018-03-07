@@ -1,6 +1,6 @@
 import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {TableSettings} from './interfaces/table-settings';
-import {ApiService} from '../../../api/api.service';
+import {ApiService, ErrorResponse} from '../../../api/api.service';
 import {ModalService} from '../../services/modal.service';
 import {TableFilter} from '../../modules/ng2-smart-table/lib/data-filters/table-filter';
 import {TableSort} from '../../modules/ng2-smart-table/lib/data-filters/table-sort';
@@ -8,15 +8,14 @@ import {TablePagination} from '../../modules/ng2-smart-table/lib/data-filters/ta
 import {TableSelection} from '../../modules/ng2-smart-table/lib/data-filters/table-selection';
 import {TableActiveFilters} from '../../modules/ng2-smart-table/lib/data-filters/table-active-filters';
 import {TableDrop} from '../../modules/ng2-smart-table/lib/data-filters/table-drop';
-import {HttpErrorResponse} from '@angular/common/http';
 import {TableAction} from './interfaces/table-action';
 import {Router} from '@angular/router';
-import {ToastrService} from 'ngx-toastr';
 import * as _ from 'lodash';
 import * as FileSaver from 'file-saver';
 import {UtilsService} from '../../../services/utils.service';
 import {StorageService} from '../../../services/storage.service';
 import {Language, LanguageService} from '../../services/language.service';
+import {ToastsService} from '../../../services/toasts.service';
 
 @Component({
     selector: 'app-table',
@@ -53,7 +52,7 @@ export class TableComponent implements OnInit {
     constructor(public _languageService: LanguageService,
                 private _apiService: ApiService,
                 private _router: Router,
-                private _toast: ToastrService,
+                private _toast: ToastsService,
                 private _modal: ModalService,
                 private _storageService: StorageService) {
     }
@@ -121,13 +120,13 @@ export class TableComponent implements OnInit {
                         this.isLoading = false;
                         this.data = data;
                     })
-                    .catch((response: HttpErrorResponse) => {
+                    .catch((response: ErrorResponse) => {
                         this.isLoading = false;
-                        console.log(response.message);
+                        this._toast.error(response.error);
                     });
             })
-            .catch((response: HttpErrorResponse) => {
-                console.log(response.message);
+            .catch((response: ErrorResponse) => {
+                this._toast.error(response.error);
             });
     }
 
@@ -308,12 +307,8 @@ export class TableComponent implements OnInit {
                             this.getData();
                         }
                     })
-                    .catch((response: any) => {
-                        if (response instanceof HttpErrorResponse) {
-                            this._toast.error(response.message);
-                        } else {
-                            this._toast.error(response);
-                        }
+                    .catch((response: ErrorResponse) => {
+                        this._toast.error(response.error);
                     });
             }
         }
@@ -345,7 +340,7 @@ export class TableComponent implements OnInit {
                                             .then(() => resolve())
                                             .catch((error) => reject(error));
                                     })
-                                    .catch((response: HttpErrorResponse) => {
+                                    .catch((response: ErrorResponse) => {
                                         reject(response);
                                     });
                             }).catch(() => {
@@ -357,7 +352,7 @@ export class TableComponent implements OnInit {
                                     .then(() => resolve())
                                     .catch((error) => reject(error));
                             })
-                            .catch((response: HttpErrorResponse) => {
+                            .catch((response: ErrorResponse) => {
                                 reject(response);
                             });
                     }
@@ -373,7 +368,7 @@ export class TableComponent implements OnInit {
                                             .then(() => resolve())
                                             .catch((error) => reject(error));
                                     })
-                                    .catch((response: HttpErrorResponse) => {
+                                    .catch((response: ErrorResponse) => {
                                         reject(response);
                                     });
                             })
@@ -386,7 +381,7 @@ export class TableComponent implements OnInit {
                                     .then(() => resolve())
                                     .catch((error) => reject(error));
                             })
-                            .catch((response: HttpErrorResponse) => {
+                            .catch((response: ErrorResponse) => {
                                 reject(response);
                             });
                     }
@@ -428,7 +423,7 @@ export class TableComponent implements OnInit {
                         break;
                 }
             } else {
-                this._toast.success('message', 'Success');
+                this._toast.success();
                 resolve();
             }
         });
@@ -466,8 +461,8 @@ export class TableComponent implements OnInit {
                     .then(() => {
                         this.getData(); // Refresh table
                     })
-                    .catch((response: HttpErrorResponse) => {
-                        this._toast.error(response.message, 'Sort error');
+                    .catch((response: ErrorResponse) => {
+                        this._toast.error(response.error);
                     });
             }
         }

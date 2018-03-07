@@ -40,13 +40,11 @@ export class ApiService {
      * GET
      * @param endpoint
      * @param params
+     * @param fromLogin
      * @returns {Promise<any>}
      */
     public get(endpoint: string, params?: Object, fromLogin?: boolean): Promise<any> {
         console.log('[API SERVICE] - GET ' + endpoint);
-        /*if (params) {
-         console.log(params);
-         }*/
         return new Promise((resolve, reject) => {
             this._http.get(this.composeUrl(endpoint), this.setOptions(params))
                 .subscribe(
@@ -54,18 +52,18 @@ export class ApiService {
                         resolve(data);
                     },
                     error => {
-                        this.handleError(endpoint, error, fromLogin != null ? fromLogin : false)
+                        this.handleError(endpoint, error, fromLogin !== null ? fromLogin : false)
                             .then(() => {
                                 this.get(endpoint, params, true)
                                     .then((data) => {
                                         resolve(data);
                                     })
-                                    .catch((error) => {
-                                        reject(error);
+                                    .catch((response: HttpErrorResponse) => {
+                                        reject(response.error);
                                     });
                             })
-                            .catch((error) => {
-                                reject(error);
+                            .catch((response) => {
+                                reject(response);
                             });
                     }
                 );
@@ -83,7 +81,6 @@ export class ApiService {
      */
     public post(endpoint: string, body: any, params?: Object | null, isLogin: boolean = false): Promise<any> {
         console.log('[API SERVICE] - POST ' + endpoint);
-        console.log(body);
         return new Promise((resolve, reject) => {
             this._http.post(this.composeUrl(endpoint), body, this.setOptions(params))
                 .subscribe(
@@ -91,19 +88,18 @@ export class ApiService {
                         resolve(data);
                     },
                     error => {
-
                         this.handleError(endpoint, error, isLogin)
                             .then(() => {
                                 this.post(endpoint, body, params, true)
                                     .then((data) => {
                                         resolve(data);
                                     })
-                                    .catch((error) => {
-                                        reject(error);
+                                    .catch((response: HttpErrorResponse) => {
+                                        reject(response.error);
                                     });
                             })
-                            .catch((error) => {
-                                reject(error);
+                            .catch((response: HttpErrorResponse) => {
+                                reject(response.error);
                             });
                     }
                 );
@@ -115,11 +111,11 @@ export class ApiService {
      * @param endpoint
      * @param body
      * @param params
+     * @param fromLogin
      * @returns {Promise<T>}
      */
     public put(endpoint: string, body: any, params?: Object, fromLogin?: boolean): Promise<any> {
         console.log('[API SERVICE] - PUT ' + endpoint);
-        console.log(body);
         return new Promise((resolve, reject) => {
             this._http.put(this.composeUrl(endpoint), body, this.setOptions(params))
                 .subscribe(
@@ -127,18 +123,18 @@ export class ApiService {
                         resolve(data);
                     },
                     error => {
-                        this.handleError(endpoint, error, fromLogin != null ? fromLogin : false)
+                        this.handleError(endpoint, error, fromLogin !== null ? fromLogin : false)
                             .then(() => {
                                 this.put(endpoint, body, params, true)
                                     .then((data) => {
                                         resolve(data);
                                     })
-                                    .catch((error) => {
-                                        reject(error);
+                                    .catch((response: HttpErrorResponse) => {
+                                        reject(response.error);
                                     });
                             })
-                            .catch((error) => {
-                                reject(error);
+                            .catch((response: HttpErrorResponse) => {
+                                reject(response.error);
                             });
                     }
                 );
@@ -155,7 +151,6 @@ export class ApiService {
      */
     public patch(endpoint: string, body: any, params?: Object, fromLogin?: boolean): Promise<any> {
         console.log('[API SERVICE] - PATCH ' + endpoint);
-        console.log(body);
         return new Promise((resolve, reject) => {
             this._http.patch(this.composeUrl(endpoint), body, this.setOptions(params))
                 .subscribe(
@@ -163,18 +158,18 @@ export class ApiService {
                         resolve(data);
                     },
                     error => {
-                        this.handleError(endpoint, error, fromLogin != null ? fromLogin : false)
+                        this.handleError(endpoint, error, fromLogin !== null ? fromLogin : false)
                             .then(() => {
                                 this.patch(endpoint, body, params, true)
                                     .then((data) => {
                                         resolve(data);
                                     })
-                                    .catch((error) => {
-                                        reject(error);
+                                    .catch((response: HttpErrorResponse) => {
+                                        reject(response.error);
                                     });
                             })
-                            .catch((error) => {
-                                reject(error);
+                            .catch((response: HttpErrorResponse) => {
+                                reject(response.error);
                             });
                     }
                 );
@@ -185,6 +180,7 @@ export class ApiService {
      * DELETE
      * @param endpoint
      * @param params
+     * @param fromLogin
      * @returns {Promise<T>}
      */
     public delete(endpoint: string, params?: Object, fromLogin?: boolean): Promise<any> {
@@ -196,18 +192,18 @@ export class ApiService {
                         resolve(data);
                     },
                     error => {
-                        this.handleError(endpoint, error, fromLogin != null ? fromLogin : false)
+                        this.handleError(endpoint, error, fromLogin !== null ? fromLogin : false)
                             .then(() => {
                                 this.delete(endpoint, params, true)
                                     .then((data) => {
                                         resolve(data);
                                     })
-                                    .catch((error) => {
-                                        reject(error);
+                                    .catch((response: HttpErrorResponse) => {
+                                        reject(response.error);
                                     });
                             })
-                            .catch((error) => {
-                                reject(error);
+                            .catch((response: HttpErrorResponse) => {
+                                reject(response.error);
                             });
                     }
                 );
@@ -222,7 +218,9 @@ export class ApiService {
 
     /**
      * Handle error status (if 401 logout)
+     * @param endpoint
      * @param error
+     * @param fromLogin
      */
     private handleError(endpoint: string, error: HttpErrorResponse, fromLogin: boolean): Promise<any> {
         return new Promise((resolve, reject) => {
@@ -241,20 +239,15 @@ export class ApiService {
                                 this._userService.storeToken(response.id);
                                 resolve();
                             })
-                            .catch((error) => {
+                            .catch((err) => {
                                 this.redirectToLogin();
-                                reject(error);
+                                reject(err);
                             });
                     }
                 }
                     break;
                 default: {
-                    if (endpoint === SETUP_ENDPOINT || fromLogin) {
-                        this.redirectToLogin();
-                        reject(error);
-                    } else {
-                        resolve();
-                    }
+                    reject(error);
                 }
                     break;
             }
@@ -320,4 +313,14 @@ export class ApiService {
 interface RequestOptions {
     headers?: HttpHeaders | { [header: string]: string | string [] };
     params?: HttpParams | { [param: string]: string | string[]; };
+}
+
+export interface ErrorResponse {
+    error: {
+        code: string;
+        message: string;
+        name: string;
+        stack: string;
+        statusCode: number;
+    };
 }

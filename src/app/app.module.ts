@@ -19,6 +19,7 @@ import {PageRefreshService} from './services/page-refresh.service';
 import {StorageService} from './services/storage.service';
 import {UserService} from './auth/services/user.service';
 import {PasswordResetComponent} from './auth/password-reset/password-reset.component';
+import {ToastsService} from './services/toasts.service';
 
 const routes: Routes = [
     {
@@ -79,7 +80,8 @@ const routes: Routes = [
         UtilsService,
         FormGeneratorService,
         PageRefreshService,
-        StorageService
+        StorageService,
+        ToastsService
     ],
     bootstrap: [AppComponent]
 })

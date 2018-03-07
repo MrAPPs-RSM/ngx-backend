@@ -2,11 +2,11 @@ import {Component, OnInit, ViewEncapsulation, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {PageTitleService} from '../../services/page-title.service';
 import {PageRefreshService} from '../../../services/page-refresh.service';
-import {ToastrService} from 'ngx-toastr';
-import {HttpErrorResponse} from '@angular/common/http';
 import {FormSettings} from '../../components/form/interfaces/form-settings';
 import {ModalService} from '../../services/modal.service';
 import {UtilsService} from '../../../services/utils.service';
+import {ToastsService} from '../../../services/toasts.service';
+import {ErrorResponse} from '../../../api/api.service';
 
 @Component({
     selector: 'app-form-page',
@@ -24,7 +24,7 @@ export class FormPageComponent implements OnInit, OnDestroy {
                 private _route: ActivatedRoute,
                 private _pageTitle: PageTitleService,
                 private _pageRefresh: PageRefreshService,
-                private _toastService: ToastrService,
+                private _toastsService: ToastsService,
                 private _modalService: ModalService) {
     }
 
@@ -37,7 +37,7 @@ export class FormPageComponent implements OnInit, OnDestroy {
         this._pageRefresh.setLastPath(this._router.url);
     }
 
-    onResponse(form: FormSettings, response: any | HttpErrorResponse): void {
+    onResponse(form: FormSettings, response: any | ErrorResponse): void {
         console.log('ON RESPONSE');
         console.log(response);
         switch (form.responseType) {
@@ -53,13 +53,13 @@ export class FormPageComponent implements OnInit, OnDestroy {
             }
                 break;
             case 'inline': {
-                if (response instanceof HttpErrorResponse) {
+                if (response.hasOwnProperty('error')) {
                     const index = UtilsService.containsObject(form, this.params.forms);
                     if (index !== -1) {
                         this.params.forms[index].errors = ['An error occurred'];
                     }
                 } else {
-                    this._toastService.success('Operation completed', 'Success');
+                    this._toastsService.success();
                     if (form.submit.redirectAfter) {
                         this._router.navigate(['panel/' + form.submit.redirectAfter]);
                     }
@@ -71,10 +71,10 @@ export class FormPageComponent implements OnInit, OnDestroy {
             }
                 break;
             default: {
-                if (response instanceof HttpErrorResponse) {
-                    this._toastService.error(response.error.message, 'Error');
+                if (response.hasOwnProperty('error')) {
+                    this._toastsService.error(response['error']);
                 } else {
-                    this._toastService.success('Operation completed', 'Success');
+                    this._toastsService.success();
                     if (form.submit.redirectAfter) {
                         this._router.navigate(['panel/' + form.submit.redirectAfter]);
                     }

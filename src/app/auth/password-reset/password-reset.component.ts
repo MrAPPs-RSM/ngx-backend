@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {environment} from '../../../environments/environment';
-import {ApiService} from '../../api/api.service';
+import {ApiService, ErrorResponse} from '../../api/api.service';
 import {Router} from '@angular/router';
-import {ToastrService} from 'ngx-toastr';
+import {ToastsService} from '../../services/toasts.service';
 
 @Component({
     selector: 'app-password-reset',
@@ -15,7 +15,7 @@ export class PasswordResetComponent implements OnInit {
     public isLoading: boolean = false;
 
     constructor(private _apiService: ApiService,
-                private _toastService: ToastrService,
+                private _toastsService: ToastsService,
                 private _router: Router) {
     }
 
@@ -28,13 +28,12 @@ export class PasswordResetComponent implements OnInit {
             .then((response) => {
                 this.isLoading = false;
                 // TODO: show message: an email has been sent to your account ...
-                this._toastService.success('message', 'title', {disableTimeOut: true});
+                this._toastsService.success(null, null, {disableTimeOut: true});
                 this._router.navigate(['login']);
             })
-            .catch((error) => {
+            .catch((response: ErrorResponse) => {
                 this.isLoading = false;
-                // TODO:
-                this._toastService.error('message', 'title');
+                this._toastsService.error(response.error);
             });
     }
 
