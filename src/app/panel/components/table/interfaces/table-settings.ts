@@ -3,6 +3,7 @@ import {TableColumns} from './table-column';
 
 export interface TableSettings {
     title?: string;
+    lang?: boolean;
     api: {
         endpoint: string;
         filter: string;

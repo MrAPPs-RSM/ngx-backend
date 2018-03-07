@@ -72,7 +72,7 @@ export class LanguageService {
 }
 
 export interface Language {
-    id: number;
+    id?: number;
     name: string;
     isoCode: string;
     isDefault?: boolean;

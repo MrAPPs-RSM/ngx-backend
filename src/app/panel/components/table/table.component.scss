@@ -17,6 +17,10 @@ app-table {
         }
       }
     }
+    > div.multilang {
+      margin-bottom: 25px;
+    }
+
     > div.table-wrapper {
       position: relative;
       &:after {

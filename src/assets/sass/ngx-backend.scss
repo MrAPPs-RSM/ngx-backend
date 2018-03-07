@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500');
 @import 'partials/imports';
-
 /* Partials */
 @import 'partials/_buttons.scss';
 @import 'partials/_alerts.scss';
@@ -8,7 +7,6 @@
 @import 'partials/_progress-bar.scss';
 @import 'partials/_form.scss';
 @import 'partials/_toasts.scss';
-
 /* Externals */
 @import '~dragula/dist/dragula.min.css';
 @import "~@ng-select/ng-select/themes/default.theme.css";
@@ -61,6 +59,18 @@ body {
     margin: 0 auto;
     @include _transform(translateY(50%));
     max-width: 600px;
+  }
+
+  div.multilang {
+    max-width: 155px;
+    > ng-select.ng-select {
+      > div.ng-control {
+        min-height: 35px;
+      }
+      i {
+        margin-right: 5px;
+      }
+    }
   }
 
 }
@@ -202,12 +212,12 @@ body {
     }
   }
 }
+
 .gu-transit {
   opacity: 0.2;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
   filter: alpha(opacity=20);
 }
-
 
 /* Drag & Drop table
 .gu-mirror {

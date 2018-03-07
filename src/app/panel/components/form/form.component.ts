@@ -25,7 +25,6 @@ export class FormComponent implements OnInit {
 
     public form: FormGroup;
     public isLoading = false;
-    public previousLang: any = null;
     public currentLang: any = null;
     public isMultiLangEnabled = false;
     objectKeys = Object.keys;
@@ -112,13 +111,13 @@ export class FormComponent implements OnInit {
     }
 
     setupForms(): FormGroup {
+        // TODO: is 'en' really required ?
         this.isMultiLangEnabled = 'en' in this.settings.fields && this._languageService.getContentLanguages().length > 0;
 
         if (this.isMultiLangEnabled) {
             for (const contentLanguage of this._languageService.getContentLanguages()) {
 
                 if (contentLanguage.isDefault) {
-                    this.previousLang = contentLanguage;
                     this.currentLang = contentLanguage;
                 }
             }
@@ -133,7 +132,6 @@ export class FormComponent implements OnInit {
 
     onLanguageChange(language: Language) {
         this.currentLang = language;
-        this.previousLang = this.currentLang;
     }
 
     ngOnInit() {

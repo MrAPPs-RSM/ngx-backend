@@ -16,6 +16,7 @@ import * as _ from 'lodash';
 import * as FileSaver from 'file-saver';
 import {UtilsService} from '../../../services/utils.service';
 import {StorageService} from '../../../services/storage.service';
+import {Language, LanguageService} from '../../services/language.service';
 
 @Component({
     selector: 'app-table',
@@ -24,10 +25,6 @@ import {StorageService} from '../../../services/storage.service';
     encapsulation: ViewEncapsulation.None
 })
 export class TableComponent implements OnInit {
-
-    /**
-     * Mini doc: fixed filter: pass filter without and[], just where: {key:value, key:value...}
-     */
 
     @Input() settings: TableSettings;
 
@@ -50,7 +47,11 @@ export class TableComponent implements OnInit {
     private sort: TableSort;
     private pagination: TablePagination;
 
-    constructor(private _apiService: ApiService,
+    private isMultiLangEnabled: boolean = false;
+    private currentLang: Language;
+
+    constructor(public _languageService: LanguageService,
+                private _apiService: ApiService,
                 private _router: Router,
                 private _toast: ToastrService,
                 private _modal: ModalService,
@@ -58,6 +59,8 @@ export class TableComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.setupLang();
+
         this.activeFilters.sort = [];
         this.activeFilters.pagination = {
             page: 1,
@@ -73,6 +76,17 @@ export class TableComponent implements OnInit {
         this.readStorageServiceParams();
 
         this.getData();
+    }
+
+    private setupLang(): void {
+        this.isMultiLangEnabled = this.settings.lang && this._languageService.getContentLanguages().length > 0;
+        if (this.isMultiLangEnabled) {
+            for (const contentLanguage of this._languageService.getContentLanguages()) {
+                if (contentLanguage.isDefault) {
+                    this.currentLang = contentLanguage;
+                }
+            }
+        }
     }
 
     private readStorageServiceParams(): void {
@@ -175,9 +189,20 @@ export class TableComponent implements OnInit {
             }
         }
 
-        return {
-            filter: JSON.stringify(params)
+
+        const response = {
+            filter: JSON.stringify(params),
+            lang: null
         };
+
+        /** Lang, if enabled */
+        if (this.currentLang) {
+            response.lang = this.currentLang.isoCode;
+        } else {
+            delete response.lang;
+        }
+
+        return response;
     }
 
     private composeCountParams(): Object {
@@ -206,9 +231,19 @@ export class TableComponent implements OnInit {
 
         }
 
-        return {
-            where: JSON.stringify(params.where)
+        const response = {
+            where: JSON.stringify(params.where),
+            lang: null
         };
+
+        /** Lang, if enabled */
+        if (this.currentLang) {
+            response.lang = this.currentLang.isoCode;
+        } else {
+            delete response.lang;
+        }
+
+        return response;
     }
 
     private parseAction(action: TableAction, data?: any): void {
@@ -458,4 +493,10 @@ export class TableComponent implements OnInit {
         this.activeFilters.sort = [];
         this.activeFilters.sort.push(this.sort);
     }
+
+    onLanguageChange(language: Language) {
+        this.currentLang = language;
+        this.getData();
+    }
+
 }

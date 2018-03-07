@@ -7,12 +7,10 @@ export const environment = {
     production: false,
     languages: [
         {
-            id: 1,
             name: 'Italiano',
             isoCode: 'it'
         },
         {
-            id: 2,
             name: 'English',
             isoCode: 'en'
         }

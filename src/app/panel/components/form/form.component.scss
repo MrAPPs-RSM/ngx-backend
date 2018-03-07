@@ -39,17 +39,7 @@ app-form {
 
     > div.fields-wrapper {
       div.multilang {
-        max-width: 155px;
         margin-bottom: 25px;
-        > ng-select.ng-select {
-          > div.ng-control {
-            min-height: 35px;
-          }
-
-          i {
-            margin-right: 5px;
-          }
-        }
       }
     }
   }

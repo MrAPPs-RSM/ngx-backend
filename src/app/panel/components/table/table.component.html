@@ -6,6 +6,23 @@
         </div>
     </header>
 
+    <div class="multilang" *ngIf="isMultiLangEnabled">
+        <ng-select [items]="_languageService.getContentLanguages()"
+                   [clearable]="false"
+                   [searchable]="false"
+                   [(ngModel)]="currentLang"
+                   [ngModelOptions]="{standalone: true}"
+                   (change)="onLanguageChange($event)"
+                   bindLabel="name">
+            <ng-template ng-label-tmp let-item="item">
+                <i [class]="'flag-icon flag-icon-' + _languageService.getIsoCodeForFlag(item)"></i> {{item.name}}
+            </ng-template>
+            <ng-template ng-option-tmp let-item="item">
+                <i [class]="'flag-icon flag-icon-' + _languageService.getIsoCodeForFlag(item)"></i> {{item.name}}
+            </ng-template>
+        </ng-select>
+    </div>
+
     <div class="table-wrapper">
         <ng2-smart-table [settings]="settings"
                          [source]="data"
