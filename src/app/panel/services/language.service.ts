@@ -9,22 +9,31 @@ export class LanguageService {
     private contentLanguages: Language[];
 
     constructor() {
-        this.backendLanguages = environment.languages;
+        this.backendLanguages = environment.hasOwnProperty('languages') ? environment['languages'] : [];
+    }
+
+    public isMultiLang() {
+        return this.backendLanguages.length > 0 && environment.hasOwnProperty('currentLang');
     }
 
     public setCurrentLang(language: Language | string): void {
-        let lang = language;
-        if (typeof language === 'string') {
-            lang = this.getBackendLanguageByIsoCode(language);
+        if (this.isMultiLang()) {
+            let lang = language;
+            if (typeof language === 'string') {
+                lang = this.getBackendLanguageByIsoCode(language);
+            }
+
+            environment['currentLang'] = (lang as Language).isoCode;
+
+            localStorage.setItem('lang', JSON.stringify(lang));
         }
-
-        environment.currentLang = (lang as Language).isoCode;
-
-        localStorage.setItem('lang', JSON.stringify(lang));
     }
 
     public getCurrentLang(): Language {
-        return JSON.parse(localStorage.getItem('lang'));
+        if (this.isMultiLang()) {
+            return JSON.parse(localStorage.getItem('lang'));
+        }
+        return null;
     }
 
     public getBackendLanguages(): Language[] {
@@ -62,12 +71,16 @@ export class LanguageService {
     }
 
     translate(value: any, isoCode?: string) {
-        const array = value.split('.');
-        let res = translations[isoCode ? isoCode : environment.currentLang];
-        array.forEach((item) => {
-            res = res[item];
-        });
-        return res;
+        if (this.isMultiLang()) {
+            const array = value.split('.');
+            let res = translations[isoCode ? isoCode : environment['currentLang']];
+            array.forEach((item) => {
+                res = res[item];
+            });
+            return res;
+        }
+
+        return value;
     }
 }
 

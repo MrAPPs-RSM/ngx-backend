@@ -5,6 +5,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {FormFieldSelect} from '../../interfaces/form-field-select';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {Subject} from 'rxjs/Subject';
+import {LanguageService} from '../../../../services/language.service';
 
 @Component({
     selector: 'app-select',
@@ -24,6 +25,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit {
 
 
     constructor(private _apiService: ApiService,
+                private _languageService: LanguageService,
                 private _route: ActivatedRoute) {
         super();
     }
@@ -36,8 +38,8 @@ export class SelectComponent extends BaseInputComponent implements OnInit {
             this.field.dependsOn.forEach((key) => {
 
                 if (key instanceof Subject) {
-                   this.observable = key as Subject<any>;
-                   this.observable.subscribe((value) => {
+                    this.observable = key as Subject<any>;
+                    this.observable.subscribe((value) => {
 
                         this.loadOptions(this.params)
                             .then(() => {
@@ -128,6 +130,22 @@ export class SelectComponent extends BaseInputComponent implements OnInit {
                     let endpoint = this.field.options;
                     if (endpoint.indexOf(':id') !== -1) {
                         endpoint = endpoint.replace(':id', this._route.params['value'].id);
+                    }
+
+                    /** Add lang if not set by setup.json */
+                    let lang: any = null;
+                    if (endpoint.indexOf('lang=') === -1) {
+                        lang = this._languageService.getCurrentLang();
+                    }
+
+                    if (lang) {
+                        if (params) {
+                            params.lang = lang['isoCode'];
+                        } else {
+                            params = {
+                                lang: lang['isoCode']
+                            };
+                        }
                     }
 
                     this._apiService.get(endpoint, params)

@@ -27,7 +27,9 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.currentLang = this._languageService.getCurrentLang();
+        if (this._languageService.isMultiLang()) {
+            this.currentLang = this._languageService.getCurrentLang();
+        }
 
         this.user = this._userService.getUser();
         this.params = this._route.snapshot.data;
