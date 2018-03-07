@@ -30,6 +30,16 @@ export class ListDetailsComponent extends BaseInputComponent implements OnInit, 
 
     ngOnInit() {
 
+        let required = false;
+
+        if ('validators' in this.field && 'required' in this.field.validators) {
+            required = this.field.validators.required;
+        }
+
+        if (!required) {
+            this.deleteDetail(0);
+        }
+
         this._dragulaService.setOptions('bag', {
             moves: function (el, container, handle) {
                 return handle.className === 'drag';
