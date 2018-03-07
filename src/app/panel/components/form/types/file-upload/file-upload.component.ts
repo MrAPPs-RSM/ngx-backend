@@ -8,9 +8,9 @@ import {
 } from '../../interfaces/form-field-file';
 import {UploaderOptions, UploadFile, UploadInput, UploadOutput} from 'ngx-uploader';
 import {ApiService} from '../../../../../api/api.service';
-import {ToastrService} from 'ngx-toastr';
 import {UtilsService} from '../../../../../services/utils.service';
 import {BaseInputComponent} from '../base-input/base-input.component';
+import {ToastsService} from '../../../../../services/toasts.service';
 
 @Component({
     selector: 'app-file-upload',
@@ -45,7 +45,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     @ViewChild('fileUpload') _fileUpload: ElementRef;
 
     constructor(private _renderer: Renderer,
-                private _toastService: ToastrService,
+                private _toastsService: ToastsService,
                 private _apiService: ApiService) {
         super();
     }
@@ -204,14 +204,16 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     }
 
     private handleResponse(response: any): void {
-        if (response.error) {
-            this._toastService.error(response.error.message, 'Error');
-        } else {
+        if (response) {
+            if (response.error) {
+                this._toastsService.error(response.error);
+            } else {
                 this.addToUpdatedFiles({
                     id: response.id,
                     url: response.url,
                     type: response.type
                 });
+            }
         }
     }
 

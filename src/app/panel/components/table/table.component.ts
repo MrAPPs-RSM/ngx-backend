@@ -91,9 +91,12 @@ export class TableComponent implements OnInit {
     private readStorageServiceParams(): void {
         const tableParameters = this._storageService.getValue('tableParameters');
 
+
         if (tableParameters) {
             if (tableParameters.filter) {
+
                 const newFilters = JSON.parse(tableParameters.filter);
+
                 if (newFilters.where) {
                     if (this.filter.where) {
                         // merge objects
@@ -188,7 +191,6 @@ export class TableComponent implements OnInit {
             }
         }
 
-
         const response = {
             filter: JSON.stringify(params),
             lang: null
@@ -280,18 +282,18 @@ export class TableComponent implements OnInit {
                         delete action.config.params.formKey;
                     }
 
-                    console.log(action.config.params);
-
                     this._storageService.setValue(action.config.params.type, action.config.params);
                 }
 
                 /**
                  * If is table auto-update (sub categories for example), refresh same component
                  */
+
                 if (('/panel/' + path) !== this._router.url) {
                     this._router.navigate(['panel/' + path]);
                 } else {
-                    this.ngOnInit();
+                    this.readStorageServiceParams();
+                    this.getData();
                 }
             }
         } else if (action.config.endpoint) {
@@ -470,7 +472,13 @@ export class TableComponent implements OnInit {
 
     onFilter(filter: TableFilter) {
         if (!_.isEmpty(filter)) {
-            this.filter.where = filter;
+            if (this.filter.where) {
+                Object.keys(filter).forEach((key) => {
+                    this.filter.where[key] = filter[key];
+                });
+            } else {
+                this.filter.where = filter;
+            }
         }
         this.getData();
         this.activeFilters.filter = filter;
