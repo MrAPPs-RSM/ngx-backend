@@ -79,6 +79,14 @@ export class Ng2SmartTableComponent implements OnChanges, OnInit {
     ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
         if (this.grid) {
             if (changes['settings']) {
+
+                /* Disable sort if drag enabled */
+                if (this.drag) {
+                    Object.keys(this.settings['columns']).forEach((key) => {
+                        this.settings['columns'][key]['sort'] = false;
+                    });
+                }
+
                 this.grid.setSettings(this.settings);
             }
             if (changes['source']) {
@@ -157,12 +165,7 @@ export class Ng2SmartTableComponent implements OnChanges, OnInit {
     }
 
     onFilter($event: TableFilter) {
-        if ($event.value !== '' && !isNullOrUndefined($event.value)) {
-            this.filters[$event.column] = $event.value;
-        } else {
-            delete this.filters[$event.column];
-        }
-
+        this.filters[$event.column] = $event.value;
         this.filter.emit(this.filters);
         this.resetAllSelector();
     }

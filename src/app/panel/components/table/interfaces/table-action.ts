@@ -1,6 +1,7 @@
 export interface TableAction {
     content: string;
     class?: string; // success | info | warning | danger | default
+    dependsOn?: boolean;
     config: {
         path?: string; // redirect to
         titleField?: string; // to avoid only id in page title

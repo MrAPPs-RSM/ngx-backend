@@ -62,8 +62,8 @@ export class ApiService {
                                         reject(response.error);
                                     });
                             })
-                            .catch((response) => {
-                                reject(response);
+                            .catch((response: HttpErrorResponse) => {
+                                reject(response.error);
                             });
                     }
                 );

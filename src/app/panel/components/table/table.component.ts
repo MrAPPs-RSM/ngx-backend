@@ -471,15 +471,19 @@ export class TableComponent implements OnInit {
     }
 
     onFilter(filter: TableFilter) {
-        if (!_.isEmpty(filter)) {
-            if (this.filter.where) {
-                Object.keys(filter).forEach((key) => {
+        if (this.filter.where) {
+            Object.keys(filter).forEach((key) => {
+                if (filter[key] !== '' && filter[key] !== null) {
                     this.filter.where[key] = filter[key];
-                });
-            } else {
-                this.filter.where = filter;
-            }
+                } else {
+                    delete this.filter.where[key];
+                }
+            });
+        } else {
+            this.filter.where = filter;
         }
+
+        console.log(this.filter);
         this.getData();
         this.activeFilters.filter = filter;
     }

@@ -102,10 +102,12 @@ export class SetupService {
             if ('type' in item) {
                 // Is a component
                 if (item.type === 'group') {
-                    if ('children' in item) {
-                        if (item.params.menu) {
-                            item.params.menu['children'] = this.remapMenu(item.children);
-                            menu.push(item.params.menu);
+                    if (item.params.menu.sidebar) {
+                        if ('children' in item) {
+                            if (item.params.menu) {
+                                item.params.menu['children'] = this.remapMenu(item.children);
+                                menu.push(item.params.menu);
+                            }
                         }
                     }
                 } else {
