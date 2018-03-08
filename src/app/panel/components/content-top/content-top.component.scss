@@ -29,6 +29,10 @@ app-content-top {
                 color: $primary;
                 font-weight: $regular;
               }
+
+              > i {
+                color: $default;
+              }
             }
           }
         }
