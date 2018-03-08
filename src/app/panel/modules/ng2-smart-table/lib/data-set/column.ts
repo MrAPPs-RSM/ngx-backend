@@ -60,7 +60,7 @@ export class Column {
         this.type = this.prepareType();
         this.editor = this.settings['editor'];
         this.hidden = typeof this.settings['hidden'] === 'undefined' ? false : !!this.settings['hidden'];
-        this.filter = this.settings['filter'];
+        this.filter = this.prepareFilter();
         this.renderComponent = this.settings['renderComponent'];
 
         this.isFilterable = typeof this.settings['filter'] === 'undefined' ? true : !!this.settings['filter'];
@@ -75,6 +75,20 @@ export class Column {
         this.valuePrepareFunction = this.settings['valuePrepareFunction'];
         this.filterFunction = this.settings['filterFunction'];
         this.onComponentInitFunction = this.settings['onComponentInitFunction'];
+    }
+
+    prepareFilter(): any {
+        if (this.settings['type'] === 'boolean' && !this.settings['filter']) {
+            return {
+                type: 'checkbox',
+                config: {
+                    true: true,
+                    false: false
+                }
+            };
+        }
+
+        return this.settings['filter'];
     }
 
     prepareType(): string {
