@@ -82,6 +82,29 @@ export class LanguageService {
 
         return value;
     }
+
+    public setCurrentContentTableLang(language: Language | string): void {
+        if (this.isMultiLang()) {
+            let lang = language;
+            if (typeof language === 'string') {
+                lang = this.getBackendLanguageByIsoCode(language);
+            }
+
+            localStorage.setItem('table_lang', JSON.stringify(lang));
+        }
+    }
+
+    public getCurrentContentTableLang(): Language {
+        if (this.isMultiLang()) {
+
+            const contentLang = localStorage.getItem('table_lang');
+
+            if (contentLang !== null) {
+                return JSON.parse(contentLang);
+            }
+        }
+        return null;
+    }
 }
 
 export interface Language {
