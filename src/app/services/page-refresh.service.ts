@@ -18,7 +18,7 @@ export class PageRefreshService {
     }
 
     public renavigate(): void {
-        this._router.navigate([localStorage.getItem(this.key)]);
+        this._router.navigateByUrl(localStorage.getItem(this.key));
     }
 
     public reset(): void {
