@@ -75,8 +75,6 @@ export class TableComponent implements OnInit {
             const queryParamsFilter = JSON.parse(this._route.snapshot.queryParams.listParams).filter;
 
             this.filter = UtilsService.mergeDeep(this.filter, queryParamsFilter);
-
-            //  console.log(this.filter);
         }
 
         this.getData();
@@ -262,8 +260,19 @@ export class TableComponent implements OnInit {
                         action.config.params.id = action.config.params.id.replace(':id', data.id);
                     }
 
-                    if (action.config.params.filter && action.config.params.filter.indexOf(':id') !== -1) {
-                        action.config.params.filter = JSON.parse(action.config.params.filter.replace(':id', data.id));
+                    if (action.config.params.filter) {
+
+                        let updatedFilter = action.config.params.filter;
+
+                        if (UtilsService.isObject(updatedFilter)) {
+                            updatedFilter = JSON.stringify(updatedFilter);
+                        }
+
+                        if (updatedFilter.indexOf(':id') !== -1) {
+                            updatedFilter = updatedFilter.replace(':id', data.id);
+                        }
+
+                        action.config.params.filter = JSON.parse(updatedFilter);
                     }
 
                     if (action.config.params.tableKey && data[action.config.params.tableKey]) {
