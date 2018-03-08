@@ -224,7 +224,7 @@ export class FormComponent implements OnInit {
             this.response.emit(this.form.value);
         } else {
             if (this.form.valid) {
-                if (this.settings.submit.confirm) {
+                if (this.settings.submit && this.settings.submit.confirm) {
                     this._modal.confirm()
                         .then(() => {
                             this.submit();
@@ -252,7 +252,7 @@ export class FormComponent implements OnInit {
                     this.isLoading = false;
                     this.response.emit(response);
 
-                    if (this.settings.submit.refreshAfter === true) {
+                    if (this.settings.submit && this.settings.submit.refreshAfter === true) {
                         this.loadData(response);
                     }
                 })
@@ -266,7 +266,7 @@ export class FormComponent implements OnInit {
                     this.isLoading = false;
                     this.response.emit(response);
 
-                    if (this.settings.submit.refreshAfter) {
+                    if (this.settings.submit && this.settings.submit.refreshAfter) {
                         this.loadData(response);
                     }
                 })
