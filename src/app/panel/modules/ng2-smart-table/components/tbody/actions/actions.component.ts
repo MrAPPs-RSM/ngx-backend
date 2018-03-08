@@ -34,8 +34,6 @@ export class ActionsComponent implements OnChanges {
             } else {
                 action['visible'] = true;
             }
-
-            console.log(action);
         }
     }
 
