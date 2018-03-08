@@ -71,6 +71,7 @@ export class FormPageComponent implements OnInit, OnDestroy {
             }
                 break;
             default: {
+                console.log(response);
                 if (response.hasOwnProperty('error')) {
                     this._toastsService.error(response['error']);
                 } else {
