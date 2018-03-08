@@ -127,9 +127,13 @@ export class SelectComponent extends BaseInputComponent implements OnInit {
                     this.options = this.filterOptionsIfNeeded(this.field.options);
                     resolve();
                 } else {
+
                     let endpoint = this.field.options;
-                    if (endpoint.indexOf(':id') !== -1) {
-                        endpoint = endpoint.replace(':id', this._route.params['value'].id);
+
+                    if (this.isEdit) {
+                        if (endpoint.indexOf(':id') !== -1) {
+                            endpoint = endpoint.replace(':id', this._route.params['value'].id);
+                        }
                     }
 
                     /** Add lang if not set by setup.json */

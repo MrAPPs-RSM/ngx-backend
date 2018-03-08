@@ -23,10 +23,16 @@ export class ActionsComponent implements OnChanges {
         const dataRow = this.row.getData();
 
         for (const action of this.actions) {
-            if ('dependsOn' in action) {
-               action['enabled'] = dataRow[action['dependsOn']];
+            if ('enableOn' in action) {
+               action['enabled'] = dataRow[action['enableOn']];
             } else {
                 action['enabled'] = true;
+            }
+
+            if ('visibleOn' in action) {
+                action['visible'] = dataRow[action['visibleOn']];
+            } else {
+                action['visible'] = true;
             }
         }
     }
