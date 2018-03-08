@@ -5,7 +5,8 @@
                 <li *ngFor="let item of breadcrumb">
                     <a [routerLink]="item.route"
                        [ngClass]="{'active': item.title === activePage}"
-                       routerLinkActive="active">{{ item.title }}</a>
+                       routerLinkActive="active"
+                       [innerHTML]="item.title"></a>
                 </li>
             </ul>
         </div>
