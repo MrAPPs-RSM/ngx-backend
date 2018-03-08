@@ -1,7 +1,10 @@
 <a *ngFor="let action of actions"
    href="#"
    [title]="action.name"
-   [ngClass]="{'disabled': !action.enabled}"
+   [ngClass]="{
+    'disabled': !action.enabled,
+    'hidden': !action.visible
+    }"
    [class]="'ng2-smart-action ' + action.class"
    [innerHTML]="action.content"
    (click)="action.enabled && onAction($event, action)">

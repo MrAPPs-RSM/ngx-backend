@@ -2,8 +2,6 @@
 
 app-table {
   > div {
-    overflow-x: auto;
-    overflow-y: hidden;
     @include card();
     &.loading {
       > header {
@@ -22,6 +20,7 @@ app-table {
     }
 
     > div.table-wrapper {
+      overflow-x: auto;
       position: relative;
       &:after {
         display: none;
