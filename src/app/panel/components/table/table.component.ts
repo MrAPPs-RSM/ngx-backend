@@ -129,6 +129,7 @@ export class TableComponent implements OnInit {
                     });
             })
             .catch((response: ErrorResponse) => {
+                this.isLoading = false;
                 this._toast.error(response.error);
             });
     }
