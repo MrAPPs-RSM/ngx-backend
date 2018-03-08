@@ -1,4 +1,5 @@
 export interface TableAction {
+    name?: string;
     content: string;
     class?: string; // success | info | warning | danger | default
     enableOn?: boolean;
