@@ -67,15 +67,18 @@ export class TableComponent implements OnInit {
             perPage: this.settings.pager && this.settings.pager.perPage ? this.settings.pager.perPage : this.DEFAULTS.pager.perPage,
         };
 
+        /** Read fixed filter from settings if set */
+        if (this.settings.api.filter) {
+            this.filter = JSON.parse(this.settings.api.filter);
+        }
+
         if (this._route.snapshot.queryParams && this._route.snapshot.queryParams.listParams) {
-            this.filter = JSON.parse(this._route.snapshot.queryParams.listParams).filter;
+
+            const queryParamsFilter = JSON.parse(this._route.snapshot.queryParams.listParams).filter;
+
+            this.filter = UtilsService.mergeDeep(this.filter, queryParamsFilter);
 
             console.log(this.filter);
-        } else {
-            /** Read fixed filter from settings if set */
-            if (this.settings.api.filter) {
-                this.filter = JSON.parse(this.settings.api.filter);
-            }
         }
 
         this.getData();
