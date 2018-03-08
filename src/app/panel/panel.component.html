@@ -1,7 +1,10 @@
 <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" [routerLink]="homePage">{{ title }}</a>
+            <a class="navbar-brand" [routerLink]="homePage">
+                <img *ngIf="showLogo" [src]="logo">
+                <span *ngIf="!showLogo">{{ title }}</span>
+            </a>
             <span class="toggler" (click)="toggleSidebar()"><i class="fa fa-bars"></i></span>
         </div>
         <div class="navbar-menu">

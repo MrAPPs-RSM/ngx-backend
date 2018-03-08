@@ -45,3 +45,6 @@ Thumbs.db
 # enviroments
 /src/environments/*.ts
 /src/environments/*.scss
+
+# images
+/src/assets/images/logo.png

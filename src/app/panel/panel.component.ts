@@ -16,6 +16,8 @@ declare const $: any;
 export class PanelComponent implements OnInit {
 
     title = environment.name;
+    showLogo: boolean = environment.logo;
+    logo: string = '../../../../../assets/images/logo.png';
     menu: any[] = [];
     homePage = 'dashboard';
     user: User;
