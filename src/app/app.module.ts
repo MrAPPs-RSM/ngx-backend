@@ -55,7 +55,7 @@ const routes: Routes = [
         PasswordResetComponent
     ],
     imports: [
-        RouterModule.forRoot(routes, {useHash: true}),
+        RouterModule.forRoot(routes, {useHash: false}),
         ReactiveFormsModule,
         BrowserModule,
         ToastNoAnimationModule,

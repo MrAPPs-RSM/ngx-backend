@@ -9,7 +9,7 @@ import {TableSelection} from '../../modules/ng2-smart-table/lib/data-filters/tab
 import {TableActiveFilters} from '../../modules/ng2-smart-table/lib/data-filters/table-active-filters';
 import {TableDrop} from '../../modules/ng2-smart-table/lib/data-filters/table-drop';
 import {TableAction} from './interfaces/table-action';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import * as _ from 'lodash';
 import * as FileSaver from 'file-saver';
 import {UtilsService} from '../../../services/utils.service';
@@ -52,6 +52,7 @@ export class TableComponent implements OnInit {
     constructor(public _languageService: LanguageService,
                 private _apiService: ApiService,
                 private _router: Router,
+                private _route: ActivatedRoute,
                 private _toast: ToastsService,
                 private _modal: ModalService,
                 private _storageService: StorageService) {
@@ -66,13 +67,16 @@ export class TableComponent implements OnInit {
             perPage: this.settings.pager && this.settings.pager.perPage ? this.settings.pager.perPage : this.DEFAULTS.pager.perPage,
         };
 
-        /** Read fixed filter from settings if set */
-        if (this.settings.api.filter) {
-            this.filter = JSON.parse(this.settings.api.filter);
-        }
+        if (this._route.snapshot.queryParams && this._route.snapshot.queryParams.listParams) {
+            this.filter = JSON.parse(this._route.snapshot.queryParams.listParams).filter;
 
-        // Update filters if set from storage service (another components, special buttons..)
-        this.readStorageServiceParams();
+            console.log(this.filter);
+        } else {
+            /** Read fixed filter from settings if set */
+            if (this.settings.api.filter) {
+                this.filter = JSON.parse(this.settings.api.filter);
+            }
+        }
 
         this.getData();
     }
@@ -85,30 +89,6 @@ export class TableComponent implements OnInit {
                     this.currentLang = contentLanguage;
                 }
             }
-        }
-    }
-
-    private readStorageServiceParams(): void {
-        const tableParameters = this._storageService.getValue('tableParameters');
-
-
-        if (tableParameters) {
-            if (tableParameters.filter) {
-
-                const newFilters = JSON.parse(tableParameters.filter);
-
-                if (newFilters.where) {
-                    if (this.filter.where) {
-                        // merge objects
-                        Object.keys(newFilters.where).forEach((key) => {
-                            this.filter.where[key] = newFilters.where[key];
-                        });
-                    } else {
-                        this.filter.where = newFilters.where;
-                    }
-                }
-            }
-            this._storageService.clearValue('tableParameters');
         }
     }
 
@@ -192,6 +172,8 @@ export class TableComponent implements OnInit {
             }
         }
 
+        console.log(params);
+
         const response = {
             filter: JSON.stringify(params),
             lang: null
@@ -261,13 +243,15 @@ export class TableComponent implements OnInit {
                     path = path.replace(':title', data[action.config.titleField]);
                 }
 
+                let extraParams = {};
+
                 if (action.config.params) {
                     if (action.config.params.id && action.config.params.id === true) {
                         action.config.params.id = data.id;
                     }
 
                     if (action.config.params.filter && action.config.params.filter.indexOf(':id') !== -1) {
-                        action.config.params.filter = action.config.params.filter.replace(':id', data.id);
+                        action.config.params.filter = JSON.parse(action.config.params.filter.replace(':id', data.id));
                     }
 
                     if (action.config.params.tableKey && data[action.config.params.tableKey]) {
@@ -283,19 +267,14 @@ export class TableComponent implements OnInit {
                         delete action.config.params.formKey;
                     }
 
-                    this._storageService.setValue(action.config.params.type, action.config.params);
+                    extraParams = { queryParams: { listParams: JSON.stringify(action.config.params)} };
+                   // this._storageService.setValue(action.config.params.type, action.config.params);
                 }
 
                 /**
                  * If is table auto-update (sub categories for example), refresh same component
                  */
-
-                if (('/panel/' + path) !== this._router.url) {
-                    this._router.navigate(['panel/' + path]);
-                } else {
-                    this.readStorageServiceParams();
-                    this.getData();
-                }
+                this._router.navigate(['panel/' + path], extraParams);
             }
         } else if (action.config.endpoint) {
             let endpoint = action.config.endpoint;

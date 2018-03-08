@@ -23,12 +23,15 @@ export class PageTitleService {
             const activeLink = {
                 title: decodeURIComponent(title),
                 route: this._router.url,
+                params: JSON.stringify(route.snapshot.queryParams),
                 breadcrumbLevel: route.snapshot.data['menu'].breadcrumbLevel
             };
             this._state.notifyDataChanged('activePage', activeLink);
         } else {
             this._state.notifyDataChanged('activePage', {
                 title: route,
+                route: this._router.url,
+                params: '',
                 breadcrumbLevel: 1
             });
         }

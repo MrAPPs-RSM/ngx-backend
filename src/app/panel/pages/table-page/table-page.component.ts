@@ -25,6 +25,7 @@ export class TablePageComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
+        console.log(this._router.url);
         this._pageRefresh.setLastPath(this._router.url);
     }
 }
