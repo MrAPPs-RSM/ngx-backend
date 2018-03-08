@@ -107,6 +107,14 @@ export class TableComponent implements OnInit {
                         this.filter.where = newFilters.where;
                     }
                 }
+
+                if (newFilters.include) {
+                    if (this.filter.include) {
+                        // TODO, merge two objects into array
+                    } else {
+                        this.filter.include = newFilters.include;
+                    }
+                }
             }
             this._storageService.clearValue('tableParameters');
         }
@@ -262,8 +270,8 @@ export class TableComponent implements OnInit {
                 }
 
                 if (action.config.params) {
-                    if (action.config.params.id && action.config.params.id === true) {
-                        action.config.params.id = data.id;
+                    if (action.config.params.id && action.config.params.id.indexOf(':id') !== -1) {
+                        action.config.params.id = action.config.params.id.replace(':id', data.id);
                     }
 
                     if (action.config.params.filter && action.config.params.filter.indexOf(':id') !== -1) {
@@ -396,7 +404,7 @@ export class TableComponent implements OnInit {
 
     private handleResponseApi(action: TableAction, response: any): Promise<any> {
         return new Promise((resolve, reject) => {
-            if (action.config.responseType && action.config.responseType !== 'default') {
+            if (action.config.responseType) {
                 switch (action.config.responseType) {
                     // TODO: implemented in a switch case to easily future support for new response types
                     case 'file_download': {
@@ -421,7 +429,8 @@ export class TableComponent implements OnInit {
                     }
                         break;
                     default: {
-
+                        this._toast.success();
+                        resolve();
                     }
                         break;
                 }
