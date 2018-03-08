@@ -13,7 +13,6 @@ import {ActivatedRoute, Router} from '@angular/router';
 import * as _ from 'lodash';
 import * as FileSaver from 'file-saver';
 import {UtilsService} from '../../../services/utils.service';
-import {StorageService} from '../../../services/storage.service';
 import {Language, LanguageService} from '../../services/language.service';
 import {ToastsService} from '../../../services/toasts.service';
 
@@ -36,7 +35,7 @@ export class TableComponent implements OnInit {
         }
     };
 
-    private isLoading: boolean = false;
+    private isLoading = false;
 
     public data: any[];
     public activeFilters: TableActiveFilters = {}; // Need for table, not for API
@@ -46,16 +45,15 @@ export class TableComponent implements OnInit {
     private sort: TableSort;
     private pagination: TablePagination;
 
-    private isMultiLangEnabled: boolean = false;
-    private currentLang: Language;
+    isMultiLangEnabled = false;
+    currentLang: Language;
 
     constructor(public _languageService: LanguageService,
                 private _apiService: ApiService,
                 private _router: Router,
                 private _route: ActivatedRoute,
                 private _toast: ToastsService,
-                private _modal: ModalService,
-                private _storageService: StorageService) {
+                private _modal: ModalService) {
     }
 
     ngOnInit() {
@@ -78,7 +76,7 @@ export class TableComponent implements OnInit {
 
             this.filter = UtilsService.mergeDeep(this.filter, queryParamsFilter);
 
-            console.log(this.filter);
+            //  console.log(this.filter);
         }
 
         this.getData();
@@ -87,11 +85,22 @@ export class TableComponent implements OnInit {
     private setupLang(): void {
         this.isMultiLangEnabled = this.settings.lang && this._languageService.getContentLanguages().length > 0;
         if (this.isMultiLangEnabled) {
-            for (const contentLanguage of this._languageService.getContentLanguages()) {
-                if (contentLanguage.isDefault) {
-                    this.currentLang = contentLanguage;
+
+            const currentLanguage = this._languageService.getCurrentContentTableLang();
+            console.log(currentLanguage);
+
+            if (currentLanguage == null) {
+                for (const contentLanguage of this._languageService.getContentLanguages()) {
+                    if (contentLanguage.isDefault) {
+                        this.currentLang = contentLanguage;
+                        this._languageService.setCurrentContentTableLang(contentLanguage);
+                    }
                 }
+            } else {
+                this.currentLang = currentLanguage;
             }
+
+
         }
     }
 
@@ -175,7 +184,7 @@ export class TableComponent implements OnInit {
             }
         }
 
-        console.log(params);
+        // console.log(params);
 
         const response = {
             filter: JSON.stringify(params),
@@ -467,7 +476,7 @@ export class TableComponent implements OnInit {
             this.filter.where = filter;
         }
 
-        console.log(this.filter);
+        // console.log(this.filter);
         this.getData();
         this.activeFilters.filter = filter;
     }
@@ -487,6 +496,7 @@ export class TableComponent implements OnInit {
 
     onLanguageChange(language: Language) {
         this.currentLang = language;
+        this._languageService.setCurrentContentTableLang(language);
         this.getData();
     }
 
