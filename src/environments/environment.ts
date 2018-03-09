@@ -17,6 +17,7 @@ export const environment = {
     ],
     currentLang: 'en',
     name: 'Ngx Backend',
+    logo: true,
     api: {
         baseFilesUrl: 'http://0.0.0.0:5555/files/output/',
         baseUrl: 'http://0.0.0.0:5555/api/',

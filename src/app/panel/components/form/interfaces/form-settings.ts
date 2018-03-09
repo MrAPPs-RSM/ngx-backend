@@ -14,7 +14,7 @@ export interface FormSettings {
         redirectAfter?: string; // if set, redirect to a path after submit
     };
     buttons?: FormButton[];
-    responseType?: string; // 'default' | 'inline' | 'terminal' | 'alert' TODO
+    responseType?: string; // 'default' | 'inline' | 'terminal'
     class?: string;
     title?: string;
     errors?: any[];

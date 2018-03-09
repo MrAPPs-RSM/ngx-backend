@@ -1,5 +1,4 @@
 import {FormField} from './form-field';
-import {isNullOrUndefined} from 'util';
 
 export interface FormFieldFile extends FormField {
     options: {
