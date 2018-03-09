@@ -20,6 +20,7 @@ export class TablePageComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        console.log("qui ci passa?");
         this.params = this._route.snapshot.data;
         this._pageTitle.set(this._route);
     }

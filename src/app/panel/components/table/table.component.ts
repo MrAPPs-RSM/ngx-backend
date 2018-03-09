@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, Input, OnInit, OnChanges, ViewEncapsulation, NgZone} from '@angular/core';
 import {TableSettings} from './interfaces/table-settings';
 import {ApiService, ErrorResponse} from '../../../api/api.service';
 import {ModalService} from '../../services/modal.service';
@@ -57,6 +57,8 @@ export class TableComponent implements OnInit {
     }
 
     ngOnInit() {
+        console.log("qui ci arriva???");
+
         this.setupLang();
 
         this.activeFilters.sort = [];
@@ -72,7 +74,7 @@ export class TableComponent implements OnInit {
 
         if (this._route.snapshot.queryParams && this._route.snapshot.queryParams.listParams) {
 
-            const queryParamsFilter = JSON.parse(this._route.snapshot.queryParams.listParams).filter;
+            const queryParamsFilter = JSON.parse(this._route.snapshot.queryParams.listParams);
 
             this.filter = UtilsService.mergeDeep(this.filter, queryParamsFilter);
         }
@@ -272,7 +274,8 @@ export class TableComponent implements OnInit {
                             updatedFilter = updatedFilter.replace(':id', data.id);
                         }
 
-                        action.config.params.filter = JSON.parse(updatedFilter);
+                        extraParams = { queryParams: { listParams: updatedFilter} };
+
                     }
 
                     if (action.config.params.tableKey && data[action.config.params.tableKey]) {
@@ -288,14 +291,15 @@ export class TableComponent implements OnInit {
                         delete action.config.params.formKey;
                     }
 
-                    extraParams = { queryParams: { listParams: JSON.stringify(action.config.params)} };
                    // this._storageService.setValue(action.config.params.type, action.config.params);
                 }
 
+                //console.log(extraParams);
                 /**
                  * If is table auto-update (sub categories for example), refresh same component
                  */
-                this._router.navigate(['panel/' + path], extraParams);
+
+                 this._router.navigate(['panel/' + path], extraParams);
             }
         } else if (action.config.endpoint) {
             let endpoint = action.config.endpoint;

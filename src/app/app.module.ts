@@ -1,7 +1,7 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {HttpClientModule} from '@angular/common/http';
-import {RouterModule, Routes} from '@angular/router';
+import {RouteReuseStrategy, RouterModule, Routes} from '@angular/router';
 import {PanelModule} from './panel/panel.module';
 import {ReactiveFormsModule} from '@angular/forms';
 import {ToastrModule, ToastNoAnimation, ToastNoAnimationModule} from 'ngx-toastr';
@@ -20,6 +20,7 @@ import {StorageService} from './services/storage.service';
 import {UserService} from './auth/services/user.service';
 import {PasswordResetComponent} from './auth/password-reset/password-reset.component';
 import {ToastsService} from './services/toasts.service';
+import {CustomReuseStrategy} from './panel/resolvers/custom.reuse.strategy';
 
 const routes: Routes = [
     {
@@ -81,7 +82,8 @@ const routes: Routes = [
         FormGeneratorService,
         PageRefreshService,
         StorageService,
-        ToastsService
+        ToastsService/*,
+        {provide: RouteReuseStrategy, useClass: CustomReuseStrategy}*/
     ],
     bootstrap: [AppComponent]
 })
