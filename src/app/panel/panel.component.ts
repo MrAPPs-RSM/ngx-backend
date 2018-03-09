@@ -1,9 +1,13 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {User, UserService} from '../auth/services/user.service';
 import {environment} from '../../environments/environment';
-import {ActivatedRoute, Route, Router} from '@angular/router';
+import {ActivatedRoute, NavigationEnd, Route, Router} from '@angular/router';
 import {PageRefreshService} from '../services/page-refresh.service';
 import {LanguageService} from './services/language.service';
+import {PageTitleService} from './services/page-title.service';
+
+import 'rxjs/add/operator/map';
+import {NotfoundPageComponent} from './pages/notfound-page/notfound-page.component';
 
 declare const $: any;
 
@@ -26,10 +30,33 @@ export class PanelComponent implements OnInit {
                 private _userService: UserService,
                 private _route: ActivatedRoute,
                 private _languageService: LanguageService,
-                private _pageRefresh: PageRefreshService) {
+                private _pageRefresh: PageRefreshService,
+                private _pageTitle: PageTitleService) {
     }
 
     ngOnInit() {
+
+        this._router.events
+            .filter(event => event instanceof NavigationEnd)
+            .map(() => this._route)
+            .map((route) => {
+                while (route.firstChild) {
+                    route = route.firstChild;
+                }
+                return route;
+            })
+            .filter((route) => route.outlet === 'primary')
+            .subscribe((activatedRoute: any) => {
+
+                this._pageRefresh.setLastPath(this._router.url);
+
+                if (activatedRoute.component.name === 'NotfoundPageComponent') {
+                    this._pageTitle.set(this._languageService.translate('404.page_title'));
+                } else {
+                    this._pageTitle.set(activatedRoute);
+                }
+            });
+
         /** When start, if current lang not set, set it from the enviroment defaults */
         if (this._languageService.isMultiLang() && !this._languageService.getCurrentLang()) {
             this._languageService.setCurrentLang(environment['currentLang']);
@@ -56,9 +83,11 @@ export class PanelComponent implements OnInit {
             }
         });
 
+
         if (this._pageRefresh.getLastPath() !== null) {
             if (this._pageRefresh.getLastPath() !== '/panel'
                 && this._pageRefresh.getLastPath() !== '/login') {
+                console.log(this._pageRefresh.getLastPath());
                 this._pageRefresh.renavigate();
             } else {
                 this._router.navigate(['panel/' + this.homePage]);
@@ -66,6 +95,7 @@ export class PanelComponent implements OnInit {
         } else {
             this._router.navigate(['panel/' + this.homePage]);
         }
+
 
         this.user = this._userService.getUser();
     }

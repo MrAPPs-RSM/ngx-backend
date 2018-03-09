@@ -56,7 +56,7 @@ const routes: Routes = [
         PasswordResetComponent
     ],
     imports: [
-        RouterModule.forRoot(routes, {useHash: false}),
+        RouterModule.forRoot(routes, {useHash: false, onSameUrlNavigation: 'reload'}),
         ReactiveFormsModule,
         BrowserModule,
         ToastNoAnimationModule,
@@ -82,8 +82,7 @@ const routes: Routes = [
         FormGeneratorService,
         PageRefreshService,
         StorageService,
-        ToastsService/*,
-        {provide: RouteReuseStrategy, useClass: CustomReuseStrategy}*/
+        ToastsService
     ],
     bootstrap: [AppComponent]
 })

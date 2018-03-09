@@ -12,6 +12,7 @@ export class PageTitleService {
     public set(route?: ActivatedRoute | string): void {
         if (route instanceof ActivatedRoute) {
             const urlParams = route.snapshot.params;
+
             let title = route.snapshot.data['menu'].title;
             if (urlParams) {
                 if (urlParams['title']) {
@@ -22,7 +23,7 @@ export class PageTitleService {
             }
             const activeLink = {
                 title: decodeURIComponent(title),
-                route: this._router.url,
+                route: this._router.url.split('?')[0],
                 params: JSON.stringify(route.snapshot.queryParams),
                 breadcrumbLevel: route.snapshot.data['menu'].breadcrumbLevel
             };
@@ -30,7 +31,7 @@ export class PageTitleService {
         } else {
             this._state.notifyDataChanged('activePage', {
                 title: route,
-                route: this._router.url,
+                route: this._router.url.split('?')[0],
                 params: '',
                 breadcrumbLevel: 1
             });

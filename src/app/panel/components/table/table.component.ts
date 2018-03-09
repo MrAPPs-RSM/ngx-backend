@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, OnChanges, ViewEncapsulation, NgZone} from '@angular/core';
+import {Component, Input, OnInit, OnChanges, ViewEncapsulation, NgZone, OnDestroy} from '@angular/core';
 import {TableSettings} from './interfaces/table-settings';
 import {ApiService, ErrorResponse} from '../../../api/api.service';
 import {ModalService} from '../../services/modal.service';
@@ -15,6 +15,7 @@ import * as FileSaver from 'file-saver';
 import {UtilsService} from '../../../services/utils.service';
 import {Language, LanguageService} from '../../services/language.service';
 import {ToastsService} from '../../../services/toasts.service';
+import {PageRefreshService} from '../../../services/page-refresh.service';
 
 @Component({
     selector: 'app-table',
@@ -49,6 +50,7 @@ export class TableComponent implements OnInit {
     currentLang: Language;
 
     constructor(public _languageService: LanguageService,
+                private _pageRefresh: PageRefreshService,
                 private _apiService: ApiService,
                 private _router: Router,
                 private _route: ActivatedRoute,
@@ -57,29 +59,31 @@ export class TableComponent implements OnInit {
     }
 
     ngOnInit() {
-        console.log("qui ci arriva???");
+
+        this._route.queryParams.subscribe(params => {
+            this.activeFilters.sort = [];
+            this.activeFilters.pagination = {
+                page: 1,
+                perPage: this.settings.pager && this.settings.pager.perPage ? this.settings.pager.perPage : this.DEFAULTS.pager.perPage,
+            };
+
+            /** Read fixed filter from settings if set */
+            if (this.settings.api.filter) {
+                this.filter = JSON.parse(this.settings.api.filter);
+            }
+
+            if (this._route.snapshot.queryParams && this._route.snapshot.queryParams.listParams) {
+                const queryParamsFilter = JSON.parse(this._route.snapshot.queryParams.listParams);
+
+                console.log("FILTRO: "+this.settings.api.filter);
+
+                this.filter = UtilsService.mergeDeep(this.filter, queryParamsFilter);
+            }
+
+            this.getData();
+        });
 
         this.setupLang();
-
-        this.activeFilters.sort = [];
-        this.activeFilters.pagination = {
-            page: 1,
-            perPage: this.settings.pager && this.settings.pager.perPage ? this.settings.pager.perPage : this.DEFAULTS.pager.perPage,
-        };
-
-        /** Read fixed filter from settings if set */
-        if (this.settings.api.filter) {
-            this.filter = JSON.parse(this.settings.api.filter);
-        }
-
-        if (this._route.snapshot.queryParams && this._route.snapshot.queryParams.listParams) {
-
-            const queryParamsFilter = JSON.parse(this._route.snapshot.queryParams.listParams);
-
-            this.filter = UtilsService.mergeDeep(this.filter, queryParamsFilter);
-        }
-
-        this.getData();
     }
 
     private setupLang(): void {
@@ -87,7 +91,6 @@ export class TableComponent implements OnInit {
         if (this.isMultiLangEnabled) {
 
             const currentLanguage = this._languageService.getCurrentContentTableLang();
-            console.log(currentLanguage);
 
             if (currentLanguage == null) {
                 for (const contentLanguage of this._languageService.getContentLanguages()) {
@@ -99,8 +102,6 @@ export class TableComponent implements OnInit {
             } else {
                 this.currentLang = currentLanguage;
             }
-
-
         }
     }
 
@@ -112,6 +113,7 @@ export class TableComponent implements OnInit {
                 this.count = res.count;
                 this._apiService.get(this.settings.api.endpoint, this.composeParams())
                     .then((data) => {
+                        console.log(data);
                         this.isLoading = false;
                         this.data = data;
                     })
@@ -294,7 +296,7 @@ export class TableComponent implements OnInit {
                    // this._storageService.setValue(action.config.params.type, action.config.params);
                 }
 
-                //console.log(extraParams);
+                console.log(extraParams);
                 /**
                  * If is table auto-update (sub categories for example), refresh same component
                  */
