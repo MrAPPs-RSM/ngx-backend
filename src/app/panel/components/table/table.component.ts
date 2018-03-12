@@ -74,9 +74,6 @@ export class TableComponent implements OnInit {
 
             if (this._route.snapshot.queryParams && this._route.snapshot.queryParams.listParams) {
                 const queryParamsFilter = JSON.parse(this._route.snapshot.queryParams.listParams);
-
-                console.log('FILTRO: ' + this.settings.api.filter);
-
                 this.filter = UtilsService.mergeDeep(this.filter, queryParamsFilter);
             }
 
@@ -245,16 +242,28 @@ export class TableComponent implements OnInit {
     }
 
     private parseAction(action: TableAction, data?: any): void {
+
+        let extraParams = {};
+
         if (action.config.path) {
             if (!data) {
-                this._router.navigate(['panel/' + action.config.path]);
+
+                if ('queryKey' in action.config.params) {
+
+                    const params = {};
+
+                    params[action.config.params['formKey']] = this.filter.where[action.config.params['queryKey']];
+                    extraParams = {queryParams: {formParams: JSON.stringify(params)}};
+
+                    this._router.navigate(['panel/' + action.config.path], extraParams);
+                } else {
+                    this._router.navigateByUrl('panel/' + action.config.path);
+                }
             } else {
                 let path = action.config.path;
                 if (path.indexOf(':id') !== -1) {
                     path = path.replace(':id', data.id);
                 }
-
-                let extraParams = {};
 
                 if (action.config.titleField && path.indexOf(':title') !== -1) {
                     path = path.replace(':title', data[action.config.titleField]);

@@ -139,10 +139,15 @@ export class FormComponent implements OnInit {
 
             this._route.queryParams.subscribe((params) => {
                 if (params.formParams) {
-                    console.log(JSON.parse(params.formParams));
-                    this.form.markAsDirty();
-                    this._ref.detectChanges();
-                    this.form.patchValue(JSON.parse(params.formParams));
+
+                    const values = JSON.parse(params.formParams);
+                    const newValues = {};
+
+                    for (const key of Object.keys(values)) {
+                        newValues[key] = isNaN(values[key]) ? values[key] : parseInt(values[key]);
+                    }
+
+                    this.form.patchValue(newValues);
                 }
             });
 
