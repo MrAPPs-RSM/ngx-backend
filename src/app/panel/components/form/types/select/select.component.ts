@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewEncapsulation, OnDestroy} from '@angular/core';
+import {Component, Input, OnInit, ViewEncapsulation, OnDestroy, OnChanges} from '@angular/core';
 import {ApiService} from '../../../../../api/api.service';
 import {ActivatedRoute} from '@angular/router';
 import {HttpErrorResponse} from '@angular/common/http';
@@ -86,15 +86,23 @@ export class SelectComponent extends BaseInputComponent implements OnInit {
     }
 
     private loadData(): void {
-        if (this.isEdit && this.field.multiple) {
+        if (this.field.multiple) {
             this.getControl().valueChanges.first().subscribe((value) => {
                 this.loadOptions().then(() => {
+
+                    if (value !== null && !(value instanceof Array)) {
+                        value = [value];
+                    }
+
                     if (value instanceof Array) {
                         value.forEach((item) => {
                             this.options.forEach((option) => {
-                                if (option.id === item.id) {
+
+                                const itemId = item instanceof Object ? item.id : item;
+
+                                if (option.id === itemId) {
                                     this.selected.push({
-                                        id: item.id,
+                                        id: itemId,
                                         text: option.text
                                     });
                                 }

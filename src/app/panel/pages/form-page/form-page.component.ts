@@ -16,7 +16,7 @@ import {ErrorResponse} from '../../../api/api.service';
 })
 export class FormPageComponent implements OnInit {
 
-    private params: {
+    params: {
         forms?: FormSettings[]
     };
 
@@ -29,8 +29,9 @@ export class FormPageComponent implements OnInit {
     }
 
     ngOnInit() {
-        this._route.queryParams.subscribe(params => {
+       this._route.queryParams.subscribe(params => {
             this.params = this._route.snapshot.data;
+         //  console.log(this.params);
         });
     }
 

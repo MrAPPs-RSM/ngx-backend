@@ -138,7 +138,8 @@ export class FormComponent implements OnInit {
             this.form = this.setupForms();
 
             this._route.queryParams.subscribe((params) => {
-                if (params && params.formParams) {
+                if (params.formParams) {
+                    console.log(JSON.parse(params.formParams));
                     this.form.markAsDirty();
                     this._ref.detectChanges();
                     this.form.patchValue(JSON.parse(params.formParams));

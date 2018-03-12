@@ -21,7 +21,7 @@ export class ContentTopComponent implements OnInit {
     ngOnInit() {
 
         this._state.subscribe('activePage', (activeLink) => {
-             console.log("ACTIVE LINK: "+JSON.stringify(activeLink));
+             // console.log("ACTIVE LINK: "+JSON.stringify(activeLink));
             if (activeLink) {
                 this.activePage = activeLink.url;
                 if (this.isResetNeeded(activeLink)) {
@@ -63,8 +63,8 @@ export class ContentTopComponent implements OnInit {
 
         for (const breadcrumb of this.breadcrumbs) {
             if (breadcrumb.route === activeLink.route) {
-                console.log(breadcrumb.route);
-                console.log(activeLink.route);
+               // console.log(breadcrumb.route);
+               // console.log(activeLink.route);
                 return true;
             }
         }
