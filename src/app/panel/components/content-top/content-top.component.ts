@@ -23,7 +23,7 @@ export class ContentTopComponent implements OnInit {
         this._state.subscribe('activePage', (activeLink) => {
              console.log("ACTIVE LINK: "+JSON.stringify(activeLink));
             if (activeLink) {
-                this.activePage = activeLink.title;
+                this.activePage = activeLink.url;
                 if (this.isResetNeeded(activeLink)) {
                     this.breadcrumbs = [activeLink];
                 } else {

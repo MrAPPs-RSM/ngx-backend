@@ -87,7 +87,7 @@ export class PanelComponent implements OnInit {
               }
           });
 
-            console.log(this._router.url);
+            // console.log(this._router.url);
 
             const redirectTo404 = () => {
                 this._router.navigate(['panel/404']);
@@ -98,20 +98,6 @@ export class PanelComponent implements OnInit {
             } else {
                 this._router.navigateByUrl(this._router.url).catch(redirectTo404);
             }
-
-
-/*
-                  if (this._pageRefresh.getLastPath() !== null) {
-                      if (this._pageRefresh.getLastPath() !== '/panel'
-                          && this._pageRefresh.getLastPath() !== '/login') {
-
-                          this._pageRefresh.renavigate();
-                      } else {
-                          this._router.navigate(['panel/' + this.homePage]);
-                      }
-                  } else {
-                      this._router.navigate(['panel/' + this.homePage]);
-                  }*/
 
         this.user = this._userService.getUser();
     }
