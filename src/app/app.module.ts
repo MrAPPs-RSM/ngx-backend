@@ -19,7 +19,6 @@ import {PageRefreshService} from './services/page-refresh.service';
 import {UserService} from './auth/services/user.service';
 import {PasswordResetComponent} from './auth/password-reset/password-reset.component';
 import {ToastsService} from './services/toasts.service';
-import {NotfoundPageComponent} from './panel/pages/notfound-page/notfound-page.component';
 
 const routes: Routes = [
     {

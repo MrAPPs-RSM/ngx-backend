@@ -248,7 +248,7 @@ export class TableComponent implements OnInit {
         if (action.config.path) {
             if (!data) {
 
-                if ('queryKey' in action.config.params) {
+                if (action.config.params && action.config.params['queryKey']) {
 
                     const params = {};
 

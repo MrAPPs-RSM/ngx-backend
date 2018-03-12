@@ -147,6 +147,7 @@ export class FormComponent implements OnInit {
                         newValues[key] = isNaN(values[key]) ? values[key] : parseInt(values[key]);
                     }
 
+                    this._ref.detectChanges();
                     this.form.patchValue(newValues);
                 }
             });
