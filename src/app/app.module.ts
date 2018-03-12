@@ -1,7 +1,7 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {HttpClientModule} from '@angular/common/http';
-import {RouteReuseStrategy, RouterModule, Routes} from '@angular/router';
+import {RouterModule, Routes} from '@angular/router';
 import {PanelModule} from './panel/panel.module';
 import {ReactiveFormsModule} from '@angular/forms';
 import {ToastrModule, ToastNoAnimation, ToastNoAnimationModule} from 'ngx-toastr';
@@ -16,11 +16,10 @@ import {LoginGuard} from './auth/guards/login.guard';
 import {UtilsService} from './services/utils.service';
 import {FormGeneratorService} from './panel/services/form-generator.service';
 import {PageRefreshService} from './services/page-refresh.service';
-import {StorageService} from './services/storage.service';
 import {UserService} from './auth/services/user.service';
 import {PasswordResetComponent} from './auth/password-reset/password-reset.component';
 import {ToastsService} from './services/toasts.service';
-import {CustomReuseStrategy} from './panel/resolvers/custom.reuse.strategy';
+import {NotfoundPageComponent} from './panel/pages/notfound-page/notfound-page.component';
 
 const routes: Routes = [
     {
@@ -39,11 +38,6 @@ const routes: Routes = [
     },
     {
         path: '',
-        redirectTo: 'login',
-        pathMatch: 'full'
-    },
-    {
-        path: '**',
         redirectTo: 'login',
         pathMatch: 'full'
     }
@@ -81,7 +75,6 @@ const routes: Routes = [
         UtilsService,
         FormGeneratorService,
         PageRefreshService,
-        StorageService,
         ToastsService
     ],
     bootstrap: [AppComponent]

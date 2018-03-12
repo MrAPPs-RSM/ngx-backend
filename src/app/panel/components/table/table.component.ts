@@ -75,7 +75,7 @@ export class TableComponent implements OnInit {
             if (this._route.snapshot.queryParams && this._route.snapshot.queryParams.listParams) {
                 const queryParamsFilter = JSON.parse(this._route.snapshot.queryParams.listParams);
 
-                console.log("FILTRO: "+this.settings.api.filter);
+                console.log('FILTRO: ' + this.settings.api.filter);
 
                 this.filter = UtilsService.mergeDeep(this.filter, queryParamsFilter);
             }
@@ -276,7 +276,7 @@ export class TableComponent implements OnInit {
                             updatedFilter = updatedFilter.replace(':id', data.id);
                         }
 
-                        extraParams = { queryParams: { listParams: updatedFilter} };
+                        extraParams = {queryParams: {listParams: updatedFilter}};
 
                     }
 
@@ -289,19 +289,18 @@ export class TableComponent implements OnInit {
                         action.config.params['formValues'] = {};
                         action.config.params['formValues'][key] = data[action.config.params.tableKey];
 
+                        const formValues = action.config.params['formValues'];
+                        extraParams = {queryParams: {formParams: JSON.stringify(formValues)}};
+
                         delete action.config.params.tableKey;
                         delete action.config.params.formKey;
                     }
-
-                   // this._storageService.setValue(action.config.params.type, action.config.params);
                 }
-
-                console.log(extraParams);
                 /**
                  * If is table auto-update (sub categories for example), refresh same component
                  */
 
-                 this._router.navigate(['panel/' + path], extraParams);
+                this._router.navigate(['panel/' + path], extraParams);
             }
         } else if (action.config.endpoint) {
             let endpoint = action.config.endpoint;

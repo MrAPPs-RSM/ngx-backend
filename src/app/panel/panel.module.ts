@@ -44,22 +44,32 @@ import {NotfoundPageComponent} from './pages/notfound-page/notfound-page.compone
 import {PipesModule} from '../pipes/pipes.module';
 import {TranslatePipe} from '../pipes/translate/translate.pipe';
 import {LanguageService} from './services/language.service';
+import {MenuService} from './services/menu.service';
 
 const routes: Routes = [
     {
         path: 'panel',
-        component: PanelComponent,
         canActivate: [
             AuthGuard
         ],
         resolve: {
             params: PanelResolver
-        }
-    },
-    {
-        path: '',
-        redirectTo: 'panel',
-        pathMatch: 'full'
+        },
+        children: [
+            {
+                path: '**',
+                canActivate: [
+                    AuthGuard
+                ],
+                resolve: {
+                    params: PanelResolver
+                },
+                component: PanelComponent,
+                pathMatch: 'full'
+            }
+        ],
+        component: PanelComponent,
+        pathMatch: 'prefix'
     }
 ];
 
@@ -116,6 +126,7 @@ const routes: Routes = [
     providers: [
         AuthGuard,
         SetupService,
+        MenuService,
         PanelResolver,
         PageTitleService,
         ModalService,

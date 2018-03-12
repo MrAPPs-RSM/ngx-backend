@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, Output, EventEmitter, ViewEncapsulation} from '@angular/core';
+import {Component, Input, OnInit, Output, EventEmitter, ViewEncapsulation, ChangeDetectorRef} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormGeneratorService} from '../../services/form-generator.service';
@@ -6,7 +6,6 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {ModalService} from '../../services/modal.service';
 import {ApiService} from '../../../api/api.service';
 import {FormSettings} from './interfaces/form-settings';
-import {StorageService} from '../../../services/storage.service';
 import {FormButton} from './interfaces/form-button';
 import {Language, LanguageService} from '../../services/language.service';
 
@@ -44,7 +43,7 @@ export class FormComponent implements OnInit {
                 private _router: Router,
                 private _apiService: ApiService,
                 private _route: ActivatedRoute,
-                private _storageService: StorageService) {
+                private _ref: ChangeDetectorRef) {
     }
 
     private _extractErrors(form: FormGroup, parentKey?: string): void {
@@ -135,6 +134,31 @@ export class FormComponent implements OnInit {
     }
 
     ngOnInit() {
+
+            this.form = this.setupForms();
+
+            this._route.queryParams.subscribe((params) => {
+                if (params && params.formParams) {
+                    this.form.markAsDirty();
+                    this._ref.detectChanges();
+                    this.form.patchValue(JSON.parse(params.formParams));
+                }
+            });
+
+      //  const params = this._route.snapshot.queryParams;
+
+
+            this.form.valueChanges.subscribe(
+                data => {
+                    console.log(data);
+                }
+            );
+
+            if (this.settings.isEdit) {
+                this.loadData();
+            }
+
+
         if (this._languageService.getContentLanguages()) {
             for (const language of this._languageService.getContentLanguages()) {
                 if (language.isDefault) {
@@ -144,21 +168,10 @@ export class FormComponent implements OnInit {
             }
         }
 
-        this.form = this.setupForms();
-
         // console.log(this.form);
 
-        this.form.valueChanges.subscribe(
-            data => {
-                console.log(data);
-                // console.log(this.form);
-            }
-        );
-
-        if (this.settings.isEdit) {
-            this.loadData();
-        }
-
+        // TODO: rivedere formParameters per duplicazione
+        /*
         const formParameters = this._storageService.getValue('formParameters');
         if (formParameters) {
             if (formParameters.loadData) {
@@ -171,6 +184,8 @@ export class FormComponent implements OnInit {
 
             this._storageService.clearValue('formParameters');
         }
+        */
+
     }
 
 
@@ -208,6 +223,7 @@ export class FormComponent implements OnInit {
                 endpoint + '/' + id, params)
                 .then((response) => {
                     this.isLoading = false;
+                    console.log(response);
                     this.form.patchValue(response);
                 })
                 .catch((response: HttpErrorResponse) => {
