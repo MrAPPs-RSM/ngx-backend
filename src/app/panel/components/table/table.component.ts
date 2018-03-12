@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, Input, OnInit, OnChanges, ViewEncapsulation, NgZone, OnDestroy} from '@angular/core';
 import {TableSettings} from './interfaces/table-settings';
 import {ApiService, ErrorResponse} from '../../../api/api.service';
 import {ModalService} from '../../services/modal.service';
@@ -15,6 +15,7 @@ import * as FileSaver from 'file-saver';
 import {UtilsService} from '../../../services/utils.service';
 import {Language, LanguageService} from '../../services/language.service';
 import {ToastsService} from '../../../services/toasts.service';
+import {PageRefreshService} from '../../../services/page-refresh.service';
 
 @Component({
     selector: 'app-table',
@@ -49,6 +50,7 @@ export class TableComponent implements OnInit {
     currentLang: Language;
 
     constructor(public _languageService: LanguageService,
+                private _pageRefresh: PageRefreshService,
                 private _apiService: ApiService,
                 private _router: Router,
                 private _route: ActivatedRoute,
@@ -57,29 +59,28 @@ export class TableComponent implements OnInit {
     }
 
     ngOnInit() {
+
+        this._route.queryParams.subscribe(params => {
+            this.activeFilters.sort = [];
+            this.activeFilters.pagination = {
+                page: 1,
+                perPage: this.settings.pager && this.settings.pager.perPage ? this.settings.pager.perPage : this.DEFAULTS.pager.perPage,
+            };
+
+            /** Read fixed filter from settings if set */
+            if (this.settings.api.filter) {
+                this.filter = JSON.parse(this.settings.api.filter);
+            }
+
+            if (this._route.snapshot.queryParams && this._route.snapshot.queryParams.listParams) {
+                const queryParamsFilter = JSON.parse(this._route.snapshot.queryParams.listParams);
+                this.filter = UtilsService.mergeDeep(this.filter, queryParamsFilter);
+            }
+
+            this.getData();
+        });
+
         this.setupLang();
-
-        this.activeFilters.sort = [];
-        this.activeFilters.pagination = {
-            page: 1,
-            perPage: this.settings.pager && this.settings.pager.perPage ? this.settings.pager.perPage : this.DEFAULTS.pager.perPage,
-        };
-
-        /** Read fixed filter from settings if set */
-        if (this.settings.api.filter) {
-            this.filter = JSON.parse(this.settings.api.filter);
-        }
-
-        if (this._route.snapshot.queryParams && this._route.snapshot.queryParams.listParams) {
-
-            const queryParamsFilter = JSON.parse(this._route.snapshot.queryParams.listParams).filter;
-
-            this.filter = UtilsService.mergeDeep(this.filter, queryParamsFilter);
-
-            //  console.log(this.filter);
-        }
-
-        this.getData();
     }
 
     private setupLang(): void {
@@ -87,7 +88,6 @@ export class TableComponent implements OnInit {
         if (this.isMultiLangEnabled) {
 
             const currentLanguage = this._languageService.getCurrentContentTableLang();
-            console.log(currentLanguage);
 
             if (currentLanguage == null) {
                 for (const contentLanguage of this._languageService.getContentLanguages()) {
@@ -99,8 +99,6 @@ export class TableComponent implements OnInit {
             } else {
                 this.currentLang = currentLanguage;
             }
-
-
         }
     }
 
@@ -112,6 +110,7 @@ export class TableComponent implements OnInit {
                 this.count = res.count;
                 this._apiService.get(this.settings.api.endpoint, this.composeParams())
                     .then((data) => {
+                        console.log(data);
                         this.isLoading = false;
                         this.data = data;
                     })
@@ -243,27 +242,51 @@ export class TableComponent implements OnInit {
     }
 
     private parseAction(action: TableAction, data?: any): void {
+
+        let extraParams = {};
+
         if (action.config.path) {
             if (!data) {
-                this._router.navigate(['panel/' + action.config.path]);
+
+                if (action.config.params && action.config.params['queryKey']) {
+
+                    const params = {};
+
+                    params[action.config.params['formKey']] = this.filter.where[action.config.params['queryKey']];
+                    extraParams = {queryParams: {formParams: JSON.stringify(params)}};
+
+                    this._router.navigate(['panel/' + action.config.path], extraParams);
+                } else {
+                    this._router.navigateByUrl('panel/' + action.config.path);
+                }
             } else {
                 let path = action.config.path;
                 if (path.indexOf(':id') !== -1) {
                     path = path.replace(':id', data.id);
                 }
-                if (path.indexOf(':title') !== -1 && action.config.titleField) {
+
+                if (action.config.titleField && path.indexOf(':title') !== -1) {
                     path = path.replace(':title', data[action.config.titleField]);
                 }
-
-                let extraParams = {};
 
                 if (action.config.params) {
                     if (action.config.params.id && action.config.params.id.indexOf(':id') !== -1) {
                         action.config.params.id = action.config.params.id.replace(':id', data.id);
                     }
 
-                    if (action.config.params.filter && action.config.params.filter.indexOf(':id') !== -1) {
-                        action.config.params.filter = JSON.parse(action.config.params.filter.replace(':id', data.id));
+                    if (action.config.params.filter) {
+
+                        let updatedFilter = action.config.params.filter;
+
+                        if (UtilsService.isObject(updatedFilter)) {
+                            updatedFilter = JSON.stringify(updatedFilter);
+                        }
+
+                        if (updatedFilter.indexOf(':id') !== -1) {
+                            updatedFilter = updatedFilter.replace(':id', data.id);
+                        }
+
+                        extraParams = {queryParams: {listParams: updatedFilter}};
                     }
 
                     if (action.config.params.tableKey && data[action.config.params.tableKey]) {
@@ -275,17 +298,17 @@ export class TableComponent implements OnInit {
                         action.config.params['formValues'] = {};
                         action.config.params['formValues'][key] = data[action.config.params.tableKey];
 
+                        const formValues = action.config.params['formValues'];
+                        extraParams = {queryParams: {formParams: JSON.stringify(formValues)}};
+
                         delete action.config.params.tableKey;
                         delete action.config.params.formKey;
                     }
-
-                    extraParams = { queryParams: { listParams: JSON.stringify(action.config.params)} };
-                   // this._storageService.setValue(action.config.params.type, action.config.params);
                 }
-
                 /**
                  * If is table auto-update (sub categories for example), refresh same component
                  */
+
                 this._router.navigate(['panel/' + path], extraParams);
             }
         } else if (action.config.endpoint) {

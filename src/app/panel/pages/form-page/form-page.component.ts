@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewEncapsulation, OnDestroy} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {PageTitleService} from '../../services/page-title.service';
 import {PageRefreshService} from '../../../services/page-refresh.service';
@@ -14,9 +14,9 @@ import {ErrorResponse} from '../../../api/api.service';
     styleUrls: ['./form-page.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class FormPageComponent implements OnInit, OnDestroy {
+export class FormPageComponent implements OnInit {
 
-    private params: {
+    params: {
         forms?: FormSettings[]
     };
 
@@ -29,12 +29,10 @@ export class FormPageComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.params = this._route.snapshot.data;
-        this._pageTitle.set(this._route);
-    }
-
-    ngOnDestroy() {
-        this._pageRefresh.setLastPath(this._router.url);
+       this._route.queryParams.subscribe(params => {
+            this.params = this._route.snapshot.data;
+         //  console.log(this.params);
+        });
     }
 
     onResponse(form: FormSettings, response: any | ErrorResponse): void {

@@ -16,7 +16,6 @@ import {LoginGuard} from './auth/guards/login.guard';
 import {UtilsService} from './services/utils.service';
 import {FormGeneratorService} from './panel/services/form-generator.service';
 import {PageRefreshService} from './services/page-refresh.service';
-import {StorageService} from './services/storage.service';
 import {UserService} from './auth/services/user.service';
 import {PasswordResetComponent} from './auth/password-reset/password-reset.component';
 import {ToastsService} from './services/toasts.service';
@@ -40,11 +39,6 @@ const routes: Routes = [
         path: '',
         redirectTo: 'login',
         pathMatch: 'full'
-    },
-    {
-        path: '**',
-        redirectTo: 'login',
-        pathMatch: 'full'
     }
 ];
 
@@ -55,7 +49,7 @@ const routes: Routes = [
         PasswordResetComponent
     ],
     imports: [
-        RouterModule.forRoot(routes, {useHash: false}),
+        RouterModule.forRoot(routes, {useHash: false, onSameUrlNavigation: 'reload'}),
         ReactiveFormsModule,
         BrowserModule,
         ToastNoAnimationModule,
@@ -80,7 +74,6 @@ const routes: Routes = [
         UtilsService,
         FormGeneratorService,
         PageRefreshService,
-        StorageService,
         ToastsService
     ],
     bootstrap: [AppComponent]

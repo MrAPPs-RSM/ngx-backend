@@ -1,9 +1,14 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {User, UserService} from '../auth/services/user.service';
 import {environment} from '../../environments/environment';
-import {ActivatedRoute, Route, Router} from '@angular/router';
+import {ActivatedRoute, NavigationEnd, Route, Router} from '@angular/router';
 import {PageRefreshService} from '../services/page-refresh.service';
 import {LanguageService} from './services/language.service';
+import {PageTitleService} from './services/page-title.service';
+
+import 'rxjs/add/operator/map';
+import {NotfoundPageComponent} from './pages/notfound-page/notfound-page.component';
+import {MenuService} from './services/menu.service';
 
 declare const $: any;
 
@@ -17,7 +22,7 @@ export class PanelComponent implements OnInit {
 
     title = environment.name;
     showLogo: boolean = environment.logo;
-    logo: string = '../../../../../assets/images/logo.png';
+    logo = '../../../../../assets/images/logo.png';
     menu: any[] = [];
     homePage = 'dashboard';
     user: User;
@@ -26,46 +31,76 @@ export class PanelComponent implements OnInit {
                 private _userService: UserService,
                 private _route: ActivatedRoute,
                 private _languageService: LanguageService,
-                private _pageRefresh: PageRefreshService) {
+                private _pageRefresh: PageRefreshService,
+                private _menuService: MenuService,
+                private _pageTitle: PageTitleService) {
     }
 
     ngOnInit() {
+
+        console.log("PANEL INIT...");
+        this._router.events
+            .filter(event => event instanceof NavigationEnd)
+            .map(() => this._route)
+            .map((route) => {
+                while (route.firstChild) {
+                    route = route.firstChild;
+                }
+                return route;
+            })
+            .filter((route) => route.outlet === 'primary')
+            .subscribe((activatedRoute: any) => {
+
+                if (activatedRoute.component.name !== 'PanelComponent') {
+
+                    if (activatedRoute.component.name === 'NotfoundPageComponent') {
+                        this._pageTitle.set(this._languageService.translate('404.page_title'));
+                    } else {
+                        this._pageTitle.set(activatedRoute);
+                    }
+                }
+            });
+
+
         /** When start, if current lang not set, set it from the enviroment defaults */
         if (this._languageService.isMultiLang() && !this._languageService.getCurrentLang()) {
             this._languageService.setCurrentLang(environment['currentLang']);
         }
 
-        if (this._route.snapshot.data['params'] && this._route.snapshot.data['params'].length > 0) {
-            this.menu = this._route.snapshot.data['params'];
-        }
+        this.menu = this._menuService.getMenu();
 
-        /** Search for home page */
-        (this._router.config as any).every((item: Route) => {
-            if (item.path === 'panel') {
-                (item.children as any).every((child) => {
-                    if ('data' in child && 'isHomePage' in child.data && child.data['isHomePage']) {
-                        this.homePage = child.path;
-                        return false;
-                    } else {
-                        return true;
-                    }
-                });
-                return false;
-            } else {
-                return true;
-            }
-        });
 
-        if (this._pageRefresh.getLastPath() !== null) {
-            if (this._pageRefresh.getLastPath() !== '/panel'
-                && this._pageRefresh.getLastPath() !== '/login') {
-                this._pageRefresh.renavigate();
+                /** Search for home page */
+            (this._router.config as any).every((item: Route) => {
+              if (item.path === 'panel') {
+                  (item.children as any).every((child) => {
+                      if ('data' in child && 'isHomePage' in child.data && child.data['isHomePage']) {
+                          this.homePage = child.path;
+                          return false;
+                      } else {
+                          return true;
+                      }
+                  });
+                  return false;
+              } else {
+                  return true;
+              }
+          });
+
+            console.log(this._router.url);
+
+            const redirectTo404 = () => {
+                this._router.navigate(['panel/404']);
+            };
+
+            if (this._router.url === '/panel') {
+                this._router.navigate(['panel/' + this.homePage]).catch(redirectTo404);
             } else {
-                this._router.navigate(['panel/' + this.homePage]);
+                this._router.navigateByUrl(this._router.url).catch(redirectTo404);
             }
-        } else {
-            this._router.navigate(['panel/' + this.homePage]);
-        }
+
+
+
 
         this.user = this._userService.getUser();
     }

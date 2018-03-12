@@ -1,7 +1,4 @@
-import {Component, OnInit, ViewEncapsulation, OnDestroy} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {PageTitleService} from '../../services/page-title.service';
-import {PageRefreshService} from '../../../services/page-refresh.service';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 
 @Component({
     selector: 'app-dashboard-page',
@@ -9,23 +6,14 @@ import {PageRefreshService} from '../../../services/page-refresh.service';
     styleUrls: ['./dashboard-page.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class DashboardPageComponent implements OnInit, OnDestroy {
+export class DashboardPageComponent implements OnInit {
 
     private params: any = {}; // Setup params
 
-    constructor(private _router: Router,
-                private _route: ActivatedRoute,
-                private _pageTitle: PageTitleService,
-                private _pageRefresh: PageRefreshService) {
+    constructor() {
     }
 
     ngOnInit() {
-        this.params = this._route.snapshot.data;
-        console.log(this.params);
-        this._pageTitle.set(this._route);
-    }
 
-    ngOnDestroy() {
-        this._pageRefresh.setLastPath(this._router.url);
     }
 }

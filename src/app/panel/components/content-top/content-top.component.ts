@@ -21,9 +21,9 @@ export class ContentTopComponent implements OnInit {
     ngOnInit() {
 
         this._state.subscribe('activePage', (activeLink) => {
-            // console.log(JSON.stringify(activeLink));
+             // console.log("ACTIVE LINK: "+JSON.stringify(activeLink));
             if (activeLink) {
-                this.activePage = activeLink.title;
+                this.activePage = activeLink.url;
                 if (this.isResetNeeded(activeLink)) {
                     this.breadcrumbs = [activeLink];
                 } else {
@@ -62,7 +62,9 @@ export class ContentTopComponent implements OnInit {
     private breadcrumbAlreadyIn(activeLink: any): boolean {
 
         for (const breadcrumb of this.breadcrumbs) {
-            if (breadcrumb.route === activeLink.route && breadcrumb.params === activeLink.params) {
+            if (breadcrumb.route === activeLink.route) {
+               // console.log(breadcrumb.route);
+               // console.log(activeLink.route);
                 return true;
             }
         }
@@ -70,11 +72,16 @@ export class ContentTopComponent implements OnInit {
         return false;
     }
 
+
     private isResetNeeded(activeLink: any): boolean {
-        return (activeLink.breadcrumbLevel === 1 && !this.breadcrumbAlreadyIn(activeLink)) || !this.hasSameParentPath(activeLink);
+
+        return (activeLink.breadcrumbLevel === 1
+            && !(this.breadcrumbAlreadyIn(activeLink))
+            && this.hasSameParentPath(activeLink))
+            || !this.hasSameParentPath(activeLink);
     }
 
     navigateTo(activeLink: any) {
-        this._router.navigate([activeLink.route.split('?')[0]], { queryParams: JSON.parse(activeLink.params) });
+        this._router.navigateByUrl(activeLink.url);
     }
 }

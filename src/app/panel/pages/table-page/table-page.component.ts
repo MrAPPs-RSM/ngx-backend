@@ -1,7 +1,7 @@
-import {Component, OnInit, ViewEncapsulation, OnDestroy} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {PageTitleService} from '../../services/page-title.service';
-import {PageRefreshService} from '../../../services/page-refresh.service';
+
+import 'rxjs/add/operator/pairwise';
 
 @Component({
     selector: 'app-table-page',
@@ -9,23 +9,19 @@ import {PageRefreshService} from '../../../services/page-refresh.service';
     styleUrls: ['./table-page.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class TablePageComponent implements OnInit, OnDestroy {
+export class TablePageComponent implements OnInit {
 
-    private params: any = {}; // Setup params
+    params: any = {}; // Setup params
 
     constructor(private _router: Router,
-                private _route: ActivatedRoute,
-                private _pageTitle: PageTitleService,
-                private _pageRefresh: PageRefreshService) {
+                private _route: ActivatedRoute) {
     }
 
     ngOnInit() {
-        this.params = this._route.snapshot.data;
-        this._pageTitle.set(this._route);
-    }
-
-    ngOnDestroy() {
-        console.log(this._router.url);
-        this._pageRefresh.setLastPath(this._router.url);
+        this._route.queryParams.subscribe(params => {
+            this.params = this._route.snapshot.data;
+        });
     }
 }
+
+

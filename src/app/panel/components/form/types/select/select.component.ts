@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewEncapsulation, OnDestroy} from '@angular/core';
+import {Component, Input, OnInit, ViewEncapsulation, OnDestroy, OnChanges} from '@angular/core';
 import {ApiService} from '../../../../../api/api.service';
 import {ActivatedRoute} from '@angular/router';
 import {HttpErrorResponse} from '@angular/common/http';
@@ -13,7 +13,7 @@ import {LanguageService} from '../../../../services/language.service';
     styleUrls: ['./select.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class SelectComponent extends BaseInputComponent implements OnInit {
+export class SelectComponent extends BaseInputComponent implements OnInit, OnChanges {
 
     @Input() field: FormFieldSelect;
     @Input() isEdit: boolean;
@@ -30,8 +30,13 @@ export class SelectComponent extends BaseInputComponent implements OnInit {
         super();
     }
 
+    ngOnChanges() {
+
+    }
+
     ngOnInit() {
         this.loadData();
+
         this.selected = this.field.multiple === true ? [] : {};
 
         if (this.field.dependsOn) {
@@ -85,31 +90,48 @@ export class SelectComponent extends BaseInputComponent implements OnInit {
         }
     }
 
-    private loadData(): void {
-        if (this.isEdit && this.field.multiple) {
-            this.getControl().valueChanges.first().subscribe((value) => {
-                this.loadOptions().then(() => {
-                    if (value instanceof Array) {
-                        value.forEach((item) => {
-                            this.options.forEach((option) => {
-                                if (option.id === item.id) {
-                                    this.selected.push({
-                                        id: item.id,
-                                        text: option.text
-                                    });
-                                }
-                            });
-                            this.selected = [...this.selected];
+    private updateSelectedOptions(value) {
+        if (value !== null && !(value instanceof Array)) {
+            value = [value];
+        }
+
+        if (value instanceof Array) {
+            value.forEach((item) => {
+                this.options.forEach((option) => {
+
+                    const itemId = item instanceof Object ? item.id : item;
+
+                    if (option.id === itemId) {
+                        this.selected.push({
+                            id: itemId,
+                            text: option.text
                         });
                     }
-                    this.refreshFormValue();
+                });
+                this.selected = [...this.selected];
+            });
+        }
+        this.refreshFormValue();
+    }
+
+    private loadData(): void {
+        if (this.field.multiple) {
+            this.getControl().valueChanges.first().subscribe((value) => {
+                console.log("VALUES: "+value)
+                this.loadOptions().then(() => {
+                    this.updateSelectedOptions(value);
+
                 }).catch((err) => {
                     console.log(err);
                 });
             });
-        } else {
-            this.loadOptions().catch((err) => console.log(err));
         }
+
+        this.loadOptions().then( () => {
+            if (this.field.multiple) {
+                this.updateSelectedOptions(this.getControl().value);
+            }
+        }).catch((err) => console.log(err));
     }
 
     private filterOptionsIfNeeded(options: SelectData[]): SelectData[] {

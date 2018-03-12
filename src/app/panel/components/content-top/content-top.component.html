@@ -3,9 +3,8 @@
         <div class="col-sm-8">
             <ul class="breadcrumb">
                 <li *ngFor="let item of breadcrumbs">
-                    <a [routerLink]="item.route"
-                       (click)="navigateTo(item)"
-                       [ngClass]="{'active': item.title === activePage}"
+                    <a (click)="navigateTo(item)"
+                       [ngClass]="{'active': item.url === activePage}"
                        routerLinkActive="active"
                        [innerHTML]="item.title"></a>
                 </li>
