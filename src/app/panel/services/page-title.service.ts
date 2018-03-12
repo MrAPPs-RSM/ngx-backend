@@ -14,6 +14,7 @@ export class PageTitleService {
             const urlParams = route.snapshot.params;
 
             let title = 'menu' in route.snapshot.data && 'title' in route.snapshot.data['menu'] ? route.snapshot.data['menu'].title : '';
+
             if (urlParams) {
                 if (urlParams['title']) {
                     title += ' ' + urlParams['title'];
@@ -21,6 +22,7 @@ export class PageTitleService {
                     title += ' ' + urlParams['id'];
                 }
             }
+
             const activeLink = {
                 title: decodeURIComponent(title),
                 route: this._router.url.split('?')[0],

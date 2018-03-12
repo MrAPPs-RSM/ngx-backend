@@ -253,11 +253,12 @@ export class TableComponent implements OnInit {
                 if (path.indexOf(':id') !== -1) {
                     path = path.replace(':id', data.id);
                 }
-                if (path.indexOf(':title') !== -1 && action.config.titleField) {
-                    path = path.replace(':title', data[action.config.titleField]);
-                }
 
                 let extraParams = {};
+
+                if (action.config.titleField && path.indexOf(':title') !== -1) {
+                    path = path.replace(':title', data[action.config.titleField]);
+                }
 
                 if (action.config.params) {
                     if (action.config.params.id && action.config.params.id.indexOf(':id') !== -1) {
@@ -277,7 +278,6 @@ export class TableComponent implements OnInit {
                         }
 
                         extraParams = {queryParams: {listParams: updatedFilter}};
-
                     }
 
                     if (action.config.params.tableKey && data[action.config.params.tableKey]) {

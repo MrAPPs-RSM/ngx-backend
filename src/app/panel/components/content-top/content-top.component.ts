@@ -82,6 +82,6 @@ export class ContentTopComponent implements OnInit {
     }
 
     navigateTo(activeLink: any) {
-        this._router.navigate([activeLink.route.split('?')[0]], { queryParams: JSON.parse(activeLink.params) });
+        this._router.navigateByUrl(activeLink.url);
     }
 }
