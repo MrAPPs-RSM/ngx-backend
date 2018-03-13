@@ -22,7 +22,7 @@ export class ImageViewComponent implements OnInit {
                     this.renderValue = value;
                 } else {
                     // Loopback Local Storage File
-                    this.renderValue = environment.api.baseFilesUrl + value;
+                    this.renderValue = value;
                 }
             } else {
                 // Google Cloud Storage File
