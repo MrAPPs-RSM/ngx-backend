@@ -7,6 +7,7 @@ import {ModalService} from '../../services/modal.service';
 import {UtilsService} from '../../../services/utils.service';
 import {ToastsService} from '../../../services/toasts.service';
 import {ErrorResponse} from '../../../api/api.service';
+import {MenuService} from '../../services/menu.service';
 
 @Component({
     selector: 'app-form-page',
@@ -25,7 +26,8 @@ export class FormPageComponent implements OnInit {
                 private _pageTitle: PageTitleService,
                 private _pageRefresh: PageRefreshService,
                 private _toastsService: ToastsService,
-                private _modalService: ModalService) {
+                private _modalService: ModalService,
+                private _menuService: MenuService) {
     }
 
     ngOnInit() {
@@ -35,9 +37,17 @@ export class FormPageComponent implements OnInit {
         });
     }
 
+    private redirectIfNeeded(form: FormSettings) {
+        if (form.submit.redirectAfter) {
+            if (!this._menuService.goBack()) {
+                this._router.navigate(['panel/' + form.submit.redirectAfter]);
+            }
+        }
+    }
+
     onResponse(form: FormSettings, response: any | ErrorResponse): void {
-        console.log('ON RESPONSE');
-        console.log(response);
+        // console.log('ON RESPONSE');
+        // console.log(response);
         switch (form.responseType) {
             case 'terminal': {
                 /** In this case, response is almost always custom,
@@ -58,9 +68,7 @@ export class FormPageComponent implements OnInit {
                     }
                 } else {
                     this._toastsService.success();
-                    if (form.submit.redirectAfter) {
-                        this._router.navigate(['panel/' + form.submit.redirectAfter]);
-                    }
+                    this.redirectIfNeeded(form);
                 }
             }
                 break;
@@ -74,9 +82,7 @@ export class FormPageComponent implements OnInit {
                     this._toastsService.error(response['error']);
                 } else {
                     this._toastsService.success();
-                    if (form.submit.redirectAfter) {
-                        this._router.navigate(['panel/' + form.submit.redirectAfter]);
-                    }
+                    this.redirectIfNeeded(form);
                 }
             }
                 break;

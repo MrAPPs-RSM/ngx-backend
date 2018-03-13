@@ -5,7 +5,6 @@ import {UserService, TOKEN_KEY, LOGIN_ENDPOINT} from '../auth/services/user.serv
 import {Router} from '@angular/router';
 
 const API_URL = environment.api.baseUrl;
-const SETUP_ENDPOINT = environment.api.setupEndpoint;
 
 @Injectable()
 export class ApiService {
@@ -44,7 +43,7 @@ export class ApiService {
      * @returns {Promise<any>}
      */
     public get(endpoint: string, params?: Object, fromLogin?: boolean): Promise<any> {
-        console.log('[API SERVICE] - GET ' + endpoint);
+       // console.log('[API SERVICE] - GET ' + endpoint);
         return new Promise((resolve, reject) => {
             this._http.get(this.composeUrl(endpoint), this.setOptions(params))
                 .subscribe(
@@ -80,7 +79,7 @@ export class ApiService {
      * @returns {Promise<T>}
      */
     public post(endpoint: string, body: any, params?: Object | null, isLogin: boolean = false): Promise<any> {
-        console.log('[API SERVICE] - POST ' + endpoint);
+        // console.log('[API SERVICE] - POST ' + endpoint);
         return new Promise((resolve, reject) => {
             this._http.post(this.composeUrl(endpoint), body, this.setOptions(params))
                 .subscribe(
@@ -115,7 +114,7 @@ export class ApiService {
      * @returns {Promise<T>}
      */
     public put(endpoint: string, body: any, params?: Object, fromLogin?: boolean): Promise<any> {
-        console.log('[API SERVICE] - PUT ' + endpoint);
+        // console.log('[API SERVICE] - PUT ' + endpoint);
         return new Promise((resolve, reject) => {
             this._http.put(this.composeUrl(endpoint), body, this.setOptions(params))
                 .subscribe(
@@ -150,7 +149,7 @@ export class ApiService {
      * @returns {Promise<T>}
      */
     public patch(endpoint: string, body: any, params?: Object, fromLogin?: boolean): Promise<any> {
-        console.log('[API SERVICE] - PATCH ' + endpoint);
+       // console.log('[API SERVICE] - PATCH ' + endpoint);
         return new Promise((resolve, reject) => {
             this._http.patch(this.composeUrl(endpoint), body, this.setOptions(params))
                 .subscribe(
@@ -184,7 +183,7 @@ export class ApiService {
      * @returns {Promise<T>}
      */
     public delete(endpoint: string, params?: Object, fromLogin?: boolean): Promise<any> {
-        console.log('[API SERVICE] - DELETE ' + endpoint);
+        // console.log('[API SERVICE] - DELETE ' + endpoint);
         return new Promise((resolve, reject) => {
             this._http.delete(this.composeUrl(endpoint), this.setOptions(params))
                 .subscribe(

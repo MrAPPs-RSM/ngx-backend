@@ -1,12 +1,14 @@
 import {Injectable} from '@angular/core';
 import {UtilsService} from '../../services/utils.service';
+import {Router} from '@angular/router';
 
 @Injectable()
 export class MenuService {
 
     private menu = [];
+    breadcrumbs: any[] = [];
 
-    constructor() {
+    constructor(private _router: Router) {
     }
 
 
@@ -48,5 +50,18 @@ export class MenuService {
 
     public getMenu(): any[] {
         return this.menu;
+    }
+
+    public canGoBack(): boolean{
+        return this.breadcrumbs.length > 1;
+    }
+
+    public goBack(): boolean {
+        if (this.canGoBack()) {
+            this._router.navigateByUrl(this.breadcrumbs[this.breadcrumbs.length - 2].url);
+            return true;
+        } else {
+           return false;
+        }
     }
 }

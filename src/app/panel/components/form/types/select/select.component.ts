@@ -117,7 +117,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnCha
     private loadData(): void {
         if (this.field.multiple) {
             this.getControl().valueChanges.first().subscribe((value) => {
-                console.log("VALUES: "+value)
+                // console.log("VALUES: "+value)
                 this.loadOptions().then(() => {
                     this.updateSelectedOptions(value);
 

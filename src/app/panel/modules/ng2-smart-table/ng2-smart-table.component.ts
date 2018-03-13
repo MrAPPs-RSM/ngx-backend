@@ -82,7 +82,7 @@ export class Ng2SmartTableComponent implements OnChanges, OnInit {
                 this.grid.setSettings(this.settings);
             }
             if (changes['source']) {
-                console.log('SOURCE CHANGED');
+                // console.log('SOURCE CHANGED');
                 this.source = this.prepareSource();
                 this.grid.setSource(this.source);
             }

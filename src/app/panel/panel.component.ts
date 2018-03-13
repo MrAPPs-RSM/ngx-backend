@@ -21,8 +21,8 @@ declare const $: any;
 export class PanelComponent implements OnInit {
 
     title = environment.name;
-    showLogo: boolean = environment.logo;
-    logo = '../../../../../assets/images/logo.png';
+    showLogo: boolean = environment.logo !== false;
+    logo = environment.logo;
     menu: any[] = [];
     homePage = 'dashboard';
     user: User;
@@ -59,7 +59,6 @@ export class PanelComponent implements OnInit {
                     }
                 }
             });
-
 
         /** When start, if current lang not set, set it from the enviroment defaults */
         if (this._languageService.isMultiLang() && !this._languageService.getCurrentLang()) {

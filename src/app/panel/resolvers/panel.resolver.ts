@@ -14,7 +14,7 @@ export class PanelResolver implements Resolve<PanelComponent> {
         return new Promise((resolve, reject) => {
             this._setupService.setup()
                 .then((data) => {
-                    console.log("   DI QUI CI è PASSATO!!");
+                    // console.log("   DI QUI CI è PASSATO!!");
                     resolve(data);
                 })
                 .catch((error) => {

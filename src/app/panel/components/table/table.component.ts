@@ -110,7 +110,7 @@ export class TableComponent implements OnInit {
                 this.count = res.count;
                 this._apiService.get(this.settings.api.endpoint, this.composeParams())
                     .then((data) => {
-                        console.log(data);
+                       // console.log(data);
                         this.isLoading = false;
                         this.data = data;
                     })

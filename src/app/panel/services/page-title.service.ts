@@ -11,26 +11,28 @@ export class PageTitleService {
 
     public set(route?: ActivatedRoute | string): void {
         if (route instanceof ActivatedRoute) {
-            const urlParams = route.snapshot.params;
 
-            let title = 'menu' in route.snapshot.data && 'title' in route.snapshot.data['menu'] ? route.snapshot.data['menu'].title : '';
+            if ('menu' in route.snapshot.data) {
+                let title = 'title' in route.snapshot.data['menu'] ? route.snapshot.data['menu'].title : '';
+                const urlParams = route.snapshot.params;
 
-            if (urlParams) {
-                if (urlParams['title']) {
-                    title += ' ' + urlParams['title'];
-                } else if (urlParams['id']) {
-                    title += ' ' + urlParams['id'];
+                if (urlParams) {
+                    if (urlParams['title']) {
+                        title += ' ' + urlParams['title'];
+                    } else if (urlParams['id']) {
+                        title += ' ' + urlParams['id'];
+                    }
                 }
-            }
 
-            const activeLink = {
-                title: decodeURIComponent(title),
-                route: this._router.url.split('?')[0],
-                url: this._router.url,
-                params: JSON.stringify(route.snapshot.queryParams),
-                breadcrumbLevel: route.snapshot.data['menu'].breadcrumbLevel
-            };
-            this._state.notifyDataChanged('activePage', activeLink);
+                const activeLink = {
+                    title: decodeURIComponent(title),
+                    route: this._router.url.split('?')[0],
+                    url: this._router.url,
+                    params: JSON.stringify(route.snapshot.queryParams),
+                    breadcrumbLevel: route.snapshot.data['menu'].breadcrumbLevel
+                };
+                this._state.notifyDataChanged('activePage', activeLink);
+            }
         } else {
             this._state.notifyDataChanged('activePage', {
                 title: route,
