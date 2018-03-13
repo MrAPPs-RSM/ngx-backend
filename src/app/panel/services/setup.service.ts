@@ -44,7 +44,7 @@ export class SetupService {
                     }
 
                     this.loadRoutes(data);
-                    console.log("CARICAMENTO ROTTE...");
+                    // console.log("CARICAMENTO ROTTE...");
                     this._menuService.prepareMenu(data);
                     resolve(true);
                 })
@@ -54,7 +54,7 @@ export class SetupService {
                     resolve(false);
                 });
             } else {
-                console.log("SALTO CARICAMENTO ROTTE...");
+                // console.log("SALTO CARICAMENTO ROTTE...");
                 resolve(true);
             }
 
