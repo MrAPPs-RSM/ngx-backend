@@ -10,7 +10,7 @@ export class DateViewComponent implements OnInit {
 
     @Input() cell: Cell;
 
-    private renderValue: string;
+    renderValue: string;
 
     ngOnInit() {
         this.renderValue = UtilsService.timeConverter(this.cell.getValue());

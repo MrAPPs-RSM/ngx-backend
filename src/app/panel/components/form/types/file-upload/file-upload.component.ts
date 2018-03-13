@@ -120,7 +120,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         }, 2000);
     }
 
-    private onUploadOutput(output: UploadOutput): void {
+    onUploadOutput(output: UploadOutput): void {
         console.log(output);
         switch (output.type) {
             case 'allAddedToQueue': {

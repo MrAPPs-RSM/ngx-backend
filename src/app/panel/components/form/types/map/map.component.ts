@@ -46,7 +46,7 @@ export class MapComponent extends BaseInputComponent implements OnInit {
             );
     }
 
-    private isValidKey(key: string): boolean {
+    isValidKey(key: string): boolean {
         if (this.form.controls[key].value === null || this.form.controls[key].value === '') {
             return true;
         } else {
@@ -54,7 +54,7 @@ export class MapComponent extends BaseInputComponent implements OnInit {
         }
     }
 
-    private onMarkerChanged(event: any): void {
+    onMarkerChanged(event: any): void {
         this.lat = event.coords.lat;
         this.lng = event.coords.lng;
         this.refreshFormValues();

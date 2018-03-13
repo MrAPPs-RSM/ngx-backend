@@ -38,7 +38,6 @@ export class PanelComponent implements OnInit {
 
     ngOnInit() {
 
-        console.log("PANEL INIT...");
         this._router.events
             .filter(event => event instanceof NavigationEnd)
             .map(() => this._route)
@@ -87,8 +86,6 @@ export class PanelComponent implements OnInit {
               }
           });
 
-            console.log(this._router.url);
-
             const redirectTo404 = () => {
                 this._router.navigate(['panel/404']);
             };
@@ -98,9 +95,6 @@ export class PanelComponent implements OnInit {
             } else {
                 this._router.navigateByUrl(this._router.url).catch(redirectTo404);
             }
-
-
-
 
         this.user = this._userService.getUser();
     }

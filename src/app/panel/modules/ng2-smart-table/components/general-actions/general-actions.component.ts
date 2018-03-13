@@ -19,7 +19,7 @@ export class GeneralActionsComponent implements OnInit {
 
     @Output() action = new EventEmitter<any>();
 
-    private actions: TableAction[] = [];
+    actions: TableAction[] = [];
 
     ngOnInit() {
         this.actions = this.grid.getSetting('generalActions');

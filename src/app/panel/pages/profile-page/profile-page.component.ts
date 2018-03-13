@@ -11,8 +11,8 @@ import {Language, LanguageService} from '../../services/language.service';
 })
 export class ProfilePageComponent implements OnInit {
 
-    private params: any = {}; // Setup params
-    private user: User;
+    params: any = {}; // Setup params
+    user: User;
 
     private currentLang: Language;
 

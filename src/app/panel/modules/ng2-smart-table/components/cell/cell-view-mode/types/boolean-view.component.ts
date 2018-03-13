@@ -9,7 +9,7 @@ export class BooleanViewComponent implements OnInit {
 
     @Input() cell: Cell;
 
-    private renderValue: boolean;
+    renderValue: boolean;
 
     ngOnInit() {
         const value = this.cell.getValue();

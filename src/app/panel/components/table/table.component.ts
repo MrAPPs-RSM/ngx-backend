@@ -36,7 +36,7 @@ export class TableComponent implements OnInit {
         }
     };
 
-    private isLoading = false;
+    isLoading = false;
 
     public data: any[];
     public activeFilters: TableActiveFilters = {}; // Need for table, not for API

@@ -9,7 +9,7 @@ export class UrlViewComponent implements OnInit {
 
     @Input() cell: Cell;
 
-    private renderValue: string;
+    renderValue: string;
 
     ngOnInit() {
         const value = this.cell.getValue();

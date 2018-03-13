@@ -12,7 +12,7 @@ export class ImageViewComponent implements OnInit {
 
     @Input() cell: Cell;
 
-    private renderValue: string;
+    renderValue: string;
 
     ngOnInit() {
         const value = this.cell.getValue();
@@ -34,7 +34,7 @@ export class ImageViewComponent implements OnInit {
     }
 
     /** Sometimes, Google Cloud takes a few seconds to make the image accessible */
-    private retryUrl($event: any): void {
+    retryUrl($event: any): void {
         setTimeout(() => {
             $event.target.src = this.renderValue;
         }, 2000);

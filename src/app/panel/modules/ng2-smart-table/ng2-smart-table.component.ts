@@ -21,7 +21,7 @@ export class Ng2SmartTableComponent implements OnChanges, OnInit {
 
     @Input() count: number;
     @Input() source: any;
-    @Input() settings: Object = {};
+    @Input() settings: any = {};
     @Input() activeFilters: TableActiveFilters;
 
     @Input() drag: boolean;
