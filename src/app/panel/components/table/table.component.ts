@@ -63,7 +63,7 @@ export class TableComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
 
-       this._subscription = this._route.queryParams.subscribe(params => {
+        this._subscription = this._route.queryParams.subscribe(params => {
             this.activeFilters.sort = [];
             this.activeFilters.pagination = {
                 page: 1,
@@ -117,7 +117,7 @@ export class TableComponent implements OnInit, OnDestroy {
                 this.count = res.count;
                 this._apiService.get(this.settings.api.endpoint, this.composeParams())
                     .then((data) => {
-                       // console.log(data);
+                        // console.log(data);
                         this.isLoading = false;
                         this.data = data;
                     })
@@ -273,7 +273,7 @@ export class TableComponent implements OnInit, OnDestroy {
                 }
 
                 if (action.config.titleField && path.indexOf(':title') !== -1) {
-                    path = path.replace(':title', data[action.config.titleField]);
+                    path = path.replace(':title', data[action.config.titleField] != null ? data[action.config.titleField] : '---');
                 }
 
                 if (action.config.params) {
