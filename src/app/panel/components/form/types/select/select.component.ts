@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {ApiService} from '../../../../../api/api.service';
 import {ActivatedRoute} from '@angular/router';
 import {HttpErrorResponse} from '@angular/common/http';
@@ -6,6 +6,7 @@ import {FormFieldSelect} from '../../interfaces/form-field-select';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {Subject} from 'rxjs/Subject';
 import {LanguageService} from '../../../../services/language.service';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
     selector: 'app-select',
@@ -13,7 +14,7 @@ import {LanguageService} from '../../../../services/language.service';
     styleUrls: ['./select.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class SelectComponent extends BaseInputComponent implements OnInit {
+export class SelectComponent extends BaseInputComponent implements OnInit, OnDestroy {
 
     @Input() field: FormFieldSelect;
     @Input() isEdit: boolean;
@@ -24,6 +25,8 @@ export class SelectComponent extends BaseInputComponent implements OnInit {
     public selected: any; // Array or object
 
 
+    private _subscription = Subscription.EMPTY;
+
     constructor(private _apiService: ApiService,
                 private _languageService: LanguageService,
                 private _route: ActivatedRoute) {
@@ -33,7 +36,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit {
     ngOnInit() {
         this.selected = this.field.multiple === true ? [] : {};
 
-        this.getControl().valueChanges.subscribe((value) => {
+        this._subscription = this.getControl().valueChanges.subscribe((value) => {
 
             if (this.field.multiple === true) {
                 if (value !== null && !(value instanceof Array)) {
@@ -98,6 +101,10 @@ export class SelectComponent extends BaseInputComponent implements OnInit {
         }
     }
 
+    ngOnDestroy() {
+        this._subscription.unsubscribe();
+    }
+
     get isValid() {
         if (this.getControl().touched) {
             if (this.field.validators && this.field.validators.required) {
@@ -151,7 +158,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit {
             && this.field.validators
             && this.field.validators.required
             && this.getControl().value === null) {
-                this.refreshFormValue(this.options);
+            this.refreshFormValue(this.options);
         }
     }
 

@@ -22,7 +22,7 @@ export class InputNumberComponent extends BaseInputComponent implements OnInit {
         if (this.field.value) {
             if (this.field.value === ':id') {
                 this.calculatedValue = this._route.params['value'].id;
-                this.form.controls[this.field.key].setValue(this.calculatedValue);
+                this.getControl().setValue(this.calculatedValue);
             } else {
                 if (!isNaN(this.field.value)) {
                     this.calculatedValue = this.field.value;

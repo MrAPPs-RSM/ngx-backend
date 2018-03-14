@@ -11,6 +11,7 @@ import {ApiService} from '../../../../../api/api.service';
 import {UtilsService} from '../../../../../services/utils.service';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {ToastsService} from '../../../../../services/toasts.service';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
     selector: 'app-file-upload',
@@ -44,6 +45,8 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
 
     @ViewChild('fileUpload') _fileUpload: ElementRef;
 
+    private _subscription = Subscription.EMPTY;
+
     constructor(private _renderer: Renderer,
                 private _toastsService: ToastsService,
                 private _apiService: ApiService) {
@@ -63,7 +66,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         this.createAllowedContentTypes();
 
         /** Load entity image (if added from duplicate or edit) */
-        this.form.controls[this.field.key].valueChanges
+        this._subscription = this.getControl().valueChanges
             .first()
             .subscribe(
                 data => {
@@ -81,6 +84,10 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     }
 
     ngOnDestroy() {
+        if (this._subscription !== null) {
+            this._subscription.unsubscribe();
+        }
+
         this.removeAllFiles();
         this.uploadedFiles = [];
     }

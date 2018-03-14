@@ -1,14 +1,15 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {FormFieldDateRange} from '../../interfaces/form-field-date-range';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {NguiDatetime} from '@ngui/datetime-picker';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
     selector: 'app-date-time-range',
     templateUrl: './date-time-range.component.html',
     styleUrls: ['./date-time-range.component.scss']
 })
-export class DateTimeRangeComponent extends BaseInputComponent implements OnInit {
+export class DateTimeRangeComponent extends BaseInputComponent implements OnInit,OnDestroy {
 
     /**
      * TODO: review this component validation logic when it will be used!!!
@@ -16,8 +17,11 @@ export class DateTimeRangeComponent extends BaseInputComponent implements OnInit
 
     @Input() field: FormFieldDateRange;
 
+    private _subscriptionStartDate = Subscription.EMPTY;
+    private _subscriptionEndDate = Subscription.EMPTY;
+
     ngOnInit() {
-        this.form.controls[this.field.startDate.key].valueChanges
+       this._subscriptionStartDate = this.form.controls[this.field.startDate.key].valueChanges
             .subscribe(value => {
                 if (value && !isNaN(value)) {
                     this.form.controls[this.field.startDate.key].setValue(
@@ -25,7 +29,7 @@ export class DateTimeRangeComponent extends BaseInputComponent implements OnInit
                     );
                 }
             });
-        this.form.controls[this.field.endDate.key].valueChanges
+       this._subscriptionEndDate = this.form.controls[this.field.endDate.key].valueChanges
             .first()
             .subscribe(value => {
                 if (value && !isNaN(value)) {
@@ -34,6 +38,11 @@ export class DateTimeRangeComponent extends BaseInputComponent implements OnInit
                     );
                 }
             });
+    }
+
+    ngOnDestroy() {
+        this._subscriptionStartDate.unsubscribe();
+        this._subscriptionEndDate.unsubscribe();
     }
 
     isDateValid(type: string) {

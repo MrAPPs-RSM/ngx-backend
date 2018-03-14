@@ -16,6 +16,7 @@ import {UtilsService} from '../../../services/utils.service';
 import {Language, LanguageService} from '../../services/language.service';
 import {ToastsService} from '../../../services/toasts.service';
 import {PageRefreshService} from '../../../services/page-refresh.service';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
     selector: 'app-table',
@@ -23,7 +24,7 @@ import {PageRefreshService} from '../../../services/page-refresh.service';
     styleUrls: ['./table.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class TableComponent implements OnInit {
+export class TableComponent implements OnInit, OnDestroy {
 
     @Input() settings: TableSettings;
 
@@ -49,6 +50,8 @@ export class TableComponent implements OnInit {
     isMultiLangEnabled = false;
     currentLang: Language;
 
+    private _subscription = Subscription.EMPTY;
+
     constructor(public _languageService: LanguageService,
                 private _pageRefresh: PageRefreshService,
                 private _apiService: ApiService,
@@ -60,7 +63,7 @@ export class TableComponent implements OnInit {
 
     ngOnInit() {
 
-        this._route.queryParams.subscribe(params => {
+       this._subscription = this._route.queryParams.subscribe(params => {
             this.activeFilters.sort = [];
             this.activeFilters.pagination = {
                 page: 1,
@@ -81,6 +84,10 @@ export class TableComponent implements OnInit {
         });
 
         this.setupLang();
+    }
+
+    ngOnDestroy() {
+        this._subscription.unsubscribe();
     }
 
     private setupLang(): void {

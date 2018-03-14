@@ -1,6 +1,7 @@
-import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {FormFieldMap} from '../../interfaces/form-field-map';
 import {BaseInputComponent} from '../base-input/base-input.component';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
     selector: 'app-map',
@@ -8,7 +9,7 @@ import {BaseInputComponent} from '../base-input/base-input.component';
     styleUrls: ['./map.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class MapComponent extends BaseInputComponent implements OnInit {
+export class MapComponent extends BaseInputComponent implements OnInit,OnDestroy {
 
     @Input() field: FormFieldMap;
 
@@ -16,6 +17,9 @@ export class MapComponent extends BaseInputComponent implements OnInit {
 
     lat: number;
     lng: number;
+
+    private _subscriptionLat = Subscription.EMPTY;
+    private _subscriptionLng = Subscription.EMPTY;
 
     ngOnInit() {
         this.options = this.field.options ? this.field.options : {
@@ -33,12 +37,17 @@ export class MapComponent extends BaseInputComponent implements OnInit {
         this.lng = this.options.defaults.lng;
         this.refreshFormValues();
 
-        this.onFormChange('lat');
-        this.onFormChange('lng');
+       this._subscriptionLat = this.onFormChange('lat');
+       this._subscriptionLng = this.onFormChange('lng');
     }
 
-    private onFormChange(key: string): void {
-        this.form.controls[this.field[key].key].valueChanges
+    ngOnDestroy() {
+        this._subscriptionLat.unsubscribe();
+        this._subscriptionLng.unsubscribe();
+    }
+
+    private onFormChange(key: string): Subscription {
+      return this.form.controls[this.field[key].key].valueChanges
             .subscribe(
                 value => {
                     this[key] = value;

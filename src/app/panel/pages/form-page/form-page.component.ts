@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {PageTitleService} from '../../services/page-title.service';
 import {PageRefreshService} from '../../../services/page-refresh.service';
@@ -8,6 +8,7 @@ import {UtilsService} from '../../../services/utils.service';
 import {ToastsService} from '../../../services/toasts.service';
 import {ErrorResponse} from '../../../api/api.service';
 import {MenuService} from '../../services/menu.service';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
     selector: 'app-form-page',
@@ -15,11 +16,13 @@ import {MenuService} from '../../services/menu.service';
     styleUrls: ['./form-page.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class FormPageComponent implements OnInit {
+export class FormPageComponent implements OnInit, OnDestroy {
 
     params: {
         forms?: FormSettings[]
     };
+
+    private _subscription = Subscription.EMPTY;
 
     constructor(private _router: Router,
                 private _route: ActivatedRoute,
@@ -31,10 +34,14 @@ export class FormPageComponent implements OnInit {
     }
 
     ngOnInit() {
-       this._route.queryParams.subscribe(params => {
+        this._subscription = this._route.queryParams.subscribe(params => {
             this.params = this._route.snapshot.data;
-         //  console.log(this.params);
+            //  console.log(this.params);
         });
+    }
+
+    ngOnDestroy() {
+        this._subscription.unsubscribe();
     }
 
     private redirectIfNeeded(form: FormSettings) {

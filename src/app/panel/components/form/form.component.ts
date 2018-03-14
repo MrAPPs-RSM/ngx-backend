@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, Output, EventEmitter, ViewEncapsulation, ChangeDetectorRef} from '@angular/core';
+import {Component, Input, OnInit, Output, EventEmitter, ViewEncapsulation, ChangeDetectorRef, OnDestroy} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormGeneratorService} from '../../services/form-generator.service';
@@ -8,6 +8,7 @@ import {ApiService} from '../../../api/api.service';
 import {FormSettings} from './interfaces/form-settings';
 import {FormButton} from './interfaces/form-button';
 import {Language, LanguageService} from '../../services/language.service';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
     selector: 'app-form',
@@ -15,7 +16,7 @@ import {Language, LanguageService} from '../../services/language.service';
     styleUrls: ['./form.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class FormComponent implements OnInit {
+export class FormComponent implements OnInit, OnDestroy {
 
     @Input() settings: FormSettings;
     @Input() isExternalForm: boolean;
@@ -33,6 +34,8 @@ export class FormComponent implements OnInit {
     private errors: any = {}; // Object that re-uses form group structure
     private errorsList: any = []; // Array to display errors in a human-readable way
 
+    private _subscription = Subscription.EMPTY;
+
     valueOfSettingsField(key: string) {
         return this.settings.fields[key];
     }
@@ -44,6 +47,48 @@ export class FormComponent implements OnInit {
                 private _apiService: ApiService,
                 private _route: ActivatedRoute,
                 private _ref: ChangeDetectorRef) {
+    }
+
+
+    ngOnInit() {
+        this._subscription = this._route.queryParams.subscribe((params) => {
+            this.form = this.setupForms();
+
+            if (this.settings.isEdit) {
+                this.loadData();
+            } else {
+                if (params.formParams) {
+
+                    const values = JSON.parse(params.formParams);
+                    const newValues = {};
+
+                    for (const key of Object.keys(values)) {
+                        newValues[key] = isNaN(values[key]) ? values[key] : parseInt(values[key]);
+                    }
+
+                    this._ref.detectChanges();
+                    this.form.patchValue(newValues);
+                }
+
+                if (params.loadData) {
+                    const data = JSON.parse(params.loadData);
+                    this.loadData(null, data.id, data.endpoint);
+                }
+            }
+        });
+
+        //  const params = this._route.snapshot.queryParams;
+
+
+        // this.form.valueChanges.subscribe(
+        //     data => {
+        //           console.log(data);
+        //     }
+        // );
+    }
+
+    ngOnDestroy() {
+        this._subscription.unsubscribe();
     }
 
     private _extractErrors(form: FormGroup, parentKey?: string): void {
@@ -131,43 +176,6 @@ export class FormComponent implements OnInit {
 
     onLanguageChange(language: Language) {
         this.currentLang = language;
-    }
-
-    ngOnInit() {
-        this._route.queryParams.subscribe((params) => {
-            this.form = this.setupForms();
-
-            if (this.settings.isEdit) {
-                this.loadData();
-            } else {
-                if (params.formParams) {
-
-                    const values = JSON.parse(params.formParams);
-                    const newValues = {};
-
-                    for (const key of Object.keys(values)) {
-                        newValues[key] = isNaN(values[key]) ? values[key] : parseInt(values[key]);
-                    }
-
-                    this._ref.detectChanges();
-                    this.form.patchValue(newValues);
-                }
-
-                if (params.loadData) {
-                    const data = JSON.parse(params.loadData);
-                    this.loadData(null, data.id, data.endpoint);
-                }
-            }
-        });
-
-        //  const params = this._route.snapshot.queryParams;
-
-
-        // this.form.valueChanges.subscribe(
-        //     data => {
-        //           console.log(data);
-        //     }
-        // );
     }
 
 
