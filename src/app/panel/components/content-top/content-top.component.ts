@@ -22,26 +22,32 @@ export class ContentTopComponent implements OnInit {
     ngOnInit() {
 
         this._state.subscribe('activePage', (activeLink) => {
+
              // console.log("ACTIVE LINK: "+JSON.stringify(activeLink));
             if (activeLink) {
                 this.activePage = activeLink.url;
-                if (this.isResetNeeded(activeLink)) {
-                    this._menuService.breadcrumbs = [activeLink];
+
+                if (this._menuService.breadcrumbs.length === 0) {
+                    this._menuService.breadcrumbs.push(activeLink);
                 } else {
-                    let found = false;
+                    if (this.isResetNeeded(activeLink)) {
+                        this._menuService.breadcrumbs = [activeLink];
+                    } else {
+                        let found = false;
 
-                    for (let i = this._menuService.breadcrumbs.length; i--;) {
-                        const breadcrumb = this._menuService.breadcrumbs[i];
+                        for (let i = this._menuService.breadcrumbs.length; i--;) {
+                            const breadcrumb = this._menuService.breadcrumbs[i];
 
-                        if (breadcrumb.route === activeLink.route && breadcrumb.params === activeLink.params) {
-                            found = true;
-                            this._menuService.breadcrumbs.splice(i + 1);
-                            return;
+                            if (breadcrumb.route === activeLink.route && breadcrumb.params === activeLink.params) {
+                                found = true;
+                                this._menuService.breadcrumbs.splice(i + 1);
+                                return;
+                            }
                         }
-                    }
 
-                    if (!found) {
-                        this._menuService.breadcrumbs.push(activeLink);
+                        if (!found) {
+                            this._menuService.breadcrumbs.push(activeLink);
+                        }
                     }
                 }
             }
@@ -68,8 +74,6 @@ export class ContentTopComponent implements OnInit {
 
         for (const breadcrumb of this._menuService.breadcrumbs) {
             if (breadcrumb.route === activeLink.route) {
-               // console.log(breadcrumb.route);
-               // console.log(activeLink.route);
                 return true;
             }
         }
@@ -83,7 +87,8 @@ export class ContentTopComponent implements OnInit {
         return (activeLink.breadcrumbLevel === 1
             && !(this.breadcrumbAlreadyIn(activeLink))
             && this.hasSameParentPath(activeLink))
-            || !this.hasSameParentPath(activeLink);
+            || !this.hasSameParentPath(activeLink)
+            || (activeLink.breadcrumbLevel === 1 && this._menuService.breadcrumbs[0].breadcrumbLevel !== 1);
     }
 
     navigateTo(activeLink: any) {

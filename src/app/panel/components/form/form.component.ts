@@ -135,35 +135,40 @@ export class FormComponent implements OnInit {
 
     ngOnInit() {
 
-            this.form = this.setupForms();
+        this.form = this.setupForms();
 
-            this._route.queryParams.subscribe((params) => {
-                if (params.formParams) {
+        this._route.queryParams.subscribe((params) => {
+            if (params.formParams) {
 
-                    const values = JSON.parse(params.formParams);
-                    const newValues = {};
+                const values = JSON.parse(params.formParams);
+                const newValues = {};
 
-                    for (const key of Object.keys(values)) {
-                        newValues[key] = isNaN(values[key]) ? values[key] : parseInt(values[key]);
-                    }
-
-                    this._ref.detectChanges();
-                    this.form.patchValue(newValues);
+                for (const key of Object.keys(values)) {
+                    newValues[key] = isNaN(values[key]) ? values[key] : parseInt(values[key]);
                 }
-            });
 
-      //  const params = this._route.snapshot.queryParams;
-
-
-            this.form.valueChanges.subscribe(
-                data => {
-                  //  console.log(data);
-                }
-            );
-
-            if (this.settings.isEdit) {
-                this.loadData();
+                this._ref.detectChanges();
+                this.form.patchValue(newValues);
             }
+
+            if (params.loadData) {
+                const data = JSON.parse(params.loadData);
+                this.loadData(null, data.id, data.endpoint);
+            }
+        });
+
+        //  const params = this._route.snapshot.queryParams;
+
+
+        this.form.valueChanges.subscribe(
+            data => {
+                //  console.log(data);
+            }
+        );
+
+        if (this.settings.isEdit) {
+            this.loadData();
+        }
 
 
         if (this._languageService.getContentLanguages()) {
@@ -206,14 +211,13 @@ export class FormComponent implements OnInit {
     loadData(entity?: any, _id?: any, _endpoint?: string): void {
         let id = null;
 
-        if (this._route.snapshot.params && this._route.snapshot.params['id']) {
+        if (_id) {
+            id = _id;
+        } else if (this._route.snapshot.params && this._route.snapshot.params['id']) {
             id = this._route.snapshot.params['id'];
         } else if (entity) {
             id = entity ? entity.id : null;
-        } else if (_id) {
-            id = _id;
         }
-
         if (id !== null) {
             this.isLoading = true;
 
@@ -230,7 +234,6 @@ export class FormComponent implements OnInit {
                 endpoint + '/' + id, params)
                 .then((response) => {
                     this.isLoading = false;
-                    console.log(response);
                     this.form.patchValue(response);
                 })
                 .catch((response: HttpErrorResponse) => {

@@ -270,9 +270,6 @@ export class TableComponent implements OnInit {
                 }
 
                 if (action.config.params) {
-                    if (action.config.params.id && action.config.params.id.indexOf(':id') !== -1) {
-                        action.config.params.id = action.config.params.id.replace(':id', data.id);
-                    }
 
                     if (action.config.params.filter) {
 
@@ -287,9 +284,9 @@ export class TableComponent implements OnInit {
                         }
 
                         extraParams = {queryParams: {listParams: updatedFilter}};
-                    }
-
-                    if (action.config.params.tableKey && data[action.config.params.tableKey]) {
+                    } else if (action.config.params.loadData) {
+                        extraParams = {queryParams: {loadData: JSON.stringify({id: data.id, endpoint: action.config.params.endpoint})}};
+                    } else if (action.config.params.tableKey && data[action.config.params.tableKey]) {
                         let key = action.config.params.tableKey;
                         if (action.config.params.formKey) {
                             key = action.config.params.formKey;

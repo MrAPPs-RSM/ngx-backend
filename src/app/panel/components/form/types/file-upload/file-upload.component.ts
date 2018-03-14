@@ -62,23 +62,22 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         this.uploadInput = new EventEmitter<UploadInput>(); // input events, we use this to emit data to ngx-uploader
         this.createAllowedContentTypes();
 
-        /** Load entity image (if edit) */
-        if (this.isEdit) {
-            this.form.controls[this.field.key].valueChanges
-                .first()
-                .subscribe(
-                    data => {
-                        if (this.uploadedFiles.length === 0) {
-                            if (data instanceof Array) {
-                                data.forEach((item) => {
-                                    this.handleResponse(item);
-                                });
-                            } else {
-                                this.handleResponse(data);
-                            }
+        /** Load entity image (if added from duplicate or edit) */
+        this.form.controls[this.field.key].valueChanges
+            .first()
+            .subscribe(
+                data => {
+                    if (this.uploadedFiles.length === 0) {
+                        if (data instanceof Array) {
+                            data.forEach((item) => {
+                                this.handleResponse(item);
+                            });
+                        } else {
+                            this.handleResponse(data);
                         }
-                    });
-        }
+                    }
+                });
+
     }
 
     ngOnDestroy() {

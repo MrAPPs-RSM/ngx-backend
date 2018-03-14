@@ -52,6 +52,24 @@ export class MenuService {
         return this.menu;
     }
 
+    public getMenuItemFromPath(path: string): any {
+        for (const menuItem of this.menu) {
+            if ('children' in menuItem) {
+                for (const subMenuItem of menuItem.children) {
+                    if ('/panel/' + subMenuItem.path === path) {
+                        return subMenuItem;
+                    }
+                }
+            } else {
+                if ('/panel/' + menuItem.path === path) {
+                    return menuItem;
+                }
+            }
+        }
+
+        return null;
+    }
+
     public canGoBack(): boolean{
         return this.breadcrumbs.length > 1;
     }
