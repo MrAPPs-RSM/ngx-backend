@@ -122,7 +122,6 @@ export class SelectComponent extends BaseInputComponent implements OnInit {
         value.forEach((itemId) => {
             this.options.forEach((option) => {
 
-                console.log(itemId);
                 if (option.id === itemId) {
                     this.selected.push({
                         id: itemId,
@@ -149,7 +148,6 @@ export class SelectComponent extends BaseInputComponent implements OnInit {
 
     private loadOptions(params?: any, forceReload?: boolean): Promise<any> {
         return new Promise((resolve, reject) => {
-            console.log("OPTIONS: " + this.field.options);
             if (this.field.options) {
                 if (this.field.options instanceof Array) {
 
