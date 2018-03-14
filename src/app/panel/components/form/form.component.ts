@@ -134,70 +134,40 @@ export class FormComponent implements OnInit {
     }
 
     ngOnInit() {
-
-        this.form = this.setupForms();
-
         this._route.queryParams.subscribe((params) => {
-            if (params.formParams) {
+            this.form = this.setupForms();
 
-                const values = JSON.parse(params.formParams);
-                const newValues = {};
+            if (this.settings.isEdit) {
+                this.loadData();
+            } else {
+                if (params.formParams) {
 
-                for (const key of Object.keys(values)) {
-                    newValues[key] = isNaN(values[key]) ? values[key] : parseInt(values[key]);
+                    const values = JSON.parse(params.formParams);
+                    const newValues = {};
+
+                    for (const key of Object.keys(values)) {
+                        newValues[key] = isNaN(values[key]) ? values[key] : parseInt(values[key]);
+                    }
+
+                    this._ref.detectChanges();
+                    this.form.patchValue(newValues);
                 }
 
-                this._ref.detectChanges();
-                this.form.patchValue(newValues);
-            }
-
-            if (params.loadData) {
-                const data = JSON.parse(params.loadData);
-                this.loadData(null, data.id, data.endpoint);
+                if (params.loadData) {
+                    const data = JSON.parse(params.loadData);
+                    this.loadData(null, data.id, data.endpoint);
+                }
             }
         });
 
         //  const params = this._route.snapshot.queryParams;
 
 
-        this.form.valueChanges.subscribe(
-            data => {
-                //  console.log(data);
-            }
-        );
-
-        if (this.settings.isEdit) {
-            this.loadData();
-        }
-
-
-        if (this._languageService.getContentLanguages()) {
-            for (const language of this._languageService.getContentLanguages()) {
-                if (language.isDefault) {
-                    this.currentLang = language;
-                    break;
-                }
-            }
-        }
-
-        // console.log(this.form);
-
-        // TODO: rivedere formParameters per duplicazione
-        /*
-        const formParameters = this._storageService.getValue('formParameters');
-        if (formParameters) {
-            if (formParameters.loadData) {
-                this.loadData(null, formParameters.id, formParameters.endpoint);
-            }
-
-            if (formParameters.formValues) {
-                this.form.patchValue(formParameters.formValues);
-            }
-
-            this._storageService.clearValue('formParameters');
-        }
-        */
-
+        // this.form.valueChanges.subscribe(
+        //     data => {
+        //           console.log(data);
+        //     }
+        // );
     }
 
 
