@@ -146,6 +146,15 @@ export class SelectComponent extends BaseInputComponent implements OnInit {
         return options;
     }
 
+    private setValueIfSingleOptionAndRequired() {
+        if (this.options.length === 1
+            && this.field.validators
+            && this.field.validators.required
+            && this.getControl().value === null) {
+                this.refreshFormValue(this.options);
+        }
+    }
+
     private loadOptions(params?: any, forceReload?: boolean): Promise<any> {
         return new Promise((resolve, reject) => {
             if (this.field.options) {
@@ -154,7 +163,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit {
                     if (this.options == null || forceReload === null || forceReload === true) {
                         this.options = this.filterOptionsIfNeeded(this.field.options);
                     }
-
+                    this.setValueIfSingleOptionAndRequired();
                     resolve();
                 } else {
                     if (this.options.length === 0 || forceReload === null || forceReload === true) {
@@ -185,6 +194,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit {
                         this._apiService.get(endpoint, params)
                             .then((response) => {
                                 this.options = this.filterOptionsIfNeeded(response);
+                                this.setValueIfSingleOptionAndRequired();
                                 resolve();
                             })
                             .catch((response: HttpErrorResponse) => {
@@ -216,7 +226,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit {
             if (values instanceof Array) {
                 const ids = [];
                 values.forEach((item) => {
-                    ids.push( item instanceof Object ? item.id : item);
+                    ids.push(item instanceof Object ? item.id : item);
                 });
                 this.getControl().setValue(ids);
             }
