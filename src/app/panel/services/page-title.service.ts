@@ -10,6 +10,9 @@ export class PageTitleService {
     }
 
     public set(route?: ActivatedRoute | string): void {
+
+        console.log(route);
+
         if (route instanceof ActivatedRoute) {
 
             if ('menu' in route.snapshot.data) {
@@ -31,10 +34,10 @@ export class PageTitleService {
                     params: JSON.stringify(route.snapshot.queryParams),
                     breadcrumbLevel: route.snapshot.data['menu'].breadcrumbLevel
                 };
-                this._state.notifyDataChanged('activePage', activeLink);
+                this._state._activePageSubject.next(activeLink);
             }
         } else {
-            this._state.notifyDataChanged('activePage', {
+            this._state._activePageSubject.next({
                 title: route,
                 route: this._router.url.split('?')[0],
                 url: this._router.url,

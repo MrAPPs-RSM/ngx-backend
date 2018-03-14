@@ -11,6 +11,7 @@ import {ApiService} from '../../../../../api/api.service';
 import {UtilsService} from '../../../../../services/utils.service';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {ToastsService} from '../../../../../services/toasts.service';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
     selector: 'app-file-upload',
@@ -44,6 +45,8 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
 
     @ViewChild('fileUpload') _fileUpload: ElementRef;
 
+    private _subscription = Subscription.EMPTY;
+
     constructor(private _renderer: Renderer,
                 private _toastsService: ToastsService,
                 private _apiService: ApiService) {
@@ -62,26 +65,29 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         this.uploadInput = new EventEmitter<UploadInput>(); // input events, we use this to emit data to ngx-uploader
         this.createAllowedContentTypes();
 
-        /** Load entity image (if edit) */
-        if (this.isEdit) {
-            this.form.controls[this.field.key].valueChanges
-                .first()
-                .subscribe(
-                    data => {
-                        if (this.uploadedFiles.length === 0) {
-                            if (data instanceof Array) {
-                                data.forEach((item) => {
-                                    this.handleResponse(item);
-                                });
-                            } else {
-                                this.handleResponse(data);
-                            }
+        /** Load entity image (if added from duplicate or edit) */
+        this._subscription = this.getControl().valueChanges
+            .first()
+            .subscribe(
+                data => {
+                    if (this.uploadedFiles.length === 0) {
+                        if (data instanceof Array) {
+                            data.forEach((item) => {
+                                this.handleResponse(item);
+                            });
+                        } else {
+                            this.handleResponse(data);
                         }
-                    });
-        }
+                    }
+                });
+
     }
 
     ngOnDestroy() {
+        if (this._subscription !== null) {
+            this._subscription.unsubscribe();
+        }
+
         this.removeAllFiles();
         this.uploadedFiles = [];
     }

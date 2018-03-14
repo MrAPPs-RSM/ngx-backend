@@ -13,11 +13,11 @@ export class CheckboxComponent extends BaseInputComponent implements OnInit {
 
     ngOnInit() {
         if (!this.isEdit) {
-            this.form.controls[this.field.key].patchValue(this.field.checked);
+            this.getControl().patchValue(this.field.checked);
         }
     }
 
     get isValid() {
-        return this.form.controls[this.field.key].valid;
+        return this.getControl().valid;
     }
 }

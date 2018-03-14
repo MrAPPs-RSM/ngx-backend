@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewEncapsulation, OnDestroy, OnChanges} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {ApiService} from '../../../../../api/api.service';
 import {ActivatedRoute} from '@angular/router';
 import {HttpErrorResponse} from '@angular/common/http';
@@ -6,6 +6,7 @@ import {FormFieldSelect} from '../../interfaces/form-field-select';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {Subject} from 'rxjs/Subject';
 import {LanguageService} from '../../../../services/language.service';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
     selector: 'app-select',
@@ -13,7 +14,7 @@ import {LanguageService} from '../../../../services/language.service';
     styleUrls: ['./select.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class SelectComponent extends BaseInputComponent implements OnInit, OnChanges {
+export class SelectComponent extends BaseInputComponent implements OnInit, OnDestroy {
 
     @Input() field: FormFieldSelect;
     @Input() isEdit: boolean;
@@ -24,20 +25,50 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnCha
     public selected: any; // Array or object
 
 
+    private _subscription = Subscription.EMPTY;
+
     constructor(private _apiService: ApiService,
                 private _languageService: LanguageService,
                 private _route: ActivatedRoute) {
         super();
     }
 
-    ngOnChanges() {
-
-    }
-
     ngOnInit() {
-        this.loadData();
-
         this.selected = this.field.multiple === true ? [] : {};
+
+        this._subscription = this.getControl().valueChanges.subscribe((value) => {
+
+            if (this.field.multiple === true) {
+                if (value !== null && !(value instanceof Array)) {
+                    value = [value];
+                }
+            }
+
+            if (value instanceof Array && value.length > 0) {
+                if ((value[0] instanceof Object)) {
+
+                    const newValues = [];
+
+                    for (const val of value) {
+                        newValues.push(val.id);
+                    }
+
+                    const updatedField = {};
+                    updatedField[this.field.key] = newValues;
+
+                    this.form.patchValue(updatedField);
+                } else {
+                    this.loadOptions(null, false).then(() => {
+                        this.updateSelectedOptions(value);
+
+                    }).catch((err) => {
+                        console.log(err);
+                    });
+                }
+            }
+        });
+
+        this.loadData();
 
         if (this.field.dependsOn) {
             this.field.dependsOn.forEach((key) => {
@@ -70,6 +101,10 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnCha
         }
     }
 
+    ngOnDestroy() {
+        this._subscription.unsubscribe();
+    }
+
     get isValid() {
         if (this.getControl().touched) {
             if (this.field.validators && this.field.validators.required) {
@@ -91,46 +126,22 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnCha
     }
 
     private updateSelectedOptions(value) {
-        if (value !== null && !(value instanceof Array)) {
-            value = [value];
-        }
+        value.forEach((itemId) => {
+            this.options.forEach((option) => {
 
-        if (value instanceof Array) {
-            value.forEach((item) => {
-                this.options.forEach((option) => {
-
-                    const itemId = item instanceof Object ? item.id : item;
-
-                    if (option.id === itemId) {
-                        this.selected.push({
-                            id: itemId,
-                            text: option.text
-                        });
-                    }
-                });
-                this.selected = [...this.selected];
+                if (option.id === itemId) {
+                    this.selected.push({
+                        id: itemId,
+                        text: option.text
+                    });
+                }
             });
-        }
-        this.refreshFormValue();
+            this.selected = [...this.selected];
+        });
     }
 
     private loadData(): void {
-        if (this.field.multiple) {
-            this.getControl().valueChanges.first().subscribe((value) => {
-                // console.log("VALUES: "+value)
-                this.loadOptions().then(() => {
-                    this.updateSelectedOptions(value);
-
-                }).catch((err) => {
-                    console.log(err);
-                });
-            });
-        }
-
-        this.loadOptions().then( () => {
-            if (this.field.multiple) {
-                this.updateSelectedOptions(this.getControl().value);
-            }
+        this.loadOptions().then(() => {
         }).catch((err) => console.log(err));
     }
 
@@ -142,47 +153,64 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnCha
         return options;
     }
 
-    private loadOptions(params?: any): Promise<any> {
+    private setValueIfSingleOptionAndRequired() {
+        if (this.options.length === 1
+            && this.field.validators
+            && this.field.validators.required
+            && this.getControl().value === null) {
+            this.refreshFormValue(this.options);
+        }
+    }
+
+    private loadOptions(params?: any, forceReload?: boolean): Promise<any> {
         return new Promise((resolve, reject) => {
             if (this.field.options) {
                 if (this.field.options instanceof Array) {
-                    this.options = this.filterOptionsIfNeeded(this.field.options);
+
+                    if (this.options == null || forceReload === null || forceReload === true) {
+                        this.options = this.filterOptionsIfNeeded(this.field.options);
+                    }
+                    this.setValueIfSingleOptionAndRequired();
                     resolve();
                 } else {
+                    if (this.options.length === 0 || forceReload === null || forceReload === true) {
+                        let endpoint = this.field.options;
 
-                    let endpoint = this.field.options;
-
-                    if (this.isEdit) {
-                        if (endpoint.indexOf(':id') !== -1) {
-                            endpoint = endpoint.replace(':id', this._route.params['value'].id);
+                        if (this.isEdit) {
+                            if (endpoint.indexOf(':id') !== -1) {
+                                endpoint = endpoint.replace(':id', this._route.params['value'].id);
+                            }
                         }
-                    }
 
-                    /** Add lang if not set by setup.json */
-                    let lang: any = null;
-                    if (endpoint.indexOf('lang=') === -1) {
-                        lang = this._languageService.getCurrentLang();
-                    }
-
-                    if (lang) {
-                        if (params) {
-                            params.lang = lang['isoCode'];
-                        } else {
-                            params = {
-                                lang: lang['isoCode']
-                            };
+                        /** Add lang if not set by setup.json */
+                        let lang: any = null;
+                        if (endpoint.indexOf('lang=') === -1) {
+                            lang = this._languageService.getCurrentLang();
                         }
-                    }
 
-                    this._apiService.get(endpoint, params)
-                        .then((response) => {
-                            this.options = this.filterOptionsIfNeeded(response);
-                            resolve();
-                        })
-                        .catch((response: HttpErrorResponse) => {
-                            // TODO: decide what to do if select options can't be loaded (back to prev page?, alert?, message?)
-                            console.log(response.error);
-                        });
+                        if (lang) {
+                            if (params) {
+                                params.lang = lang['isoCode'];
+                            } else {
+                                params = {
+                                    lang: lang['isoCode']
+                                };
+                            }
+                        }
+
+                        this._apiService.get(endpoint, params)
+                            .then((response) => {
+                                this.options = this.filterOptionsIfNeeded(response);
+                                this.setValueIfSingleOptionAndRequired();
+                                resolve();
+                            })
+                            .catch((response: HttpErrorResponse) => {
+                                // TODO: decide what to do if select options can't be loaded (back to prev page?, alert?, message?)
+                                console.log(response.error);
+                            });
+                    } else {
+                        resolve();
+                    }
                 }
             } else {
                 reject();
@@ -192,8 +220,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnCha
 
     onChange($event): void {
         if (this.field.multiple) {
-            this.selected = $event;
-            this.refreshFormValue();
+            this.refreshFormValue($event);
         }
 
         if (this.observable != null) {
@@ -201,12 +228,12 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnCha
         }
     }
 
-    private refreshFormValue(): void {
-        if (this.selected) {
-            if (this.selected instanceof Array) {
+    private refreshFormValue(values): void {
+        if (values != null) {
+            if (values instanceof Array) {
                 const ids = [];
-                this.selected.forEach((item) => {
-                    ids.push(item.id);
+                values.forEach((item) => {
+                    ids.push(item instanceof Object ? item.id : item);
                 });
                 this.getControl().setValue(ids);
             }

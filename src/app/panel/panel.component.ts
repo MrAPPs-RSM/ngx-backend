@@ -1,13 +1,11 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {User, UserService} from '../auth/services/user.service';
 import {environment} from '../../environments/environment';
-import {ActivatedRoute, NavigationEnd, Route, Router} from '@angular/router';
+import {ActivatedRoute, Route, Router} from '@angular/router';
 import {PageRefreshService} from '../services/page-refresh.service';
 import {LanguageService} from './services/language.service';
-import {PageTitleService} from './services/page-title.service';
 
 import 'rxjs/add/operator/map';
-import {NotfoundPageComponent} from './pages/notfound-page/notfound-page.component';
 import {MenuService} from './services/menu.service';
 
 declare const $: any;
@@ -32,33 +30,10 @@ export class PanelComponent implements OnInit {
                 private _route: ActivatedRoute,
                 private _languageService: LanguageService,
                 private _pageRefresh: PageRefreshService,
-                private _menuService: MenuService,
-                private _pageTitle: PageTitleService) {
+                private _menuService: MenuService) {
     }
 
     ngOnInit() {
-
-        this._router.events
-            .filter(event => event instanceof NavigationEnd)
-            .map(() => this._route)
-            .map((route) => {
-                while (route.firstChild) {
-                    route = route.firstChild;
-                }
-                return route;
-            })
-            .filter((route) => route.outlet === 'primary')
-            .subscribe((activatedRoute: any) => {
-
-                if (activatedRoute.component.name !== 'PanelComponent') {
-
-                    if (activatedRoute.component.name === 'NotfoundPageComponent') {
-                        this._pageTitle.set(this._languageService.translate('404.page_title'));
-                    } else {
-                        this._pageTitle.set(activatedRoute);
-                    }
-                }
-            });
 
         /** When start, if current lang not set, set it from the enviroment defaults */
         if (this._languageService.isMultiLang() && !this._languageService.getCurrentLang()) {

@@ -16,6 +16,7 @@ import {UtilsService} from '../../../services/utils.service';
 import {Language, LanguageService} from '../../services/language.service';
 import {ToastsService} from '../../../services/toasts.service';
 import {PageRefreshService} from '../../../services/page-refresh.service';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
     selector: 'app-table',
@@ -23,7 +24,7 @@ import {PageRefreshService} from '../../../services/page-refresh.service';
     styleUrls: ['./table.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class TableComponent implements OnInit {
+export class TableComponent implements OnInit, OnDestroy {
 
     @Input() settings: TableSettings;
 
@@ -49,6 +50,8 @@ export class TableComponent implements OnInit {
     isMultiLangEnabled = false;
     currentLang: Language;
 
+    private _subscription = Subscription.EMPTY;
+
     constructor(public _languageService: LanguageService,
                 private _pageRefresh: PageRefreshService,
                 private _apiService: ApiService,
@@ -60,7 +63,7 @@ export class TableComponent implements OnInit {
 
     ngOnInit() {
 
-        this._route.queryParams.subscribe(params => {
+        this._subscription = this._route.queryParams.subscribe(params => {
             this.activeFilters.sort = [];
             this.activeFilters.pagination = {
                 page: 1,
@@ -81,6 +84,10 @@ export class TableComponent implements OnInit {
         });
 
         this.setupLang();
+    }
+
+    ngOnDestroy() {
+        this._subscription.unsubscribe();
     }
 
     private setupLang(): void {
@@ -110,7 +117,7 @@ export class TableComponent implements OnInit {
                 this.count = res.count;
                 this._apiService.get(this.settings.api.endpoint, this.composeParams())
                     .then((data) => {
-                       // console.log(data);
+                        // console.log(data);
                         this.isLoading = false;
                         this.data = data;
                     })
@@ -266,13 +273,10 @@ export class TableComponent implements OnInit {
                 }
 
                 if (action.config.titleField && path.indexOf(':title') !== -1) {
-                    path = path.replace(':title', data[action.config.titleField]);
+                    path = path.replace(':title', data[action.config.titleField] != null ? data[action.config.titleField] : '---');
                 }
 
                 if (action.config.params) {
-                    if (action.config.params.id && action.config.params.id.indexOf(':id') !== -1) {
-                        action.config.params.id = action.config.params.id.replace(':id', data.id);
-                    }
 
                     if (action.config.params.filter) {
 
@@ -287,9 +291,9 @@ export class TableComponent implements OnInit {
                         }
 
                         extraParams = {queryParams: {listParams: updatedFilter}};
-                    }
-
-                    if (action.config.params.tableKey && data[action.config.params.tableKey]) {
+                    } else if (action.config.params.loadData) {
+                        extraParams = {queryParams: {loadData: JSON.stringify({id: data.id, endpoint: action.config.params.endpoint})}};
+                    } else if (action.config.params.tableKey && data[action.config.params.tableKey]) {
                         let key = action.config.params.tableKey;
                         if (action.config.params.formKey) {
                             key = action.config.params.formKey;
