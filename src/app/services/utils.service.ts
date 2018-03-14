@@ -124,6 +124,7 @@ export class UtilsService {
         return -1;
     }
 
+
     public static isEmptyObject(obj: any): boolean {
         return Object.keys(obj).length === 0;
     }

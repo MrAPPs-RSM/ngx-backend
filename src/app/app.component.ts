@@ -5,6 +5,7 @@ import {LanguageService} from './panel/services/language.service';
 import {MenuService} from './panel/services/menu.service';
 import {GlobalState} from './global.state';
 import {Subscription} from 'rxjs/Subscription';
+import {UtilsService} from './services/utils.service';
 
 @Component({
     selector: 'app-root',
@@ -15,6 +16,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
     private _routerSub = Subscription.EMPTY;
     private _activePageSub = Subscription.EMPTY;
+
+    private firstRoute = true;
 
     constructor(private _router: Router,
                 private _route: ActivatedRoute,
@@ -36,9 +39,13 @@ export class AppComponent implements OnInit, OnDestroy {
             })
             .filter((route) => route.outlet === 'primary')
             .subscribe((activatedRoute: any) => {
-                console.log(activatedRoute);
 
                 if (activatedRoute.component.name !== 'PanelComponent') {
+                    // skipping for first panel redirect to the current route
+                    if (this.firstRoute) {
+                        this.firstRoute = false;
+                        return;
+                    }
 
                     if (activatedRoute.component.name === 'NotfoundPageComponent') {
                         this._pageTitle.set(this._languageService.translate('404.page_title'));
@@ -65,8 +72,9 @@ export class AppComponent implements OnInit, OnDestroy {
                         for (let i = this._menuService.breadcrumbs.length; i--;) {
                             const breadcrumb = this._menuService.breadcrumbs[i];
 
-                            if (breadcrumb.route === activeLink.route && breadcrumb.params === activeLink.params) {
+                            if (breadcrumb.url === activeLink.url) {
                                 found = true;
+                                console.log(breadcrumb.url);
                                 this._menuService.breadcrumbs.splice(i + 1);
                                 return;
                             }
@@ -112,18 +120,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
 
     private isResetNeeded(activeLink: any): boolean {
-
-        console.log(activeLink.breadcrumbLevel === 1
+        return activeLink.breadcrumbLevel === 1
             && !(this.breadcrumbAlreadyIn(activeLink))
-            && this.hasSameParentPath(activeLink));
-
-        console.log(!this.hasSameParentPath(activeLink));
-
-        console.log((activeLink.breadcrumbLevel === 1 && this._menuService.breadcrumbs[0].breadcrumbLevel !== 1));
-
-        return (activeLink.breadcrumbLevel === 1
-            && !(this.breadcrumbAlreadyIn(activeLink))
-            && this.hasSameParentPath(activeLink))
+            && UtilsService.isEmptyObject(JSON.parse(activeLink.params))
+            && this.hasSameParentPath(activeLink)
             || !this.hasSameParentPath(activeLink)
             || (activeLink.breadcrumbLevel === 1 && this._menuService.breadcrumbs[0].breadcrumbLevel !== 1);
     }
