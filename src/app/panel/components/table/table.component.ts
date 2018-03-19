@@ -75,8 +75,8 @@ export class TableComponent implements OnInit, OnDestroy {
                 this.filter = JSON.parse(this.settings.api.filter);
             }
 
-            if (this._route.snapshot.queryParams && this._route.snapshot.queryParams.listParams) {
-                const queryParamsFilter = JSON.parse(this._route.snapshot.queryParams.listParams);
+            if (this._route.snapshot.queryParams && this._route.snapshot.queryParams['listParams']) {
+                const queryParamsFilter = JSON.parse(this._route.snapshot.queryParams['listParams']);
                 this.filter = UtilsService.mergeDeep(this.filter, queryParamsFilter);
             }
 
@@ -292,7 +292,14 @@ export class TableComponent implements OnInit, OnDestroy {
 
                         extraParams = {queryParams: {listParams: updatedFilter}};
                     } else if (action.config.params.loadData) {
-                        extraParams = {queryParams: {loadData: JSON.stringify({id: data.id, endpoint: action.config.params.endpoint})}};
+                        extraParams = {
+                            queryParams: {
+                                loadData: JSON.stringify({
+                                    id: data.id,
+                                    endpoint: action.config.params.endpoint
+                                })
+                            }
+                        };
                     } else if (action.config.params.tableKey && data[action.config.params.tableKey]) {
                         let key = action.config.params.tableKey;
                         if (action.config.params.formKey) {
@@ -355,6 +362,9 @@ export class TableComponent implements OnInit, OnDestroy {
                     if (action.config.confirm) {
                         this._modal.confirm()
                             .then(() => {
+                                if (action.config.refreshAfter !== false) {
+                                    this.isLoading = true;
+                                }
                                 this._apiService.get(endpoint)
                                     .then((response) => {
                                         this.handleResponseApi(action, response)
@@ -367,6 +377,9 @@ export class TableComponent implements OnInit, OnDestroy {
                             }).catch(() => {
                         });
                     } else {
+                        if (action.config.refreshAfter !== false) {
+                            this.isLoading = true;
+                        }
                         this._apiService.get(endpoint)
                             .then((response) => {
                                 this.handleResponseApi(action, response)
@@ -383,6 +396,9 @@ export class TableComponent implements OnInit, OnDestroy {
                     if (action.config.confirm) {
                         this._modal.confirm()
                             .then(() => {
+                                if (action.config.refreshAfter !== false) {
+                                    this.isLoading = true;
+                                }
                                 this._apiService.delete(endpoint)
                                     .then((response) => {
                                         this.handleResponseApi(action, response)
@@ -396,6 +412,9 @@ export class TableComponent implements OnInit, OnDestroy {
                             .catch(() => {
                             });
                     } else {
+                        if (action.config.refreshAfter !== false) {
+                            this.isLoading = true;
+                        }
                         this._apiService.delete(endpoint)
                             .then((response) => {
                                 this.handleResponseApi(action, response)
