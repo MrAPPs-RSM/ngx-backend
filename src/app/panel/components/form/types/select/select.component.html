@@ -2,11 +2,12 @@
     <div class="form-group"
          [ngClass]="{'has-error': !isValid}">
 
-        <label class="select-label">{{field.label}}</label>
-        <span *ngIf="field.validators && field.validators.required">*</span>
+        <label class="select-label">{{field.label}}
+            <span *ngIf="field.validators && field.validators.required">*</span>
+        </label>
 
         <ng-select *ngIf="field.multiple"
-                   [attr.disabled]="field.disabled ? '' : null"
+                   [disabled]="field.disabled"
                    [items]="options"
                    [multiple]="true"
                    bindLabel="text"
@@ -18,7 +19,7 @@
         </ng-select>
 
         <ng-select *ngIf="!field.multiple"
-                   [attr.disabled]="field.disabled ? '' : null"
+                   [disabled]="field.disabled"
                    [items]="options"
                    [multiple]="false"
                    (change)="onChange($event)"

@@ -34,6 +34,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
     }
 
     ngOnInit() {
+
         this.selected = this.field.multiple === true ? [] : {};
 
         this._subscription = this.getControl().valueChanges.subscribe((value) => {
@@ -246,4 +247,5 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
 export interface SelectData {
     id: string | number;
     text: string;
+    disabled: boolean;
 }
