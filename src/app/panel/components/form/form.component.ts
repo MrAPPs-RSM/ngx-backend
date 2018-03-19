@@ -51,7 +51,7 @@ export class FormComponent implements OnInit, OnDestroy {
 
 
     ngOnInit() {
-        this._subscription = this._route.queryParams.subscribe((params) => {
+        this._subscription = this._route.queryParams.subscribe((params: any) => {
             this.form = this.setupForms();
 
             if (this.settings.isEdit) {

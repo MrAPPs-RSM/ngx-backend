@@ -27,13 +27,17 @@ export class LoginComponent implements OnInit {
 
     onSubmit(data): void {
         this.isLoading = true;
+
         this._apiService.login(data)
             .then((response) => {
                 this.isLoading = false;
 
                 response.user['password'] = data.password;
+                response.user.remember = !!data['remember'];
+
                 this._userService.storeUser(response.user);
                 this._userService.storeToken(response.id);
+
                 this._router.navigate(['panel']);
             })
             .catch((response: ErrorResponse) => {

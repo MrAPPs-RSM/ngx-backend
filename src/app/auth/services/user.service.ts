@@ -43,6 +43,7 @@ export class UserService {
 }
 
 export interface User {
+    remember?: boolean;
     realm: string;
     username: string;
     password: string;

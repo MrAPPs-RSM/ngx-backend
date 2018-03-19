@@ -232,16 +232,22 @@ export class ApiService {
                         reject(error);
                     } else {
 
-                        this.login(null)
-                            .then((response) => {
-                                // console.log("TOKEN CHANGED");
-                                this._userService.storeToken(response.id);
-                                resolve();
-                            })
-                            .catch((err) => {
-                                this.redirectToLogin();
-                                reject(err);
-                            });
+                        // Only if remember me enabled
+                        if (this._userService.getUser().remember) {
+                            this.login(null)
+                                .then((response) => {
+                                    // console.log("TOKEN CHANGED");
+                                    this._userService.storeToken(response.id);
+                                    resolve();
+                                })
+                                .catch((err) => {
+                                    this.redirectToLogin();
+                                    reject(err);
+                                });
+                        } else {
+                            this.redirectToLogin();
+                            reject();
+                        }
                     }
                 }
                     break;
