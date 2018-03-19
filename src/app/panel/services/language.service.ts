@@ -29,6 +29,10 @@ export class LanguageService {
         }
     }
 
+    public removeLang(): void {
+        localStorage.removeItem('lang');
+    }
+
     public getCurrentLang(): Language {
         if (this.isMultiLang()) {
             return JSON.parse(localStorage.getItem('lang'));

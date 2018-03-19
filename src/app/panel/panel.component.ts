@@ -35,6 +35,8 @@ export class PanelComponent implements OnInit {
 
     ngOnInit() {
 
+        console.log(this._languageService.getCurrentLang());
+
         /** When start, if current lang not set, set it from the enviroment defaults */
         if (this._languageService.isMultiLang() && !this._languageService.getCurrentLang()) {
             this._languageService.setCurrentLang(environment['currentLang']);
@@ -77,6 +79,7 @@ export class PanelComponent implements OnInit {
     logout(): void {
         this._userService.removeToken();
         this._userService.removeUser();
+        this._languageService.removeLang();
         this._pageRefresh.reset();
         this._router.navigate(['login']);
     }
