@@ -45,6 +45,7 @@ import {PipesModule} from '../pipes/pipes.module';
 import {TranslatePipe} from '../pipes/translate/translate.pipe';
 import {LanguageService} from './services/language.service';
 import {MenuService} from './services/menu.service';
+import { PlainComponent } from './components/form/types/plain/plain.component';
 
 const routes: Routes = [
     {
@@ -121,7 +122,8 @@ const routes: Routes = [
         MapComponent,
         ContentTopComponent,
         ProfilePageComponent,
-        NotfoundPageComponent
+        NotfoundPageComponent,
+        PlainComponent
     ],
     providers: [
         AuthGuard,

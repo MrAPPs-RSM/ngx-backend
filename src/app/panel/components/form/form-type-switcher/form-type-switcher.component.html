@@ -17,6 +17,16 @@
           [index]="index">
   </app-input-text>
 
+  <app-plain
+          *ngSwitchCase="formConfig.types.PLAIN"
+          [form]="form"
+          [groupName]="groupName"
+          [field]="field"
+          [isEdit]="isEdit"
+          [index]="index">
+  </app-plain>
+
+
   <app-input-password
           *ngSwitchCase="formConfig.types.PASSWORD"
           [groupName]="groupName"
