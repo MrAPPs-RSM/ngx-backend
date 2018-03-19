@@ -129,6 +129,13 @@ body {
   }
 }
 
+tooltip-content {
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  display: inline-block;
+}
+
 /* Drag&Drop */
 .gu-mirror {
   padding: inherit;
@@ -211,6 +218,10 @@ body {
       }
     }
   }
+
+  tooltip-content {
+    display: none;
+  }
 }
 
 .gu-transit {
@@ -218,42 +229,3 @@ body {
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
   filter: alpha(opacity=20);
 }
-
-/* Drag & Drop table
-.gu-mirror {
-  width: auto !important;
-  position: fixed !important;
-  margin: 0 !important;
-  z-index: 9999 !important;
-  border: 1px solid $grey;
-  > td {
-    text-align: center !important;
-    border-bottom: 1px solid $grey;
-    font-size: 14px;
-    color: $default;
-    font-weight: $light;
-    padding: 5px 10px;
-    background: #ffffff;
-    width: 10%;
-    &:not(:last-child) {
-      border-right: 1px solid $grey;
-    }
-
-    @include respond-to(upto-sm) {
-      &:last-child {
-        display: none;
-      }
-    }
-
-    &.ng2-smart-actions {
-      > ng2-st-tbody-actions {
-        > a {
-          &:not(:last-child) {
-            margin-right: 10px;
-          }
-        }
-      }
-    }
-  }
-}
-*/

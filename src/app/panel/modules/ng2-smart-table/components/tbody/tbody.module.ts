@@ -6,6 +6,7 @@ import {CellModule} from '../cell/cell.module';
 
 import {Ng2SmartTableTbodyComponent} from './tbody.component';
 import {ActionsComponent} from './actions/actions.component';
+import {TooltipModule} from 'ngx-tooltip';
 
 const TBODY_COMPONENTS = [
     Ng2SmartTableTbodyComponent,
@@ -17,6 +18,7 @@ const TBODY_COMPONENTS = [
         CommonModule,
         FormsModule,
         CellModule,
+        TooltipModule
     ],
     declarations: [
         ...TBODY_COMPONENTS,

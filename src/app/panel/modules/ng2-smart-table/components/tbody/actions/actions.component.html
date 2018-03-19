@@ -1,11 +1,15 @@
 <a *ngFor="let action of actions"
    href="#"
-   [title]="action.name"
    [ngClass]="{
     'disabled': !action.enabled,
     'hidden': !action.visible
     }"
    [class]="'ng2-smart-action ' + action.class"
    [innerHTML]="action.content"
-   (click)="action.enabled && onAction($event, action)">
+   (click)="action.enabled && onAction($event, action)"
+   [tooltip]="action.name"
+   [tooltipDisabled]="!action.enabled"
+   [tooltipAnimation]="true"
+   [tooltipPlacement]="'top'"
+>
 </a>

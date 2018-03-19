@@ -6,6 +6,7 @@
         <span *ngIf="field.validators && field.validators.required">*</span>
 
         <ng-select *ngIf="field.multiple"
+                   [attr.disabled]="field.disabled ? '' : null"
                    [items]="options"
                    [multiple]="true"
                    bindLabel="text"
@@ -17,6 +18,7 @@
         </ng-select>
 
         <ng-select *ngIf="!field.multiple"
+                   [attr.disabled]="field.disabled ? '' : null"
                    [items]="options"
                    [multiple]="false"
                    (change)="onChange($event)"
