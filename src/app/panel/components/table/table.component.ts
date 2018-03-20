@@ -399,6 +399,7 @@ export class TableComponent implements OnInit, OnDestroy {
                                 if (action.config.refreshAfter !== false) {
                                     this.isLoading = true;
                                 }
+                                console.log(this.isLoading);
                                 this._apiService.delete(endpoint)
                                     .then((response) => {
                                         this.handleResponseApi(action, response)

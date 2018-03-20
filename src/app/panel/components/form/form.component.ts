@@ -80,11 +80,11 @@ export class FormComponent implements OnInit, OnDestroy {
         //  const params = this._route.snapshot.queryParams;
 
 
-        // this.form.valueChanges.subscribe(
-        //     data => {
-        //           console.log(data);
-        //     }
-        // );
+        this.form.valueChanges.subscribe(
+           data => {
+                   console.log(data);
+          }
+        );
     }
 
     ngOnDestroy() {

@@ -7,6 +7,7 @@
 @import 'partials/_progress-bar.scss';
 @import 'partials/_form.scss';
 @import 'partials/_toasts.scss';
+@import 'partials/_tooltip.scss';
 /* Externals */
 @import '~dragula/dist/dragula.min.css';
 @import "~@ng-select/ng-select/themes/default.theme.css";
@@ -127,13 +128,6 @@ body {
       color: $grey;
     }
   }
-}
-
-tooltip-content {
-  width: 0;
-  height: 0;
-  overflow: hidden;
-  display: inline-block;
 }
 
 /* Drag&Drop */

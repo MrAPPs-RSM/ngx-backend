@@ -95,12 +95,16 @@ ng-select.ng-select.bottom {
     }
 
     > div.ng-value-container {
+      > div.ng-input, div.ng-placeholder {
+        top: 12px;
+      }
       > div.ng-value {
+        top: 12px;
         overflow: hidden;
         border-radius: $borderRadius;
         border-color: $lightGrey;
         font-size: 13px;
-        padding: 2px 5px;
+        padding: 2px 0;
         > span.ng-value-icon.left {
           border: none;
           padding: 0;

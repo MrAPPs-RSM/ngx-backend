@@ -1,0 +1,19 @@
+tooltip-content {
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  display: inline-block;
+
+  > div.tooltip.top {
+    > div.tooltip-inner {
+      border-radius: $borderRadius;
+      font-weight: $light;
+      background-color: $sidebarDark;
+      color: $lightGrey;
+      padding: 2px 5px;
+    }
+    > div.tooltip-arrow {
+      border-top-color: $sidebarDark;
+    }
+  }
+}

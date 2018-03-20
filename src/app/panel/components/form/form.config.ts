@@ -14,7 +14,8 @@ export let formConfig = {
         MAP: 'map',
         FILE: 'file',
         LIST_DETAILS: 'list_details',
-        PLAIN: 'plain'
+        PLAIN: 'plain',
+        PREVIEW: 'preview'
     },
     noInputTypes: {
         SEPARATOR: 'separator'
