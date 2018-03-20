@@ -8,7 +8,7 @@ import {TablePagination} from '../../modules/ng2-smart-table/lib/data-filters/ta
 import {TableSelection} from '../../modules/ng2-smart-table/lib/data-filters/table-selection';
 import {TableActiveFilters} from '../../modules/ng2-smart-table/lib/data-filters/table-active-filters';
 import {TableDrop} from '../../modules/ng2-smart-table/lib/data-filters/table-drop';
-import {TableAction} from './interfaces/table-action';
+import {Association, TableAction} from './interfaces/table-action';
 import {ActivatedRoute, Router} from '@angular/router';
 import * as _ from 'lodash';
 import * as FileSaver from 'file-saver';
@@ -255,11 +255,13 @@ export class TableComponent implements OnInit, OnDestroy {
         if (action.config.path) {
             if (!data) {
 
-                if (action.config.params && action.config.params['queryKey']) {
-
+                if (action.config.params && action.config.params.associateFields && action.config.params.associateFields.length > 0) {
                     const params = {};
 
-                    params[action.config.params['formKey']] = this.filter.where[action.config.params['queryKey']];
+                    action.config.params.associateFields.forEach((association: Association) => {
+                        params[association.formKey] = this.filter.where[association.queryKey];
+                    });
+
                     extraParams = {queryParams: {formParams: JSON.stringify(params)}};
 
                     this._router.navigate(['panel/' + action.config.path], extraParams);
@@ -273,7 +275,7 @@ export class TableComponent implements OnInit, OnDestroy {
                 }
 
                 if (action.config.titleField && path.indexOf(':title') !== -1) {
-                    path = path.replace(':title', data[action.config.titleField] != null ? data[action.config.titleField] : '---');
+                    path = path.replace(':title', data[action.config.titleField] !== null ? data[action.config.titleField] : '---');
                 }
 
                 if (action.config.params) {
@@ -300,20 +302,21 @@ export class TableComponent implements OnInit, OnDestroy {
                                 })
                             }
                         };
-                    } else if (action.config.params.tableKey && data[action.config.params.tableKey]) {
-                        let key = action.config.params.tableKey;
-                        if (action.config.params.formKey) {
-                            key = action.config.params.formKey;
-                        }
-
+                    } else if (action.config.params.associateFields && action.config.params.associateFields.length > 0) {
                         action.config.params['formValues'] = {};
-                        action.config.params['formValues'][key] = data[action.config.params.tableKey];
+
+                        action.config.params.associateFields.forEach((association: Association) => {
+                            let key = association.tableKey;
+                            if (association.formKey) {
+                                key = association.formKey;
+                            }
+                            action.config.params['formValues'][key] = data[association.tableKey];
+                        });
 
                         const formValues = action.config.params['formValues'];
                         extraParams = {queryParams: {formParams: JSON.stringify(formValues)}};
 
-                        delete action.config.params.tableKey;
-                        delete action.config.params.formKey;
+                        delete action.config.params.associateFields;
                     }
                 }
                 /**

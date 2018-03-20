@@ -10,11 +10,10 @@ export interface TableAction {
         params?: {
             type?: string, // 'formParameters'
             loadData?: true, // only for formsParameters, reload data based on id
-            tableKey?: string; // if a table key need to be passed to a form
-            formKey?: string; // key of the field that need to be evaluated with tableKey value
             filter?: string; // filter for get data on new table
             id?: string, // id to pass :id
             endpoint?: string; // if endpoint call after navigate to form is different of the endpoint defined in that form
+            associateFields?: Association[];
         }; // query params to pass to path
         endpoint?: string; // api call
         confirm?: boolean; // if true opens confirmation modal before api
@@ -26,4 +25,10 @@ export interface TableAction {
             extension: string; // required (csv, txt, jpeg)
         }
     };
+}
+
+export interface Association {
+    tableKey: string;
+    formKey?: string;
+    queryKey?: string;
 }
