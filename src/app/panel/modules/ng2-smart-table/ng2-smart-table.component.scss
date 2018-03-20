@@ -135,9 +135,8 @@
             &.ng2-smart-actions {
               > ng2-st-tbody-actions {
                 > a {
-                  &:not(:last-child) {
-                    margin-right: 10px;
-                  }
+                  margin-left: 5px;
+                  margin-right: 5px;
                 }
               }
             }
