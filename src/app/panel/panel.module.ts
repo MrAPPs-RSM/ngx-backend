@@ -45,8 +45,9 @@ import {PipesModule} from '../pipes/pipes.module';
 import {TranslatePipe} from '../pipes/translate/translate.pipe';
 import {LanguageService} from './services/language.service';
 import {MenuService} from './services/menu.service';
-import { PlainComponent } from './components/form/types/plain/plain.component';
-import { PreviewComponent } from './components/form/types/preview/preview.component';
+import {PlainComponent} from './components/form/types/plain/plain.component';
+import {PreviewComponent} from './components/form/types/preview/preview.component';
+import {NouisliderModule} from 'ng2-nouislider';
 
 const routes: Routes = [
     {
@@ -90,7 +91,8 @@ const routes: Routes = [
             apiKey: 'AIzaSyAP1chVIcUZSeLzRhRhXYbo20SBj7bryfM' // TODO: set gmaps api key
         }),
         Ng2SmartTableModule,
-        PipesModule
+        PipesModule,
+        NouisliderModule
     ],
     exports: [
         FormComponent,

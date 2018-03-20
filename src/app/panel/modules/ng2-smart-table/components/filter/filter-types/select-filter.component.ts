@@ -5,8 +5,7 @@ import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/skip';
 
 import {DefaultFilter} from './default-filter';
-import {ApiService} from '../../../../../../api/api.service';
-import {HttpErrorResponse} from '@angular/common/http';
+import {ApiService, ErrorResponse} from '../../../../../../api/api.service';
 
 @Component({
     selector: 'select-filter',
@@ -57,7 +56,7 @@ export class SelectFilterComponent extends DefaultFilter implements OnInit {
                 .then((response) => {
                     this.options = response;
                 })
-                .catch((response: HttpErrorResponse) => {
+                .catch((response: ErrorResponse) => {
                     // TODO: decide what to do if select options can't be loaded (back to prev page?, alert?, message?)
                     console.log(response.error);
                 });

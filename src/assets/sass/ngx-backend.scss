@@ -8,9 +8,12 @@
 @import 'partials/_form.scss';
 @import 'partials/_toasts.scss';
 @import 'partials/_tooltip.scss';
+@import 'partials/_slider.scss';
 /* Externals */
 @import '~dragula/dist/dragula.min.css';
 @import "~@ng-select/ng-select/themes/default.theme.css";
+@import "~nouislider/distribute/nouislider.min.css";
+
 
 body {
   background-color: #F1F1F1;

@@ -1,7 +1,6 @@
 import {Component, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
-import {ApiService} from '../../../../../api/api.service';
+import {ApiService, ErrorResponse} from '../../../../../api/api.service';
 import {ActivatedRoute} from '@angular/router';
-import {HttpErrorResponse} from '@angular/common/http';
 import {FormFieldSelect} from '../../interfaces/form-field-select';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {Subject} from 'rxjs/Subject';
@@ -205,7 +204,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
                                 this.setValueIfSingleOptionAndRequired();
                                 resolve();
                             })
-                            .catch((response: HttpErrorResponse) => {
+                            .catch((response: ErrorResponse) => {
                                 // TODO: decide what to do if select options can't be loaded (back to prev page?, alert?, message?)
                                 console.log(response.error);
                             });

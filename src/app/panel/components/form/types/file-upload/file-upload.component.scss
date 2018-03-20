@@ -55,7 +55,7 @@ app-file-upload {
           list-style: none;
           > li {
             text-align: center;
-            $fileSize: 70px;
+            $fileSize: 50px;
             width: $fileSize;
             display: inline-block;
             &:not(:last-child) {
@@ -88,7 +88,7 @@ app-file-upload {
               }
             }
             > span.file-name {
-              margin-top: -1px;
+              margin-top: 0;
               font-size: 13px;
               text-align: center;
               width: $fileSize;

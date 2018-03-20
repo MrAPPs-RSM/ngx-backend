@@ -1,4 +1,4 @@
-<div [class]="field.class ? field.class : 'col-sm-12'" [ngClass]="{'hidden': field.hidden}">
+<div [class]="field.class ? field.class : 'col-sm-12'" *ngIf="!isVisible">
     <div class="form-group">
 
         <!-- Label -->
@@ -7,11 +7,16 @@
             <span *ngIf="field.validators && field.validators.required">*</span>
         </label>
 
-        SLIDER
+        <nouislider
+                [min]="min"
+                [max]="max"
+                [config]="sliderConfig"
+                [(ngModel)]="offset"
+                [ngModelOptions]="{standalone: true}"
+                (ngModelChange)="onChange($event)"
+        ></nouislider>
 
-        <br/>
-
-        PREVIEW
+        <img class="preview" [src]="url">
 
         <!-- Others -->
         <span *ngIf="field.description" class="help-block">{{field.description}}</span>

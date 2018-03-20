@@ -1,0 +1,12 @@
+@import '../../../../../../assets/sass/partials/imports';
+
+app-preview {
+  > div {
+    > div.form-group {
+      > img.preview {
+        margin-top: 25px;
+      }
+    }
+  }
+
+}

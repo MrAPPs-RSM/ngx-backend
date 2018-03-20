@@ -2,9 +2,8 @@ import {Component, Input, OnInit, Output, EventEmitter, ViewEncapsulation, Chang
 import {FormControl, FormGroup} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormGeneratorService} from '../../services/form-generator.service';
-import {HttpErrorResponse} from '@angular/common/http';
 import {ModalService} from '../../services/modal.service';
-import {ApiService} from '../../../api/api.service';
+import {ApiService, ErrorResponse} from '../../../api/api.service';
 import {FormSettings} from './interfaces/form-settings';
 import {FormButton} from './interfaces/form-button';
 import {Language, LanguageService} from '../../services/language.service';
@@ -214,7 +213,7 @@ export class FormComponent implements OnInit, OnDestroy {
                     this.isLoading = false;
                     this.form.patchValue(response);
                 })
-                .catch((response: HttpErrorResponse) => {
+                .catch((response: ErrorResponse) => {
                     this.isLoading = false;
                     this.response.emit((response));
                 });
@@ -260,7 +259,7 @@ export class FormComponent implements OnInit, OnDestroy {
                         this.loadData(response);
                     }
                 })
-                .catch((response: HttpErrorResponse) => {
+                .catch((response: ErrorResponse) => {
                     this.isLoading = false;
                     this.response.emit(response);
                 });
@@ -274,7 +273,7 @@ export class FormComponent implements OnInit, OnDestroy {
                         this.loadData(response);
                     }
                 })
-                .catch((response: HttpErrorResponse) => {
+                .catch((response: ErrorResponse) => {
                     this.isLoading = false;
                     this.response.emit(response);
                 });

@@ -1,0 +1,43 @@
+.noUi-target {
+  border: none;
+  border-radius: $borderRadius;
+  @include box-shadow(none);
+  height: 4px;
+  background-color: lighten($primary, 40);
+}
+
+.noUi-connects {
+  border-radius: $borderRadius;
+  > .noUi-connect {
+    background-color: darken($primary, 5);
+  }
+}
+
+.noUi-origin {
+  $defaultSize: 14px;
+  $hoverSize: 18px;
+  > .noUi-handle {
+    @include _transition(all 0.3s);
+    background-color: darken($primary, 5);
+    box-shadow: none;
+    border-radius: 50%;
+    border: none;
+    width: $defaultSize;
+    height: $defaultSize;
+    right: -#{$defaultSize / 2} !important;
+    top: -5px;
+    outline: none;
+
+    &:before, &:after {
+      content: none;
+    }
+
+    &.noUi-active {
+      width: $hoverSize;
+      height: $hoverSize;
+      right: -#{$hoverSize / 2} !important;
+      top: -7px;
+    }
+  }
+}
+
