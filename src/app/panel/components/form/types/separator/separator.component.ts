@@ -1,5 +1,5 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {BaseInputComponent} from '../base-input/base-input.component';
+import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {Separator} from '../../interfaces/separator';
 
 @Component({
     selector: 'app-separator',
@@ -7,7 +7,9 @@ import {BaseInputComponent} from '../base-input/base-input.component';
     styleUrls: ['./separator.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class SeparatorComponent extends BaseInputComponent implements OnInit {
+export class SeparatorComponent implements OnInit {
+
+    @Input() field: Separator;
 
     ngOnInit() {
     }

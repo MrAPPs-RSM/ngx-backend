@@ -3,13 +3,15 @@
 app-separator {
   > div {
     display: block;
-    margin: 25px 0;
+    margin-bottom: 25px;
     color: $default;
     > p {
       &.title {
         font-size: 17px;
         border-bottom: 1px solid $lightGrey;
-        padding-bottom: 10px;
+        padding-bottom: 2px;
+        font-weight: $regular;
+        margin-bottom: 5px;
         > i {
           margin-right: 5px;
         }
