@@ -43,9 +43,8 @@ export class PreviewComponent extends BaseInputComponent implements OnInit {
         this.form.controls[this.field.fileKey].valueChanges.subscribe((value) => {
             /** If file is uploaded */
             this.isVisible = value && value.length > 0;
-            this.fileId = value[0];
-
             if (this.isVisible) {
+                this.fileId = value[0];
                 this.getData();
             }
         });
