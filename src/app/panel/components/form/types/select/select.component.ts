@@ -223,13 +223,13 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
             this.refreshFormValue($event);
         }
 
-        if (this.observable != null) {
+        if (this.observable) {
             this.observable.next();
         }
     }
 
     private refreshFormValue(values): void {
-        if (values != null) {
+        if (values !== null) {
             if (values instanceof Array) {
                 const ids = [];
                 values.forEach((item) => {
@@ -246,5 +246,4 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
 export interface SelectData {
     id: string | number;
     text: string;
-    disabled: boolean;
 }
