@@ -38,6 +38,18 @@
       right: -#{$hoverSize / 2} !important;
       top: -7px;
     }
+
+    > .noUi-tooltip {
+      font-size: 10px;
+      border: none;
+      border-radius: $borderRadius;
+      font-weight: $light;
+      background-color: $sidebarDark;
+      color: $lightGrey;
+      padding: 2px 4px;
+      @include _transform(none);
+      left: -1px;
+      bottom: -22px;
+    }
   }
 }
-

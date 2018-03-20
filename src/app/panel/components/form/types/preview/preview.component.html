@@ -1,4 +1,4 @@
-<div [class]="field.class ? field.class : 'col-sm-12'" *ngIf="!isVisible">
+<div [formGroup]="form" [class]="field.class ? field.class : 'col-sm-12'" *ngIf="!isVisible">
     <div class="form-group">
 
         <!-- Label -->
@@ -16,7 +16,23 @@
                 (ngModelChange)="onChange($event)"
         ></nouislider>
 
-        <img class="preview" [src]="url">
+        <div class="preview-wrapper">
+            <div class="preview"
+                 [style.width.px]="field.width"
+                 [style.height.px]="field.height">
+                <div class="progress"
+                     [ngClass]="{'visible': isLoading}">
+                    <div class="indeterminate"></div>
+                </div>
+                <img [ngClass]="{'visible': !isLoading}"
+                     [src]="url"
+                     (error)="onImageError()">
+            </div>
+
+            <div class="value">
+                <span>Current value: {{offset}}</span>
+            </div>
+        </div>
 
         <!-- Others -->
         <span *ngIf="field.description" class="help-block">{{field.description}}</span>

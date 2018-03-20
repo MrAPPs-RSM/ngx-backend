@@ -15,6 +15,7 @@ export class PreviewComponent extends BaseInputComponent implements OnInit {
     private readonly sliderConfig: any = {
         connect: [true, false],
         behaviour: 'tap',
+        tooltips: false,
         step: 1
     };
 
@@ -32,12 +33,11 @@ export class PreviewComponent extends BaseInputComponent implements OnInit {
 
     private fileId: number;
     private url: string;
+    private isLoading: boolean;
 
     ngOnInit() {
         this.isVisible = false;
-        this.min = 0;
-        this.max = 10;
-        this.offset = 0;
+        this.reset();
 
         this.form.controls[this.field.fileKey].valueChanges.subscribe((value) => {
             /** If file is uploaded */
@@ -51,15 +51,19 @@ export class PreviewComponent extends BaseInputComponent implements OnInit {
     }
 
     getData() {
-        console.log('calling endpoint');
+        this.isLoading = true;
         this._apiService.get(this.field.endpoint + '/' + this.fileId, {offset: this.offset})
             .then((response: PreviewResponse) => {
+                this.isLoading = false;
                 this.url = response.url;
                 this.min = response.min;
                 this.max = response.max;
                 this.offset = response.offset;
+                this.updateFormValue();
             })
             .catch((response: ErrorResponse) => {
+                this.isLoading = false;
+                this.reset();
                 console.log(response.error);
             });
     }
@@ -67,6 +71,20 @@ export class PreviewComponent extends BaseInputComponent implements OnInit {
     onChange(value: any) {
         this.offset = value;
         this.getData();
+    }
+
+    onImageError() {
+        this.url = '../../../../../assets/images/image-error.png';
+    }
+
+    updateFormValue() {
+        this.getControl().setValue(this.offset);
+    }
+
+    reset() {
+        this.min = 0;
+        this.max = 10;
+        this.offset = 0;
     }
 }
 
