@@ -38,6 +38,7 @@ export class PreviewComponent extends BaseInputComponent implements OnInit {
     ngOnInit() {
         this.isVisible = false;
         this.reset();
+        this.updateFormValue();
 
         this.form.controls[this.field.fileKey].valueChanges.subscribe((value) => {
             /** If file is uploaded */
