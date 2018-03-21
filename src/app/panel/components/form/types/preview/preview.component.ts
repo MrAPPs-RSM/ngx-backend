@@ -12,7 +12,7 @@ import {FormFieldPreview} from '../../interfaces/form-field-preview';
 export class PreviewComponent extends BaseInputComponent implements OnInit {
 
     /** Fixed slider configuration */
-    private readonly sliderConfig: any = {
+    readonly sliderConfig: any = {
         connect: [true, false],
         behaviour: 'tap',
         tooltips: false,
@@ -25,14 +25,14 @@ export class PreviewComponent extends BaseInputComponent implements OnInit {
         super();
     }
 
-    private isVisible: boolean;
+    isVisible: boolean;
 
-    private min: number;
-    private max: number;
-    private offset: number;
+    min: number;
+    max: number;
+    offset: number;
 
-    private fileId: number;
-    private url: string;
+    fileId: number;
+    url: string;
 
     ngOnInit() {
         this.reset();
