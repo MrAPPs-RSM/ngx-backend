@@ -19,6 +19,8 @@ export class PreviewComponent extends BaseInputComponent implements OnInit {
         step: 1
     };
 
+    private readonly defaultWith: number = 200;
+
     @Input() field: FormFieldPreview;
 
     constructor(private _apiService: ApiService) {

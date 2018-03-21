@@ -13,13 +13,14 @@
                 [config]="sliderConfig"
                 [(ngModel)]="offset"
                 [ngModelOptions]="{standalone: true}"
-                (ngModelChange)="onChange($event)"
+                (end)="onChange($event)"
+                (slide)="onChange($event)"
         ></nouislider>
 
         <div class="preview-wrapper">
             <div class="preview"
-                 [style.width.px]="field.width"
-                 [style.height.px]="field.height">
+                 [style.width.px]="field.width ? field.width : defaultWith"
+                 [style.height]="field.height ? field.height + 'px' : 'auto'">
                 <div class="progress"
                      [ngClass]="{'visible': isLoading}">
                     <div class="indeterminate"></div>
