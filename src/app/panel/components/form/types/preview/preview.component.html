@@ -8,22 +8,17 @@
         </label>
 
         <nouislider *ngIf="max > 0"
-                [min]="min"
-                [max]="max"
-                [config]="sliderConfig"
-                (change)="onChange($event)"
+                    [min]="min"
+                    [max]="max"
+                    [(ngModel)]="offset"
+                    [ngModelOptions]="{standalone: true}"
+                    [config]="sliderConfig"
+                    (change)="onChange()"
         ></nouislider>
 
         <div class="preview-wrapper">
-            <div class="preview"
-                 [style.width.px]="field.width ? field.width : defaultWith"
-                 [style.height]="field.height ? field.height + 'px' : 'auto'">
-                <div class="progress"
-                     [ngClass]="{'visible': isLoading}">
-                    <div class="indeterminate"></div>
-                </div>
-                <img [ngClass]="{'visible': !isLoading}"
-                     [src]="url"
+            <div class="preview">
+                <img [src]="url"
                      (error)="onImageError()">
                 <div class="value" *ngIf="max > 0">
                     <span>{{offset}} / {{max}}</span>

@@ -13,8 +13,10 @@ export class ImageViewComponent implements OnInit {
     @Input() cell: Cell;
 
     renderValue: string;
+    private count: number;
 
     ngOnInit() {
+        this.count = 0;
         const value = this.cell.getValue();
         if (value) {
             if (typeof value === 'string') {
@@ -35,8 +37,13 @@ export class ImageViewComponent implements OnInit {
 
     /** Sometimes, Google Cloud takes a few seconds to make the image accessible */
     retryUrl($event: any): void {
-        setTimeout(() => {
-            $event.target.src = this.renderValue;
-        }, 2000);
+        if (this.count < 3) {
+            this.count++;
+            setTimeout(() => {
+                $event.target.src = this.renderValue;
+            }, 2000);
+        } else {
+            this.renderValue = '../../../../../../../../assets/images/image-error.png';
+        }
     }
 }

@@ -16,11 +16,8 @@ export class PreviewComponent extends BaseInputComponent implements OnInit {
         connect: [true, false],
         behaviour: 'tap',
         tooltips: false,
-        step: 1,
-        start: 0
+        step: 1
     };
-
-    private readonly defaultWith: number = 200;
 
     @Input() field: FormFieldPreview;
 
@@ -36,51 +33,62 @@ export class PreviewComponent extends BaseInputComponent implements OnInit {
 
     private fileId: number;
     private url: string;
-    private isLoading: boolean;
 
     ngOnInit() {
+        this.reset();
+        this.updateFormValue();
+
         this.isVisible = false;
 
-        if (!this.min && !this.max && !this.offset) {
-            this.reset();
-            this.updateFormValue();
+        if (this.isEdit) {
+            this.getControl().valueChanges.first().subscribe((value) => {
+                this.offset = value;
+                this.onFileChange();
+            });
         }
 
+        this.onFileChange();
+    }
+
+    onFileChange() {
         this.form.controls[this.field.fileKey].valueChanges.subscribe((value) => {
             /** If file is uploaded */
-            this.isVisible = value && value.length > 0;
-            if (this.isVisible) {
-                this.fileId = value[0];
+            if (value) {
+                if (value instanceof Array) {
+                    this.isVisible = value && value.length > 0;
+                    if (this.isVisible) {
+                        this.fileId = value[0];
+                    }
+                } else {
+                    this.isVisible = !!value;
+                    this.fileId = value.id;
+                }
                 this.getData();
+            } else {
+                this.offset = 0;
+                this.isVisible = false;
             }
         });
     }
 
     getData() {
-        this.isLoading = true;
-        this._apiService.get(this.field.endpoint + '/' + this.fileId, {offset: this.offset})
-            .then((response: PreviewResponse) => {
-                this.isLoading = false;
-                this.url = response.url;
-                this.min = response.min;
-                this.max = response.max;
-                this.offset = response.offset;
-                this.updateFormValue();
-
-                console.log(this.min, this.max, this.offset);
-            })
-            .catch((response: ErrorResponse) => {
-                this.isLoading = false;
-                this.reset();
-                console.log(response.error);
-            });
+        if (this.fileId) {
+            this._apiService.get(this.field.endpoint + '/' + this.fileId, {offset: this.offset})
+                .then((response: PreviewResponse) => {
+                    this.url = response.url;
+                    this.min = response.min;
+                    this.max = response.max;
+                    this.offset = response.offset;
+                    this.updateFormValue();
+                })
+                .catch((response: ErrorResponse) => {
+                    this.reset();
+                });
+        }
     }
 
-    onChange(value: any) {
-        if (value !== this.offset) {
-            this.offset = value;
-            this.getData();
-        }
+    onChange() {
+        this.getData();
     }
 
     onImageError() {
@@ -93,7 +101,7 @@ export class PreviewComponent extends BaseInputComponent implements OnInit {
 
     reset() {
         this.min = 0;
-        this.max = 10;
+        this.max = 0;
         this.offset = 0;
     }
 }

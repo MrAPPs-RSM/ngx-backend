@@ -7,14 +7,9 @@ app-preview {
         @include clearfix;
         margin-top: 30px;
         > div.preview {
-          margin: 0 auto;
-          > img {
-            width: 100%;
-            height: 100%;
-          }
+          text-align: center;
           > div.value {
             margin-top: 10px;
-            text-align: center;
             color: $default;
             font-size: 13px;
           }
