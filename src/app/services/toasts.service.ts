@@ -5,7 +5,7 @@ import {LanguageService} from '../panel/services/language.service';
 @Injectable()
 export class ToastsService {
 
-    readonly TYPES = {
+    private readonly TYPES = {
         success: 'success',
         error: 'error',
         warning: 'warning',
@@ -45,7 +45,11 @@ export class ToastsService {
         if (error) {
             _title = error.name;
         } else {
-            _title = title ? title : this._lang.translate('toasts.' + type + '.title');
+            _title = title;
+        }
+
+        if (!_title) {
+            _title = this._lang.translate('toasts.' + type + '.title');
         }
 
         return _title.toUpperCase();
@@ -57,7 +61,11 @@ export class ToastsService {
         if (error) {
             _message = error.message;
         } else {
-            _message = message ? message : this._lang.translate('toasts.' + type + '.message');
+            _message = message;
+        }
+
+        if (!_message) {
+            _message = this._lang.translate('toasts.' + type + '.message');
         }
 
         return _message.charAt(0).toUpperCase() + _message.slice(1);

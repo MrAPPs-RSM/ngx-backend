@@ -55,7 +55,7 @@ app-file-upload {
           list-style: none;
           > li {
             text-align: center;
-            $fileSize: 50px;
+            $fileSize: 100px;
             width: $fileSize;
             display: inline-block;
             &:not(:last-child) {

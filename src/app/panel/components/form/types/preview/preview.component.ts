@@ -16,7 +16,8 @@ export class PreviewComponent extends BaseInputComponent implements OnInit {
         connect: [true, false],
         behaviour: 'tap',
         tooltips: false,
-        step: 1
+        step: 1,
+        start: 0
     };
 
     private readonly defaultWith: number = 200;
@@ -39,8 +40,11 @@ export class PreviewComponent extends BaseInputComponent implements OnInit {
 
     ngOnInit() {
         this.isVisible = false;
-        this.reset();
-        this.updateFormValue();
+
+        if (!this.min && !this.max && !this.offset) {
+            this.reset();
+            this.updateFormValue();
+        }
 
         this.form.controls[this.field.fileKey].valueChanges.subscribe((value) => {
             /** If file is uploaded */
@@ -62,6 +66,8 @@ export class PreviewComponent extends BaseInputComponent implements OnInit {
                 this.max = response.max;
                 this.offset = response.offset;
                 this.updateFormValue();
+
+                console.log(this.min, this.max, this.offset);
             })
             .catch((response: ErrorResponse) => {
                 this.isLoading = false;
@@ -71,8 +77,10 @@ export class PreviewComponent extends BaseInputComponent implements OnInit {
     }
 
     onChange(value: any) {
-        this.offset = value;
-        this.getData();
+        if (value !== this.offset) {
+            this.offset = value;
+            this.getData();
+        }
     }
 
     onImageError() {

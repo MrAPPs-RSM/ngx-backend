@@ -7,14 +7,11 @@
             <span *ngIf="field.validators && field.validators.required">*</span>
         </label>
 
-        <nouislider
+        <nouislider *ngIf="max > 0"
                 [min]="min"
                 [max]="max"
                 [config]="sliderConfig"
-                [(ngModel)]="offset"
-                [ngModelOptions]="{standalone: true}"
-                (end)="onChange($event)"
-                (slide)="onChange($event)"
+                (change)="onChange($event)"
         ></nouislider>
 
         <div class="preview-wrapper">
@@ -28,10 +25,9 @@
                 <img [ngClass]="{'visible': !isLoading}"
                      [src]="url"
                      (error)="onImageError()">
-            </div>
-
-            <div class="value">
-                <span>Current value: {{offset}}</span>
+                <div class="value" *ngIf="max > 0">
+                    <span>{{offset}} / {{max}}</span>
+                </div>
             </div>
         </div>
 
