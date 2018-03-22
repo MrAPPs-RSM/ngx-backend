@@ -2,6 +2,7 @@ import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {ApiService, ErrorResponse} from '../../../../../api/api.service';
 import {FormFieldPreview} from '../../interfaces/form-field-preview';
+import {environment} from '../../../../../../environments/environment';
 
 @Component({
     selector: 'app-preview',
@@ -92,7 +93,7 @@ export class PreviewComponent extends BaseInputComponent implements OnInit {
     }
 
     onImageError() {
-        this.url = '../../../../../assets/images/image-error.png';
+        this.url = environment.assets.imageError;
     }
 
     updateFormValue() {

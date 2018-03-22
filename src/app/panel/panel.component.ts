@@ -19,8 +19,8 @@ declare const $: any;
 export class PanelComponent implements OnInit {
 
     title = environment.name;
-    showLogo: boolean = environment.logo !== false;
-    logo = environment.logo;
+    showLogo: boolean = environment.assets.logo !== false;
+    logo = environment.assets.logo;
     menu: any[] = [];
     homePage = 'dashboard';
     user: User;

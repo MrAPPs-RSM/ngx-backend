@@ -31,7 +31,7 @@ export class ImageViewComponent implements OnInit {
                 this.renderValue = value.thumbnails.small;
             }
         } else {
-            this.renderValue = '../../../../../../../../assets/images/image-error.png';
+            this.renderValue = environment.assets.imageError;
         }
     }
 
@@ -43,7 +43,7 @@ export class ImageViewComponent implements OnInit {
                 $event.target.src = this.renderValue;
             }, 2000);
         } else {
-            this.renderValue = '../../../../../../../../assets/images/image-error.png';
+            this.renderValue = environment.assets.imageError;
         }
     }
 }
