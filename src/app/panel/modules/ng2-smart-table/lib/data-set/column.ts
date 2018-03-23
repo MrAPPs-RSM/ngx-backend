@@ -78,16 +78,26 @@ export class Column {
     }
 
     prepareFilter(): any {
-        if (this.settings['type'] === 'boolean' && !this.settings['filter']) {
-            return {
-                type: 'checkbox',
-                config: {
-                    true: true,
-                    false: false
+        if (this.settings['filter'] !== false) {
+            switch (this.settings['type']) {
+                case 'boolean': {
+                    return {
+                        type: 'checkbox',
+                        config: {
+                            true: true,
+                            false: false
+                        }
+                    };
                 }
-            };
+                    break;
+                case 'date': {
+                    return {
+                        type: 'date'
+                    };
+                }
+                    break;
+            }
         }
-
         return this.settings['filter'];
     }
 

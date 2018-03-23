@@ -32,10 +32,8 @@
   }
 
   /* Date picker */
-  div.ngui-datetime-picker-wrapper {
-    > input {
-      @include _form-input;
-    }
+  div.date-picker-wrapper {
+
   }
 
   &.has-error {

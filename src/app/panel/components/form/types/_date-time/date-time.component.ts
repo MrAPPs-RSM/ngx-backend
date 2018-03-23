@@ -1,7 +1,7 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {FormFieldDate} from '../../interfaces/form-field-date';
 import {BaseInputComponent} from '../base-input/base-input.component';
-import {NguiDatetime} from '@ngui/datetime-picker';
+// import {NguiDatetime} from '@ngui/datetime-picker';
 import {Subscription} from 'rxjs/Subscription';
 
 @Component({
@@ -20,7 +20,8 @@ export class DateTimeComponent extends BaseInputComponent implements OnInit, OnD
             .subscribe(value => {
                 if (value && !isNaN(value)) {
                     this.getControl().setValue(
-                        NguiDatetime.formatDate(new Date(value))
+                        null
+                        // NguiDatetime.formatDate(new Date(value))
                     );
                 }
             });

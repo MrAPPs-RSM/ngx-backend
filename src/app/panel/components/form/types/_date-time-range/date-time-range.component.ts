@@ -1,7 +1,7 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {FormFieldDateRange} from '../../interfaces/form-field-date-range';
 import {BaseInputComponent} from '../base-input/base-input.component';
-import {NguiDatetime} from '@ngui/datetime-picker';
+// import {NguiDatetime} from '@ngui/datetime-picker';
 import {Subscription} from 'rxjs/Subscription';
 
 @Component({
@@ -9,7 +9,7 @@ import {Subscription} from 'rxjs/Subscription';
     templateUrl: './date-time-range.component.html',
     styleUrls: ['./date-time-range.component.scss']
 })
-export class DateTimeRangeComponent extends BaseInputComponent implements OnInit,OnDestroy {
+export class DateTimeRangeComponent extends BaseInputComponent implements OnInit, OnDestroy {
 
     /**
      * TODO: review this component validation logic when it will be used!!!
@@ -25,7 +25,8 @@ export class DateTimeRangeComponent extends BaseInputComponent implements OnInit
             .subscribe(value => {
                 if (value && !isNaN(value)) {
                     this.form.controls[this.field.startDate.key].setValue(
-                        NguiDatetime.formatDate(new Date(value))
+                        null
+                        // NguiDatetime.formatDate(new Date(value))
                     );
                 }
             });
@@ -34,7 +35,8 @@ export class DateTimeRangeComponent extends BaseInputComponent implements OnInit
             .subscribe(value => {
                 if (value && !isNaN(value)) {
                     this.form.controls[this.field.endDate.key].setValue(
-                        NguiDatetime.formatDate(new Date(value))
+                        null
+                        // NguiDatetime.formatDate(new Date(value))
                     );
                 }
             });

@@ -97,13 +97,17 @@
             [index]="index">
     </app-checkbox>
 
-    <app-date-time
+    <app-date-picker
             *ngSwitchCase="formConfig.types.DATE"
             [groupName]="groupName"
             [form]="form"
             [field]="field"
             [isEdit]="isEdit"
             [index]="index"
+    ></app-date-picker>
+
+    <!--<app-date-time
+
     ></app-date-time>
 
     <app-date-time-range
@@ -113,7 +117,7 @@
             [field]="field"
             [isEdit]="isEdit"
             [index]="index"
-    ></app-date-time-range>
+    ></app-date-time-range>-->
 
     <app-file-upload
             *ngSwitchCase="formConfig.types.FILE"

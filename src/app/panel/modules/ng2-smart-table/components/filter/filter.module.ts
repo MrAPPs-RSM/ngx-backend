@@ -7,12 +7,14 @@ import {CheckboxFilterComponent} from './filter-types/checkbox-filter.component'
 import {InputFilterComponent} from './filter-types/input-filter.component';
 import {SelectFilterComponent} from './filter-types/select-filter.component';
 import {NgSelectModule} from '@ng-select/ng-select';
+import {DateFilterComponent} from './filter-types/date-filter.component';
 
 const FILTER_COMPONENTS = [
     FilterComponent,
     CheckboxFilterComponent,
     InputFilterComponent,
     SelectFilterComponent,
+    DateFilterComponent
 ];
 
 @NgModule({
@@ -20,7 +22,7 @@ const FILTER_COMPONENTS = [
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
-        NgSelectModule,
+        NgSelectModule
     ],
     declarations: [
         ...FILTER_COMPONENTS,

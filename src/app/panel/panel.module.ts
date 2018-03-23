@@ -5,25 +5,35 @@ import {ReactiveFormsModule, FormsModule} from '@angular/forms';
 import {ColorPickerModule} from 'ngx-color-picker';
 import {EditorModule} from '@tinymce/tinymce-angular';
 import {NgSelectModule} from '@ng-select/ng-select';
-import {NguiDatetimePickerModule} from '@ngui/datetime-picker';
 import {NgUploaderModule} from 'ngx-uploader';
 import {AgmCoreModule} from '@agm/core';
 import {Ng2SmartTableModule} from './modules/ng2-smart-table/ng2-smart-table.module';
+import {PipesModule} from '../pipes/pipes.module';
+import {NouisliderModule} from 'ng2-nouislider';
+import {OwlDateTimeModule, OwlNativeDateTimeModule} from 'ng-pick-datetime';
 
-import {AuthGuard} from '../auth/guards/auth.guard';
 import {PanelComponent} from './panel.component';
 import {FormPageComponent} from './pages/form-page/form-page.component';
 import {TablePageComponent} from './pages/table-page/table-page.component';
-import {TableComponent} from './components/table/table.component';
-import {PanelResolver} from './resolvers/panel.resolver';
+import {ProfilePageComponent} from './pages/profile-page/profile-page.component';
+import {NotfoundPageComponent} from './pages/notfound-page/notfound-page.component';
+
+import {AuthGuard} from '../auth/guards/auth.guard';
 import {SetupService} from './services/setup.service';
+import {PanelResolver} from './resolvers/panel.resolver';
+import {ModalService} from './services/modal.service';
+import {LanguageService} from './services/language.service';
+import {MenuService} from './services/menu.service';
+import {TranslatePipe} from '../pipes/translate/translate.pipe';
+
+
+import {TableComponent} from './components/table/table.component';
 import {DashboardPageComponent} from './pages/dashboard-page/dashboard-page.component';
 import {PageTitleService} from './services/page-title.service';
 import {FormComponent} from './components/form/form.component';
 import {BaseInputComponent} from './components/form/types/base-input/base-input.component';
 import {InputPasswordComponent} from './components/form/types/input-password/input-password.component';
 import {InputTextComponent} from './components/form/types/input-text/input-text.component';
-import {ModalService} from './services/modal.service';
 import {InputUrlComponent} from './components/form/types/input-url/input-url.component';
 import {InputNumberComponent} from './components/form/types/input-number/input-number.component';
 import {SeparatorComponent} from './components/form/types/separator/separator.component';
@@ -32,22 +42,56 @@ import {InputTextareaComponent} from './components/form/types/input-textarea/inp
 import {SelectComponent} from './components/form/types/select/select.component';
 import {InputEmailComponent} from './components/form/types/input-email/input-email.component';
 import {CheckboxComponent} from './components/form/types/checkbox/checkbox.component';
-import {DateTimeComponent} from './components/form/types/date-time/date-time.component';
-import {DateTimeRangeComponent} from './components/form/types/date-time-range/date-time-range.component';
 import {FileUploadComponent} from './components/form/types/file-upload/file-upload.component';
 import {MapComponent} from './components/form/types/map/map.component';
 import {ContentTopComponent} from './components/content-top/content-top.component';
 import {FormTypeSwitcherComponent} from './components/form/form-type-switcher/form-type-switcher.component';
-import {ProfilePageComponent} from './pages/profile-page/profile-page.component';
 import {ListDetailsComponent} from './components/form/types/list-details/list-details.component';
-import {NotfoundPageComponent} from './pages/notfound-page/notfound-page.component';
-import {PipesModule} from '../pipes/pipes.module';
-import {TranslatePipe} from '../pipes/translate/translate.pipe';
-import {LanguageService} from './services/language.service';
-import {MenuService} from './services/menu.service';
 import {PlainComponent} from './components/form/types/plain/plain.component';
 import {PreviewComponent} from './components/form/types/preview/preview.component';
-import {NouisliderModule} from 'ng2-nouislider';
+import {DatePickerComponent} from './components/form/types/date-picker/date-picker.component';
+
+const COMPONENTS = [
+    PanelComponent,
+    FormComponent,
+    TableComponent,
+    DashboardPageComponent,
+    BaseInputComponent,
+    InputTextComponent,
+    InputPasswordComponent,
+    FormPageComponent,
+    TablePageComponent,
+    InputUrlComponent,
+    InputNumberComponent,
+    SeparatorComponent,
+    FormTypeSwitcherComponent,
+    InputColorComponent,
+    InputTextareaComponent,
+    SelectComponent,
+    InputEmailComponent,
+    CheckboxComponent,
+    FileUploadComponent,
+    ListDetailsComponent,
+    MapComponent,
+    ContentTopComponent,
+    ProfilePageComponent,
+    NotfoundPageComponent,
+    PlainComponent,
+    PreviewComponent,
+    DatePickerComponent
+];
+
+const PROVIDERS = [
+    AuthGuard,
+    SetupService,
+    MenuService,
+    PanelResolver,
+    PageTitleService,
+    ModalService,
+    LanguageService,
+    TranslatePipe
+];
+
 
 const routes: Routes = [
     {
@@ -85,14 +129,15 @@ const routes: Routes = [
         ColorPickerModule,
         EditorModule,
         NgSelectModule,
-        NguiDatetimePickerModule,
         NgUploaderModule,
         AgmCoreModule.forRoot({
             apiKey: 'AIzaSyAP1chVIcUZSeLzRhRhXYbo20SBj7bryfM' // TODO: set gmaps api key
         }),
         Ng2SmartTableModule,
         PipesModule,
-        NouisliderModule
+        NouisliderModule,
+        OwlDateTimeModule,
+        OwlNativeDateTimeModule,
     ],
     exports: [
         FormComponent,
@@ -100,44 +145,10 @@ const routes: Routes = [
         InputPasswordComponent
     ],
     declarations: [
-        PanelComponent,
-        FormComponent,
-        TableComponent,
-        DashboardPageComponent,
-        BaseInputComponent,
-        InputTextComponent,
-        InputPasswordComponent,
-        FormPageComponent,
-        TablePageComponent,
-        InputUrlComponent,
-        InputNumberComponent,
-        SeparatorComponent,
-        FormTypeSwitcherComponent,
-        InputColorComponent,
-        InputTextareaComponent,
-        SelectComponent,
-        InputEmailComponent,
-        CheckboxComponent,
-        DateTimeComponent,
-        DateTimeRangeComponent,
-        FileUploadComponent,
-        ListDetailsComponent,
-        MapComponent,
-        ContentTopComponent,
-        ProfilePageComponent,
-        NotfoundPageComponent,
-        PlainComponent,
-        PreviewComponent
+        ...COMPONENTS
     ],
     providers: [
-        AuthGuard,
-        SetupService,
-        MenuService,
-        PanelResolver,
-        PageTitleService,
-        ModalService,
-        LanguageService,
-        TranslatePipe
+        ...PROVIDERS
     ],
     entryComponents: [
         FormPageComponent,
