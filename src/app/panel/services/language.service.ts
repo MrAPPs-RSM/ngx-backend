@@ -9,20 +9,20 @@ export class LanguageService {
     private backendLanguages: Language[];
     private contentLanguages: Language[];
 
-    public static getLocaleCodeFromLang(lang: string): string {
+    public static getLocaleCodeFromLang(lang: any): string {
+        let locale = lang;
         switch (lang) {
             case 'en': {
-                return 'en-US';
+                locale = 'en-US';
             }
                 break;
             case 'it': {
-                return 'it-IT';
+                locale = 'it-IT';
             }
                 break;
-            default: {
-                return lang;
-            }
         }
+
+        return locale;
     }
 
     constructor(private _dateTimeAdapter: DateTimeAdapter<any>) {
