@@ -68,9 +68,9 @@
 
 /* Date picker */
 owl-date-time-container.owl-dt-container.owl-dt-popup-container {
-  @include box-shadow(none);
-  border: 1px solid $lightGrey;
-  border-top: none;
+  margin-top: 5px;
+  @include box-shadow();
+  border: none;
   width: 220px;
 
   owl-date-time-calendar {
