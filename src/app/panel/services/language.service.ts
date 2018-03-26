@@ -25,7 +25,7 @@ export class LanguageService {
         }
     }
 
-    constructor(private _dateTimeAdapter: DateTimeAdapter) {
+    constructor(private _dateTimeAdapter: DateTimeAdapter<any>) {
         this.backendLanguages = environment.hasOwnProperty('languages') ? environment['languages'] : [];
     }
 

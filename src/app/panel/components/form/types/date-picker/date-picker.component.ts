@@ -18,9 +18,4 @@ export class DatePickerComponent extends BaseInputComponent implements OnInit {
             });
         }
     }
-
-    get isValid() {
-        return true;
-    }
-
 }

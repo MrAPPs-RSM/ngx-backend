@@ -8,6 +8,7 @@ import {InputFilterComponent} from './filter-types/input-filter.component';
 import {SelectFilterComponent} from './filter-types/select-filter.component';
 import {NgSelectModule} from '@ng-select/ng-select';
 import {DateFilterComponent} from './filter-types/date-filter.component';
+import {OwlDateTimeModule, OwlNativeDateTimeModule} from 'ng-pick-datetime';
 
 const FILTER_COMPONENTS = [
     FilterComponent,
@@ -22,7 +23,9 @@ const FILTER_COMPONENTS = [
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
-        NgSelectModule
+        NgSelectModule,
+        OwlDateTimeModule,
+        OwlNativeDateTimeModule
     ],
     declarations: [
         ...FILTER_COMPONENTS,

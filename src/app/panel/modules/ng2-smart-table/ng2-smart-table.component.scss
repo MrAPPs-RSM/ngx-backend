@@ -92,15 +92,13 @@
                 }
 
                 > date-filter {
-                  > div.ngui-datetime-picker-wrapper {
-                    > input {
-                      @include _form-input();
-                      height: 40px;
-                      font-weight: $light;
-                      border: none;
-                      background-color: #f9f9f9;
-                      margin: 5px 0;
-                    }
+                  input {
+                    @include _form-input();
+                    height: 40px;
+                    font-weight: $light;
+                    border: none;
+                    background-color: #f9f9f9;
+                    margin: 5px 0;
                   }
                 }
               }

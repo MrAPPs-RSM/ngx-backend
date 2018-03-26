@@ -38,7 +38,7 @@ export class DateRangePickerComponent extends BaseInputComponent implements OnIn
         return true;
     }
 
-    private setFormValue(value: Array) {
+    private setFormValue(value: any[]) {
         this.getControlByKey(this.field.fromKey).setValue(value[0]);
         this.getControlByKey(this.field.toKey).setValue(value[1]);
     }
