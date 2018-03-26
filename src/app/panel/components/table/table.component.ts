@@ -293,7 +293,7 @@ export class TableComponent implements OnInit, OnDestroy {
             } else {
                 let path = action.config.path;
                 if (path.indexOf(':id') !== -1) {
-                    path = path.replace(':id', data.id);
+                    path = path.replace(':id', 'idField' in action.config ? data[action.config['idField']] : data.id);
                 }
 
                 if (action.config.titleField && path.indexOf(':title') !== -1) {
@@ -311,7 +311,7 @@ export class TableComponent implements OnInit, OnDestroy {
                         }
 
                         if (updatedFilter.indexOf(':id') !== -1) {
-                            updatedFilter = updatedFilter.replace(':id', data.id);
+                            updatedFilter = updatedFilter.replace(':id', 'idField' in action.config ? data[action.config['idField']] : data.id);
                         }
 
                         extraParams = {queryParams: {listParams: updatedFilter}};
@@ -350,7 +350,7 @@ export class TableComponent implements OnInit, OnDestroy {
         } else if (action.config.endpoint) {
             let endpoint = action.config.endpoint;
             if (endpoint.indexOf(':id') !== -1) {
-                endpoint = endpoint.replace(':id', data.id);
+                endpoint = endpoint.replace(':id', 'idField' in action.config ? data[action.config['idField']] : data.id);
             }
 
             if (action.config.method) {
