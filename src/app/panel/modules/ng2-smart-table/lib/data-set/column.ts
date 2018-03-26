@@ -79,9 +79,10 @@ export class Column {
 
     prepareFilter(): any {
         if (this.settings['filter'] !== false) {
+            let filter: any = this.settings['filter'];
             switch (this.settings['type']) {
                 case 'boolean': {
-                    return {
+                    filter = {
                         type: 'checkbox',
                         config: {
                             true: true,
@@ -91,14 +92,16 @@ export class Column {
                 }
                     break;
                 case 'date': {
-                    return {
+                    filter = {
                         type: 'date'
                     };
                 }
                     break;
             }
+            return filter;
+        } else {
+            return this.settings['filter'];
         }
-        return this.settings['filter'];
     }
 
     prepareType(): string {

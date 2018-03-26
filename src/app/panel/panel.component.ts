@@ -42,6 +42,9 @@ export class PanelComponent implements OnInit {
             this._languageService.setCurrentLang(environment['currentLang']);
         }
 
+        /** Date pickers locale */
+        this._languageService.setDatePickerLocale();
+
         this.menu = this._menuService.getMenu();
 
 

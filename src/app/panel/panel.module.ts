@@ -50,6 +50,7 @@ import {ListDetailsComponent} from './components/form/types/list-details/list-de
 import {PlainComponent} from './components/form/types/plain/plain.component';
 import {PreviewComponent} from './components/form/types/preview/preview.component';
 import {DatePickerComponent} from './components/form/types/date-picker/date-picker.component';
+import {DateRangePickerComponent} from './components/form/types/date-range-picker/date-range-picker.component';
 
 const COMPONENTS = [
     PanelComponent,
@@ -78,7 +79,8 @@ const COMPONENTS = [
     NotfoundPageComponent,
     PlainComponent,
     PreviewComponent,
-    DatePickerComponent
+    DatePickerComponent,
+    DateRangePickerComponent
 ];
 
 const PROVIDERS = [
