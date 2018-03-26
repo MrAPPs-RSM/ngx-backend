@@ -72,12 +72,11 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
 
         if (this.field.dependsOn) {
             this.field.dependsOn.forEach((key) => {
-
                 if (key instanceof Subject) {
                     this.observable = key as Subject<any>;
                     this.observable.subscribe((value) => {
 
-                        this.loadOptions(this.params)
+                        this.loadOptions(this.params, true)
                             .then(() => {
                             })
                             .catch((error) => {
@@ -88,7 +87,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
                     if (this.form.controls[key]) {
                         this.form.controls[key].valueChanges.subscribe((value) => {
                             this.params[key] = value;
-                            this.loadOptions(this.params)
+                            this.loadOptions(this.params, true)
                                 .then(() => {
                                 })
                                 .catch((error) => {
@@ -167,13 +166,13 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
             if (this.field.options) {
                 if (this.field.options instanceof Array) {
 
-                    if (this.options == null || forceReload === null || forceReload === true) {
+                    if (this.options == null || forceReload === true) {
                         this.options = this.filterOptionsIfNeeded(this.field.options);
                     }
                     this.setValueIfSingleOptionAndRequired();
                     resolve();
                 } else {
-                    if (this.options.length === 0 || forceReload === null || forceReload === true) {
+                    if (this.options.length === 0 || forceReload === true) {
                         let endpoint = this.field.options;
 
                         if (this.isEdit) {
@@ -197,6 +196,8 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
                                 };
                             }
                         }
+
+                        console.log(params);
 
                         this._apiService.get(endpoint, params)
                             .then((response) => {
