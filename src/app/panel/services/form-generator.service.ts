@@ -115,15 +115,11 @@ export class FormGeneratorService {
                     }
                         break;
                     case formConfig.types.DATE_RANGE: {
-                        const startValidators = this.getValidators(field['startDate'].validators);
-                        group[field['startDate'].key] = new FormControl(
+                        group[field['fromKey']] = new FormControl(null);
+                        group[field['toKey']] = new FormControl(null);
+                        group[field.key] = new FormControl(
                             null,
-                            startValidators ? Validators.compose(startValidators) : null
-                        );
-                        const endValidators = this.getValidators(field['endDate'].validators);
-                        group[field['endDate'].key] = new FormControl(
-                            null,
-                            endValidators ? Validators.compose(endValidators) : null
+                            validators.length > 0 ? Validators.compose(validators) : null
                         );
                     }
                         break;

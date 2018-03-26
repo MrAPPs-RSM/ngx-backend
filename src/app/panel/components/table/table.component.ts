@@ -169,12 +169,23 @@ export class TableComponent implements OnInit, OnDestroy {
                 Object.keys(this.filter.where).forEach((key) => {
                     const condition = {};
                     if (this.settings.columns[key]) {
-                        if (this.settings.columns[key].type === 'boolean') {
-                            condition[key] = this.filter.where[key];
-                        } else {
-                            condition[key] = {
-                                like: '%' + this.filter.where[key] + '%'
-                            };
+                        switch (this.settings.columns[key].type) {
+                            case 'boolean': {
+                                condition[key] = this.filter.where[key];
+                            }
+                                break;
+                            case 'date': {
+                                condition[key] = {
+                                    between: [this.filter.where[key].from, this.filter.where[key].to]
+                                };
+                            }
+                                break;
+                            default: {
+                                condition[key] = {
+                                    like: '%' + this.filter.where[key] + '%'
+                                };
+                            }
+                                break;
                         }
                     } else {
                         condition[key] = this.filter.where[key];
@@ -218,12 +229,23 @@ export class TableComponent implements OnInit, OnDestroy {
             Object.keys(this.filter.where).forEach((key) => {
                 const condition = {};
                 if (this.settings.columns[key]) {
-                    if (this.settings.columns[key].type === 'boolean') {
-                        condition[key] = this.filter.where[key];
-                    } else {
-                        condition[key] = {
-                            like: '%' + this.filter.where[key] + '%'
-                        };
+                    switch (this.settings.columns[key].type) {
+                        case 'boolean': {
+                            condition[key] = this.filter.where[key];
+                        }
+                            break;
+                        case 'date': {
+                            condition[key] = {
+                                between: [this.filter.where[key].from, this.filter.where[key].to]
+                            };
+                        }
+                            break;
+                        default: {
+                            condition[key] = {
+                                like: '%' + this.filter.where[key] + '%'
+                            };
+                        }
+                            break;
                     }
                 } else {
                     condition[key] = this.filter.where[key];
@@ -526,7 +548,7 @@ export class TableComponent implements OnInit, OnDestroy {
             this.filter.where = filter;
         }
 
-        // console.log(this.filter);
+        console.log(this.filter);
         this.getData();
         this.activeFilters.filter = filter;
     }

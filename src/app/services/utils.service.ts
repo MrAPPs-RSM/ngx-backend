@@ -80,20 +80,18 @@ export class UtilsService {
 
     public static timeConverter(timestamp: number) {
         const a = new Date(timestamp);
-        const year = a.getUTCFullYear();
-        let month = a.getUTCMonth() + 1;
-        let date = a.getUTCDate();
-        let hour = a.getUTCHours();
-        let min = a.getUTCMinutes();
-        let sec = a.getUTCSeconds();
+        const year = a.getFullYear();
+        let month = a.getMonth() + 1;
+        let date = a.getDate();
+        let hour = a.getHours();
+        let min = a.getMinutes();
 
         month = UtilsService.addLeadingZero(month);
         date = UtilsService.addLeadingZero(date);
         hour = UtilsService.addLeadingZero(hour);
         min = UtilsService.addLeadingZero(min);
-        sec = UtilsService.addLeadingZero(sec);
 
-        return year + '-' + month + '-' + date + ' ' + hour + ':' + min + ':' + sec;
+        return date + '/' + month + '/' + year + ', ' + hour + ':' + min;
     }
 
     public static isValidURL(str) {

@@ -1,4 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {NgModule} from '@angular/core';
 import {HttpClientModule} from '@angular/common/http';
 import {RouterModule, Routes} from '@angular/router';
@@ -52,6 +53,7 @@ const routes: Routes = [
         RouterModule.forRoot(routes, {useHash: false, onSameUrlNavigation: 'reload'}),
         ReactiveFormsModule,
         BrowserModule,
+        NoopAnimationsModule,
         ToastNoAnimationModule,
         ToastrModule.forRoot({
             maxOpened: 1,

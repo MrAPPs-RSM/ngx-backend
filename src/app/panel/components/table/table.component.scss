@@ -20,7 +20,6 @@ app-table {
     }
 
     > div.table-wrapper {
-      overflow-x: auto;
       position: relative;
       &:after {
         display: none;

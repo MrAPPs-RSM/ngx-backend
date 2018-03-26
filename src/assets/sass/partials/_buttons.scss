@@ -8,7 +8,6 @@
   white-space: inherit;
   text-align: inherit;
   @include _transition(all 0.3s);
-  @include _transition(all 0.3s);
   font-size: 15px;
 
   &:focus, &:active {

@@ -1,4 +1,5 @@
 import {Injectable} from '@angular/core';
+import {DateTimeAdapter} from 'ng-pick-datetime';
 import {environment} from '../../../environments/environment';
 import {translations} from '../../../translations';
 
@@ -8,7 +9,23 @@ export class LanguageService {
     private backendLanguages: Language[];
     private contentLanguages: Language[];
 
-    constructor() {
+    public static getLocaleCodeFromLang(lang: string): string {
+        switch (lang) {
+            case 'en': {
+                return 'en-US';
+            }
+                break;
+            case 'it': {
+                return 'it-IT';
+            }
+                break;
+            default: {
+                return lang;
+            }
+        }
+    }
+
+    constructor(private _dateTimeAdapter: DateTimeAdapter<any>) {
         this.backendLanguages = environment.hasOwnProperty('languages') ? environment['languages'] : [];
     }
 
@@ -26,7 +43,14 @@ export class LanguageService {
             environment['currentLang'] = (lang as Language).isoCode;
 
             localStorage.setItem('lang', JSON.stringify(lang));
-        }
+
+            this.setDatePickerLocale();
+           }
+    }
+
+    public setDatePickerLocale(): void {
+        /** Changing date picker locale */
+        this._dateTimeAdapter.setLocale(LanguageService.getLocaleCodeFromLang(environment['currentLang']));
     }
 
     public removeLang(): void {

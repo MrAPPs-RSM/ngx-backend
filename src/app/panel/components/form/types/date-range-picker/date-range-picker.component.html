@@ -9,12 +9,19 @@
         <!-- Input -->
 
         <input
-                ngui-datetime-picker
-                class="form-control date-picker"
+                class="form-control"
+                (keydown)="false"
                 id="{{field.key}}"
-                formControlName="{{ field.key }}"
-                [date-only]="!field.isDateTime"
+                formControlName="{{field.key}}"
+                [owlDateTimeTrigger]="dt"
+                [owlDateTime]="dt"
+                [selectMode]="'range'"
         >
+        <owl-date-time
+                #dt
+                [firstDayOfWeek]="1"
+                [pickerType]="field.isDateTime ? 'both' : 'calendar'"
+        ></owl-date-time>
 
         <!-- Others -->
         <span *ngIf="field.description" class="help-block sub-little-text">{{field.description}}</span>
