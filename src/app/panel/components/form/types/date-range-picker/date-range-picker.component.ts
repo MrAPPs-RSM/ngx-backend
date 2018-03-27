@@ -42,4 +42,8 @@ export class DateRangePickerComponent extends BaseInputComponent implements OnIn
         this.getControlByKey(this.field.fromKey).setValue(value[0]);
         this.getControlByKey(this.field.toKey).setValue(value[1]);
     }
+
+    clear() {
+        this.getControl().setValue([null, null]);
+    }
 }

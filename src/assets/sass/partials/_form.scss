@@ -67,6 +67,17 @@
 }
 
 /* Date picker */
+div.date-picker-wrapper {
+  position: relative;
+  > span.remove {
+    cursor: pointer;
+    position: absolute;
+    color: $default;
+    font-size: 18px;
+    top: 8px;
+    right: 12px;
+  }
+}
 owl-date-time-container.owl-dt-container.owl-dt-popup-container {
   margin-top: 5px;
   @include box-shadow();

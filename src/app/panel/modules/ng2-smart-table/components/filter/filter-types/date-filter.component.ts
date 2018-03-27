@@ -9,18 +9,23 @@ import {FormControl} from '@angular/forms';
 @Component({
     selector: 'date-filter',
     template: `
-        <input
-                class="form-control"
-                (keydown)="false"
-                [formControl]="inputControl"
-                [owlDateTimeTrigger]="dt"
-                [owlDateTime]="dt"
-                [selectMode]="'range'"
-        >
-        <owl-date-time
-                #dt
-                [firstDayOfWeek]="1"
-        ></owl-date-time>
+        <div class="date-picker-wrapper">
+            <input
+                    class="form-control"
+                    (keydown)="false"
+                    [formControl]="inputControl"
+                    [owlDateTimeTrigger]="dt"
+                    [owlDateTime]="dt"
+                    [selectMode]="'range'"
+            >
+            <owl-date-time
+                    #dt
+                    [firstDayOfWeek]="1"
+                    [pickerType]="'calendar'"
+            ></owl-date-time>
+            <span class="remove" *ngIf="inputControl.value"
+                  (click)="clear()">×</span>
+        </div>
     `
 })
 export class DateFilterComponent extends DefaultFilter implements OnInit {
@@ -35,5 +40,11 @@ export class DateFilterComponent extends DefaultFilter implements OnInit {
                 this.query = {from: value[0], to: value[1]};
                 this.setFilter();
             });
+    }
+
+    clear() {
+        this.query = '';
+        this.inputControl.setValue(null, {emitEvent: false});
+        this.setFilter();
     }
 }

@@ -8,18 +8,22 @@
         </label>
         <!-- Input -->
 
-        <input
-                class="form-control"
-                (keydown)="false"
-                formControlName="{{field.key}}"
-                id="{{field.key}}"
-                [owlDateTimeTrigger]="dt"
-                [owlDateTime]="dt">
-        <owl-date-time
-                #dt
-                [firstDayOfWeek]="1"
-                [pickerType]="field.isDateTime ? 'both' : 'calendar'"
-        ></owl-date-time>
+        <div class="date-picker-wrapper">
+            <input
+                    class="form-control"
+                    (keydown)="false"
+                    formControlName="{{field.key}}"
+                    id="{{field.key}}"
+                    [owlDateTimeTrigger]="dt"
+                    [owlDateTime]="dt">
+            <owl-date-time
+                    #dt
+                    [firstDayOfWeek]="1"
+                    [pickerType]="field.isDateTime ? 'both' : 'calendar'"
+            ></owl-date-time>
+            <span class="remove"
+                  (click)="clear()">×</span>
+        </div>
 
         <!-- Others -->
         <span *ngIf="field.description" class="help-block sub-little-text">{{field.description}}</span>

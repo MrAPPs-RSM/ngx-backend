@@ -18,4 +18,8 @@ export class DatePickerComponent extends BaseInputComponent implements OnInit {
             });
         }
     }
+
+    clear() {
+        this.getControl().setValue(null);
+    }
 }
