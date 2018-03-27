@@ -22,7 +22,6 @@ export class PanelResolver implements Resolve<PanelComponent> {
     }
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> {
-        console.log('PANEL RESOLVER');
         return this._setupService.setup().catch((error) => {
             this._toasts.error(error);
             this._userService.removeToken();

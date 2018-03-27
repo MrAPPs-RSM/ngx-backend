@@ -34,14 +34,9 @@ export class SetupService {
     public setup(): Observable<any> {
         const promise = new Promise<any>((resolve, reject) => {
 
-            console.log('SETUP');
-
             if (this._lastRouteLoading == null || Date.now() - this._lastRouteLoading.getMilliseconds() < 10000) {
                 this._apiService.get(environment.api.setupEndpoint)
                     .then((data) => {
-
-                        console.log('SETUP response');
-                        console.log(data);
 
                         this._lastRouteLoading = new Date();
 
@@ -55,6 +50,7 @@ export class SetupService {
                         resolve();
                     })
                     .catch((error) => {
+                        this._lastRouteLoading = null;
                         reject();
                     });
             } else {
