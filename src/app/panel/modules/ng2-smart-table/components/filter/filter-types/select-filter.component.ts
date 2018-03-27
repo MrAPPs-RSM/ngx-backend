@@ -29,7 +29,6 @@ export class SelectFilterComponent extends DefaultFilter implements OnInit {
     inputControl = new FormControl();
     options: any[] = [];
 
-    // TODO: if this module will be exported from ngx-backend, change this logic and use simple Http service
     constructor(private _apiService: ApiService) {
         super();
         this.formGroup = new FormGroup({
@@ -44,7 +43,9 @@ export class SelectFilterComponent extends DefaultFilter implements OnInit {
             .skip(1)
             .distinctUntilChanged()
             .debounceTime(this.delay)
-            .subscribe((value: string) => this.setFilter());
+            .subscribe((value: string) => {
+                this.setFilter();
+            });
     }
 
     private loadOptions(): void {
