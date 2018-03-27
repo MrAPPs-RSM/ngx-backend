@@ -21,6 +21,8 @@ app-table {
 
     > div.table-wrapper {
       position: relative;
+      max-width: 100%;
+      overflow: auto;
       &:after {
         display: none;
         content: '';
