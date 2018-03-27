@@ -28,7 +28,8 @@ export class TableComponent implements OnInit, OnDestroy {
 
     @Input() settings: TableSettings;
 
-    private DEFAULTS = {
+    private readonly DEFAULTS = {
+        perPageValues: [5, 10, 25, 50],
         pager: {
             perPage: 10
         },
@@ -47,6 +48,8 @@ export class TableComponent implements OnInit, OnDestroy {
     private sort: TableSort;
     private pagination: TablePagination;
 
+    private resetPagination: boolean;
+
     isMultiLangEnabled = false;
     currentLang: Language;
 
@@ -62,12 +65,13 @@ export class TableComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.resetPagination = false;
 
         this._subscription = this._route.queryParams.subscribe(params => {
             this.activeFilters.sort = [];
             this.activeFilters.pagination = {
                 page: 1,
-                perPage: this.settings.pager && this.settings.pager.perPage ? this.settings.pager.perPage : this.DEFAULTS.pager.perPage,
+                perPage: this.preparePerPage(),
             };
 
             /** Read fixed filter from settings if set */
@@ -84,6 +88,23 @@ export class TableComponent implements OnInit, OnDestroy {
         });
 
         this.setupLang();
+    }
+
+    private preparePerPage(): number {
+        const perPage = this.settings.pager && this.settings.pager.perPage ? this.settings.pager.perPage : this.DEFAULTS.pager.perPage;
+        if (this.DEFAULTS.perPageValues.indexOf(perPage) > -1) {
+            return perPage;
+        } else {
+            if (perPage > 50) {
+                return 50;
+            } else if (perPage > 25) {
+                return 25;
+            } else if (perPage > 10) {
+                return 10;
+            } else {
+                return 5;
+            }
+        }
     }
 
     ngOnDestroy() {
@@ -143,7 +164,7 @@ export class TableComponent implements OnInit, OnDestroy {
             },
             order: null,
             skip: 0,
-            limit: this.settings.pager && this.settings.pager.perPage ? this.settings.pager.perPage : this.DEFAULTS.pager.perPage,
+            limit: this.preparePerPage(),
         };
 
         /** Pagination */
@@ -193,7 +214,9 @@ export class TableComponent implements OnInit, OnDestroy {
                     params.where.and.push(condition);
                 });
 
-                params.skip = 0; // reset pagination if filters
+                if (this.resetPagination) {
+                    params.skip = 0; // reset pagination if filters
+                }
             }
 
             if (this.filter.include) {
@@ -539,8 +562,10 @@ export class TableComponent implements OnInit, OnDestroy {
         if (this.filter.where) {
             Object.keys(filter).forEach((key) => {
                 if (filter[key] !== '' && filter[key] !== null) {
+                    this.resetPagination = true;
                     this.filter.where[key] = filter[key];
                 } else {
+                    this.resetPagination = false;
                     delete this.filter.where[key];
                 }
             });
@@ -548,7 +573,6 @@ export class TableComponent implements OnInit, OnDestroy {
             this.filter.where = filter;
         }
 
-        console.log(this.filter);
         this.getData();
         this.activeFilters.filter = filter;
     }
