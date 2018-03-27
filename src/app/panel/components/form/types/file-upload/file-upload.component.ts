@@ -213,10 +213,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     private handleResponse(response: any, statusCode: number): void {
         if (response) {
             if (statusCode !== 200 || response.error) {
-
-                if ('error' in response) {
-                    this._toastsService.error( response.error);
-                }
+                this._toastsService.error('error' in response ? response.error : {});
             } else {
                 this.addToUpdatedFiles({
                     id: response.id,
