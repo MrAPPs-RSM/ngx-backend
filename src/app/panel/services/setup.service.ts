@@ -6,10 +6,12 @@ import {DashboardPageComponent} from '../pages/dashboard-page/dashboard-page.com
 import {TablePageComponent} from '../pages/table-page/table-page.component';
 import {FormPageComponent} from '../pages/form-page/form-page.component';
 import {ProfilePageComponent} from '../pages/profile-page/profile-page.component';
-import {UserService} from '../../auth/services/user.service';
 import {LanguageService} from './language.service';
 import {MenuService} from './menu.service';
 import {NotfoundPageComponent} from '../pages/notfound-page/notfound-page.component';
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/observable/fromPromise';
+
 
 const TYPES = {
     profile: ProfilePageComponent,
@@ -21,44 +23,43 @@ const TYPES = {
 @Injectable()
 export class SetupService {
 
-    private _lastRouteLoading: Date;
+    public _lastRouteLoading: Date;
 
     constructor(private _router: Router,
                 private _menuService: MenuService,
-                private _userService: UserService,
                 private _apiService: ApiService,
                 private _languageService: LanguageService) {
     }
 
-    public setup(): Promise<any> {
-        return new Promise<any>((resolve, reject) => {
+    public setup(): Observable<any> {
+        const promise = new Promise<any>((resolve, reject) => {
 
-            if(this._lastRouteLoading == null || Date.now() - this._lastRouteLoading.getMilliseconds() < 10000) {
-            this._apiService.get(environment.api.setupEndpoint)
-                .then((data) => {
+            if (this._lastRouteLoading == null || Date.now() - this._lastRouteLoading.getMilliseconds() < 10000) {
+                this._apiService.get(environment.api.setupEndpoint)
+                    .then((data) => {
 
-                   this._lastRouteLoading = new Date();
+                        this._lastRouteLoading = new Date();
 
-                    if ('contentLanguages' in data) {
-                        this._languageService.setContentLanguages(data['contentLanguages']);
-                    }
+                        if ('contentLanguages' in data) {
+                            this._languageService.setContentLanguages(data['contentLanguages']);
+                        }
 
-                    this.loadRoutes(data);
-                    // console.log("CARICAMENTO ROTTE...");
-                    this._menuService.prepareMenu(data);
-                    resolve(true);
-                })
-                .catch((error) => {
-                    this._userService.removeToken();
-                    this._userService.removeUser();
-                    resolve(false);
-                });
+                        this.loadRoutes(data);
+                        // console.log("CARICAMENTO ROTTE...");
+                        this._menuService.prepareMenu(data);
+                        resolve();
+                    })
+                    .catch((error) => {
+                        this._lastRouteLoading = null;
+                        reject();
+                    });
             } else {
                 // console.log("SALTO CARICAMENTO ROTTE...");
-                resolve(true);
+                resolve();
             }
-
         });
+
+        return Observable.fromPromise(promise);
     }
 
     private remapRoutesData(data: any): Array<any> {
@@ -83,7 +84,7 @@ export class SetupService {
 
         const routerConfig = this._router.config;
 
-        const routes = [ {path: '404', component: NotfoundPageComponent}];
+        const routes = [{path: '404', component: NotfoundPageComponent}];
 
 
         for (const item of this.remapRoutesData(data)) {

@@ -246,7 +246,7 @@ export class ApiService {
                                 });
                         } else {
                             this.redirectToLogin();
-                            reject();
+                            reject(error);
                         }
                     }
                 }
