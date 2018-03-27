@@ -21,7 +21,13 @@
                 <img [src]="url"
                      (error)="onImageError()">
                 <div class="value" *ngIf="max > 0">
-                    <span>{{offset}} / {{max}}</span>
+                    <input type="number"
+                           [(ngModel)]="offset"
+                           [ngModelOptions]="{standalone: true}"
+                           [min]="min"
+                           [max]="max"
+                    >
+                    <span>/ {{max}}</span>
                 </div>
             </div>
         </div>

@@ -1,3 +1,7 @@
+input {
+  outline: none;
+}
+
 .form-group {
   @include clearfix;
   clear: both;
