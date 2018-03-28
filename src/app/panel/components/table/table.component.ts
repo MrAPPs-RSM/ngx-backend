@@ -130,27 +130,40 @@ export class TableComponent implements OnInit, OnDestroy {
         }
     }
 
-    private getData(): void {
+    private getData(doCount?: boolean): void {
         this.isLoading = true;
 
-        this.getCount()
-            .then((res: { count: number }) => {
-                this.count = res.count;
-                this._apiService.get(this.settings.api.endpoint, this.composeParams())
-                    .then((data) => {
-                        // console.log(data);
-                        this.isLoading = false;
-                        this.data = data;
-                    })
-                    .catch((response: ErrorResponse) => {
-                        this.isLoading = false;
-                        this._toast.error(response.error);
-                    });
-            })
-            .catch((response: ErrorResponse) => {
-                this.isLoading = false;
-                this._toast.error(response.error);
-            });
+        if (doCount === false) {
+            this._apiService.get(this.settings.api.endpoint, this.composeParams())
+                .then((data) => {
+                    // console.log(data);
+                    this.isLoading = false;
+                    this.data = data;
+                })
+                .catch((response: ErrorResponse) => {
+                    this.isLoading = false;
+                    this._toast.error(response.error);
+                });
+        } else {
+            this.getCount()
+                .then((res: { count: number }) => {
+                    this.count = res.count;
+                    this._apiService.get(this.settings.api.endpoint, this.composeParams())
+                        .then((data) => {
+                            // console.log(data);
+                            this.isLoading = false;
+                            this.data = data;
+                        })
+                        .catch((response: ErrorResponse) => {
+                            this.isLoading = false;
+                            this._toast.error(response.error);
+                        });
+                })
+                .catch((response: ErrorResponse) => {
+                    this.isLoading = false;
+                    this._toast.error(response.error);
+                });
+        }
     }
 
     private getCount(): Promise<any> {
@@ -579,7 +592,7 @@ export class TableComponent implements OnInit, OnDestroy {
 
     onPagination(pagination: TablePagination) {
         this.pagination = pagination;
-        this.getData();
+        this.getData(false);
         this.activeFilters.pagination = this.pagination;
     }
 

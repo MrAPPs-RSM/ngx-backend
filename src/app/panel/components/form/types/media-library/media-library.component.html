@@ -1,0 +1,56 @@
+<div class="media-library" *ngIf="show">
+    <div class="header">
+        {{'forms.inputs.media_library' | translate}}
+        <span *ngIf="maxFiles" class="max-files">({{'forms.inputs.max_files' | translate}} {{maxFiles}})</span>
+        <span class="remove" (click)="close()">×</span>
+    </div>
+    <div class="progress" [ngClass]="{'visible': isLoading}">
+        <div class="indeterminate"></div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-4 col-sm-3 col-md-3 col-lg-2" *ngFor="let media of data">
+                <div class="media" (click)="selectMedia($event, media)" [ngClass]="{selected: media.selected}">
+                    <img [src]="media.url" (error)="onImageError($event)">
+                    <span class="selected"><i class="fa fa-check"></i></span>
+                </div>
+                <div class="info">
+                    <span class="name">{{media.name}}</span>
+                    <span class="type">{{media.type}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <nav *ngIf="shouldShowPagination()" class="pagination pull-left">
+                    <ul>
+                        <li class="page-item" [ngClass]="{disabled: getCurrentPage() == 1}">
+                            <a class="page-link" href="#"
+                               (click)="getCurrentPage() == 1 ? false : paginate(1)" aria-label="First">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+
+                        <li class="page-item" [ngClass]="{active: getCurrentPage() == page}"
+                            *ngFor="let page of getPages()">
+                            <span class="page-link" *ngIf="getCurrentPage() == page">{{ page }}</span>
+                            <a class="page-link" href="#"
+                               (click)="paginate(page)" *ngIf="getCurrentPage() != page">{{ page }}</a>
+                        </li>
+
+                        <li class="page-item"
+                            [ngClass]="{disabled: getCurrentPage() == getLastPage()}">
+                            <a class="ng2-smart-page-link page-link" href="#"
+                               (click)="getCurrentPage() == getLastPage() ? false : paginate(getLastPage())"
+                               aria-label="Last">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+
+                <span class="pull-right btn btn-sm btn-primary" (click)="confirmSelection()">Confirm</span>
+            </div>
+        </div>
+    </div>
+</div>

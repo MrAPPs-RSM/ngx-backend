@@ -13,8 +13,6 @@ import {BaseInputComponent} from '../base-input/base-input.component';
 import {ToastsService} from '../../../../../services/toasts.service';
 import {Subscription} from 'rxjs/Subscription';
 
-declare const $: any;
-
 @Component({
     selector: 'app-file-upload',
     templateUrl: './file-upload.component.html',
@@ -73,10 +71,6 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     isLoading: boolean = false;
 
     showMediaLibrary: boolean = false;
-    isMediaLibraryLoading: boolean = false;
-    mediaLibrary: Media[] = [];
-    mediaLibraryCount: number = 0;
-    mediaSelection: Media[] = [];
 
     @ViewChild('fileUpload') _fileUpload: ElementRef;
 
@@ -281,42 +275,23 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     /** Media library  */
     openMediaLibrary(): void {
         this.showMediaLibrary = true;
-        // Initializing media library
-        if (this.mediaLibrary.length === 0) {
-            this.mediaLibraryCount = this.mediaLibraryMock.length;
-            this.isMediaLibraryLoading = true;
-            setTimeout(() => {
-                this.isMediaLibraryLoading = false;
-                this.mediaLibrary = this.mediaLibraryMock;
-            }, 500);
-        }
     }
 
     closeMediaLibrary(): void {
         this.showMediaLibrary = false;
     }
 
-    selectMedia(event: any, media: Media): void {
-        const index = UtilsService.containsObject(media, this.mediaSelection);
-        if (index > -1) {
-            $(event.target).removeClass('selected');
-            this.mediaSelection.splice(index, 1);
-        } else {
-            if (this.mediaSelection.length < this.maxFiles) {
-                $(event.target).addClass('selected');
-                this.mediaSelection.push(media);
-            }
-        }
-    }
-
-    confirmSelection(): void {
-        this.closeMediaLibrary();
-        this.mediaSelection.forEach((media: Media) => {
-            this.addToUpdatedFiles({
-                id: media.id,
-                url: media.url,
-                type: media.type
+    onConfirmMediaLibrarySelection(selection: Media[] | any): void {
+        if (selection) {
+            (selection as Media[]).forEach((media: Media) => {
+                this.addToUpdatedFiles({
+                    id: media.id,
+                    url: media.url,
+                    type: media.type
+                });
             });
-        });
+        }
+
+        this.closeMediaLibrary();
     }
 }

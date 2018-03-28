@@ -7,7 +7,7 @@ export interface FormFieldFile extends FormField {
         },
         maxFiles?: number; // only if multiple
         multiple?: boolean;
-        mediaLibrary?: boolean;
+        mediaLibrary?: MediaLibraryOptions;
         allowedContentTypes?: string[];
     };
 }
@@ -18,10 +18,15 @@ export interface UploadedFile {
     type: string;
 }
 
+export interface MediaLibraryOptions {
+    endpoint: string;
+}
+
 export interface Media {
     id: number;
     type: string;
     url: string;
     name: string;
+    selected?: boolean;
 }
 
