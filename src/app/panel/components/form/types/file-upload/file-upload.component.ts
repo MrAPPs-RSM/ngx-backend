@@ -305,8 +305,6 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
             if (this.mediaSelection.length < this.maxFiles) {
                 $(event.target).addClass('selected');
                 this.mediaSelection.push(media);
-            } else {
-                $('span.max-files').addClass('danger');
             }
         }
     }
