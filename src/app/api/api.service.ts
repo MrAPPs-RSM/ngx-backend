@@ -304,8 +304,14 @@ export class ApiService {
             const user = this._userService.getUser();
 
             if (user != null) {
-                data[environment.auth.credentials.username] = user.username;
-                data[environment.auth.credentials.password] = user.password;
+                data = {};
+                if (environment.auth.credentials) {
+                    data[environment.auth.credentials.username] = user.username;
+                    data[environment.auth.credentials.password] = user.password;
+                } else {
+                    data['username'] = user.username;
+                    data['password'] = user.password;
+                }
             }
         }
 
