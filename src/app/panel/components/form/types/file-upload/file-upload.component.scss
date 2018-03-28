@@ -30,15 +30,79 @@ app-file-upload {
         > div {
           color: $default;
           span.choose {
-            font-weight: $regular;
-            cursor: pointer;
-            color: darken($default, 10);
-            &:hover {
-              color: darken($default, 20);
+            &:last-child {
+              margin-left: 10px;
             }
           }
         }
       }
+
+
+      > div.media-library {
+        border: 1px solid $primary;
+        margin-top: 10px;
+        > div.header {
+          position: relative;
+          padding: 10px 20px;
+          background-color: $primary;
+          color: #ffffff;
+          font-weight: $regular;
+          > span.remove {
+            font-weight: $light;
+            cursor: pointer;
+            position: absolute;
+            font-size: 18px;
+            top: 5px;
+            right: 8px;
+          }
+        }
+        > div.container {
+          > div.row {
+            padding: $cardPaddingY;
+            > div {
+              > div.media {
+                position: relative;
+                cursor: pointer;
+                border: 1px solid $lightGrey;
+                > * {
+                  pointer-events: none;
+                }
+                > img {
+                  max-width: 100%;
+                }
+                > div.info {
+                  background-color: #ffffff;
+                  border-top: none;
+                  @include _transform(translateY(100%));
+                  @include _transition(all 0.3s);
+                  position: absolute;
+                  bottom: 0;
+                  left: 0;
+                  width: 100%;
+                  padding: 5px 5px 0;
+                  > span {
+                    font-size: 13px;
+                    display: block;
+                    &.type {
+                      font-weight: $regular;
+                    }
+                  }
+                }
+                &:hover, &.selected {
+                  > div.info {
+                    @include _transform(translateY(0));
+                  }
+                }
+
+                &.selected {
+                  border: 3px solid $primary;
+                }
+              }
+            }
+          }
+        }
+      }
+
       > div.uploaded-files-container {
         margin-top: 10px;
         position: relative;

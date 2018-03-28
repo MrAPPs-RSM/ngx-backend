@@ -7,7 +7,9 @@ export const translations = {
             inputs: {
                 invalid_date_range: 'Range di date non valido',
                 drag_drop: 'Drag & Drop oppure',
-                choose_files: 'scegli file(s)',
+                upload_files: 'Carica file(s)',
+                select_from_library: 'Seleziona dalla libreria',
+                media_library: 'Libreria media',
                 max_files: 'Numero di file consentito:',
                 uploading_files: 'Caricamento in corso, attendere'
             },
@@ -54,7 +56,9 @@ export const translations = {
             inputs: {
                 invalid_date_range: 'Invalid date range',
                 drag_drop: 'Drag & Drop or',
-                choose_files: 'choose file(s)',
+                choose_files: 'Upload file(s)',
+                select_from_library: 'Select from library',
+                media_library: 'Media library',
                 max_files: 'Max files:',
                 uploading_files: 'Uploading, please wait'
             },

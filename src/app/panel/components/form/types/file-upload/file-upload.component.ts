@@ -3,7 +3,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import {
-    FormFieldFile,
+    FormFieldFile, Media,
     UploadedFile
 } from '../../interfaces/form-field-file';
 import {UploaderOptions, UploadFile, UploadInput, UploadOutput} from 'ngx-uploader';
@@ -13,6 +13,8 @@ import {BaseInputComponent} from '../base-input/base-input.component';
 import {ToastsService} from '../../../../../services/toasts.service';
 import {Subscription} from 'rxjs/Subscription';
 
+declare const $: any;
+
 @Component({
     selector: 'app-file-upload',
     templateUrl: './file-upload.component.html',
@@ -20,6 +22,33 @@ import {Subscription} from 'rxjs/Subscription';
     encapsulation: ViewEncapsulation.None
 })
 export class FileUploadComponent extends BaseInputComponent implements OnInit, OnDestroy {
+
+    private readonly mediaLibraryMock: Media[] = [
+        {
+            id: 1,
+            type: 'image/jpeg',
+            url: 'http://via.placeholder.com/300x300?text=1',
+            name: 'File 1'
+        },
+        {
+            id: 2,
+            type: 'image/jpeg',
+            url: 'http://via.placeholder.com/300x300?text=2',
+            name: 'File 2'
+        },
+        {
+            id: 3,
+            type: 'image/jpeg',
+            url: 'http://via.placeholder.com/300x300?text=3',
+            name: 'File 3'
+        },
+        {
+            id: 4,
+            type: 'image/jpeg',
+            url: 'http://via.placeholder.com/300x300?text=4',
+            name: 'File 4'
+        }
+    ];
 
     @Input() field: FormFieldFile;
 
@@ -39,9 +68,15 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
 
     uploadInput: EventEmitter<UploadInput>;
 
-    rejected = false;
-    dragOver = false;
-    isLoading = false;
+    rejected: boolean = false;
+    dragOver: boolean = false;
+    isLoading: boolean = false;
+
+    showMediaLibrary: boolean = false;
+    isMediaLibraryLoading: boolean = false;
+    mediaLibrary: Media[] = [];
+    mediaLibraryCount: number = 0;
+    mediaSelection: Media[] = [];
 
     @ViewChild('fileUpload') _fileUpload: ElementRef;
 
@@ -241,5 +276,49 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     private removeUploadedFile(file: UploadedFile): void {
         this.uploadedFiles = UtilsService.removeObjectFromArray(file, this.uploadedFiles);
         this.updateFormValue();
+    }
+
+    /** Media library  */
+    openMediaLibrary(): void {
+        this.showMediaLibrary = true;
+        // Initializing media library
+        if (this.mediaLibrary.length === 0) {
+            this.mediaLibraryCount = this.mediaLibraryMock.length;
+            this.isMediaLibraryLoading = true;
+            setTimeout(() => {
+                this.isMediaLibraryLoading = false;
+                this.mediaLibrary = this.mediaLibraryMock;
+            }, 500);
+        }
+    }
+
+    closeMediaLibrary(): void {
+        this.showMediaLibrary = false;
+    }
+
+    selectMedia(event: any, media: Media): void {
+        const index = UtilsService.containsObject(media, this.mediaSelection);
+        if (index > -1) {
+            $(event.target).removeClass('selected');
+            this.mediaSelection.splice(index, 1);
+        } else {
+            if (this.mediaSelection.length < this.maxFiles) {
+                $(event.target).addClass('selected');
+                this.mediaSelection.push(media);
+            } else {
+                $('span.max-files').addClass('danger');
+            }
+        }
+    }
+
+    confirmSelection(): void {
+        this.closeMediaLibrary();
+        this.mediaSelection.forEach((media: Media) => {
+            this.addToUpdatedFiles({
+                id: media.id,
+                url: media.url,
+                type: media.type
+            });
+        });
     }
 }
