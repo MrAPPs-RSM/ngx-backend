@@ -1,5 +1,5 @@
 import {
-    Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Renderer, ViewChild,
+    Component, EventEmitter, Input, OnDestroy, OnInit,
     ViewEncapsulation
 } from '@angular/core';
 import {
@@ -49,12 +49,9 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
 
     showMediaLibrary: boolean = false;
 
-    @ViewChild('fileUpload') _fileUpload: ElementRef;
-
     private _subscription = Subscription.EMPTY;
 
-    constructor(private _renderer: Renderer,
-                private _toastsService: ToastsService,
+    constructor(private _toastsService: ToastsService,
                 private _apiService: ApiService) {
         super();
     }
@@ -121,7 +118,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     }
 
     calculateInputId(): string {
-        if (this.currentLang !== null) {
+        if (this.currentLang) {
             return this.currentLang.isoCode + '_' + this.field.key;
         }
         return this.field.key;
