@@ -16,6 +16,17 @@ export class DatePickerComponent extends BaseInputComponent implements OnInit {
             this.getControl().valueChanges.first().subscribe((value) => {
                 this.getControl().setValue(new Date(value));
             });
+        } else {
+            if (this.field.value) {
+                if (this.field.value === 'now') {
+                    this.getControl().setValue(new Date());
+                } else {
+                    const timestamp = Date.parse(this.field.value);
+                    if (!isNaN(timestamp)) {
+                        this.getControl().setValue(new Date(timestamp));
+                    }
+                }
+            }
         }
     }
 
