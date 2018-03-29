@@ -25,6 +25,8 @@ export class FormComponent implements OnInit, OnDestroy {
     @Input() isExternalLoading: boolean;
     @Output() response: EventEmitter<any> = new EventEmitter<any>();
 
+    dataStored: boolean;
+
     public form: FormGroup;
     public isLoading = false;
     public currentLang: any = null;
@@ -85,6 +87,7 @@ export class FormComponent implements OnInit, OnDestroy {
 
         this.form.valueChanges.subscribe(
             data => {
+                this.dataStored = false;
                 console.log(data);
             }
         );
@@ -95,7 +98,7 @@ export class FormComponent implements OnInit, OnDestroy {
     }
 
     public canDeactivate(): Observable<boolean> | boolean {
-        return !this.form.dirty && !this.isLoading;
+        return (!this.form.dirty || this.dataStored) && !this.isLoading;
     }
 
     private _extractErrors(form: FormGroup, parentKey?: string): void {
@@ -264,6 +267,7 @@ export class FormComponent implements OnInit, OnDestroy {
             this._apiService.patch(endpoint + '/' + this._route.snapshot.params['id'], value)
                 .then((response) => {
                     this.isLoading = false;
+                    this.dataStored = true;
                     this.response.emit(response);
 
                     if (this.settings.submit && this.settings.submit.refreshAfter === true) {
@@ -278,6 +282,7 @@ export class FormComponent implements OnInit, OnDestroy {
             this._apiService.put(this.settings.api.endpoint, value)
                 .then((response) => {
                     this.isLoading = false;
+                    this.dataStored = true;
                     this.response.emit(response);
 
                     if (this.settings.submit && this.settings.submit.refreshAfter) {
