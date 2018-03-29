@@ -30,15 +30,13 @@ app-file-upload {
         > div {
           color: $default;
           span.choose {
-            font-weight: $regular;
-            cursor: pointer;
-            color: darken($default, 10);
-            &:hover {
-              color: darken($default, 20);
+            &:last-child {
+              margin-left: 10px;
             }
           }
         }
       }
+
       > div.uploaded-files-container {
         margin-top: 10px;
         position: relative;

@@ -52,6 +52,7 @@ import {PlainComponent} from './components/form/types/plain/plain.component';
 import {PreviewComponent} from './components/form/types/preview/preview.component';
 import {DatePickerComponent} from './components/form/types/date-picker/date-picker.component';
 import {DateRangePickerComponent} from './components/form/types/date-range-picker/date-range-picker.component';
+import { MediaLibraryComponent } from './components/form/types/media-library/media-library.component';
 
 const COMPONENTS = [
     PanelComponent,
@@ -149,7 +150,8 @@ const routes: Routes = [
         InputPasswordComponent
     ],
     declarations: [
-        ...COMPONENTS
+        ...COMPONENTS,
+        MediaLibraryComponent
     ],
     providers: [
         ...PROVIDERS

@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Modal} from 'ngx-modialog/plugins/bootstrap';
+import {ProfilePageComponent} from '../pages/profile-page/profile-page.component';
 
 @Injectable()
 export class ModalService {

@@ -3,7 +3,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import {
-    FormFieldFile,
+    FormFieldFile, Media,
     UploadedFile
 } from '../../interfaces/form-field-file';
 import {UploaderOptions, UploadFile, UploadInput, UploadOutput} from 'ngx-uploader';
@@ -12,6 +12,9 @@ import {UtilsService} from '../../../../../services/utils.service';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {ToastsService} from '../../../../../services/toasts.service';
 import {Subscription} from 'rxjs/Subscription';
+import {Language} from '../../../../services/language.service';
+
+declare const $: any;
 
 @Component({
     selector: 'app-file-upload',
@@ -22,6 +25,7 @@ import {Subscription} from 'rxjs/Subscription';
 export class FileUploadComponent extends BaseInputComponent implements OnInit, OnDestroy {
 
     @Input() field: FormFieldFile;
+    @Input() currentLang: Language;
 
     options: UploaderOptions = {
         concurrency: 1,
@@ -39,9 +43,11 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
 
     uploadInput: EventEmitter<UploadInput>;
 
-    rejected = false;
-    dragOver = false;
-    isLoading = false;
+    rejected: boolean = false;
+    dragOver: boolean = false;
+    isLoading: boolean = false;
+
+    showMediaLibrary: boolean = false;
 
     @ViewChild('fileUpload') _fileUpload: ElementRef;
 
@@ -110,13 +116,15 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         }
     }
 
-    /**
-     * Just to invoke file selection if click on button or input text
-     * @returns {boolean}
-     */
-    private bringFileSelector(): boolean {
-        this._renderer.invokeElementMethod(this._fileUpload.nativeElement, 'click');
-        return false;
+    bringFileSelector(): boolean {
+        $('#' + this.calculateInputId()).trigger('click');
+    }
+
+    calculateInputId(): string {
+        if (this.currentLang !== null) {
+            return this.currentLang.isoCode + '_' + this.field.key;
+        }
+        return this.field.key;
     }
 
     /** Sometimes, Google Cloud takes a few seconds to make the image accessible */
@@ -242,5 +250,28 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     private removeUploadedFile(file: UploadedFile): void {
         this.uploadedFiles = UtilsService.removeObjectFromArray(file, this.uploadedFiles);
         this.updateFormValue();
+    }
+
+    /** Media library  */
+    openMediaLibrary(): void {
+        this.showMediaLibrary = true;
+    }
+
+    closeMediaLibrary(): void {
+        this.showMediaLibrary = false;
+    }
+
+    onConfirmMediaLibrarySelection(selection: Media[] | any): void {
+        if (selection) {
+            (selection as Media[]).forEach((media: Media) => {
+                this.addToUpdatedFiles({
+                    id: media.id,
+                    url: media.url,
+                    type: media.type
+                });
+            });
+        }
+
+        this.closeMediaLibrary();
     }
 }
