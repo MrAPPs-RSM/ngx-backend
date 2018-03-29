@@ -6,6 +6,7 @@ import {MenuService} from './panel/services/menu.service';
 import {GlobalState} from './global.state';
 import {Subscription} from 'rxjs/Subscription';
 import {UtilsService} from './services/utils.service';
+import {environment} from '../environments/environment';
 
 @Component({
     selector: 'app-root',
@@ -29,7 +30,9 @@ export class AppComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
 
-
+        if (environment.production) {
+            window.console.log = function() {};
+        }
 
         this._routerSub = this._router.events
             .filter(event => event instanceof NavigationEnd)
