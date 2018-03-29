@@ -3,6 +3,7 @@
         <div [class]="environment.auth.login.form.class ? environment.auth.login.form.class : 'col-sm-12'">
             <app-form
                     [settings]="environment.auth.login.form"
+                    [enableAutoSubmit]="true"
                     (response)="onSubmit($event)"
                     [isExternalForm]="true"
                     [isExternalLoading]="isLoading">
