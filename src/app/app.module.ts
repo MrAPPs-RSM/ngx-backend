@@ -20,6 +20,7 @@ import {PageRefreshService} from './services/page-refresh.service';
 import {UserService} from './auth/services/user.service';
 import {PasswordResetComponent} from './auth/password-reset/password-reset.component';
 import {ToastsService} from './services/toasts.service';
+import {PendingChangesGuard} from './auth/guards/pending-changes.guard';
 
 const routes: Routes = [
     {
@@ -73,6 +74,7 @@ const routes: Routes = [
         ApiService,
         UserService,
         LoginGuard,
+        PendingChangesGuard,
         UtilsService,
         FormGeneratorService,
         PageRefreshService,
