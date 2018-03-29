@@ -31,6 +31,7 @@
                     <div> -->
 
         <!-- TODO: remove this part to re-enable drag&drop -->
+
         <div class="drop-container">
             <div>
                 <span *ngIf="isLoading">{{'forms.inputs.uploading_files' | translate}}</span>
@@ -44,9 +45,12 @@
             </div>
         </div>
 
+        <!-- [id]="calculateInputId()"-->
+
         <input type="file"
+               #fileUpload
                class="hidden"
-               [id]="calculateInputId()"
+
                ngFileSelect
                [disabled]="(uploadedFiles.length >= maxFiles)"
                [options]="options"

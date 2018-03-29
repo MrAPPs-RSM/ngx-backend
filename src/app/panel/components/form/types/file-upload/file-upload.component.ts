@@ -1,5 +1,5 @@
 import {
-    Component, EventEmitter, Input, OnDestroy, OnInit,
+    Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Renderer, ViewChild,
     ViewEncapsulation
 } from '@angular/core';
 import {
@@ -49,9 +49,12 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
 
     showMediaLibrary: boolean = false;
 
+    @ViewChild('fileUpload') _fileUpload: ElementRef;
+
     private _subscription = Subscription.EMPTY;
 
-    constructor(private _toastsService: ToastsService,
+    constructor(private _renderer: Renderer,
+                private _toastsService: ToastsService,
                 private _apiService: ApiService) {
         super();
     }
@@ -114,10 +117,17 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     }
 
     bringFileSelector(): boolean {
-        $('#' + this.calculateInputId()).trigger('click');
+        if (this.showMediaLibrary) {
+            this.closeMediaLibrary();
+        }
+        this._renderer.invokeElementMethod(this._fileUpload.nativeElement, 'click');
+        return false;
+
+        // $('#' + this.calculateInputId()).trigger('click');
     }
 
     calculateInputId(): string {
+        console.log(this.currentLang);
         if (this.currentLang) {
             return this.currentLang.isoCode + '_' + this.field.key;
         }
@@ -194,6 +204,8 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
 
     private startUpload(): void {
         this.isLoading = true;
+
+        console.log(this.isLoading);
         console.log('START UPLOAD');
         const event: UploadInput = {
             type: 'uploadAll',
@@ -227,6 +239,8 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
                 });
             }
         }
+
+        console.log(this.uploadedFiles);
     }
 
     private addToUpdatedFiles(file: UploadedFile): void {
