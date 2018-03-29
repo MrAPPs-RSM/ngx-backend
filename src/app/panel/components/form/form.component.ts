@@ -19,6 +19,7 @@ export class FormComponent implements OnInit, OnDestroy {
 
     @Input() settings: FormSettings;
     @Input() isExternalForm: boolean;
+    @Input() enableAutoSubmit: boolean;
     @Input() isExternalLoading: boolean;
     @Output() response: EventEmitter<any> = new EventEmitter<any>();
 
@@ -46,6 +47,7 @@ export class FormComponent implements OnInit, OnDestroy {
                 private _apiService: ApiService,
                 private _route: ActivatedRoute,
                 private _ref: ChangeDetectorRef) {
+        this.enableAutoSubmit = false;
     }
 
 

@@ -1,6 +1,6 @@
 <form *ngIf="form"
       [formGroup]="form"
-      (keyup.enter)="onSubmit()"
+      (keyup.enter)="enableAutoSubmit && onSubmit()"
       [ngClass]="{'loading': isLoading || isExternalLoading}">
     <header>
         <h3 *ngIf="settings.title">{{ settings.title }}</h3>
