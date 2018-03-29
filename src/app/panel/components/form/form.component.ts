@@ -1,4 +1,13 @@
-import {Component, Input, OnInit, Output, EventEmitter, ViewEncapsulation, ChangeDetectorRef, OnDestroy} from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    Output,
+    EventEmitter,
+    ViewEncapsulation,
+    ChangeDetectorRef,
+    OnDestroy
+} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormGeneratorService} from '../../services/form-generator.service';
@@ -82,9 +91,9 @@ export class FormComponent implements OnInit, OnDestroy {
 
 
         this.form.valueChanges.subscribe(
-           data => {
-                   console.log(data);
-          }
+            data => {
+                console.log(data);
+            }
         );
     }
 

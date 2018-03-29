@@ -11,6 +11,7 @@ import {Ng2SmartTableModule} from './modules/ng2-smart-table/ng2-smart-table.mod
 import {PipesModule} from '../pipes/pipes.module';
 import {NouisliderModule} from 'ng2-nouislider';
 import {OwlDateTimeModule, OwlNativeDateTimeModule} from 'ng-pick-datetime';
+import {CKEditorModule} from 'ng2-ckeditor';
 
 import {PanelComponent} from './panel.component';
 import {FormPageComponent} from './pages/form-page/form-page.component';
@@ -140,6 +141,7 @@ const routes: Routes = [
         NouisliderModule,
         OwlDateTimeModule,
         OwlNativeDateTimeModule,
+        CKEditorModule
     ],
     exports: [
         FormComponent,
