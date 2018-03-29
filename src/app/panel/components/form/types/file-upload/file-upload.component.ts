@@ -102,10 +102,10 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
                     if (this.uploadedFiles.length === 0) {
                         if (data instanceof Array) {
                             data.forEach((item) => {
-                                this.handleResponse(item);
+                                this.handleResponse(item, 200);
                             });
                         } else {
-                            this.handleResponse(data);
+                            this.handleResponse(data, 200);
                         }
                     }
                 });
@@ -205,7 +205,8 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
             case 'done': {
                 this.isLoading = false;
                 this.removeFile(output.file.id);
-                this.handleResponse(output.file.response);
+                console.log(output.file);
+                this.handleResponse(output.file.response, output.file.responseStatus);
             }
                 break;
             default: {
@@ -238,10 +239,10 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         this._fileUpload.nativeElement.files = null;
     }
 
-    private handleResponse(response: any): void {
+    private handleResponse(response: any, statusCode: number): void {
         if (response) {
-            if (response.error) {
-                this._toastsService.error(response.error);
+            if (statusCode !== 200 || response.error) {
+                this._toastsService.error('error' in response ? response.error : {});
             } else {
                 this.addToUpdatedFiles({
                     id: response.id,

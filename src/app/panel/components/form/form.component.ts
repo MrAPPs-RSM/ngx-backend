@@ -1,4 +1,13 @@
-import {Component, Input, OnInit, Output, EventEmitter, ViewEncapsulation, ChangeDetectorRef, OnDestroy} from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    Output,
+    EventEmitter,
+    ViewEncapsulation,
+    ChangeDetectorRef,
+    OnDestroy
+} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormGeneratorService} from '../../services/form-generator.service';
@@ -19,6 +28,7 @@ export class FormComponent implements OnInit, OnDestroy {
 
     @Input() settings: FormSettings;
     @Input() isExternalForm: boolean;
+    @Input() enableAutoSubmit: boolean;
     @Input() isExternalLoading: boolean;
     @Output() response: EventEmitter<any> = new EventEmitter<any>();
 
@@ -46,6 +56,7 @@ export class FormComponent implements OnInit, OnDestroy {
                 private _apiService: ApiService,
                 private _route: ActivatedRoute,
                 private _ref: ChangeDetectorRef) {
+        this.enableAutoSubmit = false;
     }
 
 
@@ -80,9 +91,9 @@ export class FormComponent implements OnInit, OnDestroy {
 
 
         this.form.valueChanges.subscribe(
-           data => {
-                   console.log(data);
-          }
+            data => {
+                console.log(data);
+            }
         );
     }
 

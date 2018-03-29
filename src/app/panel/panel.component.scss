@@ -17,12 +17,11 @@ app-panel {
         > a.navbar-brand {
           color: $primary;
           font-size: 20px;
-          padding-left: 30px;
+          padding: 5px 30px;
           font-weight: $regular;
           > img {
-            width: 190px;
-            transform: translateY(-30%);
-            margin-top: -4px;
+            margin-top: -2.5px;
+            height: 45px;
           }
         }
         > span.toggler {

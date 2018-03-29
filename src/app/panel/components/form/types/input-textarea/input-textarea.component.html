@@ -8,17 +8,16 @@
         </label>
 
         <!-- Input -->
-        <!-- TODO: apiKey -->
-        <editor
-                *ngIf="field.options && field.options.tinyMce"
-                apiKey="test"
-                [init]="field.options.tinyMce.init"
-                id="{{field.key}}"
-                formControlName="{{field.key}}">
-        </editor>
+        <ckeditor
+                *ngIf="field.options && field.options.editor"
+                formControlName="{{field.key}}"
+                (focus)="onFocus($event)"
+                [config]="config"
+                [readonly]="field.disabled">
+        </ckeditor>
 
         <textarea
-                *ngIf="!field.options || !field.options.tinyMce"
+                *ngIf="!field.options || !field.options.editor"
                 formControlName="{{field.key}}"
                 id="{{field.key}}"
                 [attr.disabled]="field.disabled ? '' : null"

@@ -4,4 +4,6 @@ export interface FormFieldDateRange extends FormField {
     isDateTime?: boolean;
     fromKey: string;
     toKey: string;
+    min?: string;
+    max?: string;
 }
