@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, Output, EventEmitter, ViewEncapsulation, ChangeDetectorRef, OnDestroy} from '@angular/core';
+import {Component, Input, OnInit, Output, EventEmitter, ViewEncapsulation, ChangeDetectorRef, OnDestroy, HostListener} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormGeneratorService} from '../../services/form-generator.service';
@@ -8,6 +8,8 @@ import {FormSettings} from './interfaces/form-settings';
 import {FormButton} from './interfaces/form-button';
 import {Language, LanguageService} from '../../services/language.service';
 import {Subscription} from 'rxjs/Subscription';
+import {ComponentCanDeactivate} from '../../../auth/guards/pending-changes.guard';
+import {Observable} from 'rxjs/Observable';
 
 @Component({
     selector: 'app-form',
@@ -82,14 +84,18 @@ export class FormComponent implements OnInit, OnDestroy {
 
 
         this.form.valueChanges.subscribe(
-           data => {
-                   console.log(data);
-          }
+            data => {
+                console.log(data);
+            }
         );
     }
 
     ngOnDestroy() {
         this._subscription.unsubscribe();
+    }
+
+    public canDeactivate(): Observable<boolean> | boolean {
+        return !this.form.dirty && !this.isLoading;
     }
 
     private _extractErrors(form: FormGroup, parentKey?: string): void {

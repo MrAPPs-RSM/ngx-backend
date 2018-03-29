@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {PageTitleService} from '../../services/page-title.service';
 import {PageRefreshService} from '../../../services/page-refresh.service';
@@ -9,6 +9,9 @@ import {ToastsService} from '../../../services/toasts.service';
 import {ErrorResponse} from '../../../api/api.service';
 import {MenuService} from '../../services/menu.service';
 import {Subscription} from 'rxjs/Subscription';
+import {FormComponent} from '../../components/form/form.component';
+import {ComponentCanDeactivate} from '../../../auth/guards/pending-changes.guard';
+import {Observable} from 'rxjs/Observable';
 
 @Component({
     selector: 'app-form-page',
@@ -16,13 +19,14 @@ import {Subscription} from 'rxjs/Subscription';
     styleUrls: ['./form-page.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class FormPageComponent implements OnInit, OnDestroy {
+export class FormPageComponent implements OnInit, OnDestroy, ComponentCanDeactivate {
 
     params: {
         forms?: FormSettings[]
     };
 
     private _subscription = Subscription.EMPTY;
+    @ViewChild(FormComponent) child: FormComponent;
 
     constructor(private _router: Router,
                 private _route: ActivatedRoute,
@@ -42,6 +46,11 @@ export class FormPageComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this._subscription.unsubscribe();
+    }
+
+    @HostListener('window:beforeunload')
+    canDeactivate(): Observable<boolean> | boolean {
+        return this.child && this.child.canDeactivate();
     }
 
     private redirectIfNeeded(form: FormSettings) {
