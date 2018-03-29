@@ -5,6 +5,7 @@ export interface FormSettings {
         endpoint: string,
         filter?: string;
     };
+    putTranslationsFirst: boolean;
     fields: any;
     isEdit?: boolean;
     submit?: {
