@@ -27,5 +27,6 @@ export interface Media {
     type: string;
     url: string;
     name: string;
+    selected?: boolean;
 }
 

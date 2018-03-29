@@ -57,7 +57,10 @@
                 <div *ngIf="key!='base'">
                     <div [formGroupName]="key" [hidden]="currentLang.isoCode != key"
                          *ngFor="let field of valueOfSettingsField(key)">
-                        <app-form-type-switcher [groupName]="key" [form]="form.get(key)" [field]="field"
+                        <app-form-type-switcher [groupName]="key"
+                                                [form]="form.get(key)"
+                                                [field]="field"
+                                                [currentLang]="currentLang"
                                                 [isEdit]="settings.isEdit"></app-form-type-switcher>
                     </div>
                 </div>

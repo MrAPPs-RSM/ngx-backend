@@ -1,7 +1,7 @@
 <div class="media-library" *ngIf="show">
     <div class="header">
         {{'forms.inputs.media_library' | translate}}
-        <span *ngIf="maxFiles" class="max-files">({{'forms.inputs.max_files' | translate}} {{maxFiles}})</span>
+        <span *ngIf="maxFiles" class="max-files">({{'forms.inputs.max_files' | translate}}: {{maxFiles}})</span>
         <span class="remove" (click)="close()">×</span>
     </div>
     <div class="progress" [ngClass]="{'visible': isLoading}">
@@ -9,28 +9,36 @@
     </div>
     <div class="container-fluid">
         <div class="row filters">
-            <div class="col-sm-3">
+            <div class="col-sm-6 col-md-4 col-lg-3">
                 <div class="input-wrapper">
                     <input type="text"
                            class="form-control"
                            [formControl]="inputControl"
-                           placeholder="Name"
                     />
                     <i class="fa fa-search"></i>
                 </div>
             </div>
-            <div class="col-sm-3">
-            </div>
         </div>
         <div class="row library">
-            <div class="col-xs-4 col-sm-3 col-md-3 col-lg-2" *ngFor="let media of data">
-                <div class="media" (click)="selectMedia($event, media)" [ngClass]="{selected: media.selected}">
+            <div class="col-xs-4 col-sm-3 col-md-3 col-lg-2" *ngFor="let media of data" (click)="selectMedia($event, media)">
+                <div class="media" [ngClass]="{selected: media.selected}">
                     <img [src]="media.url" (error)="onImageError($event)">
                     <span class="selected"><i class="fa fa-check"></i></span>
                 </div>
                 <div class="info">
                     <span class="name">{{media.name}}</span>
                     <span class="type">{{media.type}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="row selection" *ngIf="selection.length > 0">
+            <div class="col-sm-12">
+                <p>{{'forms.inputs.selected_files' | translate}} ({{selection.length}}):</p>
+            </div>
+            <div class="col-sm-12">
+                <div class="media" *ngFor="let media of selection">
+                    <img [src]="media.url" (error)="onImageError($event)">
+                    <span (click)="unSelectMedia($event, media)">×</span>
                 </div>
             </div>
         </div>

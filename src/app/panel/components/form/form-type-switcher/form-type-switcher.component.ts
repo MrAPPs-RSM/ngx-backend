@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {formConfig} from '../form.config';
+import {Language} from '../../../services/language.service';
 
 @Component({
   selector: 'app-form-type-switcher',
@@ -15,6 +16,7 @@ export class FormTypeSwitcherComponent implements OnInit {
     @Input() field: any;
     @Input() isEdit: boolean;
     @Input() unique?: Function;
+    @Input() currentLang?: Language;
 
     public formConfig = formConfig;
 

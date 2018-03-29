@@ -51,15 +51,15 @@ app-media-library {
         &.library {
           > div {
             margin: 15px 0;
+            cursor: pointer;
+            > * {
+              pointer-events: none;
+            }
             > div.media {
               border: 2px solid $lightGrey;
               border-bottom: none;
               position: relative;
-              cursor: pointer;
               padding-top: 100%;
-              > * {
-                pointer-events: none;
-              }
 
               > img {
                 position: absolute;
@@ -103,6 +103,33 @@ app-media-library {
                 &.name {
                   font-weight: $regular;
                 }
+              }
+            }
+          }
+        }
+        &.selection {
+          margin-top: 15px;
+          > div {
+            margin-left: -5px;
+            > p {
+              color: $default;
+              font-size: 13px;
+              margin-left: 5px;
+            }
+            > div.media {
+              display: inline-block;
+              border: 1px solid $lightGrey;
+              margin: 5px;
+              > img {
+                width: 60px;
+                height: 60px;
+              }
+              > span {
+                cursor: pointer;
+                display: block;
+                width: 60px;
+                color: $default;
+                text-align: center;
               }
             }
           }

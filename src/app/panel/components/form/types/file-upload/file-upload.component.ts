@@ -12,6 +12,9 @@ import {UtilsService} from '../../../../../services/utils.service';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {ToastsService} from '../../../../../services/toasts.service';
 import {Subscription} from 'rxjs/Subscription';
+import {Language} from '../../../../services/language.service';
+
+declare const $: any;
 
 @Component({
     selector: 'app-file-upload',
@@ -21,34 +24,8 @@ import {Subscription} from 'rxjs/Subscription';
 })
 export class FileUploadComponent extends BaseInputComponent implements OnInit, OnDestroy {
 
-    private readonly mediaLibraryMock: Media[] = [
-        {
-            id: 1,
-            type: 'image/jpeg',
-            url: 'http://via.placeholder.com/300x300?text=1',
-            name: 'File 1'
-        },
-        {
-            id: 2,
-            type: 'image/jpeg',
-            url: 'http://via.placeholder.com/300x300?text=2',
-            name: 'File 2'
-        },
-        {
-            id: 3,
-            type: 'image/jpeg',
-            url: 'http://via.placeholder.com/300x300?text=3',
-            name: 'File 3'
-        },
-        {
-            id: 4,
-            type: 'image/jpeg',
-            url: 'http://via.placeholder.com/300x300?text=4',
-            name: 'File 4'
-        }
-    ];
-
     @Input() field: FormFieldFile;
+    @Input() currentLang: Language;
 
     options: UploaderOptions = {
         concurrency: 1,
@@ -139,13 +116,15 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         }
     }
 
-    /**
-     * Just to invoke file selection if click on button or input text
-     * @returns {boolean}
-     */
-    private bringFileSelector(): boolean {
-        this._renderer.invokeElementMethod(this._fileUpload.nativeElement, 'click');
-        return false;
+    bringFileSelector(): boolean {
+        $('#' + this.calculateInputId()).trigger('click');
+    }
+
+    calculateInputId(): string {
+        if (this.currentLang !== null) {
+            return this.currentLang.isoCode + '_' + this.field.key;
+        }
+        return this.field.key;
     }
 
     /** Sometimes, Google Cloud takes a few seconds to make the image accessible */

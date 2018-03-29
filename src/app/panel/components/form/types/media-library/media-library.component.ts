@@ -1,5 +1,8 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
-import {Media, MediaLibraryOptions} from '../../interfaces/form-field-file';
+import {
+    Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChange,
+    ViewEncapsulation
+} from '@angular/core';
+import {Media, MediaLibraryOptions, UploadedFile} from '../../interfaces/form-field-file';
 import {ApiService, ErrorResponse} from '../../../../../api/api.service';
 import {UtilsService} from '../../../../../services/utils.service';
 import {ToastsService} from '../../../../../services/toasts.service';
@@ -8,6 +11,7 @@ import {FormControl} from '@angular/forms';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/skip';
+import {Subscription} from 'rxjs/Subscription';
 
 declare const $: any;
 
@@ -17,10 +21,11 @@ declare const $: any;
     styleUrls: ['./media-library.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class MediaLibraryComponent implements OnInit {
+export class MediaLibraryComponent implements OnInit, OnChanges, OnDestroy {
 
     @Input() show: boolean;
     @Input() options: MediaLibraryOptions;
+    @Input() uploadedFiles: UploadedFile[];
     @Input() maxFiles: number;
     @Input() allowedContentTypes: any[];
 
@@ -37,6 +42,7 @@ export class MediaLibraryComponent implements OnInit {
         page: 1
     };
 
+    subscriptionInputControl = Subscription.EMPTY;
     inputControl = new FormControl();
 
     filter: any = {
@@ -47,14 +53,33 @@ export class MediaLibraryComponent implements OnInit {
                 private _toast: ToastsService) {
     }
 
+    ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
+        if (changes['show']) {
+            if (changes['show'].currentValue === true) {
+                if (this.data.length === 0) {
+                    this.reload();
+                }
+            }
+        }
+    }
+
     ngOnInit() {
         this.reset();
         if (this.data.length === 0) {
             this.reload();
         }
 
-        this.inputControl.valueChanges.skip(1).distinctUntilChanged().debounceTime(300)
+        this.onFilterChange();
+    }
+
+    ngOnDestroy() {
+        this.subscriptionInputControl.unsubscribe();
+    }
+
+    private onFilterChange() {
+        this.subscriptionInputControl = this.inputControl.valueChanges.skip(1).distinctUntilChanged().debounceTime(300)
             .subscribe((value: string) => this.onFilter(value, 'fileName'));
+        // TODO: parametrizzare 'fileName'
     }
 
     private reload() {
@@ -72,8 +97,9 @@ export class MediaLibraryComponent implements OnInit {
     }
 
     private reset() {
-        this.filter.where.name = null;
+        this.filter.where = {};
         this.pagination.page = 1;
+        this.data = [];
         this.selection = [];
     }
 
@@ -87,6 +113,7 @@ export class MediaLibraryComponent implements OnInit {
             .then((data) => {
                 this.isLoading = false;
                 this.data = data;
+                this.checkSelection();
             })
             .catch((response: ErrorResponse) => {
                 this.isLoading = false;
@@ -122,9 +149,11 @@ export class MediaLibraryComponent implements OnInit {
             limit: this.pagination.perPage,
         };
 
+        let resetPagination: boolean = false;
+
         Object.keys(this.filter.where).forEach((key) => {
             const condition = {};
-            if (this.filter.where[key] !== null) {
+            if (this.filter.where[key] !== null && this.filter.where[key] !== '') {
                 if (typeof this.filter.where[key] === 'string') {
                     condition[key] = {
                         like: '%' + this.filter.where[key] + '%'
@@ -132,13 +161,29 @@ export class MediaLibraryComponent implements OnInit {
                 } else {
                     condition[key] = this.filter.where[key];
                 }
+                resetPagination = true;
                 params.where.and.push(condition);
             }
         });
 
+        if (this.uploadedFiles.length > 0) {
+            this.uploadedFiles.forEach((file: UploadedFile) => {
+                params.where.and.push({
+                    id: {
+                        neq: file.id
+                    }
+                });
+            });
+        }
+
         const typesFilter = this.composeAllowedContentTypesFilter();
         if (typesFilter) {
             params.where.and.push(typesFilter);
+        }
+
+        if (resetPagination) {
+            this.pagination.page = 1;
+            params.skip = 0;
         }
 
         return {
@@ -169,6 +214,16 @@ export class MediaLibraryComponent implements OnInit {
             }
         });
 
+        if (this.uploadedFiles.length > 0) {
+            this.uploadedFiles.forEach((file: UploadedFile) => {
+                params.where.and.push({
+                    id: {
+                        neq: file.id
+                    }
+                });
+            });
+        }
+
         const typesFilter = this.composeAllowedContentTypesFilter();
         if (typesFilter) {
             params.where.and.push(typesFilter);
@@ -183,23 +238,49 @@ export class MediaLibraryComponent implements OnInit {
     selectMedia(event: any, media: Media): void {
         const index = UtilsService.containsObject(media, this.selection);
         if (index > -1) {
-            $(event.target).removeClass('selected');
+            media.selected = false;
             this.selection.splice(index, 1);
         } else {
             if ((this.maxFiles > 0 && this.selection.length < this.maxFiles) || this.maxFiles === 0) {
-                $(event.target).addClass('selected');
+                media.selected = true;
                 this.selection.push(media);
             }
         }
     }
 
+    unSelectMedia(event: any, media: Media): void {
+        const index = UtilsService.containsObject(media, this.selection);
+        if (index > -1) {
+            media.selected = false;
+            this.selection.splice(index, 1);
+        }
+
+        this.data.forEach((item: Media) => {
+            if (item.id === media.id) {
+                item.selected = false;
+            }
+        });
+    }
+
+    private checkSelection(): void {
+        this.data.forEach((media: Media) => {
+            this.selection.forEach((selected: Media) => {
+                if (media.id === selected.id) {
+                    media.selected = true;
+                }
+            });
+        });
+    }
+
     close(): void {
         this.confirm.emit();
+        this.subscriptionInputControl.unsubscribe();
         this.reset();
     }
 
     confirmSelection(): void {
         this.confirm.emit(this.selection);
+        this.subscriptionInputControl.unsubscribe();
         this.reset();
     }
 
@@ -254,6 +335,6 @@ export class MediaLibraryComponent implements OnInit {
 
     onFilter(value: any, key: string): void {
         this.filter.where[key] = value;
-        this.getData();
+        this.reload();
     }
 }

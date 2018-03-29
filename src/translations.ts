@@ -10,7 +10,8 @@ export const translations = {
                 upload_files: 'Carica file(s)',
                 select_from_library: 'Seleziona dalla libreria',
                 media_library: 'Libreria media',
-                max_files: 'Numero di file consentito:',
+                max_files: 'Numero di file consentito',
+                selected_files: 'File selezionati',
                 uploading_files: 'Caricamento in corso, attendere'
             },
             errors: {
@@ -59,7 +60,8 @@ export const translations = {
                 choose_files: 'Upload file(s)',
                 select_from_library: 'Select from library',
                 media_library: 'Media library',
-                max_files: 'Max files:',
+                max_files: 'Max files',
+                selected_files: 'Selected files',
                 uploading_files: 'Uploading, please wait'
             },
             errors: {

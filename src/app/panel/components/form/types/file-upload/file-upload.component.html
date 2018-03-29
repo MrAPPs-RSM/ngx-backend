@@ -34,8 +34,8 @@
         <div class="drop-container">
             <div>
                 <span *ngIf="isLoading">{{'forms.inputs.uploading_files' | translate}}</span>
-                <span *ngIf="(maxFiles > 0 && uploadedFiles.length >= maxFiles) && !isLoading">{{'forms.inputs.max_files' | translate}} {{maxFiles}}</span>
-                <span *ngIf="(uploadedFiles.length === 0 || (maxFiles > 0 && uploadedFiles.length < maxFiles)) && !isLoading">
+                <span *ngIf="(maxFiles > 0 && uploadedFiles.length >= maxFiles) && !isLoading">{{'forms.inputs.max_files' | translate}}: {{maxFiles}}</span>
+                <span *ngIf="(uploadedFiles.length === 0 || ((maxFiles > 0 && uploadedFiles.length < maxFiles) || maxFiles === 0)) && !isLoading">
                     <span class="choose btn btn-sm btn-default"
                           (click)="bringFileSelector()">{{'forms.inputs.upload_files' | translate}}</span>
                     <span class="choose btn btn-sm btn-info" *ngIf="!!field.options.mediaLibrary"
@@ -46,7 +46,7 @@
 
         <input type="file"
                class="hidden"
-               #fileUpload
+               [id]="calculateInputId()"
                ngFileSelect
                [disabled]="(uploadedFiles.length >= maxFiles)"
                [options]="options"
@@ -58,6 +58,7 @@
                 *ngIf="!!field.options.mediaLibrary"
                 [show]="showMediaLibrary"
                 [allowedContentTypes]="options.allowedContentTypes"
+                [uploadedFiles]="uploadedFiles"
                 [options]="field.options.mediaLibrary"
                 [maxFiles]="maxFiles"
                 (confirm)="onConfirmMediaLibrarySelection($event)"
