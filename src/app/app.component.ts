@@ -28,6 +28,9 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+
+
+
         this._routerSub = this._router.events
             .filter(event => event instanceof NavigationEnd)
             .map(() => this._route)

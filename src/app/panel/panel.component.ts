@@ -35,6 +35,10 @@ export class PanelComponent implements OnInit {
 
     ngOnInit() {
 
+        if (environment.production) { // assuming you have env variable configured
+            window.console.log = function() {};
+        }
+
         /** When start, if current lang not set, set it from the enviroment defaults */
         if (this._languageService.isMultiLang() && !this._languageService.getCurrentLang()) {
             this._languageService.setCurrentLang(environment['currentLang']);
