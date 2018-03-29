@@ -304,7 +304,8 @@ export class TableComponent implements OnInit, OnDestroy {
                     const params = {};
 
                     action.config.params.associateFields.forEach((association: Association) => {
-                        params[association.formKey] = this.filter.where[association.queryKey];
+                        const queryKey = association.queryKey.indexOf('where') >= 0 || association.queryKey.indexOf('.') >= 0 ? association.queryKey : 'where.' + association.queryKey;
+                        params[association.formKey] = UtilsService.objectByString(this.filter, queryKey);
                     });
 
                     extraParams = {queryParams: {formParams: JSON.stringify(params)}};

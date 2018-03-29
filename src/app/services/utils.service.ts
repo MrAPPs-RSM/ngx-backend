@@ -24,6 +24,21 @@ export class UtilsService {
         return (item && typeof item === 'object' && !Array.isArray(item));
     }
 
+    public static objectByString(o: Object, s: string) {
+        s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
+        s = s.replace(/^\./, '');           // strip a leading dot
+        const a = s.split('.');
+        for (let i = 0, n = a.length; i < n; ++i) {
+            const k = a[i];
+            if (o && typeof o === 'object' && k in o) {
+                o = o[k];
+            } else {
+                return null;
+            }
+        }
+        return o;
+    }
+
     public static mergeDeep(target, source) {
         const output = Object.assign({}, target);
         if (this.isObject(target) && this.isObject(source)) {
