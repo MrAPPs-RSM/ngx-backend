@@ -3,7 +3,7 @@
 app-media-library {
   > div.media-library {
     border: 1px solid $primary;
-    margin-top: 10px;
+    margin-top: 15px;
     > div.header {
       position: relative;
       padding: 10px 20px;
@@ -22,11 +22,35 @@ app-media-library {
       }
     }
     > div.container-fluid {
-      padding: $cardPaddingY;
+      padding: 15px 20px;
       > div.row {
-        &:first-child {
+        &.filters {
+          div.input-wrapper {
+            position: relative;
+            > input {
+              height: 40px;
+              padding-right: 30px;
+            }
+            > i {
+              position: absolute;
+              top: 11px;
+              font-size: 18px;
+              right: 8px;
+              color: $default;
+            }
+          }
+
+          ng-select.ng-select.bottom {
+            > div.ng-control {
+              min-width: 150px;
+              height: 40px;
+              font-weight: $light;
+            }
+          }
+        }
+        &.library {
           > div {
-            margin-bottom: 15px;
+            margin: 15px 0;
             > div.media {
               border: 2px solid $lightGrey;
               border-bottom: none;
@@ -83,9 +107,11 @@ app-media-library {
             }
           }
         }
-        &:last-child {
+        &.footer {
+          margin-top: 15px;
           > div {
             > nav.pagination {
+              margin: 0;
               > ul {
                 margin: 0;
                 padding-left: 0;

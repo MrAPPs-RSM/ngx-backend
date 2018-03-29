@@ -4,6 +4,10 @@ import {ApiService, ErrorResponse} from '../../../../../api/api.service';
 import {UtilsService} from '../../../../../services/utils.service';
 import {ToastsService} from '../../../../../services/toasts.service';
 import {environment} from '../../../../../../environments/environment';
+import {FormControl} from '@angular/forms';
+import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/skip';
 
 declare const $: any;
 
@@ -33,27 +37,44 @@ export class MediaLibraryComponent implements OnInit {
         page: 1
     };
 
+    inputControl = new FormControl();
+
+    filter: any = {
+        where: {}
+    };
+
     constructor(private _apiService: ApiService,
                 private _toast: ToastsService) {
     }
 
     ngOnInit() {
-        this.clearSelection();
+        this.reset();
         if (this.data.length === 0) {
-            // init library
-            this.isLoading = true;
-            this.getCount()
-                .then((res: { count: number }) => {
-                    this.count = res.count;
-                    this.initPages();
-                    this.getData();
-                })
-                .catch((response: ErrorResponse) => {
-                    this.isLoading = false;
-                    this._toast.error(response.error);
-                    this.close();
-                });
+            this.reload();
         }
+
+        this.inputControl.valueChanges.skip(1).distinctUntilChanged().debounceTime(300)
+            .subscribe((value: string) => this.onFilter(value, 'fileName'));
+    }
+
+    private reload() {
+        this.getCount()
+            .then((res: { count: number }) => {
+                this.count = res.count;
+                this.initPages();
+                this.getData();
+            })
+            .catch((response: ErrorResponse) => {
+                this.isLoading = false;
+                this._toast.error(response.error);
+                this.close();
+            });
+    }
+
+    private reset() {
+        this.filter.where.name = null;
+        this.pagination.page = 1;
+        this.selection = [];
     }
 
     private getCount(): Promise<any> {
@@ -61,11 +82,11 @@ export class MediaLibraryComponent implements OnInit {
     }
 
     private getData(): void {
+        this.isLoading = true;
         this._apiService.get(this.options.endpoint, this.composeParams())
             .then((data) => {
                 this.isLoading = false;
                 this.data = data;
-                this.checkSelection();
             })
             .catch((response: ErrorResponse) => {
                 this.isLoading = false;
@@ -101,6 +122,20 @@ export class MediaLibraryComponent implements OnInit {
             limit: this.pagination.perPage,
         };
 
+        Object.keys(this.filter.where).forEach((key) => {
+            const condition = {};
+            if (this.filter.where[key] !== null) {
+                if (typeof this.filter.where[key] === 'string') {
+                    condition[key] = {
+                        like: '%' + this.filter.where[key] + '%'
+                    };
+                } else {
+                    condition[key] = this.filter.where[key];
+                }
+                params.where.and.push(condition);
+            }
+        });
+
         const typesFilter = this.composeAllowedContentTypesFilter();
         if (typesFilter) {
             params.where.and.push(typesFilter);
@@ -119,6 +154,20 @@ export class MediaLibraryComponent implements OnInit {
                 and: []
             }
         };
+
+        Object.keys(this.filter.where).forEach((key) => {
+            if (this.filter.where[key] !== null) {
+                const condition = {};
+                if (typeof this.filter.where[key] === 'string') {
+                    condition[key] = {
+                        like: '%' + this.filter.where[key] + '%'
+                    };
+                } else {
+                    condition[key] = this.filter.where[key];
+                }
+                params.where.and.push(condition);
+            }
+        });
 
         const typesFilter = this.composeAllowedContentTypesFilter();
         if (typesFilter) {
@@ -144,28 +193,14 @@ export class MediaLibraryComponent implements OnInit {
         }
     }
 
-    checkSelection(): void {
-        if (this.selection.length > 0) {
-            this.selection.forEach((selectedMedia: Media) => {
-                this.data.forEach((dataMedia: Media) => {
-                    dataMedia.selected = selectedMedia.id === dataMedia.id;
-                });
-            });
-        }
-    }
-
     close(): void {
         this.confirm.emit();
-        this.clearSelection();
+        this.reset();
     }
 
     confirmSelection(): void {
         this.confirm.emit(this.selection);
-        this.clearSelection();
-    }
-
-    clearSelection(): void {
-        this.selection = [];
+        this.reset();
     }
 
     onImageError($event: any): void {
@@ -215,5 +250,10 @@ export class MediaLibraryComponent implements OnInit {
 
     getLastPage(): number {
         return Math.ceil(this.count / this.pagination.perPage);
+    }
+
+    onFilter(value: any, key: string): void {
+        this.filter.where[key] = value;
+        this.getData();
     }
 }
