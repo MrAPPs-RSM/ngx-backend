@@ -11,6 +11,7 @@ import {MenuService} from './menu.service';
 import {NotfoundPageComponent} from '../pages/notfound-page/notfound-page.component';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/fromPromise';
+import {PendingChangesGuard} from '../../auth/guards/pending-changes.guard';
 
 
 const TYPES = {
@@ -95,6 +96,11 @@ export class SetupService {
                     component: TYPES[item.type],
                     data: item.params
                 };
+
+                if (item.type === 'form') {
+                    route['canDeactivate'] = [PendingChangesGuard];
+                }
+
                 routes.push(route);
             }
         }

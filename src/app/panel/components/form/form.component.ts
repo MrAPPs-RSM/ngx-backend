@@ -1,13 +1,4 @@
-import {
-    Component,
-    Input,
-    OnInit,
-    Output,
-    EventEmitter,
-    ViewEncapsulation,
-    ChangeDetectorRef,
-    OnDestroy
-} from '@angular/core';
+import {Component, Input, OnInit, Output, EventEmitter, ViewEncapsulation, ChangeDetectorRef, OnDestroy, HostListener} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormGeneratorService} from '../../services/form-generator.service';
@@ -17,6 +8,8 @@ import {FormSettings} from './interfaces/form-settings';
 import {FormButton} from './interfaces/form-button';
 import {Language, LanguageService} from '../../services/language.service';
 import {Subscription} from 'rxjs/Subscription';
+import {ComponentCanDeactivate} from '../../../auth/guards/pending-changes.guard';
+import {Observable} from 'rxjs/Observable';
 
 @Component({
     selector: 'app-form',
@@ -31,6 +24,8 @@ export class FormComponent implements OnInit, OnDestroy {
     @Input() enableAutoSubmit: boolean;
     @Input() isExternalLoading: boolean;
     @Output() response: EventEmitter<any> = new EventEmitter<any>();
+
+    dataStored: boolean;
 
     public form: FormGroup;
     public isLoading = false;
@@ -92,6 +87,7 @@ export class FormComponent implements OnInit, OnDestroy {
 
         this.form.valueChanges.subscribe(
             data => {
+                this.dataStored = false;
                 console.log(data);
             }
         );
@@ -99,6 +95,10 @@ export class FormComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this._subscription.unsubscribe();
+    }
+
+    public canDeactivate(): Observable<boolean> | boolean {
+        return (!this.form.dirty || this.dataStored) && !this.isLoading;
     }
 
     private _extractErrors(form: FormGroup, parentKey?: string): void {
@@ -267,6 +267,7 @@ export class FormComponent implements OnInit, OnDestroy {
             this._apiService.patch(endpoint + '/' + this._route.snapshot.params['id'], value)
                 .then((response) => {
                     this.isLoading = false;
+                    this.dataStored = true;
                     this.response.emit(response);
 
                     if (this.settings.submit && this.settings.submit.refreshAfter === true) {
@@ -281,6 +282,7 @@ export class FormComponent implements OnInit, OnDestroy {
             this._apiService.put(this.settings.api.endpoint, value)
                 .then((response) => {
                     this.isLoading = false;
+                    this.dataStored = true;
                     this.response.emit(response);
 
                     if (this.settings.submit && this.settings.submit.refreshAfter) {
