@@ -15,7 +15,10 @@
                     formControlName="{{field.key}}"
                     id="{{field.key}}"
                     [owlDateTimeTrigger]="dt"
-                    [owlDateTime]="dt">
+                    [owlDateTime]="dt"
+                    [min]="min"
+                    [max]="max"
+            >
             <owl-date-time
                     #dt
                     [firstDayOfWeek]="1"

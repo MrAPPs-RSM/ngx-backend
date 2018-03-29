@@ -46,13 +46,9 @@ input {
       }
     }
 
-    /* Date picker */
-    div.ngui-datetime-picker-wrapper {
-      > input {
+    ckeditor {
+      > div.cke_2 {
         border-color: $danger;
-        &:focus {
-          border-color: $danger;
-        }
       }
     }
   }

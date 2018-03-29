@@ -7,6 +7,19 @@ export class UtilsService {
     constructor() {
     }
 
+    public static getDateObjectFromString(date: string): Date | null {
+        if (date === 'now') {
+            return new Date();
+        } else {
+            const timestamp = Date.parse(date);
+            if (!isNaN(timestamp)) {
+                return new Date(timestamp);
+            } else {
+                return null;
+            }
+        }
+    }
+
     public static isObject(item: any) {
         return (item && typeof item === 'object' && !Array.isArray(item));
     }
@@ -17,12 +30,12 @@ export class UtilsService {
             Object.keys(source).forEach(key => {
                 if (this.isObject(source[key])) {
                     if (!(key in target)) {
-                        Object.assign(output, { [key]: source[key] });
+                        Object.assign(output, {[key]: source[key]});
                     } else {
                         output[key] = this.mergeDeep(target[key], source[key]);
                     }
                 } else {
-                    Object.assign(output, { [key]: source[key] });
+                    Object.assign(output, {[key]: source[key]});
                 }
             });
         }

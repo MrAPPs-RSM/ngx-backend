@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {FormFieldDateRange} from '../../interfaces/form-field-date-range';
 import {AbstractControl} from '@angular/forms';
+import {UtilsService} from '../../../../../services/utils.service';
 
 @Component({
     selector: 'app-date-range-picker',
@@ -12,7 +13,11 @@ export class DateRangePickerComponent extends BaseInputComponent implements OnIn
 
     @Input() field: FormFieldDateRange;
 
+    min: Date;
+    max: Date;
+
     ngOnInit() {
+        this.initMaxMin();
         if (this.isEdit) {
             this.getControlByKey(this.field.fromKey).valueChanges.first().subscribe((fromValue) => {
                 if (fromValue) {
@@ -28,6 +33,15 @@ export class DateRangePickerComponent extends BaseInputComponent implements OnIn
         this.getControl().valueChanges.subscribe((value) => {
             this.setFormValue(value);
         });
+    }
+
+    private initMaxMin() {
+        if (this.field.min) {
+            this.min = UtilsService.getDateObjectFromString(this.field.min);
+        }
+        if (this.field.max) {
+            this.max = UtilsService.getDateObjectFromString(this.field.max);
+        }
     }
 
     getControlByKey(key: string): AbstractControl {
