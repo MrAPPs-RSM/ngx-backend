@@ -232,7 +232,7 @@ export class FormComponent implements OnInit, OnDestroy {
     }
 
     onSubmit(): void {
-        this.closeErrors(false);
+        this.closeErrors();
         if (this.isExternalForm) {
             /** If is external form, the component will handle the request */
             this.response.emit(this.form.value);
@@ -296,13 +296,10 @@ export class FormComponent implements OnInit, OnDestroy {
         }
     }
 
-    closeErrors(apiErrors?: boolean): void {
-        if (apiErrors) {
-            this.settings.errors = [];
-        } else {
-            this.errors = {};
-            this.errorsList = [];
-        }
+    closeErrors(): void {
+        this.settings.errors = [];
+        this.errors = {};
+        this.errorsList = [];
     }
 
     onButton(button: FormButton): void {

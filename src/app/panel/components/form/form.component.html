@@ -9,24 +9,19 @@
         </div>
     </header>
 
-    <!-- Validation errors, handled locally (required fields, etc) -->
-    <div class="alert alert-danger errors" [ngClass]="{'visible': errorsList && errorsList.length > 0}">
-        <ol>
+    <div class="alert alert-danger errors" [ngClass]="{'visible': (errorsList && errorsList.length > 0) || (settings.errors && settings.errors.length > 0)}">
+        <ul *ngIf="errorsList || settings.errors">
+            <!-- Validation errors, handled locally (required fields, etc) -->
             <li *ngFor="let error of errorsList">
                 <span>{{error.label}}</span> {{error.message}}
             </li>
-        </ol>
-        <span class="close-alert" (click)="closeErrors(false)">×</span>
-    </div>
 
-    <!-- Errors from API RESPONSE, handled by external components -->
-    <div class="alert alert-danger errors" [ngClass]="{'visible': settings.errors && settings.errors.length > 0}">
-        <ol>
+            <!-- Errors from API RESPONSE, handled by external components -->
             <li *ngFor="let error of settings.errors">
                 {{error}}
             </li>
-        </ol>
-        <span class="close-alert" (click)="closeErrors(true)">×</span>
+        </ul>
+        <span class="close-alert" (click)="closeErrors()">×</span>
     </div>
 
     <div class="fields-wrapper">

@@ -80,7 +80,7 @@ export class FormPageComponent implements OnInit, OnDestroy, ComponentCanDeactiv
                 if (response.hasOwnProperty('error')) {
                     const index = UtilsService.containsObject(form, this.params.forms);
                     if (index !== -1) {
-                        this.params.forms[index].errors = ['An error occurred'];
+                        this.params.forms[index].errors = [response['error']['message']];
                     }
                 } else {
                     this._toastsService.success();
