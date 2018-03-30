@@ -7,6 +7,8 @@ import 'rxjs/add/operator/skip';
 import {DefaultFilter} from './default-filter';
 import {ApiService, ErrorResponse} from '../../../../../../api/api.service';
 
+declare const $: any;
+
 @Component({
     selector: 'select-filter',
     template: `
@@ -15,6 +17,8 @@ import {ApiService, ErrorResponse} from '../../../../../../api/api.service';
                        [multiple]="false"
                        [formControl]="inputControl"
                        [(ngModel)]="query"
+                       [appendTo]="'body'"
+                       [closeOnSelect]="true"
                        bindLabel="text"
                        bindValue="id"
                        [placeholder]="column.getFilterConfig().placeholder"
@@ -46,6 +50,8 @@ export class SelectFilterComponent extends DefaultFilter implements OnInit {
             .subscribe((value: string) => {
                 this.setFilter();
             });
+
+        this.onScroll();
     }
 
     private loadOptions(): void {
@@ -62,5 +68,11 @@ export class SelectFilterComponent extends DefaultFilter implements OnInit {
                     console.log(response.error);
                 });
         }
+    }
+
+    private onScroll(): void {
+        $('.table-wrapper').scroll(function() {
+            $('.table-wrapper').click();
+        });
     }
 }
