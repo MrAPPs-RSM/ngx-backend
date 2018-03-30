@@ -76,12 +76,9 @@ export class FormPageComponent implements OnInit, OnDestroy, ComponentCanDeactiv
                 );
             }
                 break;
-            case 'inline': {
+            case 'toast': {
                 if (response.hasOwnProperty('error')) {
-                    const index = UtilsService.containsObject(form, this.params.forms);
-                    if (index !== -1) {
-                        this.params.forms[index].errors = [response['error']['message']];
-                    }
+                    this._toastsService.error(response['error']);
                 } else {
                     this._toastsService.success();
                     this.redirectIfNeeded(form);
@@ -93,9 +90,20 @@ export class FormPageComponent implements OnInit, OnDestroy, ComponentCanDeactiv
             }
                 break;
             default: {
-                console.log(response);
                 if (response.hasOwnProperty('error')) {
-                    this._toastsService.error(response['error']);
+                    if (response['error']['statusCode'] !== 500) {
+                        const index = UtilsService.containsObject(form, this.params.forms);
+                        if (index !== -1) {
+                            // Multiple errors
+                            if (response['error']['message'].indexOf('~') !== -1) {
+                                this.params.forms[index].errors = response['error']['message'].split('~');
+                            } else { // Single error
+                                this.params.forms[index].errors = [response['error']['message']];
+                            }
+                        }
+                    } else {
+                        this._toastsService.error(response['error']);
+                    }
                 } else {
                     this._toastsService.success();
                     this.redirectIfNeeded(form);
