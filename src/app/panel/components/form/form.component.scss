@@ -14,9 +14,10 @@ app-form {
     > div.errors {
       margin: 0;
       padding: 0;
-      > ol {
-        margin: 0 0 0 15px;
-        padding: 10px 15px;
+      > ul {
+        list-style: square;
+        margin: 0;
+        padding: 10px 30px;
         > li {
           > span {
             font-weight: $regular;

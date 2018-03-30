@@ -57,7 +57,7 @@ export const translations = {
             inputs: {
                 invalid_date_range: 'Invalid date range',
                 drag_drop: 'Drag & Drop or',
-                choose_files: 'Upload file(s)',
+                upload_files: 'Upload file(s)',
                 select_from_library: 'Select from library',
                 media_library: 'Media library',
                 max_files: 'Max files',

@@ -334,7 +334,7 @@ export class TableComponent implements OnInit, OnDestroy {
                 }
 
                 if (action.config.titleField && path.indexOf(':title') !== -1) {
-                    path = path.replace(':title', data[action.config.titleField] !== null ? data[action.config.titleField] : '---');
+                    path = path.replace(':title', data[action.config.titleField] !== null && data[action.config.titleField] !== '' ? data[action.config.titleField] : '---');
                 }
 
                 if (action.config.params) {
