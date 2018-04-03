@@ -65,10 +65,7 @@ export class MediaLibraryComponent implements OnInit, OnChanges, OnDestroy {
 
     ngOnInit() {
         this.reset();
-        if (this.data.length === 0) {
-            this.reload();
-        }
-
+        this.initPages();
         this.onFilterChange();
     }
 

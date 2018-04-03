@@ -13,6 +13,8 @@ import {BaseInputComponent} from '../base-input/base-input.component';
 import {ToastsService} from '../../../../../services/toasts.service';
 import {Subscription} from 'rxjs/Subscription';
 import {Language} from '../../../../services/language.service';
+import {FormComponent} from '../../form.component';
+import {MediaLibraryComponent} from '../media-library/media-library.component';
 
 declare const $: any;
 
