@@ -10,7 +10,7 @@ import {FormControl, FormGroup} from '@angular/forms';
 })
 export class TimetablePickerComponent extends BaseInputComponent implements OnInit {
 
-    timeMask = [/[1-9]/, /\d/, ':', /\d/, /\d/];
+    timeMask = [/[0-2]/, /\d/, ':', /[0-5]/, /\d/]; // hh:mm
 
     subForm: FormGroup;
     mS: FormControl = new FormControl(); // morning start
@@ -25,9 +25,17 @@ export class TimetablePickerComponent extends BaseInputComponent implements OnIn
             'aS': this.aS,
             'aE': this.aE
         });
+
+        this.changeListener();
     }
 
-    onChange($event: any, model: string) {
-        console.log($event, model);
+    changeListener() {
+        this.subForm.valueChanges.subscribe((value) => {
+            this.updateControlValue(value);
+        });
+    }
+
+    updateControlValue(value: any) {
+        this.getControl().setValue(value);
     }
 }
