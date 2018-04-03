@@ -115,6 +115,15 @@
             [index]="index"
     ></app-date-range-picker>
 
+    <app-timetable-picker
+            *ngSwitchCase="formConfig.types.TIMETABLE"
+            [groupName]="groupName"
+            [form]="form"
+            [field]="field"
+            [isEdit]="isEdit"
+            [index]="index"
+    ></app-timetable-picker>
+
 
     <app-file-upload
             *ngSwitchCase="formConfig.types.FILE"

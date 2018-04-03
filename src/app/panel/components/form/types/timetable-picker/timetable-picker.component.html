@@ -1,0 +1,42 @@
+<div [formGroup]="form" [class]="field.class ? field.class : 'col-sm-12'" [ngClass]="{'hidden': field.hidden}">
+    <div class="form-group" [ngClass]="{'has-error': !isValid}">
+
+        <!-- Label -->
+        <label>
+            {{field.label}}
+            <span *ngIf="field.validators && field.validators.required">*</span>
+        </label>
+
+        <div class="container">
+            <div class="row wrapper">
+                <div class="col-xs-3 col-sm-3">
+                    <label>Morning start</label>
+                    <input [textMask]="{mask: timeMask}"
+                           [formControl]="mS"
+                           class="form-control">
+                </div>
+                <div class="col-xs-3 col-sm-3">
+                    <label>Morning end</label>
+                    <input [textMask]="{mask: timeMask}"
+                           [formControl]="mE"
+                           class="form-control">
+                </div>
+                <div class="col-xs-3 col-sm-3">
+                    <label>Afternoon start</label>
+                    <input [textMask]="{mask: timeMask}"
+                           [formControl]="aS"
+                           class="form-control">
+                </div>
+                <div class="col-xs-3 col-sm-3">
+                    <label>Afternoon end</label>
+                    <input [textMask]="{mask: timeMask}"
+                           [formControl]="aE"
+                           class="form-control">
+                </div>
+            </div>
+        </div>
+
+        <!-- Others -->
+        <span *ngIf="field.description" class="help-block sub-little-text">{{field.description}}</span>
+    </div>
+</div>
