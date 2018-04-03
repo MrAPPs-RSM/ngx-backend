@@ -15,7 +15,7 @@
                            [formControl]="mS"
                            class="form-control">
                 </div>
-                <div class="col-xs-3 col-sm-3" [ngClass]="{'has-error' : mE.invalid && (mE.dirty || mE.touched)}">
+                <div class="col-xs-3 col-sm-3">
                     <label>Morning end</label>
                     <input [textMask]="{mask: timeMask}"
                            [formControl]="mE"

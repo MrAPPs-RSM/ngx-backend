@@ -2,6 +2,19 @@
 
 app-timetable-picker {
   .form-group {
+    &.has-error {
+      > .container {
+        > .wrapper {
+          border-color: $danger;
+          label {
+            color: $default;
+          }
+          input {
+            border-color: $lightGrey;
+          }
+        }
+      }
+    }
     > .container {
       > .wrapper {
         border: 1px solid $lightGrey;

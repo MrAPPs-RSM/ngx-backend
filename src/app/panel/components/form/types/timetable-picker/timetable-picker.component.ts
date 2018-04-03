@@ -1,6 +1,7 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {FormControl, FormGroup} from '@angular/forms';
+import {isNullOrUndefined} from 'util';
 
 @Component({
     selector: 'app-timetable-picker',
@@ -29,13 +30,57 @@ export class TimetablePickerComponent extends BaseInputComponent implements OnIn
         this.changeListener();
     }
 
-    changeListener() {
+    get isValid() {
+        if (this.isRequired() && this.isDirty()) {
+            // Only morning open
+            if (this.isEvaluated(this.mS.value) && this.isEvaluated(this.mE.value)
+                && this.isNotEvaluated(this.aS.value) && this.isNotEvaluated(this.aE.value)) {
+                return true;
+            } else {
+                // Only afternoon open
+                if (this.isEvaluated(this.aS.value) && this.isEvaluated(this.aE.value)
+                    && this.isNotEvaluated(this.mS.value) && this.isNotEvaluated(this.mE.value)) {
+                    return true;
+                } else {
+                    // Full day continue
+                    if (this.isEvaluated(this.mS.value) && this.isEvaluated(this.aE.value)
+                        && this.isNotEvaluated(this.mE.value) && this.isNotEvaluated(this.aS.value)) {
+                        return true;
+                    } else {
+                        // Full day standard
+                        if (this.isEvaluated(this.mS.value) && this.isEvaluated(this.mE.value)
+                            && this.isEvaluated(this.aS.value) && this.isEvaluated(this.aE.value)) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+                }
+            }
+        } else {
+            return true;
+        }
+    }
+
+    private isDirty(): boolean {
+        return this.mS.dirty || this.mE.dirty || this.aS.dirty || this.aE.dirty;
+    }
+
+    private isEvaluated(value: any): boolean {
+        return !isNullOrUndefined(value) && value !== '';
+    }
+
+    private isNotEvaluated(value: any): boolean {
+        return isNullOrUndefined(value) || value === '';
+    }
+
+    private changeListener(): void {
         this.subForm.valueChanges.subscribe((value) => {
             this.updateControlValue(value);
         });
     }
 
-    updateControlValue(value: any) {
+    private updateControlValue(value: any): void {
         this.getControl().setValue(value);
     }
 }

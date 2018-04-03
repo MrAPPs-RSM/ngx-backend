@@ -173,7 +173,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
 
     get isValid() {
         if (this.getControl().touched) {
-            if (this.field.validators && this.field.validators.required) {
+            if (this.isRequired()) {
                 if (this.field.multiple) {
                     if (this.getControl().value instanceof Array) {
                         return this.getControl().value.length > 0;
@@ -221,8 +221,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
 
     private setValueIfSingleOptionAndRequired() {
         if (this.options.length === 1
-            && this.field.validators
-            && this.field.validators.required
+            && this.isRequired()
             && this.getControl().value === null) {
             this.refreshFormValue(this.options);
         }
