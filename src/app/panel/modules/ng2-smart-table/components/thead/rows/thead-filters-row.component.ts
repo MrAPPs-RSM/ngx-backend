@@ -9,6 +9,7 @@ import {DataSource} from '../../../lib/data-source/data-source';
         <th *ngIf="isMultiSelectVisible"></th>
         <th *ngFor="let column of grid.getVisibleColumns()" class="ng2-smart-th {{ column.id }}">
             <ng2-smart-table-filter [source]="source"
+                                    [grid]="grid"
                                     [column]="column"
                                     [inputClass]="filterInputClass"
                                     (filter)="filter.emit($event)">
