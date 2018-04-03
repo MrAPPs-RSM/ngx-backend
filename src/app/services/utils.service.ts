@@ -156,12 +156,16 @@ export class UtilsService {
     }
 
     public static containsValue(obj: any, value: any): boolean {
+        let notContains = true;
         Object.keys(obj).forEach((key) => {
             if (_.isEqual(obj[key], value)) {
-                return true;
+                notContains = notContains && false;
+            } else {
+                notContains = notContains && true;
             }
         });
-        return false;
+
+        return !notContains;
     }
 
     public static removeObjectFromArray(obj: any, list: any[]): any[] {
