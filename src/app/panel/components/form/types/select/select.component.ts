@@ -4,7 +4,7 @@ import {ActivatedRoute} from '@angular/router';
 import {FormFieldSelect} from '../../interfaces/form-field-select';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {Subject} from 'rxjs/Subject';
-import {LanguageService} from '../../../../services/language.service';
+import {Language, LanguageService} from '../../../../services/language.service';
 import {Subscription} from 'rxjs/Subscription';
 
 @Component({
@@ -18,7 +18,13 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
     @Input() field: FormFieldSelect;
     @Input() isEdit: boolean;
     @Input() unique?: Function;
-    params = {};
+
+    endpoint: string;
+    params = {
+        where: {
+            and: []
+        }
+    };
     observable: Subject<any>;
     public options: SelectData[] = [];
     public selected: any; // Array or object
@@ -33,8 +39,9 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
     }
 
     ngOnInit() {
-
         this.selected = this.field.multiple === true ? [] : {};
+
+        this.addQueryParams();
 
         this._subscription = this.getControl().valueChanges.subscribe((value) => {
 
@@ -58,7 +65,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
 
                     this.form.patchValue(updatedField);
                 } else {
-                    this.loadOptions(null, false).then(() => {
+                    this.loadOptions(false).then(() => {
                         this.updateSelectedOptions(value);
 
                     }).catch((err) => {
@@ -76,7 +83,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
                     this.observable = key as Subject<any>;
                     this.observable.subscribe((value) => {
 
-                        this.loadOptions(this.params, true)
+                        this.loadOptions(true)
                             .then(() => {
                             })
                             .catch((error) => {
@@ -86,8 +93,34 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
                 } else {
                     if (this.form.controls[key]) {
                         this.form.controls[key].valueChanges.subscribe((value) => {
-                            this.params[key] = value;
-                            this.loadOptions(this.params, true)
+                            let keyNotSet = true;
+                            const indexesToDelete: number[] = [];
+                            this.params.where.and.forEach((cond, index) => {
+                                if (Object.keys(cond)[0] === key) { // update if already set
+                                    if (value && value !== '') {
+                                        cond[key] = value;
+                                    } else {
+                                        indexesToDelete.push(index);
+                                    }
+                                    keyNotSet = keyNotSet && false;
+                                }
+                            });
+
+                            if (keyNotSet) {
+                                if (value && value !== '') {
+                                    const condition = {};
+                                    condition[key] = value;
+                                    this.params.where.and.push(condition);
+                                }
+                            }
+
+                            if (indexesToDelete.length > 0) {
+                                indexesToDelete.forEach((index) => {
+                                    this.params.where.and.splice(index, 1);
+                                });
+                            }
+
+                            this.loadOptions(true)
                                 .then(() => {
                                 })
                                 .catch((error) => {
@@ -102,6 +135,40 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
 
     ngOnDestroy() {
         this._subscription.unsubscribe();
+    }
+
+    addQueryParams(): void {
+        if (this.field.options instanceof Array) {
+            this.endpoint = null;
+            return null;
+        } else {
+            const endpoint = this.field.options;
+            let filter;
+            if (endpoint.indexOf('?') !== -1) {
+                const queryParams = endpoint.split('?')[1];
+                if (queryParams.indexOf('where') !== -1) {
+                    console.log(queryParams.split('where=')[1]);
+                    filter = JSON.parse(queryParams.split('where=')[1]);
+                }
+                if (filter) {
+                    if ('and' in filter) {
+                        filter['and'].forEach((condition) => {
+                            this.params.where.and.push(condition);
+                        });
+                    } else {
+                        Object.keys(filter).forEach((key) => {
+                            const obj = {};
+                            obj[key] = filter[key];
+                            this.params.where.and.push(obj);
+                        });
+
+                    }
+                }
+                this.endpoint = endpoint.split('?')[0];
+            } else {
+                this.endpoint = endpoint;
+            }
+        }
     }
 
     get isValid() {
@@ -161,60 +228,56 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
         }
     }
 
-    private loadOptions(params?: any, forceReload?: boolean): Promise<any> {
+    private loadOptions(forceReload?: boolean): Promise<any> {
         return new Promise((resolve, reject) => {
-            if (this.field.options) {
-                if (this.field.options instanceof Array) {
+            if (this.endpoint) {
+                if (this.options.length === 0 || forceReload === true) {
+                    const queryParams = {
+                        where: JSON.stringify(this.params.where)
+                    };
 
-                    if (this.options == null || forceReload === true) {
-                        this.options = this.filterOptionsIfNeeded(this.field.options);
-                    }
-                    this.setValueIfSingleOptionAndRequired();
-                    resolve();
-                } else {
-                    if (this.options.length === 0 || forceReload === true) {
-                        let endpoint = this.field.options;
-
-                        if (this.isEdit) {
-                            if (endpoint.indexOf(':id') !== -1) {
-                                endpoint = endpoint.replace(':id', this._route.params['value'].id);
-                            }
+                    if (this.isEdit) {
+                        if (this.endpoint.indexOf(':id') !== -1) {
+                            this.endpoint = this.endpoint.replace(':id', this._route.params['value'].id);
                         }
 
-                        /** Add lang if not set by setup.json */
-                        let lang: any = null;
-                        if (endpoint.indexOf('lang=') === -1) {
+                        if (queryParams.where.indexOf(':id') !== -1) {
+                            queryParams.where = queryParams.where.replace(':id', this._route.params['value'].id);
+                        }
+                    }
+                    /** Add lang if not set by setup.json but defined in select*/
+                    if (this.field.lang) {
+                        let lang: Language = null;
+                        if (this.endpoint.indexOf('lang=') === -1) {
                             lang = this._languageService.getCurrentLang();
                         }
 
                         if (lang) {
-                            if (params) {
-                                params.lang = lang['isoCode'];
-                            } else {
-                                params = {
-                                    lang: lang['isoCode']
-                                };
-                            }
+                            queryParams['lang'] = lang.isoCode;
                         }
-
-                        console.log(params);
-
-                        this._apiService.get(endpoint, params)
-                            .then((response) => {
-                                this.options = this.filterOptionsIfNeeded(response);
-                                this.setValueIfSingleOptionAndRequired();
-                                resolve();
-                            })
-                            .catch((response: ErrorResponse) => {
-                                // TODO: decide what to do if select options can't be loaded (back to prev page?, alert?, message?)
-                                console.log(response.error);
-                            });
-                    } else {
-                        resolve();
                     }
+
+                    this._apiService.get(this.endpoint, queryParams)
+                        .then((response) => {
+                            this.options = this.filterOptionsIfNeeded(response);
+                            this.setValueIfSingleOptionAndRequired();
+                            resolve();
+                        })
+                        .catch((response: ErrorResponse) => {
+                            // TODO: decide what to do if select options can't be loaded (back to prev page?, alert?, message?)
+                            console.log(response.error);
+                        });
+                } else {
+                    resolve();
                 }
             } else {
-                reject();
+                if (this.field.options instanceof Array) {
+                    if (this.options.length === 0 || forceReload === true) {
+                        this.options = this.filterOptionsIfNeeded(this.field.options);
+                    }
+                    this.setValueIfSingleOptionAndRequired();
+                    resolve();
+                }
             }
         });
     }
