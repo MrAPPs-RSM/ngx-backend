@@ -32,4 +32,7 @@ export class BaseInputComponent implements OnInit {
         }
     }
 
+    public isRequired(): boolean {
+        return this.field.validators && this.field.validators.required;
+    }
 }
