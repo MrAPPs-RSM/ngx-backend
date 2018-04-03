@@ -1,0 +1,12 @@
+@import '../../../../../../assets/sass/partials/imports';
+
+app-timetable-picker {
+  .form-group {
+    > .container {
+      > .wrapper {
+        border: 1px solid $lightGrey;
+        padding: 10px 0;
+      }
+    }
+  }
+}

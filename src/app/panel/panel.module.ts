@@ -12,6 +12,8 @@ import {PipesModule} from '../pipes/pipes.module';
 import {NouisliderModule} from 'ng2-nouislider';
 import {OwlDateTimeModule, OwlNativeDateTimeModule} from 'ng-pick-datetime';
 import {CKEditorModule} from 'ng2-ckeditor';
+import {TextMaskModule} from 'angular2-text-mask';
+
 
 import {PanelComponent} from './panel.component';
 import {FormPageComponent} from './pages/form-page/form-page.component';
@@ -52,7 +54,8 @@ import {PlainComponent} from './components/form/types/plain/plain.component';
 import {PreviewComponent} from './components/form/types/preview/preview.component';
 import {DatePickerComponent} from './components/form/types/date-picker/date-picker.component';
 import {DateRangePickerComponent} from './components/form/types/date-range-picker/date-range-picker.component';
-import { MediaLibraryComponent } from './components/form/types/media-library/media-library.component';
+import {MediaLibraryComponent} from './components/form/types/media-library/media-library.component';
+import {TimetablePickerComponent} from './components/form/types/timetable-picker/timetable-picker.component';
 
 const COMPONENTS = [
     PanelComponent,
@@ -82,7 +85,9 @@ const COMPONENTS = [
     PlainComponent,
     PreviewComponent,
     DatePickerComponent,
-    DateRangePickerComponent
+    DateRangePickerComponent,
+    MediaLibraryComponent,
+    TimetablePickerComponent
 ];
 
 const PROVIDERS = [
@@ -142,7 +147,8 @@ const routes: Routes = [
         NouisliderModule,
         OwlDateTimeModule,
         OwlNativeDateTimeModule,
-        CKEditorModule
+        CKEditorModule,
+        TextMaskModule
     ],
     exports: [
         FormComponent,
@@ -150,8 +156,7 @@ const routes: Routes = [
         InputPasswordComponent
     ],
     declarations: [
-        ...COMPONENTS,
-        MediaLibraryComponent
+        ...COMPONENTS
     ],
     providers: [
         ...PROVIDERS
