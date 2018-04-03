@@ -3,6 +3,7 @@ import {Component, Input, Output, EventEmitter, OnChanges, SimpleChanges} from '
 import {DataSource} from '../../lib/data-source/data-source';
 import {Column} from '../../lib/data-set/column';
 import {Subscription} from 'rxjs/Subscription';
+import {Grid} from '../../lib/grid';
 
 @Component({
     selector: 'ng2-smart-table-filter',
@@ -10,6 +11,8 @@ import {Subscription} from 'rxjs/Subscription';
         <div class="ng2-smart-filter" *ngIf="column.isFilterable" [ngSwitch]="column.getFilterType()">
             <select-filter *ngSwitchCase="'select'"
                            [query]="query"
+                           [grid]="grid"
+                           [reloadOptions]="reloadSelectOptions"
                            [ngClass]="inputClass"
                            [column]="column"
                            (filter)="onFilter($event, column)">
@@ -37,6 +40,7 @@ import {Subscription} from 'rxjs/Subscription';
 })
 export class FilterComponent implements OnChanges {
 
+    @Input() grid: Grid;
     @Input() column: Column;
     @Input() source: DataSource;
     @Input() inputClass: string = '';
@@ -44,12 +48,15 @@ export class FilterComponent implements OnChanges {
     @Output() filter = new EventEmitter<any>();
 
     query: string = '';
+    reloadSelectOptions: boolean = false;
 
     protected dataChangedSub: Subscription;
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.source) {
             if (!changes.source.firstChange) {
+                // Just to trigger onChange on select filter
+                this.reloadSelectOptions = !this.reloadSelectOptions;
                 this.dataChangedSub.unsubscribe();
             }
             this.dataChangedSub = this.source.onChanged().subscribe((dataChanges) => {

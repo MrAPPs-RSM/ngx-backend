@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChange} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/debounceTime';
@@ -6,6 +6,7 @@ import 'rxjs/add/operator/skip';
 
 import {DefaultFilter} from './default-filter';
 import {ApiService, ErrorResponse} from '../../../../../../api/api.service';
+import {Language, LanguageService} from '../../../../../services/language.service';
 
 declare const $: any;
 
@@ -27,18 +28,25 @@ declare const $: any;
         </div>
     `
 })
-export class SelectFilterComponent extends DefaultFilter implements OnInit {
+export class SelectFilterComponent extends DefaultFilter implements OnInit, OnChanges {
 
+    @Input() reloadOptions;
     formGroup: FormGroup;
     inputControl = new FormControl();
     options: any[] = [];
 
-    constructor(private _apiService: ApiService) {
+    constructor(private _apiService: ApiService, private _languageService: LanguageService) {
         super();
         this.formGroup = new FormGroup({
             select: this.inputControl
         });
         this.delay = 0;
+    }
+
+    ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
+        if (changes['reloadOptions']) {
+            this.loadOptions();
+        }
     }
 
     ngOnInit() {
@@ -59,7 +67,16 @@ export class SelectFilterComponent extends DefaultFilter implements OnInit {
             this.options = this.column.getFilterConfig().options;
         } else {
             const endpoint = this.column.getFilterConfig().options;
-            this._apiService.get(endpoint)
+
+            /** Add lang if table is multilang */
+            const queryParams = {
+                lang: null
+            };
+            if (this.grid.getSetting('lang')) {
+                queryParams.lang = this._languageService.getCurrentContentTableLang().isoCode;
+            }
+
+            this._apiService.get(endpoint, queryParams)
                 .then((response) => {
                     this.options = response;
                 })

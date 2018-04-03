@@ -147,6 +147,9 @@ export class FormComponent implements OnInit, OnDestroy {
         if (obj.min) {
             message = this._languageService.translate('forms.errors.min') + obj.requiredValue;
         }
+        if (obj.timetable) {
+            message = this._languageService.translate('forms.errors.timetable');
+        }
 
         this.errorsList.push({
             label: fieldLabel,

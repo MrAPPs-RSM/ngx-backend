@@ -29,14 +29,7 @@ export class ListDetailsComponent extends BaseInputComponent implements OnInit, 
     }
 
     ngOnInit() {
-
-        let required = false;
-
-        if ('validators' in this.field && 'required' in this.field.validators) {
-            required = this.field.validators.required;
-        }
-
-        if (!required) {
+        if (!this.isRequired()) {
             this.deleteDetail(0);
         }
 

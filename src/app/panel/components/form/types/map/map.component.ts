@@ -9,7 +9,7 @@ import {Subscription} from 'rxjs/Subscription';
     styleUrls: ['./map.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class MapComponent extends BaseInputComponent implements OnInit,OnDestroy {
+export class MapComponent extends BaseInputComponent implements OnInit, OnDestroy {
 
     @Input() field: FormFieldMap;
 

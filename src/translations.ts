@@ -17,7 +17,8 @@ export const translations = {
             errors: {
                 required: 'è richiesto',
                 max: 'è troppo grande. Valore massimo richiesto:',
-                min: 'è troppo piccolo. Valore minimo richiesto:'
+                min: 'è troppo piccolo. Valore minimo richiesto:',
+                timetable: 'non è valido. (Impostare mattina, pomeriggio o orario continuato)'
             }
         },
         toasts: {
@@ -67,7 +68,8 @@ export const translations = {
             errors: {
                 required: 'is required',
                 max: 'is too big. Max value:',
-                min: 'is too small. Min value:'
+                min: 'is too small. Min value:',
+                timetable: 'is not valid. (Set morning, afternoon or continued schedule)'
             }
         },
         toasts: {
