@@ -20,6 +20,12 @@ export class TimetablePickerComponent extends BaseInputComponent implements OnIn
     aE: FormControl = new FormControl(); // afternoon end
 
     ngOnInit() {
+        if (this.isEdit) {
+            this.getControl().valueChanges.first().subscribe((value) => {
+                this.subForm.setValue(value);
+            });
+        }
+
         this.subForm = new FormGroup({
             'mS': this.mS,
             'mE': this.mE,
