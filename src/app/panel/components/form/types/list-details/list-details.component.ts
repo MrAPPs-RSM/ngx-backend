@@ -29,7 +29,7 @@ export class ListDetailsComponent extends BaseInputComponent implements OnInit, 
     }
 
     ngOnInit() {
-        if (!this.isRequired()) {
+        if (!this.isRequired() && !this.isEdit) {
             this.deleteDetail(0);
         }
 
@@ -67,7 +67,6 @@ export class ListDetailsComponent extends BaseInputComponent implements OnInit, 
     }
 
     filterOptions(select: SelectComponent, options: SelectData[]): SelectData[] {
-
         const updatedOptions = [];
 
         const formArray = this.form.get(this.field.key) as FormArray;

@@ -14,6 +14,7 @@
                     <span class="drag" *ngIf="!!field.drag"></span>
                     <div *ngFor="let controlField of field.fields" class="row">
                         <app-form-type-switcher [form]="control"
+                                                [isSubField]="true"
                                                 [field]="controlField"
                                                 [isEdit]="isEdit"
                                                 [unique]="field.unique ? filterOptions : null"

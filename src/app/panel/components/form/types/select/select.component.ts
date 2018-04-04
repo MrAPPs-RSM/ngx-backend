@@ -29,8 +29,8 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
     public options: SelectData[] = [];
     public selected: any;
 
-
     private _subscription = Subscription.EMPTY;
+    private _subFieldSubscription = Subscription.EMPTY;
 
     constructor(private _apiService: ApiService,
                 private _languageService: LanguageService,
@@ -43,10 +43,18 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
         this.addQueryParams();
 
         this.loadOptions().then(() => {
-            /** First, check if isEdit and load the current data */
             if (this.isEdit) {
                 this.updateSelectedOptions(this.getControl().value);
                 this.refreshFormValue(this.getControl().value);
+
+                if (this.isSubField) {
+                    this._subFieldSubscription = this.getControl().valueChanges.subscribe((value) => {
+                        if (value) {
+                            this.updateSelectedOptions(value);
+                            this._subFieldSubscription.unsubscribe();
+                        }
+                    });
+                }
             }
         }).catch((err) => console.log(err));
 
@@ -137,6 +145,10 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
     ngOnDestroy() {
         if (this._subscription) {
             this._subscription.unsubscribe();
+        }
+
+        if (this._subFieldSubscription) {
+            this._subFieldSubscription.unsubscribe();
         }
     }
 
