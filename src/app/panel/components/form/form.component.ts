@@ -225,6 +225,7 @@ export class FormComponent implements OnInit, OnDestroy {
                 endpoint + '/' + id, params)
                 .then((response) => {
                     this.isLoading = false;
+
                     this.form.patchValue(response);
                 })
                 .catch((response: ErrorResponse) => {

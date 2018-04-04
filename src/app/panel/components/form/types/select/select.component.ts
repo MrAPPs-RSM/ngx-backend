@@ -42,21 +42,16 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
         this.selected = this.field.multiple === true ? [] : {};
         this.addQueryParams();
 
-        /** First, check if isEdit and load the current data */
-        if (this.isEdit) {
-            this.getControl().valueChanges.first().subscribe((value) => {
-                this.loadOptions(false).then(() => {
-                    this.updateSelectedOptions(value);
-                    this.refreshFormValue(value);
-                }).catch((err) => console.log(err));
-            });
-        } else {
-            this.loadOptions().then(() => {
-            }).catch((err) => console.log(err));
-        }
+        this.loadOptions().then(() => {
+            /** First, check if isEdit and load the current data */
+            if (this.isEdit) {
+                this.updateSelectedOptions(this.getControl().value);
+                this.refreshFormValue(this.getControl().value);
+            }
+        }).catch((err) => console.log(err));
 
         /** Check for changes after load to handle different logic */
-        this._subscription = this.getControl().valueChanges.skip(1).subscribe((value) => {
+        this._subscription = this.getControl().valueChanges.skip(this.isEdit ? 1 : 0).subscribe((value) => {
             if (this.field.multiple === true) {
                 if (value !== null && !(value instanceof Array)) {
                     value = [value];
@@ -200,39 +195,43 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
     }
 
     private updateSelectedOptions(value: any) {
-        if (this.field.multiple === true) {
-            value.forEach((itemId) => {
-                if (typeof itemId === 'object') {
-                    itemId = itemId.id;
-                }
+        if (value) {
+            if (this.field.multiple === true) {
+                value.forEach((itemId) => {
+                    if (typeof itemId === 'object') {
+                        itemId = itemId.id;
+                    }
+                    this.options.forEach((option) => {
+                        if (option.id === itemId) {
+                            this.selected.push({
+                                id: itemId,
+                                text: option.text
+                            });
+                        }
+                    });
+                });
+                this.selected = [...this.selected];
+            } else {
                 this.options.forEach((option) => {
-                    if (option.id === itemId) {
-                        this.selected.push({
-                            id: itemId,
-                            text: option.text
-                        });
+                    if (typeof value === 'object') {
+                        if (option.id === value.id) {
+                            this.selected = {
+                                id: value.id,
+                                text: option.text
+                            };
+                        }
+                    } else {
+                        if (option.id === value) {
+                            this.selected = {
+                                id: value,
+                                text: option.text
+                            };
+                        }
                     }
                 });
-            });
-            this.selected = [...this.selected];
+            }
         } else {
-            this.options.forEach((option) => {
-                if (typeof value === 'object') {
-                    if (option.id === value.id) {
-                        this.selected = {
-                            id: value.id,
-                            text: option.text
-                        };
-                    }
-                } else {
-                    if (option.id === value) {
-                        this.selected = {
-                            id: value,
-                            text: option.text
-                        };
-                    }
-                }
-            });
+           this.selected = this.field.multiple === true ? [] : null;
         }
     }
 

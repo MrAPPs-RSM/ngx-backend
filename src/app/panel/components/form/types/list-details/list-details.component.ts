@@ -61,7 +61,9 @@ export class ListDetailsComponent extends BaseInputComponent implements OnInit, 
 
     ngOnDestroy() {
         this._dragulaService.destroy('bag');
-        this.observer.complete();
+        if (this.observer) {
+            this.observer.complete();
+        }
     }
 
     filterOptions(select: SelectComponent, options: SelectData[]): SelectData[] {
