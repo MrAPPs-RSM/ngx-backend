@@ -39,7 +39,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
     }
 
     ngOnInit() {
-        this.selected = this.field.multiple ? [] : {};
+        this.selected = this.field.multiple === true ? [] : {};
         this.addQueryParams();
 
         /** First, check if isEdit and load the current data */
@@ -57,7 +57,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
 
         /** Check for changes after load to handle different logic */
         this._subscription = this.getControl().valueChanges.skip(1).subscribe((value) => {
-            if (this.field.multiple) {
+            if (this.field.multiple === true) {
                 if (value !== null && !(value instanceof Array)) {
                     value = [value];
                 }
@@ -182,7 +182,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
     get isValid() {
         if (this.getControl().touched) {
             if (this.isRequired()) {
-                if (this.field.multiple) {
+                if (this.field.multiple === true) {
                     if (this.getControl().value instanceof Array) {
                         return this.getControl().value.length > 0;
                     } else {
@@ -200,7 +200,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
     }
 
     private updateSelectedOptions(value: any) {
-        if (this.field.multiple) {
+        if (this.field.multiple === true) {
             value.forEach((itemId) => {
                 if (typeof itemId === 'object') {
                     itemId = itemId.id;
