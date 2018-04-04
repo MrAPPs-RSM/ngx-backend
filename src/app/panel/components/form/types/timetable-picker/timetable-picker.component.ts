@@ -25,18 +25,15 @@ export class TimetablePickerComponent extends BaseInputComponent implements OnIn
     private _subFieldSubscription = Subscription.EMPTY;
 
     ngOnInit() {
-        this._subscription = this.getControl().valueChanges.subscribe((value) => {
-            console.log(value);
-        });
         if (this.isEdit) {
             this._subscription = this.getControl().valueChanges.first().subscribe((value) => {
                 this.subForm.setValue(value);
             });
 
             if (this.isSubField) {
-                this._subFieldSubscription = this.getControl().valueChanges.subscribe((value) => {
-                    if (value) {
-                        this.subForm.setValue(value, {emitEvent: false});
+                this._subFieldSubscription = this.getControl().parent.valueChanges.subscribe((value) => {
+                    if (value[this.field.key]) {
+                        this.subForm.setValue(value[this.field.key], {emitEvent: false});
                         this._subFieldSubscription.unsubscribe();
                     }
                 });
