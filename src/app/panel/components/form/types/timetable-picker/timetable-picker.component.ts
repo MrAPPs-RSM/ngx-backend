@@ -1,7 +1,8 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {FormControl, FormGroup} from '@angular/forms';
 import {isNullOrUndefined} from 'util';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
     selector: 'app-timetable-picker',
@@ -9,7 +10,7 @@ import {isNullOrUndefined} from 'util';
     styleUrls: ['./timetable-picker.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class TimetablePickerComponent extends BaseInputComponent implements OnInit {
+export class TimetablePickerComponent extends BaseInputComponent implements OnInit, OnDestroy {
 
     timeMask = [/[0-2]/, /\d/, ':', /[0-5]/, /\d/]; // hh:mm
 
@@ -19,11 +20,24 @@ export class TimetablePickerComponent extends BaseInputComponent implements OnIn
     aS: FormControl = new FormControl(); // afternoon start
     aE: FormControl = new FormControl(); // afternoon end
 
+    private _subscription = Subscription.EMPTY;
+    private _subFormSubscription = Subscription.EMPTY;
+    private _subFieldSubscription = Subscription.EMPTY;
+
     ngOnInit() {
         if (this.isEdit) {
-            this.getControl().valueChanges.first().subscribe((value) => {
+            this._subscription = this.getControl().valueChanges.first().subscribe((value) => {
                 this.subForm.setValue(value);
             });
+
+            if (this.isSubField) {
+                this._subFieldSubscription = this.getControl().parent.valueChanges.subscribe((value) => {
+                    if (value[this.field.key]) {
+                        this.subForm.setValue(value[this.field.key], {emitEvent: false});
+                        this._subFieldSubscription.unsubscribe();
+                    }
+                });
+            }
         }
 
         this.subForm = new FormGroup({
@@ -34,6 +48,20 @@ export class TimetablePickerComponent extends BaseInputComponent implements OnIn
         });
 
         this.changeListener();
+    }
+
+    ngOnDestroy() {
+        if (this._subscription) {
+            this._subscription.unsubscribe();
+        }
+
+        if (this._subFormSubscription) {
+            this._subFormSubscription.unsubscribe();
+        }
+
+        if (this._subFieldSubscription) {
+            this._subFieldSubscription.unsubscribe();
+        }
     }
 
     get isValid() {
@@ -81,7 +109,7 @@ export class TimetablePickerComponent extends BaseInputComponent implements OnIn
     }
 
     private changeListener(): void {
-        this.subForm.valueChanges.subscribe((value) => {
+        this._subFormSubscription = this.subForm.valueChanges.subscribe((value) => {
             this.updateControlValue(value);
         });
     }

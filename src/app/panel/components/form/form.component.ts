@@ -1,5 +1,15 @@
-import {Component, Input, OnInit, Output, EventEmitter, ViewEncapsulation, ChangeDetectorRef, OnDestroy, HostListener} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
+import {
+    Component,
+    Input,
+    OnInit,
+    Output,
+    EventEmitter,
+    ViewEncapsulation,
+    ChangeDetectorRef,
+    OnDestroy,
+    HostListener
+} from '@angular/core';
+import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormGeneratorService} from '../../services/form-generator.service';
 import {ModalService} from '../../services/modal.service';
@@ -8,8 +18,8 @@ import {FormSettings} from './interfaces/form-settings';
 import {FormButton} from './interfaces/form-button';
 import {Language, LanguageService} from '../../services/language.service';
 import {Subscription} from 'rxjs/Subscription';
-import {ComponentCanDeactivate} from '../../../auth/guards/pending-changes.guard';
 import {Observable} from 'rxjs/Observable';
+import {formConfig} from './form.config';
 
 @Component({
     selector: 'app-form',
@@ -35,8 +45,8 @@ export class FormComponent implements OnInit, OnDestroy {
 
 
     // Local validation errors
-    private errors: any = {}; // Object that re-uses form group structure
-    private errorsList: any = []; // Array to display errors in a human-readable way
+    errors: any = {}; // Object that re-uses form group structure
+    errorsList: any = []; // Array to display errors in a human-readable way
 
     private _subscription = Subscription.EMPTY;
 
@@ -225,6 +235,30 @@ export class FormComponent implements OnInit, OnDestroy {
                 endpoint + '/' + id, params)
                 .then((response) => {
                     this.isLoading = false;
+
+                    const listDetailKeys = [];
+
+                    const listDetailsFields = {};
+
+                    Object.keys(response).forEach((key) => {
+                        this.settings.fields.base.forEach((field) => {
+                            if (field.key === key && field.type === formConfig.types.LIST_DETAILS) {
+                                listDetailKeys.push(key);
+                                listDetailsFields[key] = field.fields;
+                            }
+                        });
+                    });
+
+                    if (listDetailKeys.length > 0) {
+                        listDetailKeys.forEach((key) => {
+                            for (let i = 1; i < response[key].length; i++) {
+                                (this.form.controls[key] as FormArray).push(
+                                    new FormGroup(this._formGenerator.generateFormFields(listDetailsFields[key]))
+                                );
+                            }
+                        });
+                    }
+
                     this.form.patchValue(response);
                 })
                 .catch((response: ErrorResponse) => {

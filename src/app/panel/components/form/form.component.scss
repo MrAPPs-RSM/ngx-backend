@@ -2,7 +2,11 @@
 
 app-form {
   > form {
+    &.error {
+      border-color: $danger;
+    }
     @include card();
+    margin-bottom: 20px;
     &.loading {
       > header {
         > .progress {
