@@ -27,7 +27,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
     };
     observable: Subject<any>;
     public options: SelectData[] = [];
-    public selected: any; // Array or object
+    public selected: any;
 
 
     private _subscription = Subscription.EMPTY;
@@ -39,13 +39,25 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
     }
 
     ngOnInit() {
-        this.selected = this.field.multiple === true ? [] : {};
-
+        this.selected = this.field.multiple ? [] : {};
         this.addQueryParams();
 
-        this._subscription = this.getControl().valueChanges.subscribe((value) => {
+        /** First, check if isEdit and load the current data */
+        if (this.isEdit) {
+            this.getControl().valueChanges.first().subscribe((value) => {
+                this.loadOptions(false).then(() => {
+                    this.updateSelectedOptions(value);
+                    this.refreshFormValue(value);
+                }).catch((err) => console.log(err));
+            });
+        } else {
+            this.loadOptions().then(() => {
+            }).catch((err) => console.log(err));
+        }
 
-            if (this.field.multiple === true) {
+        /** Check for changes after load to handle different logic */
+        this._subscription = this.getControl().valueChanges.skip(1).subscribe((value) => {
+            if (this.field.multiple) {
                 if (value !== null && !(value instanceof Array)) {
                     value = [value];
                 }
@@ -60,22 +72,16 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
                         newValues.push(val.id);
                     }
 
-                    const updatedField = {};
-                    updatedField[this.field.key] = newValues;
-
-                    this.form.patchValue(updatedField);
+                    this.getControl().setValue(newValues);
                 } else {
                     this.loadOptions(false).then(() => {
                         this.updateSelectedOptions(value);
-
                     }).catch((err) => {
                         console.log(err);
                     });
                 }
             }
         });
-
-        this.loadData();
 
         if (this.field.dependsOn) {
             this.field.dependsOn.forEach((key) => {
@@ -134,7 +140,9 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
     }
 
     ngOnDestroy() {
-        this._subscription.unsubscribe();
+        if (this._subscription) {
+            this._subscription.unsubscribe();
+        }
     }
 
     addQueryParams(): void {
@@ -191,24 +199,41 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
         }
     }
 
-    private updateSelectedOptions(value) {
-        value.forEach((itemId) => {
-            this.options.forEach((option) => {
-
-                if (option.id === itemId) {
-                    this.selected.push({
-                        id: itemId,
-                        text: option.text
-                    });
+    private updateSelectedOptions(value: any) {
+        if (this.field.multiple) {
+            value.forEach((itemId) => {
+                if (typeof itemId === 'object') {
+                    itemId = itemId.id;
                 }
+                this.options.forEach((option) => {
+                    if (option.id === itemId) {
+                        this.selected.push({
+                            id: itemId,
+                            text: option.text
+                        });
+                    }
+                });
             });
             this.selected = [...this.selected];
-        });
-    }
-
-    private loadData(): void {
-        this.loadOptions().then(() => {
-        }).catch((err) => console.log(err));
+        } else {
+            this.options.forEach((option) => {
+                if (typeof value === 'object') {
+                    if (option.id === value.id) {
+                        this.selected = {
+                            id: value.id,
+                            text: option.text
+                        };
+                    }
+                } else {
+                    if (option.id === value) {
+                        this.selected = {
+                            id: value,
+                            text: option.text
+                        };
+                    }
+                }
+            });
+        }
     }
 
     private filterOptionsIfNeeded(options: SelectData[]): SelectData[] {
@@ -282,23 +307,27 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
     }
 
     onChange($event): void {
-        if (this.field.multiple) {
-            this.refreshFormValue($event);
-        }
+        this.refreshFormValue($event);
 
         if (this.observable) {
             this.observable.next();
         }
     }
 
-    private refreshFormValue(values): void {
-        if (values !== null) {
-            if (values instanceof Array) {
+    private refreshFormValue(value): void {
+        if (value !== null) {
+            if (value instanceof Array) {
                 const ids = [];
-                values.forEach((item) => {
+                value.forEach((item) => {
                     ids.push(item instanceof Object ? item.id : item);
                 });
                 this.getControl().setValue(ids);
+            } else {
+                if (typeof value === 'object') {
+                    this.getControl().setValue(value.id);
+                } else {
+                    this.getControl().setValue(value);
+                }
             }
         } else {
             this.getControl().setValue(null);

@@ -6,27 +6,14 @@
             <span *ngIf="field.validators && field.validators.required">*</span>
         </label>
 
-        <ng-select *ngIf="field.multiple"
-                   [disabled]="field.disabled"
+        <ng-select [disabled]="field.disabled"
                    [items]="options"
-                   [multiple]="true"
+                   [multiple]="!!field.multiple"
                    bindLabel="text"
                    placeholder="{{field.placeholder}}"
                    [(ngModel)]="selected"
                    (change)="onChange($event)"
                    [ngModelOptions]="{standalone: true}"
-        >
-        </ng-select>
-
-        <ng-select *ngIf="!field.multiple"
-                   [disabled]="field.disabled"
-                   [items]="options"
-                   [multiple]="false"
-                   (change)="onChange($event)"
-                   bindValue="id"
-                   bindLabel="text"
-                   placeholder="{{field.placeholder}}"
-                   formControlName="{{field.key}}"
         >
         </ng-select>
 
