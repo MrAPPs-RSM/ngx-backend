@@ -16,7 +16,8 @@ export let formConfig = {
         FILE: 'file',
         LIST_DETAILS: 'list_details',
         PLAIN: 'plain',
-        PREVIEW: 'preview'
+        PREVIEW: 'preview',
+        GEOSEARCH: 'geosearch',
     },
     noInputTypes: {
         SEPARATOR: 'separator'

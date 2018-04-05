@@ -21,6 +21,10 @@ export class MapComponent extends BaseInputComponent implements OnInit, OnDestro
     private _subscriptionLat = Subscription.EMPTY;
     private _subscriptionLng = Subscription.EMPTY;
 
+    private _calcValueSubscription: any = {
+        lat: Subscription.EMPTY,
+        lng: Subscription.EMPTY,
+    };
     ngOnInit() {
         this.options = this.field.options ? this.field.options : {
             defaults: {
@@ -37,17 +41,44 @@ export class MapComponent extends BaseInputComponent implements OnInit, OnDestro
         this.lng = this.options.defaults.lng;
         this.refreshFormValues();
 
-       this._subscriptionLat = this.onFormChange('lat');
-       this._subscriptionLng = this.onFormChange('lng');
+        this._subscriptionLat = this.onFormChange('lat');
+        this._subscriptionLng = this.onFormChange('lng');
+
+        this.checkCalculatedValue('lat');
+        this.checkCalculatedValue('lng');
+    }
+
+    private checkCalculatedValue(key: string) {
+        if (this.field[key].calculatedValue) {
+            if (this.field[key].calculatedValue.indexOf('.') > -1) {
+                const baseKey = this.field[key].calculatedValue.split('.')[0];
+                const subKey = this.field[key].calculatedValue.split('.')[1];
+                if (this.form.get(baseKey)) {
+                    this._calcValueSubscription[key] = this.form.controls[baseKey].valueChanges.subscribe((value) => {
+                        if (value && value[subKey]) {
+                            this[key] = value[subKey];
+                            this.refreshFormValues();
+                        }
+                    });
+                }
+            }
+        }
     }
 
     ngOnDestroy() {
         this._subscriptionLat.unsubscribe();
         this._subscriptionLng.unsubscribe();
+
+        if (this._calcValueSubscription.lat) {
+            this._calcValueSubscription.lat.unsubscribe();
+        }
+        if (this._calcValueSubscription.lng) {
+            this._calcValueSubscription.lng.unsubscribe();
+        }
     }
 
     private onFormChange(key: string): Subscription {
-      return this.form.controls[this.field[key].key].valueChanges
+        return this.form.controls[this.field[key].key].valueChanges
             .subscribe(
                 value => {
                     this[key] = value;
@@ -70,7 +101,7 @@ export class MapComponent extends BaseInputComponent implements OnInit, OnDestro
     }
 
     private refreshFormValues(): void {
-        this.form.controls[this.field.lat.key].patchValue(this.lat);
-        this.form.controls[this.field.lng.key].patchValue(this.lng);
+        this.form.controls[this.field.lat.key].patchValue(this.lat, {emitEvent: false});
+        this.form.controls[this.field.lng.key].patchValue(this.lng, {emitEvent: false});
     }
 }

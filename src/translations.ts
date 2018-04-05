@@ -12,7 +12,8 @@ export const translations = {
                 media_library: 'Libreria media',
                 max_files: 'Numero di file consentito',
                 selected_files: 'File selezionati',
-                uploading_files: 'Caricamento in corso, attendere'
+                uploading_files: 'Caricamento in corso, attendere',
+                search_address: 'Inizia a digitare l\'indirizzo'
             },
             errors: {
                 required: 'è richiesto',
@@ -63,7 +64,8 @@ export const translations = {
                 media_library: 'Media library',
                 max_files: 'Max files',
                 selected_files: 'Selected files',
-                uploading_files: 'Uploading, please wait'
+                uploading_files: 'Uploading, please wait',
+                search_address: 'Type to search address'
             },
             errors: {
                 required: 'is required',
