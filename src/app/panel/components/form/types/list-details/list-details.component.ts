@@ -25,7 +25,7 @@ export class ListDetailsComponent extends BaseInputComponent implements OnInit, 
                 private _formGenerator: FormGeneratorService) {
         super();
 
-        this.addEnabled = true;
+        this.checkAddEnabled();
     }
 
     ngOnInit() {
@@ -96,8 +96,6 @@ export class ListDetailsComponent extends BaseInputComponent implements OnInit, 
             }
         }
 
-        this.addEnabled = updatedOptions.length > 0 && formArray.controls.length < updatedOptions.length;
-
         return updatedOptions;
     }
 
@@ -108,13 +106,23 @@ export class ListDetailsComponent extends BaseInputComponent implements OnInit, 
     addDetail() {
         // add new formgroup
         this.getControl().push(new FormGroup(this._formGenerator.generateFormFields(this.field.fields)));
+        this.checkAddEnabled();
     }
 
     deleteDetail(index: number) {
-        if (this.observer != null) {
+        if (this.observer) {
             this.observer.next();
         }
         // remove the chosen row
         this.getControl().removeAt(index);
+        this.checkAddEnabled();
+    }
+
+    checkAddEnabled(): void {
+        if (this.field.max) {
+            this.addEnabled = this.getControl().controls.length < this.field.max;
+        } else {
+            this.addEnabled = true;
+        }
     }
 }
