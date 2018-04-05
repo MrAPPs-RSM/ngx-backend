@@ -73,7 +73,10 @@ export class SelectFilterComponent extends DefaultFilter implements OnInit, OnCh
                 lang: null
             };
             if (this.grid.getSetting('lang')) {
-                queryParams.lang = this._languageService.getCurrentContentTableLang().isoCode;
+                const lang = this._languageService.getCurrentContentTableLang();
+                if (lang) {
+                    queryParams.lang = lang.isoCode;
+                }
             }
 
             this._apiService.get(endpoint, queryParams)
