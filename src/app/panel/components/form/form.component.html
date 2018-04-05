@@ -75,6 +75,7 @@
                 </div>
                 <div *ngFor="let field of settings.fields.base">
                     <app-form-type-switcher [form]="form" [field]="field"
+                                            [onlyView]="settings.onlyView"
                                             [isEdit]="settings.isEdit"></app-form-type-switcher>
                 </div>
             </div>
@@ -90,7 +91,7 @@
                     </button>
                 </div>
                 <div class="pull-right">
-                    <button type="button" (click)="onSubmit()" class="btn btn-primary"
+                    <button type="button" (click)="onSubmit()" class="btn btn-primary" *ngIf="!settings.onlyView"
                             [disabled]="isLoading || isExternalLoading"> {{ settings.submit?.label ? settings.submit.label :
                         'forms.labels.submit' | translate}}
                     </button>

@@ -13,14 +13,14 @@
                 formControlName="{{field.key}}"
                 (focus)="onFocus($event)"
                 [config]="config"
-                [readonly]="field.disabled">
+                [readonly]="field.disabled || onlyView">
         </ckeditor>
 
         <textarea
                 *ngIf="!field.options || !field.options.editor"
                 formControlName="{{field.key}}"
                 id="{{field.key}}"
-                [attr.disabled]="field.disabled ? '' : null"
+                [attr.disabled]="field.disabled || onlyView ? '' : null"
                 rows="{{field.options?.rows}}"
                 cols="{{field.options?.cols}}"
                 class="form-control"

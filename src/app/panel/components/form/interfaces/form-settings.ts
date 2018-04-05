@@ -8,6 +8,7 @@ export interface FormSettings {
     putTranslationsFirst: boolean;
     fields: any;
     isEdit?: boolean;
+    onlyView?: boolean; // does GET but does not allow submit
     submit?: {
         endpoint?: string; // endpoint to call after submit (if different from GET in edit forms)
         label?: string; // if not set: "Save"

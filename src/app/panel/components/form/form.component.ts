@@ -66,6 +66,13 @@ export class FormComponent implements OnInit, OnDestroy {
 
 
     ngOnInit() {
+        if (typeof this.settings.onlyView === 'undefined') {
+            this.settings.onlyView = false;
+        }
+
+        console.log('form', this.settings.onlyView);
+
+
         this._subscription = this._route.queryParams.subscribe((params: any) => {
             this.form = this.setupForms();
 

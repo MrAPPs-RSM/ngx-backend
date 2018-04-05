@@ -10,7 +10,7 @@
         <!-- Input -->
         <input *ngIf="color !== null"
                type="text"
-               [attr.disabled]="field.disabled ? '' : null"
+               [attr.disabled]="field.disabled || onlyView ? '' : null"
                [cpPosition]="'bottom'"
                id="{{field.key}}"
                formControlName="{{field.key}}"

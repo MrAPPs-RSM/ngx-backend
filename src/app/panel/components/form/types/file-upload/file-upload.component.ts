@@ -13,8 +13,6 @@ import {BaseInputComponent} from '../base-input/base-input.component';
 import {ToastsService} from '../../../../../services/toasts.service';
 import {Subscription} from 'rxjs/Subscription';
 import {Language} from '../../../../services/language.service';
-import {FormComponent} from '../../form.component';
-import {MediaLibraryComponent} from '../media-library/media-library.component';
 
 declare const $: any;
 
@@ -62,6 +60,8 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     }
 
     ngOnInit() {
+
+        console.log('file', this.onlyView);
 
         if (this.field.options.multiple) {
             this.maxFiles = this.field.options.maxFiles ? this.field.options.maxFiles : 0;

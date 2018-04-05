@@ -15,6 +15,7 @@ export class FormTypeSwitcherComponent implements OnInit {
     @Input() groupName: string;
     @Input() field: any;
     @Input() isEdit: boolean;
+    @Input() onlyView: boolean;
     @Input() unique?: Function;
     @Input() currentLang?: Language;
     @Input() isSubField: boolean;

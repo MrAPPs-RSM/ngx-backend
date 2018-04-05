@@ -11,7 +11,7 @@
                         <!-- Input -->
                         <input
                                 type="number"
-                                [attr.disabled]="field.lat.disabled ? '' : null"
+                                [attr.disabled]="field.lat.disabled || onlyView ? '' : null"
                                 formControlName="{{field.lat.key}}"
                                 class="form-control"
                                 id="{{field.lat.key}}"
@@ -29,7 +29,7 @@
                         <!-- Input -->
                         <input
                                 type="number"
-                                [attr.disabled]="field.lng.disabled ? '' : null"
+                                [attr.disabled]="field.lng.disabled || onlyView ? '' : null"
                                 formControlName="{{field.lng.key}}"
                                 class="form-control"
                                 id="{{field.lng.key}}"

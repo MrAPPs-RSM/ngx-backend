@@ -10,7 +10,7 @@
     <!-- Input -->
     <input
             type="email"
-            [attr.disabled]="field.disabled ? '' : null"
+            [attr.disabled]="field.disabled || onlyView ? '' : null"
             formControlName="{{field.key}}"
             class="form-control"
             id="{{field.key}}"

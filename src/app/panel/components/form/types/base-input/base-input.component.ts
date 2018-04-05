@@ -13,6 +13,7 @@ export class BaseInputComponent implements OnInit {
     @Input() form: FormGroup;
     @Input() field: any = {};
     @Input() isEdit = false;
+    @Input() onlyView = false;
     @Input() isSubField: boolean;
 
     constructor() {

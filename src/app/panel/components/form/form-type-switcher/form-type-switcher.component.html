@@ -8,6 +8,7 @@
     <app-input-text
             *ngSwitchCase="formConfig.types.TEXT"
             [isSubField]="isSubField"
+            [onlyView]="onlyView"
             [form]="form"
             [groupName]="groupName"
             [field]="field"
@@ -18,6 +19,7 @@
     <app-geo-search
             *ngSwitchCase="formConfig.types.GEOSEARCH"
             [isSubField]="isSubField"
+            [onlyView]="onlyView"
             [form]="form"
             [groupName]="groupName"
             [field]="field"
@@ -28,6 +30,7 @@
     <app-plain
             *ngSwitchCase="formConfig.types.PLAIN"
             [isSubField]="isSubField"
+            [onlyView]="onlyView"
             [form]="form"
             [groupName]="groupName"
             [field]="field"
@@ -39,6 +42,7 @@
     <app-input-password
             *ngSwitchCase="formConfig.types.PASSWORD"
             [isSubField]="isSubField"
+            [onlyView]="onlyView"
             [groupName]="groupName"
             [form]="form"
             [field]="field"
@@ -49,6 +53,7 @@
     <app-input-url
             *ngSwitchCase="formConfig.types.URL"
             [isSubField]="isSubField"
+            [onlyView]="onlyView"
             [groupName]="groupName"
             [form]="form"
             [field]="field"
@@ -59,6 +64,7 @@
     <app-input-number
             *ngSwitchCase="formConfig.types.NUMBER"
             [isSubField]="isSubField"
+            [onlyView]="onlyView"
             [groupName]="groupName"
             [form]="form"
             [field]="field"
@@ -69,6 +75,7 @@
     <app-input-color
             *ngSwitchCase="formConfig.types.COLOR"
             [isSubField]="isSubField"
+            [onlyView]="onlyView"
             [groupName]="groupName"
             [form]="form"
             [field]="field"
@@ -79,6 +86,7 @@
     <app-input-textarea
             *ngSwitchCase="formConfig.types.TEXTAREA"
             [isSubField]="isSubField"
+            [onlyView]="onlyView"
             [groupName]="groupName"
             [form]="form"
             [field]="field"
@@ -89,6 +97,7 @@
     <app-select
             *ngSwitchCase="formConfig.types.SELECT"
             [isSubField]="isSubField"
+            [onlyView]="onlyView"
             [groupName]="groupName"
             [unique]="unique"
             [form]="form"
@@ -100,6 +109,7 @@
     <app-input-email
             *ngSwitchCase="formConfig.types.EMAIL"
             [isSubField]="isSubField"
+            [onlyView]="onlyView"
             [groupName]="groupName"
             [form]="form"
             [field]="field"
@@ -110,6 +120,7 @@
     <app-checkbox
             *ngSwitchCase="formConfig.types.CHECKBOX"
             [isSubField]="isSubField"
+            [onlyView]="onlyView"
             [groupName]="groupName"
             [form]="form"
             [field]="field"
@@ -120,6 +131,7 @@
     <app-date-picker
             *ngSwitchCase="formConfig.types.DATE"
             [isSubField]="isSubField"
+            [onlyView]="onlyView"
             [groupName]="groupName"
             [form]="form"
             [field]="field"
@@ -130,6 +142,7 @@
     <app-date-range-picker
             *ngSwitchCase="formConfig.types.DATE_RANGE"
             [isSubField]="isSubField"
+            [onlyView]="onlyView"
             [groupName]="groupName"
             [form]="form"
             [field]="field"
@@ -140,6 +153,7 @@
     <app-timetable-picker
             *ngSwitchCase="formConfig.types.TIMETABLE"
             [isSubField]="isSubField"
+            [onlyView]="onlyView"
             [groupName]="groupName"
             [form]="form"
             [field]="field"
@@ -151,6 +165,7 @@
     <app-file-upload
             *ngSwitchCase="formConfig.types.FILE"
             [groupName]="groupName"
+            [onlyView]="onlyView"
             [form]="form"
             [currentLang]="currentLang"
             [field]="field"
@@ -170,6 +185,7 @@
     <app-map
             *ngSwitchCase="formConfig.types.MAP"
             [groupName]="groupName"
+            [onlyView]="onlyView"
             [form]="form"
             [field]="field"
             [isEdit]="isEdit"

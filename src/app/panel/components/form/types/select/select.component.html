@@ -6,7 +6,7 @@
             <span *ngIf="field.validators && field.validators.required">*</span>
         </label>
 
-        <ng-select [disabled]="field.disabled"
+        <ng-select [disabled]="field.disabled || onlyView"
                    [items]="options"
                    [multiple]="!!field.multiple"
                    bindLabel="text"

@@ -5,6 +5,7 @@
                    id="{{field.key}}"
                    formControlName="{{field.key}}"
                    class="styled"
+                   [attr.disabled]="field.disabled || onlyView ? '' : null"
                    [checked]=field.checked>
             <span>
                 {{field.label}}

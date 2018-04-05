@@ -183,6 +183,12 @@ owl-date-time-container.owl-dt-container.owl-dt-popup-container {
 }
 
 ng-select.ng-select.bottom {
+  &.disabled {
+    > div.ng-control {
+      cursor: not-allowed;
+      background-color: #f5f5f5;
+    }
+  }
   &.opened, &.focused {
     > div.ng-control {
       background-color: #f5f5f5;
@@ -262,6 +268,16 @@ label.checkbox {
     height: 0;
     z-index: -100 !important;
     opacity: 0;
+
+    &:disabled {
+      & + span {
+        cursor: not-allowed;
+        &:before {
+          cursor: not-allowed;
+        }
+      }
+    }
+
     &:checked {
       & + span {
         &:before {

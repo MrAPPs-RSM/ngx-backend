@@ -13,6 +13,10 @@
     background-color: #f5f5f5;
   }
 
+  &:disabled {
+    background-color: #f5f5f5;
+  }
+
   &.plain {
     cursor: default;
     background-color: #ffffff;

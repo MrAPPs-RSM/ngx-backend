@@ -32,7 +32,7 @@
 
         <!-- TODO: remove this part to re-enable drag&drop -->
 
-        <div class="drop-container">
+        <div class="drop-container" *ngIf="!onlyView">
             <div>
                 <span *ngIf="isLoading">{{'forms.inputs.uploading_files' | translate}}</span>
                 <span *ngIf="(maxFiles > 0 && uploadedFiles.length >= maxFiles) && !isLoading">{{'forms.inputs.max_files' | translate}}: {{maxFiles}}</span>
@@ -70,7 +70,7 @@
 
         <div class="uploaded-files-container"
              *ngIf="uploadedFiles.length > 0">
-            <label class="uploaded-files-label">Uploaded file(s)</label>
+            <label class="uploaded-files-label" *ngIf="!onlyView">Uploaded file(s)</label>
             <ul>
                 <li *ngFor="let file of uploadedFiles">
                     <div class="file-wrapper">
@@ -89,7 +89,7 @@
                             <img *ngSwitchCase="'png'" [src]="file.url" (error)="retryUrl($event, file.url)"/>
                         </div>
                     </div>
-                    <span class="file-name">
+                    <span class="file-name" *ngIf="!onlyView">
                         <span class="remove"
                               (click)="removeUploadedFile(file)">×</span>
                     </span>
