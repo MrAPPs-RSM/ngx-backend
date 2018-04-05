@@ -3,6 +3,7 @@ export interface FormField {
     label: string;
     key?: string;
     hidden?: boolean;
+    calculatedValue?: string;
     disabled?: boolean;
     placeholder?: string;
     value?: any;

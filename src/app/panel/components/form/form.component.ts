@@ -296,6 +296,11 @@ export class FormComponent implements OnInit, OnDestroy {
         /** Using getRawValue() because form.value is not changed when FormArray order changes
          *  Useful to support drag&drop on list detail */
         const value = this.form.getRawValue();
+
+        if (value['geosearch']) { // TODO: valutare se fare meglio
+            delete value['geosearch'];
+        }
+
         this.isLoading = true;
         if (this.settings.isEdit) {
 

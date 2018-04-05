@@ -15,6 +15,16 @@
             [index]="index">
     </app-input-text>
 
+    <app-geo-search
+            *ngSwitchCase="formConfig.types.GEOSEARCH"
+            [isSubField]="isSubField"
+            [form]="form"
+            [groupName]="groupName"
+            [field]="field"
+            [isEdit]="isEdit"
+            [index]="index">
+    </app-geo-search>
+
     <app-plain
             *ngSwitchCase="formConfig.types.PLAIN"
             [isSubField]="isSubField"

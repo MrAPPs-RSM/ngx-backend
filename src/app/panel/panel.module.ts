@@ -56,6 +56,7 @@ import {DatePickerComponent} from './components/form/types/date-picker/date-pick
 import {DateRangePickerComponent} from './components/form/types/date-range-picker/date-range-picker.component';
 import {MediaLibraryComponent} from './components/form/types/media-library/media-library.component';
 import {TimetablePickerComponent} from './components/form/types/timetable-picker/timetable-picker.component';
+import {GeoSearchComponent} from './components/form/types/geo-search/geo-search.component';
 
 const COMPONENTS = [
     PanelComponent,
@@ -87,7 +88,8 @@ const COMPONENTS = [
     DatePickerComponent,
     DateRangePickerComponent,
     MediaLibraryComponent,
-    TimetablePickerComponent
+    TimetablePickerComponent,
+    GeoSearchComponent
 ];
 
 const PROVIDERS = [
