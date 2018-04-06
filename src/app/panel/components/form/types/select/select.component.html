@@ -1,11 +1,8 @@
 <div [formGroup]="form" [class]="field.class ? field.class : 'col-sm-12'" [ngClass]="{'hidden': field.hidden}">
-    <div class="form-group"
-         [ngClass]="{'has-error': !isValid}">
-
+    <div class="form-group" [ngClass]="{'has-error': !isValid()}">
         <label class="select-label">{{field.label}}
-            <span *ngIf="field.validators && field.validators.required">*</span>
+            <span *ngIf="isRequired()">*</span>
         </label>
-
         <ng-select [disabled]="field.disabled || onlyView"
                    [items]="options"
                    [multiple]="!!field.multiple"
@@ -18,7 +15,5 @@
         </ng-select>
 
     </div>
-
-    <!-- Others -->
     <span *ngIf="field.description" class="help-block sub-little-text">{{field.description}}</span>
 </div>

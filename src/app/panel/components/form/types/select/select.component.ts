@@ -19,13 +19,13 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
     @Input() isEdit: boolean;
     @Input() unique?: Function;
 
-    endpoint: string;
-    params = {
+    private endpoint: string;
+    private params = {
         where: {
             and: []
         }
     };
-    observable: Subject<any>;
+    private observable: Subject<any>;
     public options: SelectData[] = [];
     public selected: any;
 
@@ -101,8 +101,8 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
                             });
                     });
                 } else {
-                    if (this.form.controls[key]) {
-                        this.form.controls[key].valueChanges.subscribe((value) => {
+                    if (this.getControl(key)) {
+                        this.getControl(key).valueChanges.subscribe((value) => {
                             let keyNotSet = true;
                             const indexesToDelete: number[] = [];
                             this.params.where.and.forEach((cond, index) => {
@@ -154,7 +154,35 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
         }
     }
 
-    addQueryParams(): void {
+    isValid() {
+        if (this.getControl().touched) {
+            if (this.isRequired()) {
+                if (this.field.multiple === true) {
+                    if (this.getControl().value instanceof Array) {
+                        return this.getControl().value.length > 0;
+                    } else {
+                        return this.getControl().value !== null;
+                    }
+                } else {
+                    return this.getControl().value !== null;
+                }
+            } else {
+                return true;
+            }
+        } else {
+            return true;
+        }
+    }
+
+    onChange($event: any): void {
+        this.refreshFormValue($event);
+
+        if (this.observable) {
+            this.observable.next();
+        }
+    }
+
+    private addQueryParams(): void {
         if (this.field.options instanceof Array) {
             this.endpoint = null;
             return null;
@@ -185,26 +213,6 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
             } else {
                 this.endpoint = endpoint;
             }
-        }
-    }
-
-    get isValid() {
-        if (this.getControl().touched) {
-            if (this.isRequired()) {
-                if (this.field.multiple === true) {
-                    if (this.getControl().value instanceof Array) {
-                        return this.getControl().value.length > 0;
-                    } else {
-                        return this.getControl().value !== null;
-                    }
-                } else {
-                    return this.getControl().value !== null;
-                }
-            } else {
-                return true;
-            }
-        } else {
-            return true;
         }
     }
 
@@ -338,14 +346,6 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
                 }
             }
         });
-    }
-
-    onChange($event): void {
-        this.refreshFormValue($event);
-
-        if (this.observable) {
-            this.observable.next();
-        }
     }
 
     private refreshFormValue(value): void {
