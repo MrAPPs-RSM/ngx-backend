@@ -8,7 +8,7 @@
 
     <ng-select [items]="locations"
                [typeahead]="typeAhead"
-               (change)="onChange($event)"
+               (change)="onSelection($event)"
                [multiple]="false"
                bindLabel="name"
                typeToSearchText="{{'forms.inputs.search_address' | translate}}"
