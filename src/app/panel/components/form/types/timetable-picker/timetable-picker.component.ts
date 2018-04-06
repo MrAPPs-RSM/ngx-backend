@@ -25,27 +25,27 @@ export class TimetablePickerComponent extends BaseInputComponent implements OnIn
     private _subFieldSubscription = Subscription.EMPTY;
 
     ngOnInit() {
-        if (this.isEdit) {
-            this._subscription = this.getControl().valueChanges.first().subscribe((value) => {
-                this.subForm.setValue(value);
-            });
-
-            if (this.isSubField) {
-                this._subFieldSubscription = this.getControl().parent.valueChanges.subscribe((value) => {
-                    if (value[this.field.key]) {
-                        this.subForm.setValue(value[this.field.key], {emitEvent: false});
-                        this._subFieldSubscription.unsubscribe();
-                    }
-                });
-            }
-        }
-
         this.subForm = new FormGroup({
             'mS': this.mS,
             'mE': this.mE,
             'aS': this.aS,
             'aE': this.aE
         });
+
+        if (this.isEdit) {
+            if (this.isSubField) {
+                this._subFieldSubscription = this.getControl().parent.valueChanges.subscribe((value) => {
+                    if (value && value[this.field.key]) {
+                        this.subForm.patchValue(value[this.field.key], {emitEvent: false});
+                        this._subFieldSubscription.unsubscribe();
+                    }
+                });
+            } else {
+                this._subscription = this.getControl().valueChanges.first().subscribe((value) => {
+                    this.subForm.patchValue(value);
+                });
+            }
+        }
 
         this.changeListener();
     }
@@ -115,6 +115,6 @@ export class TimetablePickerComponent extends BaseInputComponent implements OnIn
     }
 
     private updateControlValue(value: any): void {
-        this.getControl().setValue(value);
+        this.getControl().patchValue(value);
     }
 }

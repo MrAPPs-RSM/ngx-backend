@@ -48,9 +48,9 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
                 this.refreshFormValue(this.getControl().value);
 
                 if (this.isSubField) {
-                    this._subFieldSubscription = this.getControl().valueChanges.subscribe((value) => {
-                        if (value) {
-                            this.updateSelectedOptions(value);
+                    this._subFieldSubscription = this.getControl().parent.valueChanges.subscribe((value) => {
+                        if (value && value[this.field.key]) {
+                            this.updateSelectedOptions(value[this.field.key]);
                             this._subFieldSubscription.unsubscribe();
                         }
                     });

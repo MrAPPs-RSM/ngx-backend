@@ -60,9 +60,6 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     }
 
     ngOnInit() {
-
-        console.log('file', this.onlyView);
-
         if (this.field.options.multiple) {
             this.maxFiles = this.field.options.maxFiles ? this.field.options.maxFiles : 0;
         } else {
