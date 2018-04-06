@@ -94,6 +94,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
 
                         this.loadOptions(true)
                             .then(() => {
+                                this.checkSelection();
                             })
                             .catch((error) => {
                                 console.log(error);
@@ -131,6 +132,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
 
                             this.loadOptions(true)
                                 .then(() => {
+                                    this.checkSelection();
                                 })
                                 .catch((error) => {
                                     console.log(error);
@@ -206,6 +208,27 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
         }
     }
 
+    private checkSelection() {
+        let keepValue = false;
+        this.options.forEach((option) => {
+            if (this.field.multiple === true) {
+                (this.selected as SelectData[]).forEach((selection) => {
+                    if (option.id === selection.id) {
+                        keepValue = true;
+                    }
+                });
+            } else {
+                if (option.id === this.selected.id) {
+                    keepValue = true;
+                }
+            }
+        });
+        if (!keepValue) {
+            this.updateSelectedOptions(null);
+            this.refreshFormValue(null);
+        }
+    }
+
     private updateSelectedOptions(value: any) {
         if (value) {
             if (this.field.multiple === true) {
@@ -243,7 +266,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
                 });
             }
         } else {
-           this.selected = this.field.multiple === true ? [] : null;
+            this.selected = this.field.multiple === true ? [] : null;
         }
     }
 
@@ -341,7 +364,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
                 }
             }
         } else {
-            this.getControl().setValue(null);
+            this.getControl().setValue(this.field.multiple === true ? [] : null);
         }
     }
 }
