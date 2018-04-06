@@ -2,7 +2,6 @@ import {Component, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/c
 import {FormFieldMap} from '../../interfaces/form-field-map';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {Subscription} from 'rxjs/Subscription';
-import {AbstractControl} from '@angular/forms';
 
 @Component({
     selector: 'app-map',
@@ -47,18 +46,6 @@ export class MapComponent extends BaseInputComponent implements OnInit, OnDestro
         }
     }
 
-    getFormControl(key: string): AbstractControl {
-        return this.form.get(key);
-    }
-
-    isValidField(key: string): boolean {
-        if (this.getFormControl(key).value === null || this.getFormControl(key).value === '') {
-            return true;
-        } else {
-            return this.getFormControl(key).valid;
-        }
-    }
-
     onMarkerChanged(event: {coords: {lat: number, lng: number}}): void {
         this.updateFormValue(event.coords.lat, event.coords.lng);
     }
@@ -68,8 +55,8 @@ export class MapComponent extends BaseInputComponent implements OnInit, OnDestro
     }
 
     private updateFormValue(lat: number, lng: number): void {
-        this.getFormControl(this.field.lat.key).patchValue(lat);
-        this.getFormControl(this.field.lng.key).patchValue(lng);
+        this.getControl(this.field.lat.key).patchValue(lat);
+        this.getControl(this.field.lng.key).patchValue(lng);
     }
 
     private checkCalculatedValue(key: string): void {
@@ -77,10 +64,10 @@ export class MapComponent extends BaseInputComponent implements OnInit, OnDestro
             if (this.field[key].calculatedValue.indexOf('.') > -1) {
                 const baseKey = this.field[key].calculatedValue.split('.')[0];
                 const subKey = this.field[key].calculatedValue.split('.')[1];
-                if (this.getFormControl(baseKey)) {
-                    this._calcValueSubscription[key] = this.getFormControl(baseKey).valueChanges.subscribe((value) => {
+                if (this.getControl(baseKey)) {
+                    this._calcValueSubscription[key] = this.getControl(baseKey).valueChanges.subscribe((value) => {
                         if (value && value[subKey]) {
-                            this.getFormControl(key).patchValue(value[subKey]);
+                            this.getControl(key).patchValue(value[subKey]);
                         }
                     });
                 }

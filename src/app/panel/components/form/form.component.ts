@@ -101,7 +101,7 @@ export class FormComponent implements OnInit, OnDestroy {
                 this.dataStored = false;
                 console.log(data);
             }
-        );*/
+        ); */
     }
 
     ngOnDestroy() {

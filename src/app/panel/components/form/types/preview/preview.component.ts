@@ -1,8 +1,9 @@
-import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {ApiService, ErrorResponse} from '../../../../../api/api.service';
 import {FormFieldPreview} from '../../interfaces/form-field-preview';
 import {environment} from '../../../../../../environments/environment';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
     selector: 'app-preview',
@@ -10,7 +11,7 @@ import {environment} from '../../../../../../environments/environment';
     styleUrls: ['./preview.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class PreviewComponent extends BaseInputComponent implements OnInit {
+export class PreviewComponent extends BaseInputComponent implements OnInit, OnDestroy {
 
     /** Fixed slider configuration */
     readonly sliderConfig: any = {
@@ -32,8 +33,11 @@ export class PreviewComponent extends BaseInputComponent implements OnInit {
     max: number;
     offset: number;
 
-    fileId: number;
     url: string;
+    private fileId: number;
+
+    private _subscription: Subscription = Subscription.EMPTY;
+    private _fileSubscription: Subscription = Subscription.EMPTY;
 
     ngOnInit() {
         this.reset();
@@ -42,17 +46,35 @@ export class PreviewComponent extends BaseInputComponent implements OnInit {
         this.isVisible = false;
 
         if (this.isEdit) {
-            this.getControl().valueChanges.first().subscribe((value) => {
+            this._subscription = this.getControl().valueChanges.first().subscribe((value) => {
                 this.offset = value;
                 this.onFileChange();
+                this._subscription.unsubscribe();
             });
         }
 
         this.onFileChange();
     }
 
-    onFileChange() {
-        this.form.controls[this.field.fileKey].valueChanges.subscribe((value) => {
+    ngOnDestroy() {
+        if (this._subscription) {
+            this._subscription.unsubscribe();
+        }
+        if (this._fileSubscription) {
+            this._fileSubscription.unsubscribe();
+        }
+    }
+
+    onChange() {
+        this.getData();
+    }
+
+    onImageError() {
+        this.url = environment.assets.imageError;
+    }
+
+    private onFileChange() {
+        this._fileSubscription = this.getControl(this.field.fileKey).valueChanges.subscribe((value) => {
             /** If file is uploaded */
             if (value) {
                 if (value instanceof Array) {
@@ -72,7 +94,7 @@ export class PreviewComponent extends BaseInputComponent implements OnInit {
         });
     }
 
-    getData() {
+    private getData() {
         if (this.fileId) {
             this._apiService.get(this.field.endpoint + '/' + this.fileId, {offset: this.offset})
                 .then((response: PreviewResponse) => {
@@ -88,19 +110,11 @@ export class PreviewComponent extends BaseInputComponent implements OnInit {
         }
     }
 
-    onChange() {
-        this.getData();
-    }
-
-    onImageError() {
-        this.url = environment.assets.imageError;
-    }
-
-    updateFormValue() {
+    private updateFormValue() {
         this.getControl().setValue(this.offset);
     }
 
-    reset() {
+    private reset() {
         this.min = 0;
         this.max = 0;
         this.offset = 0;

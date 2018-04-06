@@ -1,13 +1,9 @@
 <div [formGroup]="form" [class]="field.class ? field.class : 'col-sm-12'" [ngClass]="{'hidden': field.hidden}">
-  <div class="form-group" [ngClass]="{'has-error': !isValid}">
-
-    <!-- Label -->
+  <div class="form-group" [ngClass]="{'has-error': !isValid()}">
     <label for="{{field.key}}">
       {{field.label}}
-      <span *ngIf="field.validators && field.validators.required">*</span>
+      <span *ngIf="isRequired()">*</span>
     </label>
-
-    <!-- Input -->
     <input
             type="number"
             [attr.disabled]="field.disabled || onlyView ? '' : null"
@@ -17,8 +13,6 @@
             placeholder="{{field.placeholder}}"
             value="{{field.value}}"
     >
-
-    <!-- Others -->
     <span *ngIf="field.description" class="help-block">{{field.description}}</span>
   </div>
 </div>

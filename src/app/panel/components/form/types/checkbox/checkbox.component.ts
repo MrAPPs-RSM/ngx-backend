@@ -17,7 +17,7 @@ export class CheckboxComponent extends BaseInputComponent implements OnInit {
         }
     }
 
-    get isValid() {
+    isValid() {
         return this.getControl().valid;
     }
 }

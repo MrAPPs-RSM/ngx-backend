@@ -1,7 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {FormFieldDateRange} from '../../interfaces/form-field-date-range';
-import {AbstractControl} from '@angular/forms';
 import {UtilsService} from '../../../../../services/utils.service';
 
 @Component({
@@ -17,11 +16,13 @@ export class DateRangePickerComponent extends BaseInputComponent implements OnIn
     max: Date;
 
     ngOnInit() {
+        this.checkDisabled();
         this.initMaxMin();
+
         if (this.isEdit) {
-            this.getControlByKey(this.field.fromKey).valueChanges.first().subscribe((fromValue) => {
+            this.getControl(this.field.fromKey).valueChanges.first().subscribe((fromValue) => {
                 if (fromValue) {
-                    this.getControlByKey(this.field.toKey).valueChanges.first().subscribe((toValue) => {
+                    this.getControl(this.field.toKey).valueChanges.first().subscribe((toValue) => {
                         if (toValue) {
                             this.getControl().setValue([new Date(fromValue), new Date(toValue)]);
                         }
@@ -31,8 +32,17 @@ export class DateRangePickerComponent extends BaseInputComponent implements OnIn
         }
 
         this.getControl().valueChanges.subscribe((value) => {
-            this.setFormValue(value);
+            this.updateFormValue(value);
         });
+    }
+
+    isValid() {
+        // TODO
+        return true;
+    }
+
+    clearValue() {
+        this.getControl().setValue([null, null]);
     }
 
     private initMaxMin() {
@@ -44,20 +54,8 @@ export class DateRangePickerComponent extends BaseInputComponent implements OnIn
         }
     }
 
-    getControlByKey(key: string): AbstractControl {
-        return this.form.get(key);
-    }
-
-    get isValid() {
-        return true;
-    }
-
-    private setFormValue(value: any[]) {
-        this.getControlByKey(this.field.fromKey).setValue(value[0]);
-        this.getControlByKey(this.field.toKey).setValue(value[1]);
-    }
-
-    clear() {
-        this.getControl().setValue([null, null]);
+    private updateFormValue(value: any[]) {
+        this.getControl(this.field.fromKey).setValue(value[0]);
+        this.getControl(this.field.toKey).setValue(value[1]);
     }
 }

@@ -97,14 +97,6 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         this.uploadedFiles = [];
     }
 
-    get isValid() {
-        if (this.getControl().touched) {
-            return this.getControl().valid;
-        } else {
-            return true;
-        }
-    }
-
     private createAllowedContentTypes(): void {
         if (this.field.options && this.field.options.allowedContentTypes) {
             this.field.options.allowedContentTypes.forEach((type) => {

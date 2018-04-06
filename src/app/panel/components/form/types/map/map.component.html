@@ -3,12 +3,11 @@
         <div class="form-wrapper">
             <div class="row">
                 <div class="col-sm-6">
-                    <div class="form-group no-margin" [ngClass]="{'has-error': !isValidField(field.lat.key)}">
+                    <div class="form-group no-margin" [ngClass]="{'has-error': !isValid(field.lat.key)}">
                         <label for="{{field.lat.key}}">
                             {{field.lat.label}}
-                            <span *ngIf="field.lat.validators && field.lat.validators.required">*</span>
+                            <span *ngIf="isRequired('lat')">*</span>
                         </label>
-                        <!-- Input -->
                         <input
                                 type="number"
                                 [attr.disabled]="field.lat.disabled || onlyView ? '' : null"
@@ -20,12 +19,11 @@
                     </div>
                 </div>
                 <div class="col-sm-6">
-                    <div class="form-group no-margin" [ngClass]="{'has-error': !isValidField(field.lng.key)}">
+                    <div class="form-group no-margin" [ngClass]="{'has-error': !isValid(field.lng.key)}">
                         <label for="{{field.lng.key}}">
                             {{field.lng.label}}
-                            <span *ngIf="field.lng.validators && field.lng.validators.required">*</span>
+                            <span *ngIf="isRequired('lng')">*</span>
                         </label>
-                        <!-- Input -->
                         <input
                                 type="number"
                                 [attr.disabled]="field.lng.disabled || onlyView ? '' : null"
@@ -37,20 +35,18 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Others -->
             <span *ngIf="field.description" class="help-block">{{field.description}}</span>
         </div>
 
         <agm-map
                 [zoom]="12"
-                [latitude]="getFormControl(field.lat.key).value"
-                [longitude]="getFormControl(field.lng.key).value"
+                [latitude]="getControl(field.lat.key).value"
+                [longitude]="getControl(field.lng.key).value"
                 [scrollwheel]="false"
                 (mapClick)="onMarkerChanged($event)">
             <agm-marker
-                    [latitude]="getFormControl(field.lat.key).value"
-                    [longitude]="getFormControl(field.lng.key).value"
+                    [latitude]="getControl(field.lat.key).value"
+                    [longitude]="getControl(field.lng.key).value"
                     [markerDraggable]="true"
                     (dragEnd)="onMarkerChanged($event)">
             </agm-marker>

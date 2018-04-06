@@ -1,13 +1,11 @@
 <div [formGroup]="form" [class]="field.class ? field.class : 'col-sm-12'" [ngClass]="{'hidden': field.hidden}">
-    <div class="form-group" [ngClass]="{'has-error': !isValid}">
+    <div class="form-group" [ngClass]="{'has-error': !isValid()}">
 
-        <!-- Label -->
         <label for="{{field.key}}">
             {{field.label}}
-            <span *ngIf="field.validators && field.validators.required">*</span>
+            <span *ngIf="isRequired()">*</span>
         </label>
 
-        <!-- Input -->
         <ckeditor
                 *ngIf="field.options && field.options.editor"
                 formControlName="{{field.key}}"
@@ -21,14 +19,11 @@
                 formControlName="{{field.key}}"
                 id="{{field.key}}"
                 [attr.disabled]="field.disabled || onlyView ? '' : null"
-                rows="{{field.options?.rows}}"
-                cols="{{field.options?.cols}}"
                 class="form-control"
                 placeholder="{{field.placeholder}}">
             {{field.value}}
         </textarea>
 
-        <!-- Others -->
         <span *ngIf="field.description" class="help-block">{{field.description}}</span>
     </div>
 </div>
