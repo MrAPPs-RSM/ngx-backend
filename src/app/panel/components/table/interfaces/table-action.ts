@@ -16,6 +16,7 @@ export interface TableAction {
             associateFields?: Association[];
         }; // query params to pass to path
         endpoint?: string; // api call
+        addFilters?: boolean; // useful for general actions, if filters need to be passed (eg: export csv)
         confirm?: boolean; // if true opens confirmation modal before api
         method?: string; // post | patch | put | delete
         refreshAfter?: boolean; // default = true, determines what to do after api,

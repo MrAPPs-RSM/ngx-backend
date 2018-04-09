@@ -416,7 +416,8 @@ export class TableComponent implements OnInit, OnDestroy {
                         if (action.config.refreshAfter !== false) {
                             this.isLoading = true;
                         }
-                        this._apiService.get(endpoint)
+                        // Adding countParams to filter without pagination and sort
+                        this._apiService.get(endpoint, action.config.addFilters ? this.composeCountParams() : null)
                             .then((response) => {
                                 this.handleResponseApi(action, response)
                                     .then(() => resolve())
@@ -472,9 +473,7 @@ export class TableComponent implements OnInit, OnDestroy {
         return new Promise((resolve, reject) => {
             if (action.config.responseType) {
                 switch (action.config.responseType) {
-                    // TODO: implemented in a switch case to easily future support for new response types
                     case 'file_download': {
-
                         if (action.config.file) {
                             const now = new Date();
 

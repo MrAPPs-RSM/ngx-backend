@@ -2,7 +2,9 @@
 
 ng2-smart-table-general-actions {
   > div {
+    display: inline-block;
+    width: 100%;
     clear: both;
-    margin-top: 20px;
+    margin: 20px 0;
   }
 }
