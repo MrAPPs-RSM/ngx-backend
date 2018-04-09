@@ -5,7 +5,6 @@ import {DataSource} from './lib/data-source/data-source';
 import {Row} from './lib/data-set/row';
 import {deepExtend} from './lib/helpers';
 import {LocalDataSource} from './lib/data-source/local/local.data-source';
-import {isNullOrUndefined} from 'util';
 import {TablePagination} from './lib/data-filters/table-pagination';
 import {TableSort} from './lib/data-filters/table-sort';
 import {TableFilter} from './lib/data-filters/table-filter';
@@ -53,7 +52,6 @@ export class Ng2SmartTableComponent implements OnChanges, OnInit {
         selectMode: 'single', // single|multi
         hideHeader: false,
         hideSubHeader: false,
-        noDataMessage: 'No data found',
         columns: {},
         pager: {
             display: true,

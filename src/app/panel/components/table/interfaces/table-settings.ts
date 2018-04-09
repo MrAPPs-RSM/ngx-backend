@@ -13,7 +13,7 @@ export interface TableSettings {
         endpoint?: string; // if not defined, will be "endpoint/sort"
         method?: string; // if not defined, will be PATCH
     };
-    noDataLabel?: string;
+    noDataMessage?: string;
     generalActions?: TableAction[]; // General actions (export csv...)
     actions?: {
         columnTitle?: string;

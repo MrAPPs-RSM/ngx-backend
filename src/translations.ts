@@ -1,5 +1,11 @@
 export const translations = {
     it: {
+        tables: {
+            actions: {
+                columnTitle: 'Azioni'
+            },
+            noDataMessage: 'Nessun elemento trovato'
+        },
         forms: {
             labels: {
                 submit: 'Salva'
@@ -52,6 +58,12 @@ export const translations = {
         }
     },
     en: {
+        tables: {
+            actions: {
+                columnTitle: 'Actions'
+            },
+            noDataMessage: 'No data found'
+        },
         forms: {
             labels: {
                 submit: 'Save'

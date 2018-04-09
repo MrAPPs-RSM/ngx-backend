@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, OnChanges, ViewEncapsulation, NgZone, OnDestroy} from '@angular/core';
+import {Component, Input, OnInit, ViewEncapsulation, OnDestroy} from '@angular/core';
 import {TableSettings} from './interfaces/table-settings';
 import {ApiService, ErrorResponse} from '../../../api/api.service';
 import {ModalService} from '../../services/modal.service';
@@ -65,8 +65,8 @@ export class TableComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.translateLabels();
         this.resetPagination = false;
-
         this._subscription = this._route.queryParams.subscribe(params => {
             this.activeFilters.sort = [];
             this.activeFilters.pagination = {
@@ -88,6 +88,14 @@ export class TableComponent implements OnInit, OnDestroy {
         });
 
         this.setupLang();
+    }
+
+    private translateLabels(): void {
+        this.settings.noDataMessage = this.settings.noDataMessage ?
+            this.settings.noDataMessage : this._languageService.translate('tables.noDataMessage');
+        console.log(this.settings.noDataMessage);
+        this.settings.actions.columnTitle = this.settings.actions && this.settings.actions.columnTitle ?
+            this.settings.actions.columnTitle : this._languageService.translate('tables.actions.columnTitle');
     }
 
     private preparePerPage(): number {
@@ -171,7 +179,9 @@ export class TableComponent implements OnInit, OnDestroy {
     }
 
     private composeParams(countParams?: boolean): Object {
-        if (countParams === null) countParams = false;
+        if (countParams === null) {
+            countParams = false;
+        }
 
         const params: any = countParams ?
             {
@@ -265,7 +275,7 @@ export class TableComponent implements OnInit, OnDestroy {
     }
 
     private composeCountParams(): Object {
-       return this.composeParams(true);
+        return this.composeParams(true);
     }
 
     private parseAction(action: TableAction, data?: any): void {
