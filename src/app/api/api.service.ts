@@ -43,7 +43,7 @@ export class ApiService {
      * @returns {Promise<any>}
      */
     public get(endpoint: string, params?: Object, fromLogin?: boolean): Promise<any> {
-       // console.log('[API SERVICE] - GET ' + endpoint);
+        // console.log('[API SERVICE] - GET ' + endpoint);
         return new Promise((resolve, reject) => {
             this._http.get(this.composeUrl(endpoint), this.setOptions(params))
                 .subscribe(
@@ -149,7 +149,7 @@ export class ApiService {
      * @returns {Promise<T>}
      */
     public patch(endpoint: string, body: any, params?: Object, fromLogin?: boolean): Promise<any> {
-       // console.log('[API SERVICE] - PATCH ' + endpoint);
+        // console.log('[API SERVICE] - PATCH ' + endpoint);
         return new Promise((resolve, reject) => {
             this._http.patch(this.composeUrl(endpoint), body, this.setOptions(params))
                 .subscribe(

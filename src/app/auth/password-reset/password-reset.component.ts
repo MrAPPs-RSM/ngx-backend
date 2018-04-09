@@ -12,7 +12,7 @@ import {ToastsService} from '../../services/toasts.service';
 export class PasswordResetComponent implements OnInit {
 
     public environment = environment;
-    public isLoading: boolean = false;
+    public isLoading = false;
 
     constructor(private _apiService: ApiService,
                 private _toastsService: ToastsService,
@@ -27,8 +27,11 @@ export class PasswordResetComponent implements OnInit {
         this._apiService.post(this.environment.auth.passwordReset.endpoint, data, null, true)
             .then((response) => {
                 this.isLoading = false;
-                // TODO: show message: an email has been sent to your account ...
-                this._toastsService.success(null, null, {disableTimeOut: true});
+                this._toastsService.success(
+                    'Password reset requested',
+                    'Check your email for further instructions',
+                    {timeOut: 5000}
+                );
                 this._router.navigate(['login']);
             })
             .catch((response: ErrorResponse) => {
