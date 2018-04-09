@@ -14,11 +14,13 @@ import {BootstrapModalModule} from 'ngx-modialog/plugins/bootstrap';
 import {GlobalState} from './global.state';
 import {ApiService} from './api/api.service';
 import {LoginGuard} from './auth/guards/login.guard';
+import {PasswordChangeGuard} from './auth/guards/password-change.guard';
 import {UtilsService} from './services/utils.service';
 import {FormGeneratorService} from './panel/services/form-generator.service';
 import {PageRefreshService} from './services/page-refresh.service';
 import {UserService} from './auth/services/user.service';
 import {PasswordResetComponent} from './auth/password-reset/password-reset.component';
+import {PasswordChangeComponent} from './auth/password-change/password-change.component';
 import {ToastsService} from './services/toasts.service';
 import {PendingChangesGuard} from './auth/guards/pending-changes.guard';
 
@@ -29,6 +31,13 @@ const routes: Routes = [
             LoginGuard
         ],
         component: PasswordResetComponent
+    },
+    {
+        path: 'password-change',
+        canActivate: [
+            PasswordChangeGuard
+        ],
+        component: PasswordChangeComponent
     },
     {
         path: 'login',
@@ -48,7 +57,8 @@ const routes: Routes = [
     declarations: [
         AppComponent,
         LoginComponent,
-        PasswordResetComponent
+        PasswordResetComponent,
+        PasswordChangeComponent
     ],
     imports: [
         RouterModule.forRoot(routes, {useHash: false, onSameUrlNavigation: 'reload'}),
@@ -74,6 +84,7 @@ const routes: Routes = [
         ApiService,
         UserService,
         LoginGuard,
+        PasswordChangeGuard,
         PendingChangesGuard,
         UtilsService,
         FormGeneratorService,
