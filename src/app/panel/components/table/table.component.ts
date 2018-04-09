@@ -249,7 +249,7 @@ export class TableComponent implements OnInit, OnDestroy {
                     params.where.and.push(condition);
                 });
 
-                if (this.resetPagination) {
+                if (this.resetPagination && !countParams) {
                     params.skip = 0; // reset pagination if filters
                 }
             }
