@@ -4,9 +4,9 @@ import {formConfig} from '../form.config';
 import {Language} from '../../../services/language.service';
 
 @Component({
-  selector: 'app-form-type-switcher',
-  templateUrl: './form-type-switcher.component.html',
-  styleUrls: ['./form-type-switcher.component.scss']
+    selector: 'app-form-type-switcher',
+    templateUrl: './form-type-switcher.component.html',
+    styleUrls: ['./form-type-switcher.component.scss']
 })
 export class FormTypeSwitcherComponent implements OnInit {
 
@@ -22,10 +22,10 @@ export class FormTypeSwitcherComponent implements OnInit {
 
     public formConfig = formConfig;
 
-  constructor() {
-  }
+    constructor() {
+    }
 
-  ngOnInit() {
-  }
+    ngOnInit() {
+    }
 
 }

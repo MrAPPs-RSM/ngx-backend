@@ -93,9 +93,11 @@ export class TableComponent implements OnInit, OnDestroy {
     private translateLabels(): void {
         this.settings.noDataMessage = this.settings.noDataMessage ?
             this.settings.noDataMessage : this._languageService.translate('tables.noDataMessage');
-        console.log(this.settings.noDataMessage);
-        this.settings.actions.columnTitle = this.settings.actions && this.settings.actions.columnTitle ?
-            this.settings.actions.columnTitle : this._languageService.translate('tables.actions.columnTitle');
+        if (this.settings.actions) {
+            this.settings.actions.columnTitle = this.settings.actions.columnTitle ?
+                this.settings.actions.columnTitle :
+                this._languageService.translate('tables.actions.columnTitle');
+        }
     }
 
     private preparePerPage(): number {

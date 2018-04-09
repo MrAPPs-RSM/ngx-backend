@@ -16,7 +16,7 @@ import {DataSource} from '../../../lib/data-source/data-source';
             [style.width]="column.width">
             <ng2-st-column-title [source]="source" [column]="column" (sort)="sort.emit($event)"></ng2-st-column-title>
         </th>
-        <th ng2-st-actions-title [grid]="grid"></th>
+        <th ng2-st-actions-title *ngIf="areActionsEnabled" [grid]="grid"></th>
     `,
 })
 export class TheadTitlesRowComponent implements OnChanges {
@@ -29,10 +29,12 @@ export class TheadTitlesRowComponent implements OnChanges {
     @Output() selectAllRows = new EventEmitter<any>();
 
     isMultiSelectVisible: boolean;
-
+    areActionsEnabled: boolean;
 
     ngOnChanges() {
         this.isMultiSelectVisible = this.grid.isMultiSelectVisible();
+        const actions = this.grid.getSetting('actions');
+        this.areActionsEnabled = actions.hasOwnProperty('add') || actions.hasOwnProperty('list');
     }
 
 }

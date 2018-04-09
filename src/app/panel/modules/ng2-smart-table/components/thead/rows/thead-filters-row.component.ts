@@ -16,6 +16,7 @@ import {DataSource} from '../../../lib/data-source/data-source';
             </ng2-smart-table-filter>
         </th>
         <th ng2-st-add-button
+            *ngIf="areActionsEnabled"
             [grid]="grid"
             [source]="source"
             (create)="create.emit()">
@@ -32,9 +33,12 @@ export class TheadFitlersRowComponent implements OnChanges {
 
     isMultiSelectVisible: boolean;
     filterInputClass: string;
+    areActionsEnabled: boolean;
 
     ngOnChanges() {
         this.isMultiSelectVisible = this.grid.isMultiSelectVisible();
         this.filterInputClass = this.grid.getSetting('filter.inputClass');
+        const actions = this.grid.getSetting('actions');
+        this.areActionsEnabled = actions.hasOwnProperty('add') || actions.hasOwnProperty('list');
     }
 }
