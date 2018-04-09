@@ -1,10 +1,8 @@
 <div [formGroup]="form" [class]="field.class ? field.class : 'col-sm-12'" *ngIf="isVisible">
     <div class="form-group">
-
-        <!-- Label -->
         <label>
             {{field.label}}
-            <span *ngIf="field.validators && field.validators.required">*</span>
+            <span *ngIf="isRequired()">*</span>
         </label>
 
         <nouislider *ngIf="max > 0"

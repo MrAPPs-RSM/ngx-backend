@@ -1,13 +1,9 @@
 <div [formGroup]="form" [class]="field.class ? field.class : 'col-sm-12'" [ngClass]="{'hidden': field.hidden}">
-    <div class="form-group" [ngClass]="{'has-error': !isValid}">
-
-        <!-- Label -->
+    <div class="form-group" [ngClass]="{'has-error': !isValid()}">
         <label for="{{field.key}}">
             {{field.label}}
-            <span *ngIf="field.validators && field.validators.required">*</span>
+            <span *ngIf="isRequired()">*</span>
         </label>
-        <!-- Input -->
-
         <div class="date-picker-wrapper">
             <input
                     class="form-control"
@@ -18,6 +14,7 @@
                     [owlDateTime]="dt"
                     [min]="min"
                     [max]="max"
+                    [disabled]="field.disabled || onlyView"
             >
             <owl-date-time
                     #dt
@@ -25,10 +22,8 @@
                     [pickerType]="field.isDateTime ? 'both' : 'calendar'"
             ></owl-date-time>
             <span class="remove"
-                  (click)="clear()"></span>
+                  (click)="clearValue()"></span>
         </div>
-
-        <!-- Others -->
         <span *ngIf="field.description" class="help-block sub-little-text">{{field.description}}</span>
     </div>
 </div>

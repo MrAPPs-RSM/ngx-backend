@@ -22,19 +22,33 @@ export class BaseInputComponent implements OnInit {
     ngOnInit() {
     }
 
-    public getControl(): AbstractControl {
-        return this.form.get(this.field.key);
-    }
-
-    get isValid() {
-        if (this.getControl().touched) {
-            return this.getControl().valid;
-        } else {
-            return true;
+    public checkDisabled(): void {
+        if (this.field.disabled || this.onlyView) {
+            this.getControl().disable();
         }
     }
 
-    public isRequired(): boolean {
-        return this.field.validators && this.field.validators.required;
+    public isRequired(key?: string): boolean {
+        if (key) {
+            return this.field[key].validators && this.field[key].validators.required;
+        } else {
+            return this.field.validators && this.field.validators.required;
+        }
+    }
+
+    public getControl(key?: string): AbstractControl {
+        if (key) {
+            return this.form.get(key);
+        } else {
+            return this.form.get(this.field.key);
+        }
+    }
+
+    public isValid(key?: string): boolean {
+        if (this.getControl(key).touched) {
+            return this.getControl(key).valid;
+        } else {
+            return true;
+        }
     }
 }

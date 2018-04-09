@@ -192,8 +192,10 @@ export class MediaLibraryComponent implements OnInit, OnChanges, OnDestroy {
 
     private composeCountParams(): Object {
         const params = {
-            where: {
-                and: []
+            filter: {
+                where: {
+                    and: []
+                }
             }
         };
 
@@ -207,13 +209,13 @@ export class MediaLibraryComponent implements OnInit, OnChanges, OnDestroy {
                 } else {
                     condition[key] = this.filter.where[key];
                 }
-                params.where.and.push(condition);
+                params.filter.where.and.push(condition);
             }
         });
 
         if (this.uploadedFiles.length > 0) {
             this.uploadedFiles.forEach((file: UploadedFile) => {
-                params.where.and.push({
+                params.filter.where.and.push({
                     id: {
                         neq: file.id
                     }
@@ -223,11 +225,11 @@ export class MediaLibraryComponent implements OnInit, OnChanges, OnDestroy {
 
         const typesFilter = this.composeAllowedContentTypesFilter();
         if (typesFilter) {
-            params.where.and.push(typesFilter);
+            params.filter.where.and.push(typesFilter);
         }
 
         return {
-            where: JSON.stringify(params.where),
+            filter: JSON.stringify(params.filter),
             lang: null
         };
     }

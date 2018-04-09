@@ -16,8 +16,8 @@ export class InputTextComponent extends BaseInputComponent implements OnInit, On
             if (this.field.calculatedValue.indexOf('.') > -1) {
                 const key = this.field.calculatedValue.split('.')[0];
                 const subKey = this.field.calculatedValue.split('.')[1];
-                if (this.form.get(key)) {
-                    this._calcValueSub = this.form.controls[key].valueChanges.subscribe((value) => {
+                if (this.getControl(key)) {
+                    this._calcValueSub = this.getControl(key).valueChanges.subscribe((value) => {
                         if (value && value[subKey]) {
                             this.getControl().setValue(value[subKey]);
                         }

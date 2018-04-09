@@ -19,13 +19,13 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
     @Input() isEdit: boolean;
     @Input() unique?: Function;
 
-    endpoint: string;
-    params = {
+    private endpoint: string;
+    private params = {
         where: {
             and: []
         }
     };
-    observable: Subject<any>;
+    private observable: Subject<any>;
     public options: SelectData[] = [];
     public selected: any;
 
@@ -94,14 +94,15 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
 
                         this.loadOptions(true)
                             .then(() => {
+                                this.checkSelection();
                             })
                             .catch((error) => {
                                 console.log(error);
                             });
                     });
                 } else {
-                    if (this.form.controls[key]) {
-                        this.form.controls[key].valueChanges.subscribe((value) => {
+                    if (this.getControl(key)) {
+                        this.getControl(key).valueChanges.subscribe((value) => {
                             let keyNotSet = true;
                             const indexesToDelete: number[] = [];
                             this.params.where.and.forEach((cond, index) => {
@@ -131,6 +132,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
 
                             this.loadOptions(true)
                                 .then(() => {
+                                    this.checkSelection();
                                 })
                                 .catch((error) => {
                                     console.log(error);
@@ -152,7 +154,35 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
         }
     }
 
-    addQueryParams(): void {
+    isValid() {
+        if (this.getControl().touched) {
+            if (this.isRequired()) {
+                if (this.field.multiple === true) {
+                    if (this.getControl().value instanceof Array) {
+                        return this.getControl().value.length > 0;
+                    } else {
+                        return this.getControl().value !== null;
+                    }
+                } else {
+                    return this.getControl().value !== null;
+                }
+            } else {
+                return true;
+            }
+        } else {
+            return true;
+        }
+    }
+
+    onChange($event: any): void {
+        this.refreshFormValue($event);
+
+        if (this.observable) {
+            this.observable.next();
+        }
+    }
+
+    private addQueryParams(): void {
         if (this.field.options instanceof Array) {
             this.endpoint = null;
             return null;
@@ -186,23 +216,24 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
         }
     }
 
-    get isValid() {
-        if (this.getControl().touched) {
-            if (this.isRequired()) {
-                if (this.field.multiple === true) {
-                    if (this.getControl().value instanceof Array) {
-                        return this.getControl().value.length > 0;
-                    } else {
-                        return this.getControl().value !== null;
+    private checkSelection() {
+        let keepValue = false;
+        this.options.forEach((option) => {
+            if (this.field.multiple === true) {
+                (this.selected as SelectData[]).forEach((selection) => {
+                    if (option.id === selection.id) {
+                        keepValue = true;
                     }
-                } else {
-                    return this.getControl().value !== null;
-                }
+                });
             } else {
-                return true;
+                if (option.id === this.selected.id) {
+                    keepValue = true;
+                }
             }
-        } else {
-            return true;
+        });
+        if (!keepValue) {
+            this.updateSelectedOptions(null);
+            this.refreshFormValue(null);
         }
     }
 
@@ -243,7 +274,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
                 });
             }
         } else {
-           this.selected = this.field.multiple === true ? [] : null;
+            this.selected = this.field.multiple === true ? [] : null;
         }
     }
 
@@ -317,14 +348,6 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
         });
     }
 
-    onChange($event): void {
-        this.refreshFormValue($event);
-
-        if (this.observable) {
-            this.observable.next();
-        }
-    }
-
     private refreshFormValue(value): void {
         if (value !== null) {
             if (value instanceof Array) {
@@ -341,7 +364,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
                 }
             }
         } else {
-            this.getControl().setValue(null);
+            this.getControl().setValue(this.field.multiple === true ? [] : null);
         }
     }
 }

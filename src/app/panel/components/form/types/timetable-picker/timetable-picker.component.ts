@@ -3,6 +3,7 @@ import {BaseInputComponent} from '../base-input/base-input.component';
 import {FormControl, FormGroup} from '@angular/forms';
 import {isNullOrUndefined} from 'util';
 import {Subscription} from 'rxjs/Subscription';
+import {Time} from "@angular/common";
 
 @Component({
     selector: 'app-timetable-picker',
@@ -23,6 +24,14 @@ export class TimetablePickerComponent extends BaseInputComponent implements OnIn
     private _subscription = Subscription.EMPTY;
     private _subFormSubscription = Subscription.EMPTY;
     private _subFieldSubscription = Subscription.EMPTY;
+
+    private static isEvaluated(value: any): boolean {
+        return !isNullOrUndefined(value) && value !== '';
+    }
+
+    private static isNotEvaluated(value: any): boolean {
+        return isNullOrUndefined(value) || value === '';
+    }
 
     ngOnInit() {
         this.subForm = new FormGroup({
@@ -64,30 +73,34 @@ export class TimetablePickerComponent extends BaseInputComponent implements OnIn
         }
     }
 
-    get isValid() {
+    isValid() {
         if (this.isRequired() && this.isDirty()) {
             // Only morning open
-            if (this.isEvaluated(this.mS.value) && this.isEvaluated(this.mE.value)
-                && this.isNotEvaluated(this.aS.value) && this.isNotEvaluated(this.aE.value)) {
+            if (TimetablePickerComponent.isEvaluated(this.mS.value) &&
+                TimetablePickerComponent.isEvaluated(this.mE.value) &&
+                TimetablePickerComponent.isNotEvaluated(this.aS.value) &&
+                TimetablePickerComponent.isNotEvaluated(this.aE.value)) {
                 return true;
             } else {
                 // Only afternoon open
-                if (this.isEvaluated(this.aS.value) && this.isEvaluated(this.aE.value)
-                    && this.isNotEvaluated(this.mS.value) && this.isNotEvaluated(this.mE.value)) {
+                if (TimetablePickerComponent.isEvaluated(this.aS.value) &&
+                    TimetablePickerComponent.isEvaluated(this.aE.value) &&
+                    TimetablePickerComponent.isNotEvaluated(this.mS.value) &&
+                    TimetablePickerComponent.isNotEvaluated(this.mE.value)) {
                     return true;
                 } else {
                     // Full day continue
-                    if (this.isEvaluated(this.mS.value) && this.isEvaluated(this.aE.value)
-                        && this.isNotEvaluated(this.mE.value) && this.isNotEvaluated(this.aS.value)) {
+                    if (TimetablePickerComponent.isEvaluated(this.mS.value) &&
+                        TimetablePickerComponent.isEvaluated(this.aE.value) &&
+                        TimetablePickerComponent.isNotEvaluated(this.mE.value) &&
+                        TimetablePickerComponent.isNotEvaluated(this.aS.value)) {
                         return true;
                     } else {
                         // Full day standard
-                        if (this.isEvaluated(this.mS.value) && this.isEvaluated(this.mE.value)
-                            && this.isEvaluated(this.aS.value) && this.isEvaluated(this.aE.value)) {
-                            return true;
-                        } else {
-                            return false;
-                        }
+                        return (TimetablePickerComponent.isEvaluated(this.mS.value) &&
+                            TimetablePickerComponent.isEvaluated(this.mE.value) &&
+                            TimetablePickerComponent.isEvaluated(this.aS.value) &&
+                            TimetablePickerComponent.isEvaluated(this.aE.value));
                     }
                 }
             }
@@ -98,14 +111,6 @@ export class TimetablePickerComponent extends BaseInputComponent implements OnIn
 
     private isDirty(): boolean {
         return this.mS.dirty || this.mE.dirty || this.aS.dirty || this.aE.dirty;
-    }
-
-    private isEvaluated(value: any): boolean {
-        return !isNullOrUndefined(value) && value !== '';
-    }
-
-    private isNotEvaluated(value: any): boolean {
-        return isNullOrUndefined(value) || value === '';
     }
 
     private changeListener(): void {

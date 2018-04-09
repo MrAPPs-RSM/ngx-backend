@@ -1,9 +1,8 @@
 <div [formGroup]="form" [class]="field.class ? field.class : 'col-sm-12'">
     <div [formArrayName]="field.key" class="form-group">
-
         <label>
             {{field.label}}
-            <span *ngIf="field.validators && field.validators.required">*</span>
+            <span *ngIf="isRequired()">*</span>
         </label>
         <div class="wrapper">
             <div [dragula]="'bag'"

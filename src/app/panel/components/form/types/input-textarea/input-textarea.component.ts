@@ -21,7 +21,7 @@ export class InputTextareaComponent extends BaseInputComponent implements OnInit
         this.focus = false;
     }
 
-    get isValid() {
+    isValid() {
         if (this.getControl().touched && this.focus) {
             return this.getControl().valid;
         } else {
@@ -34,7 +34,8 @@ export class InputTextareaComponent extends BaseInputComponent implements OnInit
             this.config = {
                 language: this._language.getCurrentLang().isoCode,
                 toolbar: [
-                    ['Format', 'Font', 'FontSize', 'Bold', 'Italic', 'Underline', 'StrikeThrough', '-', 'Undo', 'Redo', '-', 'Cut', 'Copy', 'Paste', '-', 'Outdent', 'Indent'],
+                    ['Format', 'Font', 'FontSize', 'Bold', 'Italic', 'Underline', 'StrikeThrough', '-',
+                        'Undo', 'Redo', '-', 'Cut', 'Copy', 'Paste', '-', 'Outdent', 'Indent'],
                     ['NumberedList', 'BulletedList', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
                     '/',
                     ['Table', '-', 'Link', 'Smiley', 'TextColor', 'BGColor', 'Source']

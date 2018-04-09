@@ -13,62 +13,31 @@ export class MapComponent extends BaseInputComponent implements OnInit, OnDestro
 
     @Input() field: FormFieldMap;
 
-    options: any;
-
-    lat: number;
-    lng: number;
-
-    private _subscriptionLat = Subscription.EMPTY;
-    private _subscriptionLng = Subscription.EMPTY;
+    private defaults: {
+        lat?: number,
+        lng?: number
+    };
 
     private _calcValueSubscription: any = {
         lat: Subscription.EMPTY,
         lng: Subscription.EMPTY,
     };
+
     ngOnInit() {
-        this.options = this.field.options ? this.field.options : {
-            defaults: {
-                lat: 41.909986, // Center Italy coordinates
-                lng: 12.3959118
-            },
-            marker: {
-                draggable: true,
-                label: null
-            }
+        this.defaults = this.field.defaults ? this.field.defaults : {
+            lat: 43.986244, // Mr. Apps coordinates
+            lng: 12.4961939
         };
 
-        this.lat = this.options.defaults.lat;
-        this.lng = this.options.defaults.lng;
-        this.refreshFormValues();
-
-        this._subscriptionLat = this.onFormChange('lat');
-        this._subscriptionLng = this.onFormChange('lng');
+        if (!this.isEdit) {
+            this.setDefaults();
+        }
 
         this.checkCalculatedValue('lat');
         this.checkCalculatedValue('lng');
     }
 
-    private checkCalculatedValue(key: string) {
-        if (this.field[key].calculatedValue) {
-            if (this.field[key].calculatedValue.indexOf('.') > -1) {
-                const baseKey = this.field[key].calculatedValue.split('.')[0];
-                const subKey = this.field[key].calculatedValue.split('.')[1];
-                if (this.form.get(baseKey)) {
-                    this._calcValueSubscription[key] = this.form.controls[baseKey].valueChanges.subscribe((value) => {
-                        if (value && value[subKey]) {
-                            this[key] = value[subKey];
-                            this.refreshFormValues();
-                        }
-                    });
-                }
-            }
-        }
-    }
-
     ngOnDestroy() {
-        this._subscriptionLat.unsubscribe();
-        this._subscriptionLng.unsubscribe();
-
         if (this._calcValueSubscription.lat) {
             this._calcValueSubscription.lat.unsubscribe();
         }
@@ -77,31 +46,32 @@ export class MapComponent extends BaseInputComponent implements OnInit, OnDestro
         }
     }
 
-    private onFormChange(key: string): Subscription {
-        return this.form.controls[this.field[key].key].valueChanges
-            .subscribe(
-                value => {
-                    this[key] = value;
+    onMarkerChanged(event: {coords: {lat: number, lng: number}}): void {
+        this.updateFormValue(event.coords.lat, event.coords.lng);
+    }
+
+    private setDefaults(): void {
+        this.updateFormValue(this.defaults.lat, this.defaults.lng);
+    }
+
+    private updateFormValue(lat: number, lng: number): void {
+        this.getControl(this.field.lat.key).patchValue(lat);
+        this.getControl(this.field.lng.key).patchValue(lng);
+    }
+
+    private checkCalculatedValue(key: string): void {
+        if (this.field[key].calculatedValue) {
+            if (this.field[key].calculatedValue.indexOf('.') > -1) {
+                const baseKey = this.field[key].calculatedValue.split('.')[0];
+                const subKey = this.field[key].calculatedValue.split('.')[1];
+                if (this.getControl(baseKey)) {
+                    this._calcValueSubscription[key] = this.getControl(baseKey).valueChanges.subscribe((value) => {
+                        if (value && value[subKey]) {
+                            this.getControl(key).patchValue(value[subKey]);
+                        }
+                    });
                 }
-            );
-    }
-
-    isValidKey(key: string): boolean {
-        if (this.form.controls[key].value === null || this.form.controls[key].value === '') {
-            return true;
-        } else {
-            return this.form.controls[key].valid;
+            }
         }
-    }
-
-    onMarkerChanged(event: any): void {
-        this.lat = event.coords.lat;
-        this.lng = event.coords.lng;
-        this.refreshFormValues();
-    }
-
-    private refreshFormValues(): void {
-        this.form.controls[this.field.lat.key].patchValue(this.lat, {emitEvent: false});
-        this.form.controls[this.field.lng.key].patchValue(this.lng, {emitEvent: false});
     }
 }

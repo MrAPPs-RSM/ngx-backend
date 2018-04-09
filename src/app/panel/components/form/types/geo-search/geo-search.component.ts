@@ -17,6 +17,9 @@ export class GeoSearchComponent extends BaseInputComponent implements OnInit {
     private readonly GEOCODING: any = {
         url: 'https://maps.googleapis.com/maps/api/geocode/json',
         key: 'AIzaSyADFxDs_iwQ6RbgvOU51iFMJIVrhSCgS2o',
+        status: {
+            ok: 'OK'
+        }
     };
 
     locations: any[] = [];
@@ -29,10 +32,24 @@ export class GeoSearchComponent extends BaseInputComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.geoCoding();
+        this.changeListener();
     }
 
-    private geoCoding(): void {
+    /* When an option is selected */
+    onSelection($event: {name: string} | null) {
+        if ($event && $event.name) {
+            this.getLocations($event.name).subscribe(
+                (data: GeoCodingResponse) => {
+                    this.getControl().patchValue(this.composeValue($event.name, data));
+                },
+                error => {
+                    console.log(error);
+                });
+        }
+    }
+
+    /* When type in select */
+    private changeListener(): void {
         this.typeAhead.pipe(
             distinctUntilChanged(),
             debounceTime(200),
@@ -48,11 +65,9 @@ export class GeoSearchComponent extends BaseInputComponent implements OnInit {
 
     private convertToOptions(data: GeoCodingResponse): any[] {
         const options = [];
-        if (data.status === 'OK') {
+        if (data.status === this.GEOCODING.status.ok) {
             data.results.forEach((item) => {
-                options.push({
-                    name: item.formatted_address
-                });
+                options.push({name: item.formatted_address});
             });
         }
 
@@ -71,57 +86,44 @@ export class GeoSearchComponent extends BaseInputComponent implements OnInit {
             return Observable.of([]).delay(300);
         }
     }
+    
+    private composeValue(name: string, data: GeoCodingResponse): GeoCodingValue {
+        const value: GeoCodingValue = {
+            name: name,
+            lat: data.results[0].geometry.location.lat,
+            lng: data.results[0].geometry.location.lng,
+        };
+        let streetNumber: string;
 
-    onChange($event: {name: string} | null) {
-        if ($event && $event.name) {
-            this.getLocations($event.name).subscribe(
-                (data: GeoCodingResponse) => {
-                    const value = {
-                        name: $event.name,
-                        address: null,
-                        street_number: null,
-                        postcode: null,
-                        city: null,
-                        country: null,
-                        lat: data.results[0].geometry.location.lat,
-                        lng: data.results[0].geometry.location.lng,
-                    };
+        if (data.status === this.GEOCODING.status.ok) {
+            data.results[0].address_components.forEach((component) => {
+                if (component.types.indexOf('route') > -1) {
+                    value.address = component.long_name;
+                }
 
-                    if (data.status === 'OK') {
-                        data.results[0].address_components.forEach((component) => {
-                            if (component.types.indexOf('route') > -1) {
-                                value.address = component.long_name;
-                            }
+                if (component.types.indexOf('street_number') > -1) {
+                    streetNumber = component.long_name;
+                }
 
-                            if (component.types.indexOf('street_number') > -1) {
-                                value.street_number = component.long_name;
-                            }
+                if (component.types.indexOf('postal_code') > -1) {
+                    value.postcode = component.long_name;
+                }
 
-                            if (component.types.indexOf('postal_code') > -1) {
-                                value.postcode = component.long_name;
-                            }
+                if (component.types.indexOf('country') > -1) {
+                    value.country = component.long_name;
+                }
 
-                            if (component.types.indexOf('country') > -1) {
-                                value.country = component.long_name;
-                            }
-
-                            if (component.types.indexOf('locality') > -1) {
-                                value.city = component.long_name;
-                            }
-                        });
-                    }
-
-                    if (value.street_number) {
-                        value.address += ', ' + value.street_number;
-                        delete value.street_number;
-                    }
-
-                    this.getControl().setValue(value);
-                },
-                error => {
-                    console.log(error);
-                });
+                if (component.types.indexOf('locality') > -1) {
+                    value.city = component.long_name;
+                }
+            });
         }
+
+        if (streetNumber) {
+            value.address += ', ' + streetNumber;
+        }
+
+        return value;
     }
 }
 
@@ -143,4 +145,14 @@ interface GeoCodingAddress {
         };
     };
     formatted_address: string;
+}
+
+interface GeoCodingValue {
+    name?: string; // Necessary for select options
+    address?: string;
+    city?: string;
+    country?: string;
+    postcode?: string;
+    lat?: number;
+    lng?: number;
 }

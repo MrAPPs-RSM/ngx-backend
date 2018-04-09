@@ -1,9 +1,9 @@
 <div [formGroup]="form" [class]="field.class ? field.class : 'col-sm-12'" [ngClass]="{'hidden': field.hidden}">
-    <div class="form-group" [ngClass]="{'has-error': !isValid}">
+    <div class="form-group" [ngClass]="{'has-error': !isValid()}">
 
         <label>
             {{field.label}}
-            <span *ngIf="field.validators && field.validators.required">*</span>
+            <span *ngIf="isRequired()">*</span>
         </label>
         <label *ngIf="field.options.allowedContentTypes"
                [ngClass]="{'error': rejected}">
@@ -45,14 +45,10 @@
             </div>
         </div>
 
-        <!-- [id]="calculateInputId()"-->
-
         <input type="file"
                #fileUpload
                class="hidden"
-
                ngFileSelect
-               [disabled]="(uploadedFiles.length >= maxFiles)"
                [options]="options"
                [uploadInput]="uploadInput"
                (uploadOutput)="onUploadOutput($event)"
@@ -96,8 +92,6 @@
                 </li>
             </ul>
         </div>
-
-        <!-- Others -->
         <span *ngIf="field.description" class="help-block">{{field.description}}</span>
     </div>
 </div>

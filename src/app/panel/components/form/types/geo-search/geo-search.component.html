@@ -1,23 +1,15 @@
 <div [formGroup]="form" [class]="field.class ? field.class : 'col-sm-12'" [ngClass]="{'hidden': field.hidden}">
-  <div class="form-group"
-       [ngClass]="{'has-error': !isValid}">
-
-    <label class="select-label">{{field.label}}
-      <span *ngIf="field.validators && field.validators.required">*</span>
-    </label>
-
+  <div class="form-group">
+    <label class="select-label">{{field.label}}</label>
     <ng-select [items]="locations"
                [typeahead]="typeAhead"
-               (change)="onChange($event)"
+               (change)="onSelection($event)"
                [multiple]="false"
                bindLabel="name"
                typeToSearchText="{{'forms.inputs.search_address' | translate}}"
                formControlName="{{field.key}}"
     >
     </ng-select>
-
   </div>
-
-  <!-- Others -->
   <span *ngIf="field.description" class="help-block sub-little-text">{{field.description}}</span>
 </div>

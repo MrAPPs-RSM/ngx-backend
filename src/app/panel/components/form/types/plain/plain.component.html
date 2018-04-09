@@ -1,12 +1,8 @@
 <div [formGroup]="form" [class]="field.class ? field.class : 'col-sm-12'" [ngClass]="{'hidden': field.hidden}">
     <div class="form-group">
-
-        <!-- Label -->
         <label for="{{field.key}}">
             {{field.label}}
         </label>
-
-        <!-- Input -->
         <input
                 disabled="disabled"
                 type="text"
@@ -15,8 +11,6 @@
                 class="form-control plain"
                 value="{{field.value}}"
         />
-
-        <!-- Others -->
         <span *ngIf="field.description" class="help-block">{{field.description}}</span>
     </div>
 </div>

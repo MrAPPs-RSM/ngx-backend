@@ -16,7 +16,9 @@ export class DatePickerComponent extends BaseInputComponent implements OnInit {
     max: Date;
 
     ngOnInit() {
+        this.checkDisabled();
         this.initMaxMin();
+
         if (this.isEdit) {
             this.getControl().valueChanges.first().subscribe((value) => {
                 this.getControl().setValue(new Date(value));
@@ -28,6 +30,10 @@ export class DatePickerComponent extends BaseInputComponent implements OnInit {
         }
     }
 
+    clearValue() {
+        this.getControl().setValue(null);
+    }
+
     private initMaxMin() {
         if (this.field.min) {
             this.min = UtilsService.getDateObjectFromString(this.field.min);
@@ -35,9 +41,5 @@ export class DatePickerComponent extends BaseInputComponent implements OnInit {
         if (this.field.max) {
             this.max = UtilsService.getDateObjectFromString(this.field.max);
         }
-    }
-
-    clear() {
-        this.getControl().setValue(null);
     }
 }
