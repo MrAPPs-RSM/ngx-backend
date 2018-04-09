@@ -170,29 +170,39 @@ export class TableComponent implements OnInit, OnDestroy {
         return this._apiService.get(this.settings.api.endpoint + '/count', this.composeCountParams());
     }
 
-    private composeParams(): Object {
-        const params = {
-            where: {
-                and: []
-            },
-            order: null,
-            skip: 0,
-            limit: this.preparePerPage(),
-        };
+    private composeParams(countParams?: boolean): Object {
+        if (countParams === null) countParams = false;
 
-        /** Pagination */
-        if (this.pagination) {
-            params.limit = this.pagination.perPage;
-            params.skip = (this.pagination.page - 1) * params.limit;
-        }
+        const params: any = countParams ?
+            {
+                where: {
+                    and: []
+                },
+            } :
+            {
+                where: {
+                    and: []
+                },
+                order: null,
+                skip: 0,
+                limit: this.preparePerPage(),
+            };
 
-        /** Sort (if drag enabled, always sort by weight ascending) */
-        if (this.settings.drag) {
-            params.order = this.settings.drag.sortField ? this.settings.drag.sortField : this.DEFAULTS.drag.sortField;
-            params.order += ' ASC';
-        } else {
-            if (this.sort) {
-                params.order = this.sort.field + ' ' + this.sort.direction.toUpperCase();
+        if (!countParams) {
+            /** Pagination */
+            if (this.pagination) {
+                params.limit = this.pagination.perPage;
+                params.skip = (this.pagination.page - 1) * params.limit;
+            }
+
+            /** Sort (if drag enabled, always sort by weight ascending) */
+            if (this.settings.drag) {
+                params.order = this.settings.drag.sortField ? this.settings.drag.sortField : this.DEFAULTS.drag.sortField;
+                params.order += ' ASC';
+            } else {
+                if (this.sort) {
+                    params.order = this.sort.field + ' ' + this.sort.direction.toUpperCase();
+                }
             }
         }
 
@@ -255,55 +265,7 @@ export class TableComponent implements OnInit, OnDestroy {
     }
 
     private composeCountParams(): Object {
-        const params = {
-            where: {
-                and: []
-            }
-        };
-        /** Filters */
-        if (this.filter && this.filter.where) {
-            Object.keys(this.filter.where).forEach((key) => {
-                const condition = {};
-                if (this.settings.columns[key]) {
-                    switch (this.settings.columns[key].type) {
-                        case 'boolean': {
-                            condition[key] = this.filter.where[key];
-                        }
-                            break;
-                        case 'date': {
-                            condition[key] = {
-                                between: [this.filter.where[key].from, this.filter.where[key].to]
-                            };
-                        }
-                            break;
-                        default: {
-                            condition[key] = {
-                                like: '%' + this.filter.where[key] + '%'
-                            };
-                        }
-                            break;
-                    }
-                } else {
-                    condition[key] = this.filter.where[key];
-                }
-                params.where.and.push(condition);
-            });
-
-        }
-
-        const response = {
-            where: JSON.stringify(params.where),
-            lang: null
-        };
-
-        /** Lang, if enabled */
-        if (this.currentLang) {
-            response.lang = this.currentLang.isoCode;
-        } else {
-            delete response.lang;
-        }
-
-        return response;
+       return this.composeParams(true);
     }
 
     private parseAction(action: TableAction, data?: any): void {
