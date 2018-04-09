@@ -73,6 +73,7 @@ export class UtilsService {
                 response = 'video/' + extension;
             }
                 break;
+            case 'gif':
             case 'jpg':
             case 'jpeg':
             case 'png': {
