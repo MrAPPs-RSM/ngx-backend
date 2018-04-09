@@ -15,6 +15,7 @@ import {GlobalState} from './global.state';
 import {ApiService} from './api/api.service';
 import {LoginGuard} from './auth/guards/login.guard';
 import {PasswordChangeGuard} from './auth/guards/password-change.guard';
+import {PasswordResetGuard} from './auth/guards/password-reset.guard';
 import {UtilsService} from './services/utils.service';
 import {FormGeneratorService} from './panel/services/form-generator.service';
 import {PageRefreshService} from './services/page-refresh.service';
@@ -28,7 +29,7 @@ const routes: Routes = [
     {
         path: 'password-reset',
         canActivate: [
-            LoginGuard
+            PasswordResetGuard
         ],
         component: PasswordResetComponent
     },
@@ -86,6 +87,7 @@ const routes: Routes = [
         LoginGuard,
         PasswordChangeGuard,
         PendingChangesGuard,
+        PasswordResetGuard,
         UtilsService,
         FormGeneratorService,
         PageRefreshService,

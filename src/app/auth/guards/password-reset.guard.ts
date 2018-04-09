@@ -5,23 +5,18 @@ import {UserService} from '../services/user.service';
 import {environment} from '../../../environments/environment';
 
 @Injectable()
-export class PasswordChangeGuard implements CanActivate {
+export class PasswordResetGuard implements CanActivate {
 
     constructor(private _userService: UserService, private _router: Router) {
     }
 
     canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-        if (environment.auth.passwordChange) {
+        if (environment.auth.passwordReset) { // If password reset form is defined
             if (this._userService.getToken() !== null) {
                 this._router.navigate(['panel']);
                 return false;
             } else {
-                if (!('access_token' in next.queryParams)) {
-                    this._router.navigate(['login']);
-                    return false;
-                } else {
-                    return true;
-                }
+                return true;
             }
         } else {
             if (this._userService.getToken() !== null) {

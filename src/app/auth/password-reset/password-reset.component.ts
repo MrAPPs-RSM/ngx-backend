@@ -30,7 +30,7 @@ export class PasswordResetComponent implements OnInit {
                 this._toastsService.success(
                     'Password reset requested',
                     'Check your email for further instructions',
-                    {disableTimeOut: true}
+                    {timeOut: 5000}
                 );
                 this._router.navigate(['login']);
             })
