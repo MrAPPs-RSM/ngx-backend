@@ -84,6 +84,14 @@ export class TableComponent implements OnInit, OnDestroy {
                 this.filter = UtilsService.mergeDeep(this.filter, queryParamsFilter);
             }
 
+            if ('order' in this.filter) {
+                const sort = this.filter.order.split(' ');
+                this.sort = {
+                    field: sort[0],
+                    direction: sort[1]
+                };
+            }
+
             this.prepareColumns();
             this.getData();
         });
