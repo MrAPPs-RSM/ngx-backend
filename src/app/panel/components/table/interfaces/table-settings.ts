@@ -1,5 +1,5 @@
 import {TableAction} from './table-action';
-import {TableColumns} from './table-column';
+import {TableColumn} from './table-column';
 
 export interface TableSettings {
     title?: string;
@@ -20,7 +20,7 @@ export interface TableSettings {
         add?: TableAction,
         list?: TableAction[];
     };
-    columns: TableColumns;
+    columns: TableColumn;
     selectMode?: string; // multi || single
     pager?: {
         perPage?: number;

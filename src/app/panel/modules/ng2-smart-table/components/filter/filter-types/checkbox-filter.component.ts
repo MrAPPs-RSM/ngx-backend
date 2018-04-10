@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnChanges, OnInit, SimpleChange} from '@angular/core';
 import {FormControl} from '@angular/forms';
 
 import {DefaultFilter} from './default-filter';
@@ -23,7 +23,7 @@ import 'rxjs/add/operator/debounceTime';
         'label.checkbox + a { font-weight: 300; }'
     ]
 })
-export class CheckboxFilterComponent extends DefaultFilter implements OnInit {
+export class CheckboxFilterComponent extends DefaultFilter implements OnInit, OnChanges {
 
     filterActive: boolean = false;
     inputControl = new FormControl();
@@ -33,14 +33,22 @@ export class CheckboxFilterComponent extends DefaultFilter implements OnInit {
         super();
     }
 
+    ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
+        if (changes['column']) {
+           const filter = this.column.getFilter();
+           if (typeof filter['default'] !== 'undefined') {
+               this.inputControl.setValue(filter['default'], {emitEvent: false});
+               this.filterActive = true;
+           }
+        }
+    }
+
     ngOnInit() {
         this.changesSubscription = (this.inputControl.valueChanges as any)
             .debounceTime(this.delay)
             .subscribe((checked: boolean) => {
                 this.filterActive = true;
-                const trueVal = (this.column.getFilterConfig() && this.column.getFilterConfig().true) || true;
-                const falseVal = (this.column.getFilterConfig() && this.column.getFilterConfig().false) || false;
-                this.query = checked ? trueVal : falseVal;
+                this.query = checked;
                 this.setFilter();
             });
     }

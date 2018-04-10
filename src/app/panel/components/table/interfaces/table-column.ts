@@ -1,4 +1,4 @@
-export interface TableColumns {
+export interface TableColumn {
     [key: string]: {
         title: string;
         type: string; // text | boolean | email | url | color | image

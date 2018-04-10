@@ -65,6 +65,7 @@ export class TableComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        console.log(this.settings.columns);
         this.translateLabels();
         this.resetPagination = false;
         this._subscription = this._route.queryParams.subscribe(params => {
@@ -82,12 +83,57 @@ export class TableComponent implements OnInit, OnDestroy {
             if (this._route.snapshot.queryParams && this._route.snapshot.queryParams['listParams']) {
                 const queryParamsFilter = JSON.parse(this._route.snapshot.queryParams['listParams']);
                 this.filter = UtilsService.mergeDeep(this.filter, queryParamsFilter);
-            }
 
+                console.log('Filter onInit');
+                console.log(this.filter);
+                this.prepareColumns();
+            }
             this.getData();
         });
 
         this.setupLang();
+    }
+
+    private prepareColumns(): void {
+        Object.keys(this.settings.columns).forEach((column) => {
+            let defaultValue;
+            if (this.settings.columns[column].filter && this.settings.columns[column].filter.default) {
+                defaultValue = UtilsService.objectByString(
+                    this.filter,
+                    this.settings.columns[column].filter.default);
+            }
+            this.settings.columns[column].filter = this.prepareColumnFilter(
+                this.settings.columns[column],
+                defaultValue
+            );
+        });
+    }
+
+    private prepareColumnFilter(column: any, defaultValue?: any): any {
+        if (column.filter !== false) {
+            let filter: any = column.filter;
+            switch (column.type) {
+                case 'boolean': {
+                    filter = {type: 'checkbox'};
+                }
+                    break;
+                case 'date': {
+                    filter = {type: 'date'};
+                }
+                    break;
+            }
+
+            if (!filter) {
+                filter = {};
+            }
+
+            if (typeof defaultValue !== 'undefined') {
+                filter.default = defaultValue;
+            }
+            return filter;
+        } else {
+            return column.filter;
+        }
     }
 
     private translateLabels(): void {
