@@ -13,7 +13,7 @@ export class InputTextComponent extends BaseInputComponent implements OnInit, On
     private _subFieldSubscription = Subscription.EMPTY;
 
     ngOnInit() {
-        if (this.isSubField) {
+        if (this.isSubField && this.isEdit) {
             this._subFieldSubscription = this.getControl().parent.valueChanges.subscribe((value) => {
                 if (value && value[this.field.key]) {
                     this.getControl().patchValue(value[this.field.key], {emitEvent: false});

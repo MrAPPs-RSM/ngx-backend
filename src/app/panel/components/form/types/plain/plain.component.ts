@@ -1,19 +1,31 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {ApiService} from '../../../../../api/api.service';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
     selector: 'app-plain',
     templateUrl: './plain.component.html',
     styleUrls: ['./plain.component.scss']
 })
-export class PlainComponent extends BaseInputComponent implements OnInit {
+export class PlainComponent extends BaseInputComponent implements OnInit, OnDestroy {
+
+    private _subFieldSubscription = Subscription.EMPTY;
 
     constructor(private _apiService: ApiService) {
         super();
     }
 
     ngOnInit() {
+        if (this.isSubField && this.isEdit) {
+            this._subFieldSubscription = this.getControl().parent.valueChanges.subscribe((value) => {
+                if (value && value[this.field.key]) {
+                    this.getControl().patchValue(value[this.field.key], {emitEvent: false});
+                    this._subFieldSubscription.unsubscribe();
+                }
+            });
+        }
+
         if (this.field.value) {
             this.loadOptions().then((array) => {
                 console.log(array);
@@ -48,4 +60,9 @@ export class PlainComponent extends BaseInputComponent implements OnInit {
         });
     }
 
+    ngOnDestroy() {
+        if (this._subFieldSubscription) {
+            this._subFieldSubscription.unsubscribe();
+        }
+    }
 }
