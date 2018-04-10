@@ -26,9 +26,9 @@ export class InputFilterComponent extends DefaultFilter implements OnInit, OnCha
     }
 
     ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
-        if (changes['column']) {
+        if (changes['column'] && changes['column'].isFirstChange()) {
             const filter = this.column.getFilter();
-            if (typeof filter['default'] !== 'undefined') {
+            if (filter && typeof filter['default'] !== 'undefined') {
                 let value;
                 if (typeof filter['default'] === 'object') {
                     if ('like' in filter['default']) {

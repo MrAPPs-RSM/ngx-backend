@@ -34,7 +34,7 @@ export class CheckboxFilterComponent extends DefaultFilter implements OnInit, On
     }
 
     ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
-        if (changes['column']) {
+        if (changes['column'] && changes['column'].isFirstChange()) {
            const filter = this.column.getFilter();
            if (typeof filter['default'] !== 'undefined') {
                this.inputControl.setValue(filter['default'], {emitEvent: false});

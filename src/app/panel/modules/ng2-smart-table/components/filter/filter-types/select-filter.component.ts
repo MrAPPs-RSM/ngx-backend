@@ -47,6 +47,14 @@ export class SelectFilterComponent extends DefaultFilter implements OnInit, OnCh
         if (changes['reloadOptions']) {
             this.loadOptions();
         }
+
+        if (changes['column'] && changes['column'].isFirstChange()) {
+            const filter = this.column.getFilter();
+            if (typeof filter['default'] !== 'undefined') {
+                this.inputControl.setValue(filter['default'], {emitEvent: false});
+                this.query = filter['default'];
+            }
+        }
     }
 
     ngOnInit() {
