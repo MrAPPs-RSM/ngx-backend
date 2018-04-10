@@ -13,7 +13,6 @@
                    [ngModelOptions]="{standalone: true}"
         >
         </ng-select>
-
+        <span *ngIf="field.description" class="help-block sub-little-text">{{field.description}}</span>
     </div>
-    <span *ngIf="field.description" class="help-block sub-little-text">{{field.description}}</span>
 </div>
