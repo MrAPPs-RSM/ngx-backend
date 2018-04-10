@@ -10,8 +10,18 @@ import {Subscription} from 'rxjs/Subscription';
 export class InputTextComponent extends BaseInputComponent implements OnInit, OnDestroy {
 
     private _calcValueSub: Subscription = Subscription.EMPTY;
+    private _subFieldSubscription = Subscription.EMPTY;
 
     ngOnInit() {
+        if (this.isSubField) {
+            this._subFieldSubscription = this.getControl().parent.valueChanges.subscribe((value) => {
+                if (value && value[this.field.key]) {
+                    this.getControl().patchValue(value[this.field.key], {emitEvent: false});
+                    this._subFieldSubscription.unsubscribe();
+                }
+            });
+        }
+
         if (this.field.calculatedValue) {
             if (this.field.calculatedValue.indexOf('.') > -1) {
                 const key = this.field.calculatedValue.split('.')[0];
@@ -30,6 +40,9 @@ export class InputTextComponent extends BaseInputComponent implements OnInit, On
     ngOnDestroy() {
         if (this._calcValueSub) {
             this._calcValueSub.unsubscribe();
+        }
+        if (this._subFieldSubscription) {
+            this._subFieldSubscription.unsubscribe();
         }
     }
 }
