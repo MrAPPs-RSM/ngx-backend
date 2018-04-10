@@ -13,6 +13,8 @@ export class DateViewComponent implements OnInit {
     renderValue: string;
 
     ngOnInit() {
-        this.renderValue = UtilsService.timeConverter(this.cell.getValue());
+        if (this.cell.getValue()) {
+            this.renderValue = UtilsService.timeConverter(this.cell.getValue());
+        }
     }
 }

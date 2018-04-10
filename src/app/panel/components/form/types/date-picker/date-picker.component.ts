@@ -21,7 +21,11 @@ export class DatePickerComponent extends BaseInputComponent implements OnInit {
 
         if (this.isEdit) {
             this.getControl().valueChanges.first().subscribe((value) => {
-                this.getControl().setValue(new Date(value));
+                if (value) {
+                    this.getControl().setValue(new Date(value));
+                } else {
+                    this.clearValue();
+                }
             });
         } else {
             if (this.field.value) {
