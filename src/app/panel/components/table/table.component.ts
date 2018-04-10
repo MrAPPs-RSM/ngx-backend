@@ -65,7 +65,6 @@ export class TableComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        console.log(this.settings.columns);
         this.translateLabels();
         this.resetPagination = false;
         this._subscription = this._route.queryParams.subscribe(params => {
@@ -96,10 +95,17 @@ export class TableComponent implements OnInit, OnDestroy {
         Object.keys(this.settings.columns).forEach((column) => {
             let defaultValue;
             if (this.settings.columns[column].filter && this.settings.columns[column].filter.default) {
-                defaultValue = UtilsService.objectByString(
-                    this.filter,
-                    this.settings.columns[column].filter.default);
+                if (typeof this.settings.columns[column].filter.default === 'string') {
+                    defaultValue = UtilsService.objectByString(
+                        this.filter,
+                        this.settings.columns[column].filter.default);
+                }
+                // Support raw value
+                if (typeof defaultValue === 'undefined') {
+                    defaultValue = this.settings.columns[column].filter.default;
+                }
             }
+
             this.settings.columns[column].filter = this.prepareColumnFilter(
                 this.settings.columns[column],
                 defaultValue
