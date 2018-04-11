@@ -30,6 +30,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
     public selected: any;
 
     private _subscription = Subscription.EMPTY;
+    private _dependsSubscription = Subscription.EMPTY;
     private _subFieldSubscription = Subscription.EMPTY;
 
     constructor(private _apiService: ApiService,
@@ -44,26 +45,30 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
 
         this.loadOptions().then(() => {
             if (this.isEdit) {
-                /** If value already set, update select options */
-                if (this.getControl().value !== null && typeof this.getControl().value !== 'undefined') {
-                    this.updateSelectedOptions(this.getControl().value);
-                    this.refreshFormValue(this.getControl().value, {emitEvent: false});
-                } else { /* Else, listen to first change */
-                    this._subscription = this.getControl().valueChanges.first().subscribe((value) => {
-                        this.updateSelectedOptions(value);
-                        this.refreshFormValue(value, {emitEvent: false});
-                        this._subscription.unsubscribe();
-                    });
-                }
-
                 /** Only if subField of list-detail-component */
                 if (this.isSubField) {
-                    this._subFieldSubscription = this.getControl().parent.valueChanges.subscribe((value) => {
-                        if (value && value[this.field.key]) {
-                            this.updateSelectedOptions(value[this.field.key]);
-                            this._subFieldSubscription.unsubscribe();
-                        }
-                    });
+                    this.getControl().updateValueAndValidity();
+                    if (this.getControl().value !== null && typeof this.getControl().value !== 'undefined') {
+                        this.updateSelectedOptions(this.getControl().value);
+                    } else {
+                        this._subFieldSubscription = this.getControl().parent.valueChanges.subscribe((value) => {
+                            if (value && value[this.field.key]) {
+                                this.updateSelectedOptions(value[this.field.key]);
+                                this._subFieldSubscription.unsubscribe();
+                            }
+                        });
+                    }
+                } else {
+                    /** If value already set, update select options */
+                    if (this.getControl().value !== null && typeof this.getControl().value !== 'undefined') {
+                        this.updateSelectedOptions(this.getControl().value);
+                    } else { /* Else, listen to first change */
+                        this._subscription = this.getControl().valueChanges.first().subscribe((value) => {
+                            this.updateSelectedOptions(value);
+                            this.refreshFormValue(value, {emitEvent: false});
+                            this._subscription.unsubscribe();
+                        });
+                    }
                 }
             }
         }).catch((err) => console.log(err));
@@ -97,60 +102,45 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
         });*/
 
         if (this.field.dependsOn) {
-            this.field.dependsOn.forEach((key) => {
-                if (key instanceof Subject) {
-                    this.observable = key as Subject<any>;
-                    this.observable.subscribe((value) => {
+            const key = this.field.dependsOn;
 
-                        this.loadOptions(true)
-                            .then(() => {
-                                this.checkSelection();
-                            })
-                            .catch((error) => {
-                                console.log(error);
-                            });
+            if (this.getControl(key)) {
+                this._dependsSubscription = this.getControl(key).valueChanges.subscribe((value) => {
+                    let keyNotSet = true;
+                    const indexesToDelete: number[] = [];
+                    this.params.where.and.forEach((cond, index) => {
+                        if (Object.keys(cond)[0] === key) { // update if already set
+                            if (value && value !== '') {
+                                cond[key] = value;
+                            } else {
+                                indexesToDelete.push(index);
+                            }
+                            keyNotSet = keyNotSet && false;
+                        }
                     });
-                } else {
-                    if (this.getControl(key)) {
-                        this.getControl(key).valueChanges.subscribe((value) => {
-                            let keyNotSet = true;
-                            const indexesToDelete: number[] = [];
-                            this.params.where.and.forEach((cond, index) => {
-                                if (Object.keys(cond)[0] === key) { // update if already set
-                                    if (value && value !== '') {
-                                        cond[key] = value;
-                                    } else {
-                                        indexesToDelete.push(index);
-                                    }
-                                    keyNotSet = keyNotSet && false;
-                                }
-                            });
-
-                            if (keyNotSet) {
-                                if (value && value !== '') {
-                                    const condition = {};
-                                    condition[key] = value;
-                                    this.params.where.and.push(condition);
-                                }
-                            }
-
-                            if (indexesToDelete.length > 0) {
-                                indexesToDelete.forEach((index) => {
-                                    this.params.where.and.splice(index, 1);
-                                });
-                            }
-
-                            this.loadOptions(true)
-                                .then(() => {
-                                    this.checkSelection();
-                                })
-                                .catch((error) => {
-                                    console.log(error);
-                                });
+                    if (keyNotSet) {
+                        if (value && value !== '') {
+                            const condition = {};
+                            condition[key] = value;
+                            this.params.where.and.push(condition);
+                        }
+                    }
+                    if (indexesToDelete.length > 0) {
+                        indexesToDelete.forEach((index) => {
+                            this.params.where.and.splice(index, 1);
                         });
                     }
-                }
-            });
+
+                    this.loadOptions(true)
+                        .then(() => {
+                            this.checkSelection();
+                            this.updateSelectedOptions(this.getControl().value);
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                        });
+                });
+            }
         }
     }
 
@@ -281,23 +271,26 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
     }
 
     private checkSelection() {
-        let keepValue = false;
-        this.options.forEach((option) => {
-            if (this.field.multiple === true) {
-                (this.selected as SelectData[]).forEach((selection) => {
-                    if (option.id === selection.id) {
+        if (this.selected || (this.selected && this.selected.length > 0)) {
+            let keepValue = false;
+            this.options.forEach((option) => {
+                if (this.field.multiple === true) {
+                    (this.selected as SelectData[]).forEach((selection) => {
+                        if (option.id === selection.id) {
+                            keepValue = true;
+                        }
+                    });
+                } else {
+                    if (this.selected && option.id === this.selected.id) {
                         keepValue = true;
                     }
-                });
-            } else {
-                if (this.selected && option.id === this.selected.id) {
-                    keepValue = true;
                 }
+            });
+
+            if (!keepValue) {
+                this.updateSelectedOptions(null);
+                this.refreshFormValue(null);
             }
-        });
-        if (!keepValue) {
-            this.updateSelectedOptions(null);
-            this.refreshFormValue(null);
         }
     }
 
@@ -358,7 +351,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
         }
     }
 
-    private refreshFormValue(value: any, options?: {emitEvent: boolean}): void {
+    private refreshFormValue(value: any, options?: { emitEvent: boolean }): void {
         if (value !== null) {
             if (value instanceof Array) {
                 const ids = [];

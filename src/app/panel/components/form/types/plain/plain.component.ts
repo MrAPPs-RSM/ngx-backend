@@ -18,6 +18,7 @@ export class PlainComponent extends BaseInputComponent implements OnInit, OnDest
 
     ngOnInit() {
         if (this.isSubField && this.isEdit) {
+            this.getControl().updateValueAndValidity();
             this._subFieldSubscription = this.getControl().parent.valueChanges.subscribe((value) => {
                 if (value && value[this.field.key]) {
                     this.getControl().patchValue(value[this.field.key], {emitEvent: false});

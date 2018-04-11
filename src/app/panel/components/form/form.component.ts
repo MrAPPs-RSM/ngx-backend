@@ -96,12 +96,12 @@ export class FormComponent implements OnInit, OnDestroy {
             }
         });
 
-        /*this.form.valueChanges.subscribe(
+        this.form.valueChanges.subscribe(
             data => {
                 this.dataStored = false;
                 console.log(data);
             }
-        ); */
+        );
     }
 
     ngOnDestroy() {
@@ -260,6 +260,7 @@ export class FormComponent implements OnInit, OnDestroy {
                         });
                     }
 
+                    console.log(response);
                     this.form.patchValue(response);
                 })
                 .catch((response: ErrorResponse) => {
