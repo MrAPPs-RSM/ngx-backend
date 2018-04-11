@@ -102,12 +102,13 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
         });*/
 
         if (this.field.dependsOn) {
-            const key = this.field.dependsOn;
+            const key = Array.isArray(this.field.dependsOn) ? this.field.dependsOn[0] : this.field.dependsOn;
 
             if (this.getControl(key)) {
                 this._dependsSubscription = this.getControl(key).valueChanges.subscribe((value) => {
                     let keyNotSet = true;
                     const indexesToDelete: number[] = [];
+
                     this.params.where.and.forEach((cond, index) => {
                         if (Object.keys(cond)[0] === key) { // update if already set
                             if (value && value !== '') {
