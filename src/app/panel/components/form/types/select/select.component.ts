@@ -39,14 +39,24 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
     }
 
     ngOnInit() {
-        this.selected = this.field.multiple === true ? [] : {};
+        this.selected = this.field.multiple === true ? [] : null;
         this.addQueryParams();
 
         this.loadOptions().then(() => {
             if (this.isEdit) {
-                this.updateSelectedOptions(this.getControl().value);
-                this.refreshFormValue(this.getControl().value);
+                /** If value already set, update select options */
+                if (this.getControl().value !== null && typeof this.getControl().value !== 'undefined') {
+                    this.updateSelectedOptions(this.getControl().value);
+                    this.refreshFormValue(this.getControl().value, {emitEvent: false});
+                } else { /* Else, listen to first change */
+                    this._subscription = this.getControl().valueChanges.first().subscribe((value) => {
+                        this.updateSelectedOptions(value);
+                        this.refreshFormValue(value, {emitEvent: false});
+                        this._subscription.unsubscribe();
+                    });
+                }
 
+                /** Only if subField of list-detail-component */
                 if (this.isSubField) {
                     this._subFieldSubscription = this.getControl().parent.valueChanges.subscribe((value) => {
                         if (value && value[this.field.key]) {
@@ -58,8 +68,8 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
             }
         }).catch((err) => console.log(err));
 
-        /** Check for changes after load to handle different logic */
-        this._subscription = this.getControl().valueChanges.skip(this.isEdit ? 1 : 0).subscribe((value) => {
+        // TODO: check if this is part of code is necessary after edits
+        /*this._subscription = this.getControl().valueChanges.skip(this.isEdit ? 1 : 0).subscribe((value) => {
             if (this.field.multiple === true) {
                 if (value !== null && !(value instanceof Array)) {
                     value = [value];
@@ -84,7 +94,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
                     });
                 }
             }
-        });
+        });*/
 
         if (this.field.dependsOn) {
             this.field.dependsOn.forEach((key) => {
@@ -182,6 +192,60 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
         }
     }
 
+    private loadOptions(forceReload?: boolean): Promise<any> {
+        return new Promise((resolve, reject) => {
+            if (this.endpoint) {
+                if (this.options.length === 0 || forceReload === true) {
+                    const queryParams = {
+                        where: JSON.stringify(this.params.where)
+                    };
+
+                    if (this.isEdit) {
+                        if (this.endpoint.indexOf(':id') !== -1) {
+                            this.endpoint = this.endpoint.replace(':id', this._route.params['value'].id);
+                        }
+
+                        if (queryParams.where.indexOf(':id') !== -1) {
+                            queryParams.where = queryParams.where.replace(':id', this._route.params['value'].id);
+                        }
+                    }
+                    /** Add lang if not set by setup.json but defined in select*/
+                    if (this.field.lang) {
+                        let lang: Language = null;
+                        if (this.endpoint.indexOf('lang=') === -1) {
+                            lang = this._languageService.getCurrentLang();
+                        }
+
+                        if (lang) {
+                            queryParams['lang'] = lang.isoCode;
+                        }
+                    }
+
+                    this._apiService.get(this.endpoint, queryParams)
+                        .then((response) => {
+                            this.options = this.filterOptionsIfNeeded(response);
+                            this.setValueIfSingleOptionAndRequired();
+                            resolve();
+                        })
+                        .catch((response: ErrorResponse) => {
+                            // TODO: decide what to do if select options can't be loaded (back to prev page?, alert?, message?)
+                            console.log(response.error);
+                        });
+                } else {
+                    resolve();
+                }
+            } else {
+                if (this.field.options instanceof Array) {
+                    if (this.options.length === 0 || forceReload === true) {
+                        this.options = this.filterOptionsIfNeeded(this.field.options);
+                    }
+                    this.setValueIfSingleOptionAndRequired();
+                    resolve();
+                }
+            }
+        });
+    }
+
     private addQueryParams(): void {
         if (this.field.options instanceof Array) {
             this.endpoint = null;
@@ -226,7 +290,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
                     }
                 });
             } else {
-                if (option.id === this.selected.id) {
+                if (this.selected && option.id === this.selected.id) {
                     keepValue = true;
                 }
             }
@@ -294,73 +358,19 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
         }
     }
 
-    private loadOptions(forceReload?: boolean): Promise<any> {
-        return new Promise((resolve, reject) => {
-            if (this.endpoint) {
-                if (this.options.length === 0 || forceReload === true) {
-                    const queryParams = {
-                        where: JSON.stringify(this.params.where)
-                    };
-
-                    if (this.isEdit) {
-                        if (this.endpoint.indexOf(':id') !== -1) {
-                            this.endpoint = this.endpoint.replace(':id', this._route.params['value'].id);
-                        }
-
-                        if (queryParams.where.indexOf(':id') !== -1) {
-                            queryParams.where = queryParams.where.replace(':id', this._route.params['value'].id);
-                        }
-                    }
-                    /** Add lang if not set by setup.json but defined in select*/
-                    if (this.field.lang) {
-                        let lang: Language = null;
-                        if (this.endpoint.indexOf('lang=') === -1) {
-                            lang = this._languageService.getCurrentLang();
-                        }
-
-                        if (lang) {
-                            queryParams['lang'] = lang.isoCode;
-                        }
-                    }
-
-                    this._apiService.get(this.endpoint, queryParams)
-                        .then((response) => {
-                            this.options = this.filterOptionsIfNeeded(response);
-                            this.setValueIfSingleOptionAndRequired();
-                            resolve();
-                        })
-                        .catch((response: ErrorResponse) => {
-                            // TODO: decide what to do if select options can't be loaded (back to prev page?, alert?, message?)
-                            console.log(response.error);
-                        });
-                } else {
-                    resolve();
-                }
-            } else {
-                if (this.field.options instanceof Array) {
-                    if (this.options.length === 0 || forceReload === true) {
-                        this.options = this.filterOptionsIfNeeded(this.field.options);
-                    }
-                    this.setValueIfSingleOptionAndRequired();
-                    resolve();
-                }
-            }
-        });
-    }
-
-    private refreshFormValue(value): void {
+    private refreshFormValue(value: any, options?: {emitEvent: boolean}): void {
         if (value !== null) {
             if (value instanceof Array) {
                 const ids = [];
                 value.forEach((item) => {
                     ids.push(item instanceof Object ? item.id : item);
                 });
-                this.getControl().setValue(ids);
+                this.getControl().setValue(ids, options);
             } else {
                 if (typeof value === 'object') {
-                    this.getControl().setValue(value.id);
+                    this.getControl().setValue(value.id, options);
                 } else {
-                    this.getControl().setValue(value);
+                    this.getControl().setValue(value, options);
                 }
             }
         } else {
