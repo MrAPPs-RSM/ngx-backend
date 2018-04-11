@@ -46,7 +46,6 @@ export class SetupService {
                         }
 
                         this.loadRoutes(data);
-                        // console.log("CARICAMENTO ROTTE...");
                         this._menuService.prepareMenu(data);
                         resolve();
                     })
@@ -77,7 +76,6 @@ export class SetupService {
                 }
             }
         }
-
         return routes;
     }
 
@@ -87,9 +85,7 @@ export class SetupService {
 
         const routes = [{path: '404', component: NotfoundPageComponent}];
 
-
         for (const item of this.remapRoutesData(data)) {
-
             if (item.type in TYPES) {
                 const route = {
                     path: item.path,
@@ -104,7 +100,6 @@ export class SetupService {
                 routes.push(route);
             }
         }
-
         routerConfig[0].children = routes;
         this._router.resetConfig(routerConfig);
     }

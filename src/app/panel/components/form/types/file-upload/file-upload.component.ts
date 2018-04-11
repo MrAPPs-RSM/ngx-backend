@@ -71,10 +71,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         this.createAllowedContentTypes();
 
         /** Load entity image (if added from duplicate or edit) */
-        this._subscription = this.getControl().valueChanges
-            .first()
-            .subscribe(
-                data => {
+        this._subscription = this.getControl().valueChanges.first().subscribe(data => {
                     if (this.uploadedFiles.length === 0) {
                         if (data instanceof Array) {
                             data.forEach((item) => {
@@ -113,16 +110,6 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         }
         this._renderer.invokeElementMethod(this._fileUpload.nativeElement, 'click');
         return false;
-
-        // $('#' + this.calculateInputId()).trigger('click');
-    }
-
-    calculateInputId(): string {
-        console.log(this.currentLang);
-        if (this.currentLang) {
-            return this.currentLang.isoCode + '_' + this.field.key;
-        }
-        return this.field.key;
     }
 
     /** Sometimes, Google Cloud takes a few seconds to make the image accessible */
@@ -130,6 +117,10 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         setTimeout(() => {
             $event.target.src = url;
         }, 2000);
+    }
+
+    canUpload(): boolean {
+        return this.uploadedFiles.length === 0 || ((this.maxFiles > 0 && this.uploadedFiles.length < this.maxFiles) || this.maxFiles === 0);
     }
 
     onUploadOutput(output: UploadOutput): void {
@@ -142,7 +133,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
             }
                 break;
             case 'addedToQueue': {
-                if (this.uploadedFiles.length < this.maxFiles) {
+                if (this.canUpload()) {
                     this.files.push(output.file);
                 }
             }
