@@ -53,13 +53,19 @@ export class ApiService {
                     error => {
                         this.handleError(endpoint, error, fromLogin !== null ? fromLogin : false)
                             .then(() => {
-                                this.get(endpoint, params, true)
-                                    .then((data) => {
-                                        resolve(data);
-                                    })
-                                    .catch((response: HttpErrorResponse) => {
-                                        reject(response.error);
-                                    });
+
+                                if (error.status === 401) {
+                                    this.get(endpoint, params, true)
+                                        .then((data) => {
+                                            resolve(data);
+                                        })
+                                        .catch((response: HttpErrorResponse) => {
+                                            reject(response.error);
+                                        });
+                                } else {
+                                    resolve(null);
+                                }
+
                             })
                             .catch((response: HttpErrorResponse) => {
                                 reject(response.error);
@@ -87,15 +93,22 @@ export class ApiService {
                         resolve(data);
                     },
                     error => {
+
                         this.handleError(endpoint, error, isLogin)
                             .then(() => {
-                                this.post(endpoint, body, params, true)
-                                    .then((data) => {
-                                        resolve(data);
-                                    })
-                                    .catch((response: HttpErrorResponse) => {
-                                        reject(response.error);
-                                    });
+
+                                if (error.status === 401) {
+                                    this.post(endpoint, body, params, true)
+                                        .then((data) => {
+                                            resolve(data);
+                                        })
+                                        .catch((response: HttpErrorResponse) => {
+                                            reject(response.error);
+                                        });
+                                } else {
+                                    resolve(null);
+                                }
+
                             })
                             .catch((response: HttpErrorResponse) => {
                                 reject(response.error);
@@ -124,13 +137,17 @@ export class ApiService {
                     error => {
                         this.handleError(endpoint, error, fromLogin !== null ? fromLogin : false)
                             .then(() => {
-                                this.put(endpoint, body, params, true)
-                                    .then((data) => {
-                                        resolve(data);
-                                    })
-                                    .catch((response: HttpErrorResponse) => {
-                                        reject(response.error);
-                                    });
+                                if (error.status === 401) {
+                                    this.put(endpoint, body, params, true)
+                                        .then((data) => {
+                                            resolve(data);
+                                        })
+                                        .catch((response: HttpErrorResponse) => {
+                                            reject(response.error);
+                                        });
+                                } else {
+                                    resolve(null);
+                                }
                             })
                             .catch((response: HttpErrorResponse) => {
                                 reject(response.error);
@@ -159,13 +176,17 @@ export class ApiService {
                     error => {
                         this.handleError(endpoint, error, fromLogin !== null ? fromLogin : false)
                             .then(() => {
-                                this.patch(endpoint, body, params, true)
-                                    .then((data) => {
-                                        resolve(data);
-                                    })
-                                    .catch((response: HttpErrorResponse) => {
-                                        reject(response.error);
-                                    });
+                                if (error.status === 401) {
+                                    this.patch(endpoint, body, params, true)
+                                        .then((data) => {
+                                            resolve(data);
+                                        })
+                                        .catch((response: HttpErrorResponse) => {
+                                            reject(response.error);
+                                        });
+                                } else {
+                                    resolve(null);
+                                }
                             })
                             .catch((response: HttpErrorResponse) => {
                                 reject(response.error);
@@ -193,13 +214,17 @@ export class ApiService {
                     error => {
                         this.handleError(endpoint, error, fromLogin !== null ? fromLogin : false)
                             .then(() => {
-                                this.delete(endpoint, params, true)
-                                    .then((data) => {
-                                        resolve(data);
-                                    })
-                                    .catch((response: HttpErrorResponse) => {
-                                        reject(response.error);
-                                    });
+                                if (error.status === 401) {
+                                    this.delete(endpoint, params, true)
+                                        .then((data) => {
+                                            resolve(data);
+                                        })
+                                        .catch((response: HttpErrorResponse) => {
+                                            reject(response.error);
+                                        });
+                                } else {
+                                    resolve(null);
+                                }
                             })
                             .catch((response: HttpErrorResponse) => {
                                 reject(response.error);
@@ -218,18 +243,18 @@ export class ApiService {
     /**
      * Handle error status (if 401 logout)
      * @param endpoint
-     * @param error
+     * @param errorResponse
      * @param fromLogin
      */
-    private handleError(endpoint: string, error: HttpErrorResponse, fromLogin: boolean): Promise<any> {
+    private handleError(endpoint: string, errorResponse: HttpErrorResponse, fromLogin: boolean): Promise<any> {
         return new Promise((resolve, reject) => {
 
-            switch (error.status) {
+            switch (errorResponse.status) {
                 case 401: {
 
                     if (fromLogin) {
                         this.redirectToLogin();
-                        reject(error);
+                        reject(errorResponse);
                     } else {
 
                         // Only if remember me enabled
@@ -246,13 +271,22 @@ export class ApiService {
                                 });
                         } else {
                             this.redirectToLogin();
-                            reject(error);
+                            reject(errorResponse);
                         }
                     }
                 }
                     break;
+                case 301:
+                case 302:
+                {
+                    resolve();
+                    if ('redirectAfter' in errorResponse.error) {
+                        this._router.navigateByUrl(errorResponse.error['redirectAfter']);
+                    }
+                }
+                    break;
                 default: {
-                    reject(error);
+                    reject(errorResponse);
                 }
                     break;
             }
