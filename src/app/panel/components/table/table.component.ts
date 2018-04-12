@@ -235,7 +235,8 @@ export class TableComponent implements OnInit, OnDestroy {
     }
 
     private getCount(): Promise<any> {
-        return this._apiService.get(this.settings.api.endpoint + '/count', this.composeCountParams());
+        const endpoint = this.settings.api.countEndpoint ? this.settings.api.countEndpoint : this.settings.api.endpoint + '/count';
+        return this._apiService.get(endpoint, this.composeCountParams());
     }
 
     private composeParams(countParams?: boolean): Object {

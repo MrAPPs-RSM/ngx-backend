@@ -59,47 +59,12 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
                         });
                     }
                 } else {
-                    /** If value already set, update select options */
-                    if (this.getControl().value !== null && typeof this.getControl().value !== 'undefined') {
-                        this.updateSelectedOptions(this.getControl().value);
-                    } else { /* Else, listen to first change */
-                        this._subscription = this.getControl().valueChanges.first().subscribe((value) => {
-                            this.updateSelectedOptions(value);
-                            this.refreshFormValue(value, {emitEvent: false});
-                            this._subscription.unsubscribe();
-                        });
-                    }
+                    this.listenValueChange();
                 }
+            } else {
+                this.listenValueChange();
             }
         }).catch((err) => console.log(err));
-
-        // TODO: check if this is part of code is necessary after edits
-        /*this._subscription = this.getControl().valueChanges.skip(this.isEdit ? 1 : 0).subscribe((value) => {
-            if (this.field.multiple === true) {
-                if (value !== null && !(value instanceof Array)) {
-                    value = [value];
-                }
-            }
-
-            if (value instanceof Array && value.length > 0) {
-                if ((value[0] instanceof Object)) {
-
-                    const newValues = [];
-
-                    for (const val of value) {
-                        newValues.push(val.id);
-                    }
-
-                    this.getControl().setValue(newValues);
-                } else {
-                    this.loadOptions(false).then(() => {
-                        this.updateSelectedOptions(value);
-                    }).catch((err) => {
-                        console.log(err);
-                    });
-                }
-            }
-        });*/
 
         if (this.field.dependsOn) {
             const key = Array.isArray(this.field.dependsOn) ? this.field.dependsOn[0] : this.field.dependsOn;
@@ -142,6 +107,20 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
                         });
                 });
             }
+        }
+    }
+
+    /** Used in edit mode, but also in create if value is pre-set from table or query params */
+    listenValueChange(): void {
+        /** If value already set, update select options */
+        if (this.getControl().value !== null && typeof this.getControl().value !== 'undefined') {
+            this.updateSelectedOptions(this.getControl().value);
+        } else { /* Else, listen to first change */
+            this._subscription = this.getControl().valueChanges.first().subscribe((value) => {
+                this.updateSelectedOptions(value);
+                this.refreshFormValue(value, {emitEvent: false});
+                this._subscription.unsubscribe();
+            });
         }
     }
 

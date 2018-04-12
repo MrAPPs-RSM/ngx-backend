@@ -7,6 +7,7 @@ export interface TableSettings {
     api: {
         endpoint: string;
         filter: string;
+        countEndpoint?: string; // if different than endpoint/count
     };
     drag?: {
         sortField?: string; // if not defined, will be weight

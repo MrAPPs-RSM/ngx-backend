@@ -24,13 +24,23 @@ export class ActionsComponent implements OnChanges {
 
         for (const action of this.actions) {
             if ('enableOn' in action) {
-               action['enabled'] = dataRow[action['enableOn']];
+                if (action['enableOn'].indexOf('!') > -1) {
+                    action['enableOn'] = action['enableOn'].replace('!', '');
+                    action['enabled'] = !dataRow[action['enableOn']];
+                } else {
+                    action['enabled'] = dataRow[action['enableOn']];
+                }
             } else {
                 action['enabled'] = true;
             }
 
             if ('visibleOn' in action) {
-                action['visible'] = dataRow[action['visibleOn']];
+                if (action['visibleOn'].indexOf('!') > -1) {
+                    action['visibleOn'] = action['visibleOn'].replace('!', '');
+                    action['visible'] = !dataRow[action['visibleOn']];
+                } else {
+                    action['visible'] = dataRow[action['visibleOn']];
+                }
             } else {
                 action['visible'] = true;
             }
