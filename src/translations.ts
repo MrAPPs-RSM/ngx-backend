@@ -46,6 +46,17 @@ export const translations = {
                 message: ''
             }
         },
+        modals: {
+            confirm: {
+                ok: 'Conferma',
+                cancel: 'Annulla',
+                title: 'Conferma azione',
+                body: 'Sei sicuro?'
+            },
+            alert: {
+                title: 'Attenzione'
+            }
+        },
         profile: {
             logout: 'Logout',
             user_info: 'Informazioni utente',
@@ -102,6 +113,17 @@ export const translations = {
             info: {
                 title: 'Information',
                 message: ''
+            }
+        },
+        modals: {
+            confirm: {
+                ok: 'Confirm',
+                cancel: 'Dismiss',
+                title: 'Confirm action',
+                body: 'Are you sure?'
+            },
+            alert: {
+                title: 'Alert'
             }
         },
         profile: {
