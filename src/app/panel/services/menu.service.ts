@@ -6,7 +6,7 @@ import {Router} from '@angular/router';
 export class MenuService {
 
     private menu = [];
-    breadcrumbs: any[] = [];
+    public breadcrumbs: any[] = [];
 
     constructor(private _router: Router) {
     }
@@ -70,7 +70,7 @@ export class MenuService {
         return null;
     }
 
-    public canGoBack(): boolean{
+    public canGoBack(): boolean {
         return this.breadcrumbs.length > 1;
     }
 
