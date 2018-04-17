@@ -80,7 +80,6 @@ export class TableComponent implements OnInit, OnDestroy {
             }
 
             if (this._route.snapshot.queryParams && this._route.snapshot.queryParams['listParams']) {
-                console.log(this._route.snapshot.queryParams['listParams']);
                 const queryParamsFilter = JSON.parse(this._route.snapshot.queryParams['listParams']);
                 this.filter = UtilsService.mergeDeep(this.filter, queryParamsFilter);
             }
