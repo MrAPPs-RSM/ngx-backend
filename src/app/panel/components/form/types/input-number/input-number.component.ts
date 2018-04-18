@@ -13,7 +13,6 @@ export class InputNumberComponent extends BaseInputComponent implements OnInit, 
 
     @Input() field: FormField;
 
-    public calculatedValue: number = null;
     private _subFieldSubscription = Subscription.EMPTY;
 
     constructor(private _route: ActivatedRoute) {
@@ -31,13 +30,12 @@ export class InputNumberComponent extends BaseInputComponent implements OnInit, 
             });
         }
 
-        if (this.field.value) {
+        if (typeof this.field.value !== 'undefined') {
             if (this.field.value === ':id') {
-                this.calculatedValue = this._route.params['value'].id;
-                this.getControl().setValue(this.calculatedValue);
+                this.getControl().setValue(this._route.params['value'].id);
             } else {
                 if (!isNaN(this.field.value)) {
-                    this.calculatedValue = this.field.value;
+                    this.getControl().setValue(this.field.value);
                 }
             }
         }
