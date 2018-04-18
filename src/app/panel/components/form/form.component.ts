@@ -9,7 +9,7 @@ import {
     OnDestroy,
     HostListener
 } from '@angular/core';
-import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormGeneratorService} from '../../services/form-generator.service';
 import {ModalService} from '../../services/modal.service';
@@ -306,7 +306,8 @@ export class FormComponent implements OnInit, OnDestroy {
         this.isLoading = true;
         if (this.settings.isEdit) {
 
-            const endpoint = this.settings.submit.endpoint ? this.settings.submit.endpoint : this.settings.api.endpoint;
+            const endpoint = this.settings.submit && this.settings.submit.endpoint ?
+                this.settings.submit.endpoint : this.settings.api.endpoint;
 
             this._apiService.patch(endpoint + '/' + this._route.snapshot.params['id'], value)
                 .then((response) => {
@@ -356,9 +357,27 @@ export class FormComponent implements OnInit, OnDestroy {
             if (path.charAt(0) !== '/') {
                 path = 'panel/' + path;
             }
-            this._router.navigate([path]);
+            let queryParams;
+            if (button.config.isTablePath) {
+                let buttonParams = button.config.params;
+                if (button.config.params.indexOf(':id') > -1) {
+                    buttonParams = button.config.params.toString().replace(':id', this._route.snapshot.params['id']);
+                }
+                if (button.config.titleField && path.indexOf(':title') !== -1) {
+                    let titleValue = '---';
+                    const titleField: AbstractControl = this.form.get(button.config.titleField);
+                    if (titleField && titleField.value !== null && titleField.value !== '') {
+                        titleValue = titleField.value;
+                    }
+                    path = path.replace(':title', titleValue);
+                }
+                queryParams = {
+                    listParams: buttonParams
+                };
+            }
+            this._router.navigate([path], {queryParams: queryParams});
         }
-        // TODO: if necessary, implement same logic like action parsing in table.component.ts
+        // TODO: implement same logic like action parsing in table.component.ts
     }
 
 }

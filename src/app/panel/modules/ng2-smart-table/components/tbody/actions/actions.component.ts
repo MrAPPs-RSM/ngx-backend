@@ -23,27 +23,44 @@ export class ActionsComponent implements OnChanges {
         const dataRow = this.row.getData();
 
         for (const action of this.actions) {
-            if ('enableOn' in action) {
-                if (action['enableOn'].indexOf('!') > -1) {
-                    action['enableOn'] = action['enableOn'].replace('!', '');
-                    action['enabled'] = !dataRow[action['enableOn']];
-                } else {
-                    action['enabled'] = dataRow[action['enableOn']];
-                }
-            } else {
-                action['enabled'] = true;
-            }
+            action['enabled'] = this.getProperty(action, dataRow, 'enableOn');
+            action['visible'] = this.getProperty(action, dataRow, 'visibleOn');
+        }
+    }
 
-            if ('visibleOn' in action) {
-                if (action['visibleOn'].indexOf('!') > -1) {
-                    action['visibleOn'] = action['visibleOn'].replace('!', '');
-                    action['visible'] = !dataRow[action['visibleOn']];
+    private getProperty(action: any, dataRow: any, key: string): boolean {
+        if (key in action) {
+            if (typeof action[key] === 'string') {
+                if (action[key].indexOf('!') > -1) {
+                    return !dataRow[action[key].replace('!', '')];
                 } else {
-                    action['visible'] = dataRow[action['visibleOn']];
+                    return dataRow[action[key]];
                 }
-            } else {
-                action['visible'] = true;
+            } else if (typeof action[key] === 'object') {
+                if ('property' in action[key] && 'value' in action[key]) {
+                    if ('operator' in action[key]) {
+                        let result: boolean;
+                        switch (action[key]['operator']) {
+                            case 'neq': {
+                                result = dataRow[action[key]['property']] !== action[key]['value'];
+                            }
+                                break;
+                            default: {
+                                result = dataRow[action[key]['property']] === action[key]['value'];
+                            }
+                                break;
+                            // TODO: handle like, in, or other properties (?)
+                        }
+                        return result;
+                    } else {
+                        return dataRow[action[key]['property']] === action[key]['value'];
+                    }
+                } else {
+                    return true;
+                }
             }
+        } else {
+            return true;
         }
     }
 

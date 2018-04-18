@@ -343,7 +343,9 @@ export class TableComponent implements OnInit, OnDestroy {
 
         let extraParams = {};
 
-        if (action.config.path) {
+        let path = action.config.path;
+
+        if (path) {
             if (!data) {
 
                 if (action.config.params && action.config.params.associateFields && action.config.params.associateFields.length > 0) {
@@ -356,18 +358,30 @@ export class TableComponent implements OnInit, OnDestroy {
 
                     extraParams = {queryParams: {formParams: JSON.stringify(params)}};
 
-                    this._router.navigate(['panel/' + action.config.path], extraParams);
+                    this._router.navigate(['panel/' + path], extraParams);
                 } else {
-                    this._router.navigateByUrl('panel/' + action.config.path);
+                    this._router.navigateByUrl('panel/' + path);
                 }
             } else {
-                let path = action.config.path;
+
+                if (action.config.tableField && path.indexOf(':tableField') !== -1) {
+                    const tableValue = UtilsService.objectByString(data, action.config.tableField);
+                    if (tableValue) {
+                        path = path.replace(':tableField', tableValue);
+                    }
+                }
+
                 if (path.indexOf(':id') !== -1) {
-                    path = path.replace(':id', 'idField' in action.config ? data[action.config['idField']] : data.id);
+                    let idValue = data.id;
+                    if ('idField' in action.config) {
+                        idValue = UtilsService.objectByString(data, action.config.idField);
+                    }
+                    path = path.replace(':id', idValue ? idValue : data.id);
                 }
 
                 if (action.config.titleField && path.indexOf(':title') !== -1) {
-                    path = path.replace(':title', data[action.config.titleField] !== null && data[action.config.titleField] !== '' ? data[action.config.titleField] : '---');
+                    const titleValue = UtilsService.objectByString(data, action.config.titleField);
+                    path = path.replace(':title', titleValue !== null && titleValue !== '' ? titleValue : '---');
                 }
 
                 if (action.config.params) {

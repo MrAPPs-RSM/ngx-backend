@@ -63,7 +63,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
         this._activePageSub = this._state._activePageSubject.subscribe((activeLink) => {
 
-            // console.log("ACTIVE LINK: "+JSON.stringify(activeLink));
             if (activeLink) {
                 //  this.activePage = activeLink.url;
 

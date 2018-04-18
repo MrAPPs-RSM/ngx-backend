@@ -54,7 +54,7 @@ export class FormPageComponent implements OnInit, OnDestroy, ComponentCanDeactiv
     }
 
     private redirectIfNeeded(form: FormSettings) {
-        if (form.submit.redirectAfter) {
+        if (form.submit && form.submit.redirectAfter) {
             if (!this._menuService.goBack()) {
                 this._router.navigate(['panel/' + form.submit.redirectAfter]);
             }
@@ -77,7 +77,7 @@ export class FormPageComponent implements OnInit, OnDestroy, ComponentCanDeactiv
             }
                 break;
             case 'toast': {
-                if (response.hasOwnProperty('error')) {
+                if (response && response.hasOwnProperty('error')) {
                     this._toastsService.error(response['error']);
                 } else {
                     this._toastsService.success();
@@ -90,7 +90,7 @@ export class FormPageComponent implements OnInit, OnDestroy, ComponentCanDeactiv
             }
                 break;
             default: {
-                if (response.hasOwnProperty('error')) {
+                if (response && response.hasOwnProperty('error')) {
                     if (response['error']['statusCode'] !== 500) {
                         const index = UtilsService.containsObject(form, this.params.forms);
                         if (index !== -1) {

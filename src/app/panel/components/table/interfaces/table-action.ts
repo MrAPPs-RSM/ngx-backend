@@ -2,10 +2,12 @@ export interface TableAction {
     name?: string;
     content: string;
     class?: string; // success | info | warning | danger | default
-    enableOn?: boolean;
-    visibleOn?: boolean;
+    enableOn?: any;
+    visibleOn?: any;
     config: {
-        path?: string; // redirect to
+        path?: any; // redirect to
+        idField?: string;
+        tableField?: string; // replace path with data property
         titleField?: string; // to avoid only id in page title
         params?: {
             type?: string, // 'formParameters'

@@ -67,7 +67,7 @@ export class MapComponent extends BaseInputComponent implements OnInit, OnDestro
                 if (this.getControl(baseKey)) {
                     this._calcValueSubscription[key] = this.getControl(baseKey).valueChanges.subscribe((value) => {
                         if (value && value[subKey]) {
-                            this.getControl(key).patchValue(value[subKey]);
+                            this.getControl(this.field[key].key).patchValue(value[subKey]);
                         }
                     });
                 }

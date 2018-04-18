@@ -1,8 +1,10 @@
 export interface FormButton {
     content: string;
-    class?: string; // success | info | warning | danger | default
+    class?: string; // success | info | warning | danger | default | primary
     config: {
         path?: string; // redirect to
+        titleField?: string; // to avoid id in title if path needs it
+        isTablePath?: boolean; // if path is a table
         params?: any; // query params to pass to path
         endpoint?: string; // api call
         confirm?: boolean; // if true opens confirmation modal before api
