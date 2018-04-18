@@ -22,7 +22,8 @@
                     [pickerType]="field.isDateTime ? 'both' : 'calendar'"
             ></owl-date-time>
             <span class="remove"
-                  (click)="clearValue()"></span>
+                  *ngIf="allowClear()"
+                  (click)="clearValue()">×</span>
         </div>
         <span *ngIf="field.description" class="help-block sub-little-text">{{field.description}}</span>
     </div>
