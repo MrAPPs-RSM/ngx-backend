@@ -275,7 +275,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
     }
 
     private updateSelectedOptions(value: any) {
-        if (value) {
+        if (typeof value !== 'undefined') {
             if (this.field.multiple === true) {
                 value.forEach((itemId) => {
                     if (typeof itemId === 'object') {

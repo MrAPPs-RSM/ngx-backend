@@ -59,7 +59,7 @@ export class Row {
             const baseField = column.id.split('.')[0];
             const subField = column.id.split('.')[1];
 
-            if (this.data[baseField] instanceof Object && this.data[baseField].hasOwnProperty(subField)) {
+            if (typeof this.data[baseField] === 'object' && this.data[baseField].hasOwnProperty(subField)) {
                 value = this.data[baseField][subField];
             }
         } else {
