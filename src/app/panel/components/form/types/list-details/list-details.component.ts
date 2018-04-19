@@ -29,7 +29,7 @@ export class ListDetailsComponent extends BaseInputComponent implements OnInit, 
     }
 
     ngOnInit() {
-        if (!this.isRequired() && !this.isEdit) {
+        if (!this.isRequired()) {
             this.deleteDetail(0);
         }
 
