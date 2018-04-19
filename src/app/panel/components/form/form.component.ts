@@ -19,6 +19,7 @@ import {Language, LanguageService} from '../../services/language.service';
 import {Subscription} from 'rxjs/Subscription';
 import {Observable} from 'rxjs/Observable';
 import {formConfig} from './form.config';
+import { Location } from '@angular/common';
 
 @Component({
     selector: 'app-form',
@@ -58,6 +59,7 @@ export class FormComponent implements OnInit, OnDestroy {
                 private _modal: ModalService,
                 private _router: Router,
                 private _apiService: ApiService,
+                private _location: Location,
                 private _route: ActivatedRoute,
                 private _ref: ChangeDetectorRef) {
         this.enableAutoSubmit = false;
@@ -266,6 +268,10 @@ export class FormComponent implements OnInit, OnDestroy {
                     this.response.emit((response));
                 });
         }
+    }
+
+    onCancel(): void {
+        this._location.back();
     }
 
     onSubmit(): void {
