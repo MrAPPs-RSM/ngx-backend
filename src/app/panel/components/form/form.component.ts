@@ -6,10 +6,9 @@ import {
     EventEmitter,
     ViewEncapsulation,
     ChangeDetectorRef,
-    OnDestroy,
-    HostListener
+    OnDestroy
 } from '@angular/core';
-import {AbstractControl, FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormArray, FormControl, FormGroup} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormGeneratorService} from '../../services/form-generator.service';
 import {ModalService} from '../../services/modal.service';

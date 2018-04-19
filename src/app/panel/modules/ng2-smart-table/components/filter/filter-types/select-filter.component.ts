@@ -15,7 +15,7 @@ declare const $: any;
     template: `
         <div [formGroup]="formGroup">
             <ng-select [items]="options"
-                       [multiple]="false"
+                       [multiple]="column.filter.multiple"
                        [formControl]="inputControl"
                        [(ngModel)]="query"
                        [appendTo]="'body'"

@@ -1,4 +1,4 @@
-import {Component, Input, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core';
+import {Component, Input, Output, EventEmitter, OnChanges, SimpleChanges, OnInit} from '@angular/core';
 
 import {DataSource} from '../../lib/data-source/data-source';
 import {Column} from '../../lib/data-set/column';
@@ -38,19 +38,27 @@ import {Grid} from '../../lib/grid';
         </div>
     `,
 })
-export class FilterComponent implements OnChanges {
+export class FilterComponent implements OnInit, OnChanges {
 
     @Input() grid: Grid;
     @Input() column: Column;
     @Input() source: DataSource;
-    @Input() inputClass: string = '';
+    @Input() inputClass = '';
 
     @Output() filter = new EventEmitter<any>();
 
-    query: string = '';
+    query: any;
     reloadSelectOptions: boolean = false;
 
     protected dataChangedSub: Subscription;
+
+    ngOnInit() {
+        this.setQueryValue();
+    }
+
+    setQueryValue() {
+            this.query = this.column.filter.multiple ? [] : '';
+    }
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.source) {
@@ -62,7 +70,7 @@ export class FilterComponent implements OnChanges {
             this.dataChangedSub = this.source.onChanged().subscribe((dataChanges) => {
                 const filterConf = this.source.getFilter();
                 if (filterConf && filterConf.filters && filterConf.filters.length === 0) {
-                    this.query = '';
+                   this.query = null;
 
                     // add a check for existing filters an set the query if one exists for this column
                     // this covers instances where the filter is set by user code while maintaining existing functionality
