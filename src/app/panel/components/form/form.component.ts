@@ -178,7 +178,6 @@ export class FormComponent implements OnInit, OnDestroy {
     }
 
     setupForms(): FormGroup {
-        // TODO: is 'en' really required ?
         this.isMultiLangEnabled = 'en' in this.settings.fields && this._languageService.getContentLanguages().length > 0;
 
         if (this.isMultiLangEnabled) {
@@ -314,7 +313,7 @@ export class FormComponent implements OnInit, OnDestroy {
                     this.dataStored = true;
                     this.response.emit(response);
 
-                    if (this.settings.submit && this.settings.submit.refreshAfter === true) {
+                    if (response != null && this.settings.submit && this.settings.submit.refreshAfter === true) {
                         this.loadData(response);
                     }
                 })
