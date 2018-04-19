@@ -30,7 +30,7 @@ export class InputNumberComponent extends BaseInputComponent implements OnInit, 
             });
         }
 
-        if (typeof this.field.value !== 'undefined') {
+        if (typeof this.field.value !== 'undefined' && this.field.value !== null) {
             if (this.field.value === ':id') {
                 this.getControl().setValue(this._route.params['value'].id);
             } else {
