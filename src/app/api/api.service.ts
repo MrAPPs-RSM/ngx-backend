@@ -43,7 +43,6 @@ export class ApiService {
      * @returns {Promise<any>}
      */
     public get(endpoint: string, params?: Object, fromLogin?: boolean): Promise<any> {
-        // console.log('[API SERVICE] - GET ' + endpoint);
         return new Promise((resolve, reject) => {
             this._http.get(this.composeUrl(endpoint), this.setOptions(params))
                 .subscribe(

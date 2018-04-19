@@ -175,10 +175,6 @@ export class TableComponent implements OnInit, OnDestroy {
         }
     }
 
-    ngOnDestroy() {
-        this._subscription.unsubscribe();
-    }
-
     private setupLang(): void {
         this.isMultiLangEnabled = this.settings.lang && this._languageService.getContentLanguages().length > 0;
         if (this.isMultiLangEnabled) {
@@ -654,6 +650,10 @@ export class TableComponent implements OnInit, OnDestroy {
         this.currentLang = language;
         this._languageService.setCurrentContentTableLang(language);
         this.getData();
+    }
+
+    ngOnDestroy() {
+        this._subscription.unsubscribe();
     }
 
 }
