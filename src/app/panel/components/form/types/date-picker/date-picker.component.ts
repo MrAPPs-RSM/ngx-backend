@@ -13,6 +13,7 @@ export class DatePickerComponent extends BaseInputComponent implements OnInit, O
 
     @Input() field: FormFieldDate;
 
+    private _subscription = Subscription.EMPTY;
     private _subFieldSubscription = Subscription.EMPTY;
 
     min: Date;
@@ -22,23 +23,22 @@ export class DatePickerComponent extends BaseInputComponent implements OnInit, O
         this.checkDisabled();
         this.initMaxMin();
 
-        if (this.isEdit) {
-            if (this.isSubField) {
-                this._subFieldSubscription = this.getControl().parent.valueChanges.subscribe((value) => {
-                    if (value && value[this.field.key]) {
-                        this.setValue(value[this.field.key], {emitEvent: false});
-                        this._subFieldSubscription.unsubscribe();
-                    }
-                });
-            } else {
-                this.getControl().valueChanges.first().subscribe((value) => {
-                    this.setValue(value);
-                });
-            }
+        if (this.isSubField) {
+            this._subFieldSubscription = this.getControl().parent.valueChanges.subscribe((value) => {
+                if (value && value[this.field.key]) {
+                    this.setValue(value[this.field.key], {emitEvent: false});
+                    this._subFieldSubscription.unsubscribe();
+                }
+            });
         } else {
-            if (this.field.value) {
-                this.getControl().setValue(UtilsService.getDateObjectFromString(this.field.value));
-            }
+            this._subscription = this.getControl().valueChanges.first().subscribe((value) => {
+                this.setValue(value);
+                this._subscription.unsubscribe();
+            });
+        }
+
+        if (this.field.value) {
+            this.getControl().setValue(UtilsService.getDateObjectFromString(this.field.value));
         }
     }
 
@@ -68,6 +68,9 @@ export class DatePickerComponent extends BaseInputComponent implements OnInit, O
     }
 
     ngOnDestroy() {
+        if (this._subscription) {
+            this._subscription.unsubscribe();
+        }
         if (this._subFieldSubscription) {
             this._subFieldSubscription.unsubscribe();
         }
