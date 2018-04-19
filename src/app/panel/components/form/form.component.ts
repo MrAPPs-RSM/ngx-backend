@@ -252,7 +252,7 @@ export class FormComponent implements OnInit, OnDestroy {
 
                     if (listDetailKeys.length > 0) {
                         listDetailKeys.forEach((key) => {
-                            for (let i = 1; i < response[key].length; i++) {
+                            for (let i = 0; i < response[key].length; i++) {
                                 (this.form.controls[key] as FormArray).push(
                                     new FormGroup(this._formGenerator.generateFormFields(listDetailsFields[key]))
                                 );
