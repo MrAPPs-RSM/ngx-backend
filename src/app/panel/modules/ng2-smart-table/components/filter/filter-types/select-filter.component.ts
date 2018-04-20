@@ -63,7 +63,7 @@ export class SelectFilterComponent extends DefaultFilter implements OnInit, OnCh
             .skip(1)
             .distinctUntilChanged()
             .debounceTime(this.delay)
-            .subscribe((value: string) => {
+            .subscribe((value: any) => {
                 this.setFilter();
             });
 

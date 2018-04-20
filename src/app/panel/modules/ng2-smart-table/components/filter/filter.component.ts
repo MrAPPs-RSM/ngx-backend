@@ -50,38 +50,23 @@ export class FilterComponent implements OnInit, OnChanges {
     query: any;
     reloadSelectOptions: boolean = false;
 
-    protected dataChangedSub: Subscription;
-
     ngOnInit() {
         this.setQueryValue();
     }
 
     setQueryValue() {
-            this.query = this.column.filter.multiple ? [] : '';
+        this.query = this.column.filter.multiple ? [] : '';
     }
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.source) {
             if (!changes.source.firstChange) {
                 // Just to trigger onChange on select filter
-                this.reloadSelectOptions = !this.reloadSelectOptions;
-                this.dataChangedSub.unsubscribe();
-            }
-            this.dataChangedSub = this.source.onChanged().subscribe((dataChanges) => {
-                const filterConf = this.source.getFilter();
-                if (filterConf && filterConf.filters && filterConf.filters.length === 0) {
-                   this.query = null;
-
-                    // add a check for existing filters an set the query if one exists for this column
-                    // this covers instances where the filter is set by user code while maintaining existing functionality
-                } else if (filterConf && filterConf.filters && filterConf.filters.length > 0) {
-                    filterConf.filters.forEach((k: any, v: any) => {
-                        if (k.field === this.column.id) {
-                            this.query = k.search;
-                        }
-                    });
+                if (this.column.filter.type === 'select') {
+                    console.log('passo');
+                    this.reloadSelectOptions = !this.reloadSelectOptions;
                 }
-            });
+            }
         }
     }
 
