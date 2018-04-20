@@ -26,8 +26,6 @@ export class Ng2SmartTableTbodyComponent implements OnChanges {
     noDataMessage: boolean;
 
     ngOnChanges() {
-        console.log('TBODY');
-        console.log(this.isDragEnabled);
         this.isMultiSelectVisible = this.grid.isMultiSelectVisible();
         this.mode = this.grid.getSetting('mode');
         this.isActionAdd = this.grid.getSetting('actions.add');

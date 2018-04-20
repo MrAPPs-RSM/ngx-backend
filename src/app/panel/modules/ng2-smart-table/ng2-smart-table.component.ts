@@ -64,8 +64,6 @@ export class Ng2SmartTableComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        console.log('TABLE');
-        console.log(this.isDragEnabled);
         if (this.isDragEnabled) {
             this._dragulaService.setOptions('bag', {
                 moves: function (el, container, handle) {
@@ -84,7 +82,6 @@ export class Ng2SmartTableComponent implements OnChanges, OnInit, OnDestroy {
                 this.grid.setSettings(this.settings);
             }
             if (changes['source']) {
-                // console.log('SOURCE CHANGED');
                 this.source = this.prepareSource();
                 this.grid.setSource(this.source);
             }
@@ -192,11 +189,15 @@ export class Ng2SmartTableComponent implements OnChanges, OnInit, OnDestroy {
 
     private onDrop() {
         const data = [];
-        this.grid.getRows().forEach((row: Row) => {
-            data.push(row.getData());
-        });
-        this.rowDrop.emit({
-            data: data
-        });
+        const rows: any[] = this.grid.getRows();
+        setTimeout(() => {
+            rows.forEach((item) => {
+                data.push(item.data);
+            });
+
+            this.rowDrop.emit({
+                data: data
+            });
+        }, 0);
     }
 }

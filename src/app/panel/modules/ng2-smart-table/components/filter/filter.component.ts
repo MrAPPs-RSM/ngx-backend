@@ -63,7 +63,6 @@ export class FilterComponent implements OnInit, OnChanges {
             if (!changes.source.firstChange) {
                 // Just to trigger onChange on select filter
                 if (this.column.filter.type === 'select') {
-                    console.log('passo');
                     this.reloadSelectOptions = !this.reloadSelectOptions;
                 }
             }

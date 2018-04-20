@@ -575,23 +575,22 @@ export class TableComponent implements OnInit, OnDestroy {
         });
     }
 
-    onAction(event: { action: TableAction, data?: any }) {
-        this.parseAction(event.action, event.data);
+    onAction($event: { action: TableAction, data?: any }) {
+        this.parseAction($event.action, $event.data);
     }
 
     onCreate() {
         this.parseAction(this.settings.actions.add);
     }
 
-    onRowSelect(event: TableSelection) {
+    onRowSelect($event: TableSelection) {
         console.log('ON Select row(s)');
-        console.log(event);
+        console.log($event);
     }
 
-    onRowDrop(event: any) {
-
+    onRowDrop($event: any) {
         const dragDropSettings: TableDrop = {
-            data: event.data,
+            data: $event.data,
             page: this.activeFilters.pagination.page,
             perPage: this.activeFilters.pagination.perPage
         };

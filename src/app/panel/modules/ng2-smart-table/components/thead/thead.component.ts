@@ -23,8 +23,6 @@ export class Ng2SmartTableTheadComponent implements OnInit, OnChanges {
     isHideSubHeader: boolean;
 
     ngOnInit() {
-        console.log('THEAD');
-        console.log(this.isDragEnabled);
     }
 
     ngOnChanges() {
