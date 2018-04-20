@@ -6,6 +6,7 @@ import {DataSource} from '../../../lib/data-source/data-source';
 @Component({
     selector: '[ng2-st-thead-titles-row]',
     template: `
+        <th ng2-st-drag-title *ngIf="isDragEnabled"></th>
         <th ng2-st-checkbox-select-all *ngIf="isMultiSelectVisible"
             [grid]="grid"
             [source]="source"
@@ -23,6 +24,7 @@ export class TheadTitlesRowComponent implements OnChanges {
 
     @Input() grid: Grid;
     @Input() isAllSelected: boolean;
+    @Input() isDragEnabled: boolean;
     @Input() source: DataSource;
 
     @Output() sort = new EventEmitter<any>();

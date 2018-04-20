@@ -7,6 +7,7 @@ import {CellModule} from '../cell/cell.module';
 
 import {Ng2SmartTableTheadComponent} from './thead.component';
 import {ActionsTitleComponent} from './cells/actions-title.component';
+import {DragTitleComponent} from './cells/drag-title.component';
 import {AddButtonComponent} from './cells/add-button.component';
 import {CheckboxSelectAllComponent} from './cells/checkbox-select-all.component';
 import {ColumnTitleComponent} from './cells/column-title.component';
@@ -17,6 +18,7 @@ import {TooltipModule} from 'ngx-tooltip';
 
 const THEAD_COMPONENTS = [
     ActionsTitleComponent,
+    DragTitleComponent,
     AddButtonComponent,
     CheckboxSelectAllComponent,
     ColumnTitleComponent,

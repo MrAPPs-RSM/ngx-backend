@@ -13,7 +13,7 @@ export class Ng2SmartTableTbodyComponent implements OnChanges {
 
     @Input() grid: Grid;
     @Input() source: DataSource;
-    @Input() dragula: any;
+    @Input() isDragEnabled: boolean;
 
     @Output() action = new EventEmitter<any>();
     @Output() userSelectRow = new EventEmitter<any>();
@@ -26,6 +26,8 @@ export class Ng2SmartTableTbodyComponent implements OnChanges {
     noDataMessage: boolean;
 
     ngOnChanges() {
+        console.log('TBODY');
+        console.log(this.isDragEnabled);
         this.isMultiSelectVisible = this.grid.isMultiSelectVisible();
         this.mode = this.grid.getSetting('mode');
         this.isActionAdd = this.grid.getSetting('actions.add');
@@ -42,6 +44,7 @@ export class Ng2SmartTableTbodyComponent implements OnChanges {
         let result: number = this.grid.getVisibleColumns().length;
         result += this.isActionAdd ? 1 : 0;
         result += this.isMultiSelectVisible ? 1 : 0;
+        result += this.isDragEnabled ? 1 : 0;
         return result;
     }
 }
