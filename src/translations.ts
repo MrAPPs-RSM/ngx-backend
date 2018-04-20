@@ -9,7 +9,8 @@ export const translations = {
         forms: {
             labels: {
                 submit: 'Salva',
-                cancel: 'Annulla'
+                cancel: 'Annulla',
+                close: 'Chiudi'
             },
             inputs: {
                 invalid_date_range: 'Range di date non valido',
@@ -79,7 +80,8 @@ export const translations = {
         forms: {
             labels: {
                 submit: 'Save',
-                cancel: 'Cancel'
+                cancel: 'Cancel',
+                close: 'Close'
             },
             inputs: {
                 invalid_date_range: 'Invalid date range',
