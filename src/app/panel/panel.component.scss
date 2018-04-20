@@ -11,7 +11,6 @@ app-panel {
       margin-right: 0;
       > div.navbar-header {
         float: left;
-        width: $sidebarWidth;
         margin-left: -15px;
         position: relative;
         > a.navbar-brand {
@@ -34,11 +33,12 @@ app-panel {
           color: $primary;
           padding: 4px;
         }
+
+        @include respond-to(from-sm) {
+          width: $sidebarWidth;
+        }
       }
       > div.navbar-menu {
-        @include respond-to(xxs) {
-          display: none;
-        }
         float: right;
         > ul {
           margin: 0 -15px;
@@ -48,6 +48,10 @@ app-panel {
               color: #777;
               padding: 15px;
               cursor: pointer;
+              &.toggler {
+                color: $primary;
+                font-size: 15px;
+              }
               &.logout {
                 color: $primary;
                 &:hover {
@@ -64,14 +68,6 @@ app-panel {
   > .wrapper {
     @include clearfix();
 
-    &.sidebar-closed {
-      > .sidebar {
-        @include _transform(translateX(-100%));
-      }
-      > .content {
-        width: 100%;
-      }
-    }
     > .sidebar {
       overflow-y: auto;
       height: 100%;
@@ -79,7 +75,6 @@ app-panel {
       z-index: 1029;
       left: 0;
       background-color: $sidebar;
-      width: $sidebarWidth;
       @include _transition(all 0.5s);
 
       > .menu {
@@ -89,21 +84,37 @@ app-panel {
           padding: 0;
           list-style: none;
           > li {
-            > a {
+            > span {
               cursor: pointer;
               display: block;
-              padding: 15px;
-              color: $lightGrey;
-              > span {
-                @include _transition(all 0.3s);
+              > a {
                 pointer-events: none;
-                margin: 3px 13px 0 0;
-                float: right;
-              }
-              > i {
-                pointer-events: none;
-                width: 15px;
-                margin-right: 15px;
+                padding: 15px;
+                color: $lightGrey;
+                display: block;
+                > i {
+                  pointer-events: none;
+                  width: 15px;
+                  margin-right: 15px;
+                }
+                > span.fa-angle-down {
+                  @include _transition(all 0.3s);
+                  pointer-events: none;
+                  margin: 3px 13px 0 0;
+                  float: right;
+                }
+                &.active {
+                  color: #ffffff;
+                  background-color: $sidebarLight;
+                  > i {
+                    color: $primary;
+                  }
+                  &:hover {
+                    > i {
+                      color: #ffffff;
+                    }
+                  }
+                }
               }
               &:hover {
                 background-color: $primary !important;
@@ -114,18 +125,6 @@ app-panel {
                   @include _transform(rotate(180deg));
                 }
               }
-              &.active {
-                color: #ffffff;
-                background-color: $sidebarLight;
-                > i {
-                  color: $primary;
-                }
-                &:hover {
-                  > i {
-                    color: #ffffff;
-                  }
-                }
-              }
             }
             > ul {
               background-color: $sidebarDark;
@@ -134,25 +133,29 @@ app-panel {
               padding: 0;
               list-style: none;
               > li {
-                > a {
+                > span {
                   cursor: pointer;
                   display: block;
-                  padding: 15px 0 15px 45px;
-                  color: #ddd;
-                  > i {
+                  > a {
                     pointer-events: none;
-                    width: 15px;
-                    margin-right: 15px;
+                    display: block;
+                    padding: 15px 0 15px 45px;
+                    color: #ddd;
+                    > i {
+                      pointer-events: none;
+                      width: 15px;
+                      margin-right: 15px;
+                    }
+                    &.active {
+                      color: #ffffff;
+                      background-color: $sidebarLight;
+                      > i {
+                        color: $primary;
+                      }
+                    }
                   }
                   &:hover {
                     background-color: $primary;
-                  }
-                  &.active {
-                    color: #ffffff;
-                    background-color: $sidebarLight;
-                    > i {
-                      color: $primary;
-                    }
                   }
                 }
               }
@@ -160,16 +163,39 @@ app-panel {
           }
         }
       }
+
+      @include respond-to(xs) {
+        width: 100%;
+      }
+      @include respond-to(from-sm) {
+        width: $sidebarWidth;
+      }
     }
 
     > .content {
       margin-top: $navbarHeight;
-      width: calc(100% - #{$sidebarWidth});
       float: right;
       @include _transition(all 0.5s);
 
+      @include respond-to(from-sm) {
+        width: calc(100% - #{$sidebarWidth});
+      }
+
+      @include respond-to(xs) {
+        width: 100%;
+      }
+
       div.warnings {
         margin-top: 15px;
+      }
+    }
+
+    &.sidebar-closed {
+      > .sidebar {
+        @include _transform(translateX(-100%));
+      }
+      > .content {
+        width: 100%;
       }
     }
   }

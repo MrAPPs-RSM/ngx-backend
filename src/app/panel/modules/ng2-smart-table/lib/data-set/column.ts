@@ -14,7 +14,7 @@ export class Column {
     sortDirection: string = '';
     defaultSortDirection: string = '';
     editor: { type: string, config: any, component: any } = {type: '', config: {}, component: null};
-    filter: { type: string, config: any, key?: string } = {type: '', config: {}};
+    filter: { type: string, config: any, key?: string, multiple: boolean } = {type: '', config: {}, multiple: false};
     renderComponent: any = null;
     compareFunction: Function;
     valuePrepareFunction: Function;

@@ -6,10 +6,9 @@ import {
     EventEmitter,
     ViewEncapsulation,
     ChangeDetectorRef,
-    OnDestroy,
-    HostListener
+    OnDestroy
 } from '@angular/core';
-import {AbstractControl, FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormArray, FormControl, FormGroup} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormGeneratorService} from '../../services/form-generator.service';
 import {ModalService} from '../../services/modal.service';
@@ -20,6 +19,7 @@ import {Language, LanguageService} from '../../services/language.service';
 import {Subscription} from 'rxjs/Subscription';
 import {Observable} from 'rxjs/Observable';
 import {formConfig} from './form.config';
+import { Location } from '@angular/common';
 
 @Component({
     selector: 'app-form',
@@ -59,6 +59,7 @@ export class FormComponent implements OnInit, OnDestroy {
                 private _modal: ModalService,
                 private _router: Router,
                 private _apiService: ApiService,
+                private _location: Location,
                 private _route: ActivatedRoute,
                 private _ref: ChangeDetectorRef) {
         this.enableAutoSubmit = false;
@@ -179,7 +180,6 @@ export class FormComponent implements OnInit, OnDestroy {
     }
 
     setupForms(): FormGroup {
-        // TODO: is 'en' really required ?
         this.isMultiLangEnabled = 'en' in this.settings.fields && this._languageService.getContentLanguages().length > 0;
 
         if (this.isMultiLangEnabled) {
@@ -252,7 +252,7 @@ export class FormComponent implements OnInit, OnDestroy {
 
                     if (listDetailKeys.length > 0) {
                         listDetailKeys.forEach((key) => {
-                            for (let i = 1; i < response[key].length; i++) {
+                            for (let i = 0; i < response[key].length; i++) {
                                 (this.form.controls[key] as FormArray).push(
                                     new FormGroup(this._formGenerator.generateFormFields(listDetailsFields[key]))
                                 );
@@ -268,6 +268,10 @@ export class FormComponent implements OnInit, OnDestroy {
                     this.response.emit((response));
                 });
         }
+    }
+
+    onCancel(): void {
+        this._location.back();
     }
 
     onSubmit(): void {
@@ -315,7 +319,7 @@ export class FormComponent implements OnInit, OnDestroy {
                     this.dataStored = true;
                     this.response.emit(response);
 
-                    if (this.settings.submit && this.settings.submit.refreshAfter === true) {
+                    if (response != null && this.settings.submit && this.settings.submit.refreshAfter === true) {
                         this.loadData(response);
                     }
                 })

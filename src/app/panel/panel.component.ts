@@ -75,7 +75,6 @@ export class PanelComponent implements OnInit {
         this.user = this._userService.getUser();
     }
 
-
     logout(): void {
         this._userService.removeToken();
         this._userService.removeUser();
@@ -84,7 +83,18 @@ export class PanelComponent implements OnInit {
         this._router.navigate(['login']);
     }
 
-    toggleSidebar(): void {
+    redirect(route: string): void {
+        this._router.navigate(['panel/' + route]);
+
+        if ($(window).width() <= 768) {
+            this.toggleSidebar();
+        }
+    }
+
+    toggleSidebar($event?: any): void {
+        if ($event) {
+            $event.preventDefault();
+        }
         const wrapper = $('div#wrapper');
         wrapper.toggleClass('sidebar-closed');
     }

@@ -7,6 +7,7 @@ import {GlobalState} from './global.state';
 import {Subscription} from 'rxjs/Subscription';
 import {UtilsService} from './services/utils.service';
 import {environment} from '../environments/environment';
+import {ApiService} from './api/api.service';
 
 @Component({
     selector: 'app-root',
@@ -24,6 +25,7 @@ export class AppComponent implements OnInit, OnDestroy {
                 private _route: ActivatedRoute,
                 private _state: GlobalState,
                 private _languageService: LanguageService,
+                private _apiService: ApiService,
                 private _pageTitle: PageTitleService,
                 private _menuService: MenuService) {
     }
@@ -31,7 +33,8 @@ export class AppComponent implements OnInit, OnDestroy {
     ngOnInit() {
 
         if (environment.production) {
-            window.console.log = function() {};
+            window.console.log = function () {
+            };
         }
 
         this._routerSub = this._router.events
@@ -86,6 +89,10 @@ export class AppComponent implements OnInit, OnDestroy {
                         }
 
                         if (!found) {
+                            if (this._apiService.isRedirecting) {
+                                this._menuService.breadcrumbs.splice(this._menuService.breadcrumbs.length - 1);
+                            }
+
                             this._menuService.breadcrumbs.push(activeLink);
                         }
                     }

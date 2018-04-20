@@ -21,7 +21,11 @@ export class DefaultFilter implements Filter, OnDestroy {
     }
 
     setFilter() {
-        this.filter.emit(this.query);
+        if (this.column.filter.multiple && this.query.length === 0) {
+            this.filter.emit('');
+        } else {
+            this.filter.emit(this.query);
+        }
     }
 }
 

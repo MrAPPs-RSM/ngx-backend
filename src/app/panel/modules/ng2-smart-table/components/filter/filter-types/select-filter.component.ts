@@ -15,7 +15,7 @@ declare const $: any;
     template: `
         <div [formGroup]="formGroup">
             <ng-select [items]="options"
-                       [multiple]="false"
+                       [multiple]="column.filter.multiple"
                        [formControl]="inputControl"
                        [(ngModel)]="query"
                        [appendTo]="'body'"
@@ -63,7 +63,7 @@ export class SelectFilterComponent extends DefaultFilter implements OnInit, OnCh
             .skip(1)
             .distinctUntilChanged()
             .debounceTime(this.delay)
-            .subscribe((value: string) => {
+            .subscribe((value: any) => {
                 this.setFilter();
             });
 
