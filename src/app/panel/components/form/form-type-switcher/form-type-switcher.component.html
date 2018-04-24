@@ -5,6 +5,11 @@
             [field]="field">
     </app-separator>
 
+    <app-gallery
+            *ngSwitchCase="formConfig.noInputTypes.GALLERY"
+            [field]="field">
+    </app-gallery>
+
     <app-input-text
             *ngSwitchCase="formConfig.types.TEXT"
             [isSubField]="isSubField"
