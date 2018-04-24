@@ -65,10 +65,6 @@ export class TableComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        if (this.settings.pager && this.settings.pager.perPage) {
-            this.onPagination({perPage: this.settings.pager.perPage, page: 1});
-        }
-
         this.translateLabels();
         this.resetPagination = false;
         this._subscription = this._route.queryParams.subscribe(params => {
