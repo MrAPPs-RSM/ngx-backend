@@ -28,7 +28,7 @@
                          [source]="data"
                          [count]="count"
                          [activeFilters]="activeFilters"
-                         [drag]="!!settings.drag"
+                         [isDragEnabled]="!!settings.drag"
                          (action)="onAction($event)"
                          (create)="onCreate()"
                          (userRowSelect)="onRowSelect($event)"

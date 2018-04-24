@@ -15,10 +15,10 @@ declare const $: any;
     template: `
         <div [formGroup]="formGroup">
             <ng-select [items]="options"
-                       [multiple]="false"
+                       [multiple]="column.filter.multiple"
                        [formControl]="inputControl"
                        [(ngModel)]="query"
-                       [appendTo]="'body'"
+                       [appendTo]="'nav'"
                        [closeOnSelect]="true"
                        bindLabel="text"
                        bindValue="id"
@@ -63,7 +63,7 @@ export class SelectFilterComponent extends DefaultFilter implements OnInit, OnCh
             .skip(1)
             .distinctUntilChanged()
             .debounceTime(this.delay)
-            .subscribe((value: string) => {
+            .subscribe((value: any) => {
                 this.setFilter();
             });
 
@@ -99,8 +99,8 @@ export class SelectFilterComponent extends DefaultFilter implements OnInit, OnCh
     }
 
     private onScroll(): void {
-        $('.table-wrapper').scroll(function() {
-            $('.table-wrapper').click();
+        $('.table-responsive').scroll(function() {
+            $('.table-responsive').click();
         });
     }
 }

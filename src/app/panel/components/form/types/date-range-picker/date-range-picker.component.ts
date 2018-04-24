@@ -1,39 +1,52 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {FormFieldDateRange} from '../../interfaces/form-field-date-range';
 import {UtilsService} from '../../../../../services/utils.service';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
     selector: 'app-date-range-picker',
     templateUrl: './date-range-picker.component.html',
     styleUrls: ['./date-range-picker.component.scss']
 })
-export class DateRangePickerComponent extends BaseInputComponent implements OnInit {
+export class DateRangePickerComponent extends BaseInputComponent implements OnInit, OnDestroy {
 
     @Input() field: FormFieldDateRange;
 
     min: Date;
     max: Date;
 
+    private _fromSubscription: Subscription = Subscription.EMPTY;
+    private _toSubscription: Subscription = Subscription.EMPTY;
+
     ngOnInit() {
         this.checkDisabled();
         this.initMaxMin();
 
-        if (this.isEdit) {
-            this.getControl(this.field.fromKey).valueChanges.first().subscribe((fromValue) => {
-                if (fromValue) {
-                    this.getControl(this.field.toKey).valueChanges.first().subscribe((toValue) => {
-                        if (toValue) {
-                            this.getControl().setValue([new Date(fromValue), new Date(toValue)]);
-                        }
-                    });
-                }
-            });
-        }
+        this._fromSubscription = this.getControl(this.field.fromKey).valueChanges.first().subscribe((fromValue) => {
+            if (fromValue) {
+                this._toSubscription = this.getControl(this.field.toKey).valueChanges.first().subscribe((toValue) => {
+                    if (toValue) {
+                        this.getControl().setValue([new Date(fromValue), new Date(toValue)]);
+                        this._toSubscription.unsubscribe();
+                    }
+                });
+                this._fromSubscription.unsubscribe();
+            }
+        });
 
         this.getControl().valueChanges.subscribe((value) => {
             this.updateFormValue(value);
         });
+    }
+
+    ngOnDestroy() {
+        if (this._fromSubscription) {
+            this._fromSubscription.unsubscribe();
+        }
+        if (this._toSubscription) {
+            this._toSubscription.unsubscribe();
+        }
     }
 
     isValid() {

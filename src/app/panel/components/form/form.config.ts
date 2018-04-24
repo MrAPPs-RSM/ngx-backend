@@ -20,7 +20,8 @@ export let formConfig = {
         GEOSEARCH: 'geosearch',
     },
     noInputTypes: {
-        SEPARATOR: 'separator'
+        SEPARATOR: 'separator',
+        GALLERY: 'gallery'
     },
     validators: {
         REQUIRED: 'required',

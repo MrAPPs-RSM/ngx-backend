@@ -10,6 +10,7 @@ const API_URL = environment.api.baseUrl;
 export class ApiService {
 
     private headers = new HttpHeaders({'Content-Type': 'application/json'});
+    public isRedirecting = false;
 
     constructor(private _http: HttpClient,
                 private _userService: UserService,
@@ -23,6 +24,8 @@ export class ApiService {
      * @returns {string}
      */
     public composeUrl(endpoint: string, addAuth?: boolean): string {
+        this.isRedirecting = false;
+
         let url = API_URL + endpoint;
         if (addAuth) {
             const authorization = TOKEN_KEY + '=' + this._userService.getToken();
@@ -43,7 +46,6 @@ export class ApiService {
      * @returns {Promise<any>}
      */
     public get(endpoint: string, params?: Object, fromLogin?: boolean): Promise<any> {
-        // console.log('[API SERVICE] - GET ' + endpoint);
         return new Promise((resolve, reject) => {
             this._http.get(this.composeUrl(endpoint), this.setOptions(params))
                 .subscribe(
@@ -279,9 +281,13 @@ export class ApiService {
                 case 301:
                 case 302:
                 {
+                    this.isRedirecting = true;
+
                     resolve();
                     if ('redirectAfter' in errorResponse.error) {
-                        this._router.navigateByUrl(errorResponse.error['redirectAfter']);
+                        setTimeout(() => {
+                            this._router.navigateByUrl(errorResponse.error['redirectAfter']);
+                        }, 200);
                     }
                 }
                     break;

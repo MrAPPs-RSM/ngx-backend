@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {User, UserService} from '../auth/services/user.service';
 import {environment} from '../../environments/environment';
 import {ActivatedRoute, Route, Router} from '@angular/router';
@@ -16,7 +16,7 @@ declare const $: any;
     styleUrls: ['./panel.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class PanelComponent implements OnInit {
+export class PanelComponent implements OnInit, AfterViewInit {
 
     title = environment.name;
     showLogo: boolean = environment.assets.logo !== false;
@@ -75,6 +75,11 @@ export class PanelComponent implements OnInit {
         this.user = this._userService.getUser();
     }
 
+    ngAfterViewInit() {
+        if ($(window).width() <= 768) {
+            this.toggleSidebar(null, true);
+        }
+    }
 
     logout(): void {
         this._userService.removeToken();
@@ -84,9 +89,25 @@ export class PanelComponent implements OnInit {
         this._router.navigate(['login']);
     }
 
-    toggleSidebar(): void {
+    redirect(route: string): void {
+        this._router.navigate(['panel/' + route]);
+
+        if ($(window).width() <= 768) {
+            this.toggleSidebar();
+        }
+    }
+
+    toggleSidebar($event?: any, close?: boolean): void {
+        if ($event) {
+            $event.preventDefault();
+        }
         const wrapper = $('div#wrapper');
-        wrapper.toggleClass('sidebar-closed');
+
+        if (close) {
+            wrapper.addClass('sidebar-closed');
+        } else {
+            wrapper.toggleClass('sidebar-closed');
+        }
     }
 
     onGroupClick($event: any): void {

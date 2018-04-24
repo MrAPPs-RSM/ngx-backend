@@ -7,6 +7,19 @@
       &.ng2-smart-action-multiple-select {
         text-align: center;
       }
+      &.ng2-smart-action-drag {
+        width: 10px;
+        text-align: center;
+        padding: 0;
+        > span {
+          cursor: move;
+          padding: 30px 10px;
+          display: block;
+          > i {
+            pointer-events: none;
+          }
+        }
+      }
     }
   }
 }

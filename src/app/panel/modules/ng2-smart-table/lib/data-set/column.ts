@@ -2,6 +2,7 @@ import {DataSet} from './data-set';
 
 export class Column {
 
+    key: string = '';
     title: string = '';
     type: string = '';
     class: string = '';
@@ -12,9 +13,10 @@ export class Column {
     isAddable: boolean = true;
     isFilterable: boolean = false;
     sortDirection: string = '';
+    sortKey
     defaultSortDirection: string = '';
     editor: { type: string, config: any, component: any } = {type: '', config: {}, component: null};
-    filter: { type: string, config: any, key?: string } = {type: '', config: {}};
+    filter: { type: string, config: any, multiple: boolean } = {type: '', config: {}, multiple: false};
     renderComponent: any = null;
     compareFunction: Function;
     valuePrepareFunction: Function;
@@ -58,6 +60,7 @@ export class Column {
     }
 
     protected process() {
+        this.key = typeof this.settings['key'] !== 'undefined' ? this.settings['key'] : null;
         this.title = this.settings['title'];
         this.class = this.settings['class'];
         this.width = this.settings['width'];

@@ -7,6 +7,7 @@ import {GlobalState} from './global.state';
 import {Subscription} from 'rxjs/Subscription';
 import {UtilsService} from './services/utils.service';
 import {environment} from '../environments/environment';
+import {ApiService} from './api/api.service';
 
 @Component({
     selector: 'app-root',
@@ -24,6 +25,7 @@ export class AppComponent implements OnInit, OnDestroy {
                 private _route: ActivatedRoute,
                 private _state: GlobalState,
                 private _languageService: LanguageService,
+                private _apiService: ApiService,
                 private _pageTitle: PageTitleService,
                 private _menuService: MenuService) {
     }
@@ -31,7 +33,8 @@ export class AppComponent implements OnInit, OnDestroy {
     ngOnInit() {
 
         if (environment.production) {
-            window.console.log = function() {};
+            window.console.log = function () {
+            };
         }
 
         this._routerSub = this._router.events
@@ -73,19 +76,35 @@ export class AppComponent implements OnInit, OnDestroy {
                         this._menuService.breadcrumbs = [activeLink];
                     } else {
                         let found = false;
+                        let add = false;
 
                         for (let i = this._menuService.breadcrumbs.length; i--;) {
                             const breadcrumb = this._menuService.breadcrumbs[i];
 
+                            const breadcrumbUrl = this.removePaginationParams(breadcrumb.url);
+                            const linkUrl = this.removePaginationParams(activeLink.url);
+
                             if (breadcrumb.url === activeLink.url) {
                                 found = true;
-                                console.log(breadcrumb.url);
                                 this._menuService.breadcrumbs.splice(i + 1);
-                                return;
+                                break;
+                            } else if (breadcrumbUrl === linkUrl) {
+                                found = true;
+                                add = true;
+                                this._menuService.breadcrumbs.splice(this._menuService.breadcrumbs.length - 1);
+                                break;
                             }
                         }
 
                         if (!found) {
+                            if (this._apiService.isRedirecting) {
+                                this._menuService.breadcrumbs.splice(this._menuService.breadcrumbs.length - 1);
+                            }
+
+                            this._menuService.breadcrumbs.push(activeLink);
+                        }
+
+                        if (add) {
                             this._menuService.breadcrumbs.push(activeLink);
                         }
                     }
@@ -98,6 +117,34 @@ export class AppComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this._routerSub.unsubscribe();
         this._activePageSub.unsubscribe();
+    }
+
+    private objToQueryParams(obj) {
+        const str = [];
+        for (const p in obj) {
+            if (obj.hasOwnProperty(p)) {
+                str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
+            }
+        }
+        return str.join('&');
+    }
+
+    private queryParamsToObj(queryParams) {
+        return JSON.parse('{"' + queryParams.replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') + '"}');
+    }
+
+    private removePaginationParams(url: string): string {
+        const uri = decodeURI(url);
+        if (uri.indexOf('?') > -1) {
+            const queryParams = uri.split('?')[1];
+            const obj = this.queryParamsToObj(queryParams);
+            delete obj.page;
+            delete obj.perPage;
+            const newParams = this.objToQueryParams(obj);
+            return uri.split('?')[0] + '?' + newParams;
+        } else {
+            return url;
+        }
     }
 
     private hasSameParentPath(activeLink: any): boolean {

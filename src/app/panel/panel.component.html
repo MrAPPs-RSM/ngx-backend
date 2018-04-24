@@ -5,11 +5,14 @@
                 <img *ngIf="showLogo" [src]="logo">
                 <span *ngIf="!showLogo">{{ title }}</span>
             </a>
-            <span class="toggler" (click)="toggleSidebar()"><i class="fa fa-bars"></i></span>
+            <span class="hidden-xs toggler" (click)="toggleSidebar()"><i class="fa fa-bars"></i></span>
         </div>
         <div class="navbar-menu">
             <ul class="nav navbar-nav">
-                <li><a class="user" [routerLink]="'/panel/profile'" routerLinkActive="active"><i class="fa fa-user"></i> {{user.username}}</a></li>
+                <li class="hidden-sm hidden-md hidden-lg"><a class="toggler" (click)="toggleSidebar($event)"><i
+                        class="fa fa-bars"></i></a></li>
+                <li><a class="user" [routerLink]="'/panel/profile'" routerLinkActive="active"><i class="fa fa-user"></i>
+                    <span class="hidden-xs">{{user.username}}</span></a></li>
                 <li><a (click)="logout()" class="logout"><i class="fa fa-power-off"></i> <span
                         class="hidden-xs">Logout</span></a></li>
             </ul>
@@ -22,13 +25,28 @@
         <div class="menu">
             <ul>
                 <li *ngFor="let item of menu">
-                    <a *ngIf="!item.children" [routerLink]="item.path" routerLinkActive="active"><i *ngIf="item.icon" class="{{item.icon}}"></i>{{item.title}}</a>
-                    <a *ngIf="item.children && item.children.length > 0" (click)="onGroupClick($event)"><i *ngIf="item.icon" class="{{item.icon}}"></i>{{item.title}}
-                        <span class="fa fa-angle-down"></span></a>
+                    <span (click)="redirect(item.path)">
+                        <a *ngIf="!item.children" [routerLink]="item.path" routerLinkActive="active">
+                                <i *ngIf="item.icon" class="{{item.icon}}"></i>
+                                {{item.title}}
+                        </a>
+                    </span>
+                    <span class="group" *ngIf="item.children && item.children.length > 0"
+                          (click)="onGroupClick($event)">
+                        <a>
+                             <i *ngIf="item.icon" class="{{item.icon}}"></i>
+                            {{item.title}}
+                            <span class="fa fa-angle-down"></span>
+                        </a>
+                    </span>
                     <ul *ngIf="item.children">
                         <li *ngFor="let child of item.children">
-                            <a [routerLink]="child.path" routerLinkActive="active"><i *ngIf="child.icon"
-                                                                                      class="{{child.icon}}"></i>{{child.sideTitle ? child.sideTitle : child.title}}</a>
+                            <span (click)="redirect(child.path)">
+                                <a [routerLink]="child.path" routerLinkActive="active">
+                                        <i *ngIf="child.icon" class="{{child.icon}}"></i>
+                                        {{child.sideTitle ? child.sideTitle : child.title}}
+                                </a>
+                            </span>
                         </li>
                     </ul>
                 </li>

@@ -1,39 +1,31 @@
-<table [id]="tableId" [ngClass]="tableClass">
+<div class="table-responsive">
+    <table [id]="tableId" [ngClass]="tableClass">
 
-    <thead ng2-st-thead *ngIf="!isHideHeader || !isHideSubHeader"
-           [grid]="grid"
-           [isAllSelected]="isAllSelected"
-           [source]="source"
-           (create)="create.emit()"
-           (selectAllRows)="onSelectAllRows($event)"
-           (sort)="onSort($event)"
-           (filter)="onFilter($event)">
-    </thead>
+        <thead ng2-st-thead *ngIf="!isHideHeader || !isHideSubHeader"
+               [grid]="grid"
+               [isAllSelected]="isAllSelected"
+               [isDragEnabled]="isDragEnabled"
+               [source]="source"
+               (create)="create.emit()"
+               (selectAllRows)="onSelectAllRows($event)"
+               (sort)="onSort($event)"
+               (filter)="onFilter($event)">
+        </thead>
 
-    <tbody ng2-st-tbody
-           *ngIf="drag"
-           [grid]="grid"
-           [source]="source"
-           (action)="action.emit($event)"
-           (userSelectRow)="onUserSelectRow($event)"
-           (multipleSelectRow)="multipleSelectRow($event)"
-           (rowHover)="onRowHover($event)"
-           [dragula]="drag"
-           [dragulaModel]="grid.getRows()"
-           [dragulaOptions]="{}">
-    </tbody>
+        <tbody ng2-st-tbody
+               [grid]="grid"
+               [source]="source"
+               (action)="action.emit($event)"
+               (userSelectRow)="onUserSelectRow($event)"
+               (multipleSelectRow)="multipleSelectRow($event)"
+               (rowHover)="onRowHover($event)"
+               [isDragEnabled]="isDragEnabled"
+               [dragula]="'bag'"
+               [dragulaModel]="grid.getRows()">
+        </tbody>
 
-    <tbody ng2-st-tbody
-           *ngIf="!drag"
-           [grid]="grid"
-           [source]="source"
-           (action)="action.emit($event)"
-           (userSelectRow)="onUserSelectRow($event)"
-           (multipleSelectRow)="multipleSelectRow($event)"
-           (rowHover)="onRowHover($event)">
-    </tbody>
-
-</table>
+    </table>
+</div>
 
 <ng2-smart-table-pager *ngIf="isPagerDisplay"
                        [source]="source"

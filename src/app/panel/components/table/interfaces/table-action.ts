@@ -13,7 +13,6 @@ export interface TableAction {
             type?: string, // 'formParameters'
             loadData?: true, // only for formsParameters, reload data based on id
             filter?: string; // filter for get data on new table
-            id?: string, // id to pass :id
             endpoint?: string; // if endpoint call after navigate to form is different of the endpoint defined in that form
             associateFields?: Association[];
         }; // query params to pass to path
