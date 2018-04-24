@@ -70,7 +70,7 @@ export class FilterComponent implements OnInit, OnChanges {
 
     onFilter(query: string) {
         this.filter.emit({
-            column: this.column.filter && this.column.filter.key ? this.column.filter.key : this.column.id,
+            column: this.column.key ? this.column.key : this.column.id,
             value: Array.isArray(query) ? {'inq': query} : query === '' ? null : query
         });
     }

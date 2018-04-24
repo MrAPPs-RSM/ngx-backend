@@ -42,9 +42,10 @@ testem.log
 .DS_Store
 Thumbs.db
 
-# enviroments
-/src/environments/*.ts
+# environments
 /src/environments/*.scss
+/src/environments/environment.ts
+/src/environments/environment.prod.ts
 
 # images
 /src/assets/images/logo.*

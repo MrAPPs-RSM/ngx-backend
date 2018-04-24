@@ -1,0 +1,30 @@
+<div [class]="field.class ? field.class : 'col-sm-12'" [ngClass]="{'hidden': field.hidden}">
+    <div class="form-group">
+        <label>
+            {{field.label}}
+        </label>
+
+        <div class="gallery">
+            <div class="progress" [ngClass]="{'visible': isLoading}">
+                <div class="indeterminate"></div>
+            </div>
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3"
+                         *ngFor="let media of gallery">
+                        <div class="media" [style.background-image]="'url('+ media.url +')'">
+                            <a href="{{media.url}}" download target="_blank"
+                                 class="download btn btn-sm btn-block btn-default"
+                                 *ngIf="field.options.download">
+                                Download <i class="fa fa-download"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <span *ngIf="field.description" class="help-block">{{field.description}}</span>
+    </div>
+</div>

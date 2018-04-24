@@ -76,24 +76,24 @@ export class FormComponent implements OnInit, OnDestroy {
 
             if (this.settings.isEdit) {
                 this.loadData();
-            } else {
-                if (params.formParams) {
+            }
 
-                    const values = JSON.parse(params.formParams);
-                    const newValues = {};
+            if (params.formParams) {
+                const values = JSON.parse(params.formParams);
+                const newValues = {};
 
-                    for (const key of Object.keys(values)) {
-                        newValues[key] = isNaN(values[key]) ? values[key] : parseInt(values[key]);
-                    }
-
-                    this._ref.detectChanges();
-                    this.form.patchValue(newValues);
+                for (const key of Object.keys(values)) {
+                    newValues[key] = isNaN(values[key]) ? values[key] : parseInt(values[key]);
                 }
 
-                if (params.loadData) {
-                    const data = JSON.parse(params.loadData);
-                    this.loadData(null, data.id, data.endpoint);
-                }
+                this._ref.detectChanges();
+                this.form.patchValue(newValues);
+            }
+
+            // TODO: remove this after veryfied its unused
+            if (params.loadData) {
+                const data = JSON.parse(params.loadData);
+                this.loadData(null, data.id, data.endpoint);
             }
         });
 
