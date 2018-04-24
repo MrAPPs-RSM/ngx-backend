@@ -39,7 +39,7 @@ export class UtilsService {
         return o;
     }
 
-    public static mergeDeep(target, source) {
+    public static mergeDeep(target, source): any {
         const output = Object.assign({}, target);
         if (this.isObject(target) && this.isObject(source)) {
             Object.keys(source).forEach(key => {
