@@ -43,8 +43,9 @@ testem.log
 Thumbs.db
 
 # environments
-/src/environments/*gallery.ts
 /src/environments/*.scss
+/src/environments/environment.ts
+/src/environments/environment.prod.ts
 
 # images
 /src/assets/images/logo.*
