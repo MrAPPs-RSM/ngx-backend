@@ -18,7 +18,7 @@ declare const $: any;
                        [multiple]="column.filter.multiple"
                        [formControl]="inputControl"
                        [(ngModel)]="query"
-                       [appendTo]="'body'"
+                       [appendTo]="'nav'"
                        [closeOnSelect]="true"
                        bindLabel="text"
                        bindValue="id"

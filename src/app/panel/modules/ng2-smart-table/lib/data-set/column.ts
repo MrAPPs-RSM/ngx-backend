@@ -2,7 +2,7 @@ import {DataSet} from './data-set';
 
 export class Column {
 
-    key?: string;
+    key: string = '';
     title: string = '';
     type: string = '';
     class: string = '';
@@ -59,6 +59,7 @@ export class Column {
     }
 
     protected process() {
+        this.key = typeof this.settings['key'] !== 'undefined' ? this.settings['key'] : null;
         this.title = this.settings['title'];
         this.class = this.settings['class'];
         this.width = this.settings['width'];
