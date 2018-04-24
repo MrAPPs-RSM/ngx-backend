@@ -65,21 +65,26 @@ export class TableComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        if (this.settings.pager && this.settings.pager.perPage) {
+            this.onPagination({perPage: this.settings.pager.perPage, page: 1});
+        }
+
         this.translateLabels();
         this.resetPagination = false;
         this._subscription = this._route.queryParams.subscribe(params => {
             this.activeFilters.sort = [];
             this.activeFilters.pagination = {
-                page: 1,
-                perPage: this.preparePerPage(),
+                page: params && params['page'] ? params['page'] : 1,
+                perPage: params && params['perPage'] ? params['perPage'] : this.preparePerPage(),
             };
+            this.pagination = this.activeFilters.pagination;
 
             /** Read fixed filter from settings if set */
             if (this.settings.api.filter) {
                 this.filter = JSON.parse(this.settings.api.filter);
             }
 
-            if (this._route.snapshot.queryParams && this._route.snapshot.queryParams['listParams']) {
+            if (params && params['listParams']) {
                 const queryParamsFilter = JSON.parse(this._route.snapshot.queryParams['listParams']);
                 this.filter = UtilsService.mergeDeep(this.filter, queryParamsFilter);
             }
@@ -633,9 +638,8 @@ export class TableComponent implements OnInit, OnDestroy {
     }
 
     onPagination(pagination: TablePagination) {
-        this.pagination = pagination;
-        this.getData(false);
-        this.activeFilters.pagination = this.pagination;
+        const queryParams = UtilsService.mergeDeep(this._route.snapshot.queryParams, pagination);
+        this._router.navigate([], {queryParams: queryParams});
     }
 
     onSort(sort: TableSort) {
