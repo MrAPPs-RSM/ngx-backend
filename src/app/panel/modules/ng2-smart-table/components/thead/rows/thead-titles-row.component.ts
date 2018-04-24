@@ -13,9 +13,8 @@ import {DataSource} from '../../../lib/data-source/data-source';
             [isAllSelected]="isAllSelected"
             (click)="selectAllRows.emit($event)">
         </th>
-        <th *ngFor="let column of grid.getVisibleColumns()" class="ng2-smart-th {{ column.id }}" [ngClass]="column.class"
-            [style.width]="column.width">
-            <ng2-st-column-title [source]="source" [column]="column" (sort)="sort.emit($event)"></ng2-st-column-title>
+        <th *ngFor="let column of grid.getVisibleColumns()" class="ng2-smart-th {{ column.id }}" [ngClass]="column.class">
+            <ng2-st-column-title [source]="source" [column]="column" (sort)="sort.emit($event)" [ngStyle]="{'width':column.width,'display':'inline-block'}"></ng2-st-column-title>
         </th>
         <th ng2-st-actions-title *ngIf="areActionsEnabled" [grid]="grid"></th>
     `,
@@ -31,6 +30,7 @@ export class TheadTitlesRowComponent implements OnChanges {
     @Output() selectAllRows = new EventEmitter<any>();
 
     isMultiSelectVisible: boolean;
+
     areActionsEnabled: boolean;
 
     ngOnChanges() {

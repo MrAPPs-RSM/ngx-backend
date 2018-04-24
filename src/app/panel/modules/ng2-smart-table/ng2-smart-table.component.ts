@@ -163,6 +163,7 @@ export class Ng2SmartTableComponent implements OnChanges, OnInit, OnDestroy {
 
     onFilter($event: TableFilter) {
         this.filters[$event.column] = $event.value;
+
         this.filter.emit(this.filters);
         this.resetAllSelector();
     }

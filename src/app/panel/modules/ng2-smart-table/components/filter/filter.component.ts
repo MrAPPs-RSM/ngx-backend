@@ -2,7 +2,6 @@ import {Component, Input, Output, EventEmitter, OnChanges, SimpleChanges, OnInit
 
 import {DataSource} from '../../lib/data-source/data-source';
 import {Column} from '../../lib/data-set/column';
-import {Subscription} from 'rxjs/Subscription';
 import {Grid} from '../../lib/grid';
 
 @Component({
@@ -72,7 +71,7 @@ export class FilterComponent implements OnInit, OnChanges {
     onFilter(query: string) {
         this.filter.emit({
             column: this.column.filter && this.column.filter.key ? this.column.filter.key : this.column.id,
-            value: query
+            value: Array.isArray(query) ? {'inq': query} : query === '' ? null : query
         });
     }
 }

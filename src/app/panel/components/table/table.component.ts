@@ -616,15 +616,23 @@ export class TableComponent implements OnInit, OnDestroy {
     onFilter(filter: TableFilter) {
         if (this.filter.where) {
             Object.keys(filter).forEach((key) => {
-                if (filter[key] !== '' && filter[key] !== null && (!Array.isArray(filter[key]) || (Array.isArray(filter[key]) && filter[key].length > 0))) {
+                if (filter[key] !== null && filter[key] !== '') {
                     this.resetPagination = true;
-                    this.filter.where[key] = Array.isArray(filter[key]) ? {'inq': filter[key]} : filter[key];
+                    this.filter.where[key] = filter[key];
                 } else {
                     this.resetPagination = false;
                     delete this.filter.where[key];
                 }
             });
         } else {
+            for (let i = 0; i < Object.keys(filter).length; i++) {
+                Object.keys(filter).forEach((key) => {
+                    if (filter[key] === null || filter[key] === '') {
+                        delete filter[key];
+                    }
+                });
+            }
+
             this.filter.where = filter;
         }
 
