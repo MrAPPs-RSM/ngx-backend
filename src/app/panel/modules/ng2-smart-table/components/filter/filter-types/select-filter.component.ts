@@ -99,8 +99,8 @@ export class SelectFilterComponent extends DefaultFilter implements OnInit, OnCh
     }
 
     private onScroll(): void {
-        $('.table-wrapper').scroll(function() {
-            $('.table-wrapper').click();
+        $('.table-responsive').scroll(function() {
+            $('.table-responsive').click();
         });
     }
 }
