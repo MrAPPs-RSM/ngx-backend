@@ -78,18 +78,20 @@ body {
   }
 
   /* Select filter in tables */
-  > div.ng-select-dropdown-outer.bottom {
-    margin-top: 0;
-    border-radius: $borderRadius;
-    border: 1px solid $lightGrey;
-    > ng-select-virtual-scroll.ng-select-dropdown {
-      top: -1px;
-      > div {
-        > div.ng-option {
-          border-radius: $borderRadius;
-          &.marked {
+  nav {
+    div.ng-select-dropdown-outer.bottom {
+      margin-top: 0;
+      border-radius: $borderRadius;
+      border: 1px solid $lightGrey;
+      > ng-select-virtual-scroll.ng-select-dropdown {
+        top: -1px;
+        > div {
+          > div.ng-option {
             border-radius: $borderRadius;
-            background-color: #f5f5f5;
+            &.marked {
+              border-radius: $borderRadius;
+              background-color: #f5f5f5;
+            }
           }
         }
       }

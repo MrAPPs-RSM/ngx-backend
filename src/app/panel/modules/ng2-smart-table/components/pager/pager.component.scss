@@ -4,7 +4,8 @@ ng2-smart-table-pager {
   > div {
     > nav.ng2-smart-pagination-nav {
       > ul.pagination {
-        margin-bottom: 0;
+        margin: 0;
+        margin-bottom: -5px;
         > li {
           &.active {
             > span, a {
