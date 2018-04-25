@@ -24,10 +24,11 @@ export interface MediaLibraryOptions {
 
 // Query params to add to retrieve medias
 export interface MediaLibraryParams {
-    types?: string;
+    types?: any;
     search?: string;
     page?: number;
     perPage?: number;
+    skipIds?: any;
 }
 
 export interface Media {

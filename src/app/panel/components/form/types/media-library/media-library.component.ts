@@ -50,7 +50,7 @@ export class MediaLibraryComponent implements OnInit, OnChanges, OnDestroy {
         if (changes['show']) {
             if (changes['show'].currentValue === true) {
                 if (this.data.length === 0) {
-                    this.reload();
+                    this.reload(true);
                 }
             }
         }
@@ -59,12 +59,6 @@ export class MediaLibraryComponent implements OnInit, OnChanges, OnDestroy {
     ngOnInit() {
         this.isLoading = false;
         this.count = 0;
-        this.params = {
-            page: 1,
-            perPage: 12,
-            search: null,
-            types: JSON.stringify(this.allowedContentTypes)
-        };
         this.reset();
         this.initPages();
         this.onFilterChange();
@@ -83,7 +77,10 @@ export class MediaLibraryComponent implements OnInit, OnChanges, OnDestroy {
             });
     }
 
-    private reload() {
+    private reload(reset?: boolean) {
+        if (reset) {
+            this.reset();
+        }
         this.getCount()
             .then((res: { count: number }) => {
                 this.count = res.count;
@@ -98,19 +95,26 @@ export class MediaLibraryComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private reset() {
-        this.params.search = null;
-        this.params.page = 1;
+        this.params = {
+            page: 1,
+            perPage: 12,
+            search: null,
+            types: JSON.stringify(this.allowedContentTypes),
+            skipIds: JSON.stringify([])
+        };
         this.data = [];
         this.selection = [];
     }
 
     private getCount(): Promise<any> {
-        return this._apiService.get(this.options.endpoint + '/count', this.composeParams(true));
+        this.composeParams();
+        return this._apiService.get(this.options.endpoint + '/count', this.params);
     }
 
     private getData(): void {
         this.isLoading = true;
-        this._apiService.get(this.options.endpoint, this.composeParams())
+        this.composeParams();
+        this._apiService.get(this.options.endpoint, this.params)
             .then((data) => {
                 this.isLoading = false;
                 this.data = data;
@@ -123,22 +127,18 @@ export class MediaLibraryComponent implements OnInit, OnChanges, OnDestroy {
             });
     }
 
-    private composeParams(count?: boolean): Object {
-        const params: any = this.params;
-
+    private composeParams(): void {
         if (this.uploadedFiles.length > 0) {
-            params.skipIds = [];
+            const skipIds = [];
             this.uploadedFiles.forEach((file: UploadedFile) => {
-                params.skipIds.push(file.id);
+                skipIds.push(file.id);
             });
+            this.params.skipIds = JSON.stringify(skipIds);
         }
 
-        if (count) {
-            delete params.page;
-            delete params.perPage;
+        if (!this.params.search) {
+            this.params.search = '';
         }
-
-        return params;
     }
 
     selectMedia(event: any, media: Media): void {
