@@ -7,6 +7,16 @@ ng2-smart-table-pager {
         margin: 0;
         margin-bottom: -5px;
         > li {
+          > span {
+            @include respond-to(xs) {
+              padding: 4px 8px;
+            }
+          }
+          > a {
+            @include respond-to(xs) {
+              padding: 4px 8px;
+            }
+          }
           &.active {
             > span, a {
               border-color: $primary;
