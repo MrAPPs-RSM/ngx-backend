@@ -73,10 +73,10 @@ app-table {
       div.pagination-wrapper {
         @include clearfix;
         @include respond-to(from-sm) {
-          margin: 20px 0;
+          margin: 20px 0 0;
         }
         @include respond-to(xs) {
-          margin: 20px -1px;
+          margin: 20px -1px 0;
         }
       }
 

@@ -86,6 +86,7 @@ app-panel {
           list-style: none;
           > li {
             > span {
+              @include _transition(all 0.3s);
               cursor: pointer;
               display: block;
               > a {
@@ -135,6 +136,7 @@ app-panel {
               list-style: none;
               > li {
                 > span {
+                  @include _transition(all 0.3s);
                   cursor: pointer;
                   display: block;
                   > a {
