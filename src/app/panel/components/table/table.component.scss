@@ -3,6 +3,11 @@
 app-table {
   > div {
     @include card();
+    padding: 0;
+    @include respond-to(from-sm) {
+      margin-bottom: 20px;
+    }
+
     &.loading {
       > header {
         > .progress {
@@ -33,6 +38,44 @@ app-table {
         height: calc(100% + (#{$cardPaddingY}*2));
         background: #4c4c4c;
         opacity: 0.2;
+      }
+
+      div.table-responsive {
+        border: none;
+        @include respond-to(from-sm) {
+          margin: 20px 30px;
+        }
+        @include respond-to(xs) {
+          margin: 0;
+        }
+        table {
+          @include respond-to(xs) {
+            border-top: none;
+            border-left: none;
+            border-right: none;
+          }
+        }
+      }
+
+      div.pagination-wrapper {
+        @include clearfix;
+        @include respond-to(from-sm) {
+          margin: 20px 30px;
+        }
+
+        @include respond-to(xs) {
+          margin: 20px -1px;
+        }
+      }
+
+      div.general-actions {
+        @include clearfix;
+        @include respond-to(from-sm) {
+          margin: 20px 30px;
+        }
+        @include respond-to(xs) {
+          margin: 20px 0 0;
+        }
       }
     }
   }

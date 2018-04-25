@@ -1,14 +1,14 @@
 .btn {
-  border: none;
+  border: none !important;
   border-radius: $borderRadius !important;
-  font-weight: $light;
-  padding: 10px 20px;
-  max-width: 100%;
+  font-weight: $light !important;
+  padding: 10px 20px !important;
+  max-width: 100% !important;
   text-decoration: none !important;
-  white-space: inherit;
-  text-align: inherit;
+  white-space: inherit !important;
+  text-align: inherit !important;
   @include _transition(all 0.3s);
-  font-size: 15px;
+  font-size: 15px !important;
 
   &:focus, &:active {
     outline: none;
@@ -18,8 +18,8 @@
   }
 
   &.btn-sm {
-    padding: 7px 10px;
-    font-size: 14px;
+    padding: 7px 10px !important;
+    font-size: 14px !important;
   }
 
   &.btn-link {

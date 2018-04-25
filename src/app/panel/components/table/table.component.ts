@@ -70,16 +70,17 @@ export class TableComponent implements OnInit, OnDestroy {
         this._subscription = this._route.queryParams.subscribe(params => {
             this.activeFilters.sort = [];
             this.activeFilters.pagination = {
-                page: 1,
-                perPage: this.preparePerPage(),
+                page: params && params['page'] ? params['page'] : 1,
+                perPage: params && params['perPage'] ? params['perPage'] : this.preparePerPage(),
             };
+            this.pagination = this.activeFilters.pagination;
 
             /** Read fixed filter from settings if set */
             if (this.settings.api.filter) {
                 this.filter = JSON.parse(this.settings.api.filter);
             }
 
-            if (this._route.snapshot.queryParams && this._route.snapshot.queryParams['listParams']) {
+            if (params && params['listParams']) {
                 const queryParamsFilter = JSON.parse(this._route.snapshot.queryParams['listParams']);
                 this.filter = UtilsService.mergeDeep(this.filter, queryParamsFilter);
             }
@@ -575,23 +576,22 @@ export class TableComponent implements OnInit, OnDestroy {
         });
     }
 
-    onAction(event: { action: TableAction, data?: any }) {
-        this.parseAction(event.action, event.data);
+    onAction($event: { action: TableAction, data?: any }) {
+        this.parseAction($event.action, $event.data);
     }
 
     onCreate() {
         this.parseAction(this.settings.actions.add);
     }
 
-    onRowSelect(event: TableSelection) {
+    onRowSelect($event: TableSelection) {
         console.log('ON Select row(s)');
-        console.log(event);
+        console.log($event);
     }
 
-    onRowDrop(event: any) {
-
+    onRowDrop($event: any) {
         const dragDropSettings: TableDrop = {
-            data: event.data,
+            data: $event.data,
             page: this.activeFilters.pagination.page,
             perPage: this.activeFilters.pagination.perPage
         };
@@ -617,15 +617,23 @@ export class TableComponent implements OnInit, OnDestroy {
     onFilter(filter: TableFilter) {
         if (this.filter.where) {
             Object.keys(filter).forEach((key) => {
-                if (filter[key] !== '' && filter[key] !== null && (!Array.isArray(filter[key]) || (Array.isArray(filter[key]) && filter[key].length > 0))) {
+                if (filter[key] !== null && filter[key] !== '') {
                     this.resetPagination = true;
-                    this.filter.where[key] = Array.isArray(filter[key]) ? {'inq': filter[key]} : filter[key];
+                    this.filter.where[key] = filter[key];
                 } else {
                     this.resetPagination = false;
                     delete this.filter.where[key];
                 }
             });
         } else {
+            for (let i = 0; i < Object.keys(filter).length; i++) {
+                Object.keys(filter).forEach((key) => {
+                    if (filter[key] === null || filter[key] === '') {
+                        delete filter[key];
+                    }
+                });
+            }
+
             this.filter.where = filter;
         }
 
@@ -634,9 +642,8 @@ export class TableComponent implements OnInit, OnDestroy {
     }
 
     onPagination(pagination: TablePagination) {
-        this.pagination = pagination;
-        this.getData(false);
-        this.activeFilters.pagination = this.pagination;
+        const queryParams = UtilsService.mergeDeep(this._route.snapshot.queryParams, pagination);
+        this._router.navigate([], {queryParams: queryParams});
     }
 
     onSort(sort: TableSort) {

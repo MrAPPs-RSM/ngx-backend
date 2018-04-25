@@ -57,6 +57,7 @@ import {DateRangePickerComponent} from './components/form/types/date-range-picke
 import {MediaLibraryComponent} from './components/form/types/media-library/media-library.component';
 import {TimetablePickerComponent} from './components/form/types/timetable-picker/timetable-picker.component';
 import {GeoSearchComponent} from './components/form/types/geo-search/geo-search.component';
+import { GalleryComponent } from './components/form/types/gallery/gallery.component';
 
 const COMPONENTS = [
     PanelComponent,
@@ -158,7 +159,8 @@ const routes: Routes = [
         InputPasswordComponent
     ],
     declarations: [
-        ...COMPONENTS
+        ...COMPONENTS,
+        GalleryComponent
     ],
     providers: [
         ...PROVIDERS

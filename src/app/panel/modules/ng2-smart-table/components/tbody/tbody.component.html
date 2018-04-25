@@ -1,9 +1,13 @@
 <tr *ngFor="let row of grid.getRows()"
     (click)="userSelectRow.emit(row)"
     (mouseover)="rowHover.emit(row)"
-    [style.cursor]="dragula ? 'move' : 'auto'"
     class="ng2-smart-row"
     [ngClass]="{selected: row.isSelected}">
+
+    <td *ngIf="isDragEnabled" class="ng2-smart-actions ng2-smart-action-drag">
+        <span class="drag"><i class="fa fa-arrows"></i></span>
+    </td>
+
     <td *ngIf="isMultiSelectVisible" class="ng2-smart-actions ng2-smart-action-multiple-select"
         (click)="onMultipleSelectRow($event, row)">
         <label class="checkbox">

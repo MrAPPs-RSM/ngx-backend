@@ -2,7 +2,6 @@ import {Component, Input, Output, EventEmitter, OnChanges, SimpleChanges, OnInit
 
 import {DataSource} from '../../lib/data-source/data-source';
 import {Column} from '../../lib/data-set/column';
-import {Subscription} from 'rxjs/Subscription';
 import {Grid} from '../../lib/grid';
 
 @Component({
@@ -63,7 +62,6 @@ export class FilterComponent implements OnInit, OnChanges {
             if (!changes.source.firstChange) {
                 // Just to trigger onChange on select filter
                 if (this.column.filter.type === 'select') {
-                    console.log('passo');
                     this.reloadSelectOptions = !this.reloadSelectOptions;
                 }
             }
@@ -72,8 +70,8 @@ export class FilterComponent implements OnInit, OnChanges {
 
     onFilter(query: string) {
         this.filter.emit({
-            column: this.column.filter && this.column.filter.key ? this.column.filter.key : this.column.id,
-            value: query
+            column: this.column.key ? this.column.key : this.column.id,
+            value: Array.isArray(query) ? {'inq': query} : query === '' ? null : query
         });
     }
 }

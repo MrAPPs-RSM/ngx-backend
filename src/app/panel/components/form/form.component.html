@@ -98,10 +98,12 @@
                     </button>
                 </div>
                 <div class="pull-right">
-                    <button (click)="onCancel()" class="btn btn-default">{{'forms.labels.cancel' | translate}}</button>
+                    <button (click)="onCancel()" *ngIf="!isExternalForm" class="btn btn-default">
+                        {{ (!settings.onlyView ? 'forms.labels.cancel' : 'forms.labels.close') | translate}}
+                    </button>
                     <button type="button" (click)="onSubmit()" class="btn btn-primary" *ngIf="!settings.onlyView"
-                            [disabled]="isLoading || isExternalLoading"> {{ settings.submit?.label ? settings.submit.label :
-                        'forms.labels.submit' | translate}}
+                            [disabled]="isLoading || isExternalLoading">
+                        {{ settings.submit?.label ? settings.submit.label : 'forms.labels.submit' | translate}}
                     </button>
                 </div>
             </div>
