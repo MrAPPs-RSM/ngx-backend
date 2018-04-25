@@ -2,7 +2,7 @@ import {Component, Input, Output, EventEmitter, OnChanges} from '@angular/core';
 
 import {Grid} from '../../lib/grid';
 import {DataSource} from '../../lib/data-source/data-source';
-import {Row} from "../../lib/data-set/row";
+import {Row} from '../../lib/data-set/row';
 
 @Component({
     selector: '[ng2-st-tbody]',

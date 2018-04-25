@@ -46,6 +46,16 @@ app-form {
       div.multilang {
         margin-bottom: 20px;
       }
+
+      > div.buttons {
+        .pull-left, .pull-right {
+          > button {
+            &:not(:first-child) {
+              margin-left: 5px;
+            }
+          }
+        }
+      }
     }
   }
 }

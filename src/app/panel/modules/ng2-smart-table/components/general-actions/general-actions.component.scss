@@ -15,15 +15,9 @@ ng2-smart-table-general-actions {
           display: inline-block;
 
           @include respond-to(from-sm) {
-            padding: 10px 20px;
-            font-size: 15px;
-          }
-
-          @include respond-to(xs) {
             padding: 8px 15px;
             font-size: 14px;
           }
-
         }
       }
     }

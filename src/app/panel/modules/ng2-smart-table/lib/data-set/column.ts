@@ -13,7 +13,6 @@ export class Column {
     isAddable: boolean = true;
     isFilterable: boolean = false;
     sortDirection: string = '';
-    sortKey
     defaultSortDirection: string = '';
     editor: { type: string, config: any, component: any } = {type: '', config: {}, component: null};
     filter: { type: string, config: any, multiple: boolean } = {type: '', config: {}, multiple: false};
