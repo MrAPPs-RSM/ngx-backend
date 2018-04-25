@@ -2,7 +2,7 @@ import {
     Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChange,
     ViewEncapsulation
 } from '@angular/core';
-import {Media, MediaLibraryOptions, UploadedFile} from '../../interfaces/form-field-file';
+import {Media, MediaLibraryOptions, MediaLibraryParams, UploadedFile} from '../../interfaces/form-field-file';
 import {ApiService, ErrorResponse} from '../../../../../api/api.service';
 import {UtilsService} from '../../../../../services/utils.service';
 import {ToastsService} from '../../../../../services/toasts.service';
@@ -27,27 +27,20 @@ export class MediaLibraryComponent implements OnInit, OnChanges, OnDestroy {
     @Input() options: MediaLibraryOptions;
     @Input() uploadedFiles: UploadedFile[];
     @Input() maxFiles: number;
-    @Input() allowedContentTypes: any[];
+    @Input() allowedContentTypes: string[];
 
     @Output() confirm: EventEmitter<any> = new EventEmitter<any>();
 
-    isLoading: boolean = false;
+    isLoading: boolean;
     data: Media[] = [];
     selection: Media[];
-    count: number = 0;
-
+    count: number;
     pages: number[];
-    pagination: { perPage: number, page: number } = {
-        perPage: 12,
-        page: 1
-    };
+
+    private params: MediaLibraryParams;
 
     subscriptionInputControl = Subscription.EMPTY;
     inputControl = new FormControl();
-
-    filter: any = {
-        where: {}
-    };
 
     constructor(private _apiService: ApiService,
                 private _toast: ToastsService) {
@@ -57,13 +50,15 @@ export class MediaLibraryComponent implements OnInit, OnChanges, OnDestroy {
         if (changes['show']) {
             if (changes['show'].currentValue === true) {
                 if (this.data.length === 0) {
-                    this.reload();
+                    this.reload(true);
                 }
             }
         }
     }
 
     ngOnInit() {
+        this.isLoading = false;
+        this.count = 0;
         this.reset();
         this.initPages();
         this.onFilterChange();
@@ -75,11 +70,17 @@ export class MediaLibraryComponent implements OnInit, OnChanges, OnDestroy {
 
     private onFilterChange() {
         this.subscriptionInputControl = this.inputControl.valueChanges.skip(1).distinctUntilChanged().debounceTime(300)
-            .subscribe((value: string) => this.onFilter(value, 'fileName'));
-        // TODO: parametrizzare 'fileName'
+            .subscribe((value: string) => {
+                this.params.search = value;
+                this.params.page = 1;
+                this.reload();
+            });
     }
 
-    private reload() {
+    private reload(reset?: boolean) {
+        if (reset) {
+            this.reset();
+        }
         this.getCount()
             .then((res: { count: number }) => {
                 this.count = res.count;
@@ -94,19 +95,26 @@ export class MediaLibraryComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private reset() {
-        this.filter.where = {};
-        this.pagination.page = 1;
+        this.params = {
+            page: 1,
+            perPage: 12,
+            search: null,
+            types: JSON.stringify(this.allowedContentTypes),
+            skipIds: JSON.stringify([])
+        };
         this.data = [];
         this.selection = [];
     }
 
     private getCount(): Promise<any> {
-        return this._apiService.get(this.options.endpoint + '/count', this.composeCountParams());
+        this.composeParams();
+        return this._apiService.get(this.options.endpoint + '/count', this.params);
     }
 
     private getData(): void {
         this.isLoading = true;
-        this._apiService.get(this.options.endpoint, this.composeParams())
+        this.composeParams();
+        this._apiService.get(this.options.endpoint, this.params)
             .then((data) => {
                 this.isLoading = false;
                 this.data = data;
@@ -119,119 +127,18 @@ export class MediaLibraryComponent implements OnInit, OnChanges, OnDestroy {
             });
     }
 
-    private composeAllowedContentTypesFilter(): Object | null {
-        if (this.allowedContentTypes.length > 0) {
-            const filter = {
-                or: []
-            };
-            // TODO: parametrizzare 'type'
-            this.allowedContentTypes.forEach((type) => {
-                filter.or.push({type: {like: '%' + type + '%'}});
-            });
-
-            return filter;
-        }
-
-        return null;
-    }
-
-    private composeParams(): Object {
-
-        const params = {
-            where: {
-                and: []
-            },
-            order: null,
-            skip: (this.pagination.page - 1) * this.pagination.perPage,
-            limit: this.pagination.perPage,
-        };
-
-        let resetPagination: boolean = false;
-
-        Object.keys(this.filter.where).forEach((key) => {
-            const condition = {};
-            if (this.filter.where[key] !== null && this.filter.where[key] !== '') {
-                if (typeof this.filter.where[key] === 'string') {
-                    condition[key] = {
-                        like: '%' + this.filter.where[key] + '%'
-                    };
-                } else {
-                    condition[key] = this.filter.where[key];
-                }
-                resetPagination = true;
-                params.where.and.push(condition);
-            }
-        });
-
+    private composeParams(): void {
         if (this.uploadedFiles.length > 0) {
+            const skipIds = [];
             this.uploadedFiles.forEach((file: UploadedFile) => {
-                params.where.and.push({
-                    id: {
-                        neq: file.id
-                    }
-                });
+                skipIds.push(file.id);
             });
+            this.params.skipIds = JSON.stringify(skipIds);
         }
 
-        const typesFilter = this.composeAllowedContentTypesFilter();
-        if (typesFilter) {
-            params.where.and.push(typesFilter);
+        if (!this.params.search) {
+            this.params.search = '';
         }
-
-        if (resetPagination) {
-            this.pagination.page = 1;
-            params.skip = 0;
-        }
-
-        return {
-            filter: JSON.stringify(params),
-            lang: null
-        };
-
-    }
-
-    private composeCountParams(): Object {
-        const params = {
-            filter: {
-                where: {
-                    and: []
-                }
-            }
-        };
-
-        Object.keys(this.filter.where).forEach((key) => {
-            if (this.filter.where[key] !== null) {
-                const condition = {};
-                if (typeof this.filter.where[key] === 'string') {
-                    condition[key] = {
-                        like: '%' + this.filter.where[key] + '%'
-                    };
-                } else {
-                    condition[key] = this.filter.where[key];
-                }
-                params.filter.where.and.push(condition);
-            }
-        });
-
-        if (this.uploadedFiles.length > 0) {
-            this.uploadedFiles.forEach((file: UploadedFile) => {
-                params.filter.where.and.push({
-                    id: {
-                        neq: file.id
-                    }
-                });
-            });
-        }
-
-        const typesFilter = this.composeAllowedContentTypesFilter();
-        if (typesFilter) {
-            params.filter.where.and.push(typesFilter);
-        }
-
-        return {
-            filter: JSON.stringify(params.filter),
-            lang: null
-        };
     }
 
     selectMedia(event: any, media: Media): void {
@@ -288,10 +195,10 @@ export class MediaLibraryComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     shouldShowPagination(): boolean {
-        return this.count > this.pagination.perPage;
+        return this.count > this.params.perPage;
     }
 
-    initPages() {
+    private initPages() {
         const pagesCount = this.getLastPage();
         let showPagesCount = 4;
         showPagesCount = pagesCount < showPagesCount ? pagesCount : showPagesCount;
@@ -300,7 +207,7 @@ export class MediaLibraryComponent implements OnInit, OnChanges, OnDestroy {
         if (this.shouldShowPagination()) {
 
             let middleOne = Math.ceil(showPagesCount / 2);
-            middleOne = this.pagination.page >= middleOne ? this.pagination.page : middleOne;
+            middleOne = this.params.page >= middleOne ? this.params.page : middleOne;
 
             let lastOne = middleOne + Math.floor(showPagesCount / 2);
             lastOne = lastOne >= pagesCount ? pagesCount : lastOne;
@@ -314,14 +221,14 @@ export class MediaLibraryComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     paginate(page: number): boolean {
-        this.pagination.page = page;
+        this.params.page = page;
         this.getData();
         this.initPages();
         return false;
     }
 
     getCurrentPage(): number {
-        return this.pagination.page;
+        return this.params.page;
     }
 
     getPages(): number[] {
@@ -329,11 +236,6 @@ export class MediaLibraryComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     getLastPage(): number {
-        return Math.ceil(this.count / this.pagination.perPage);
-    }
-
-    onFilter(value: any, key: string): void {
-        this.filter.where[key] = value;
-        this.reload();
+        return Math.ceil(this.count / this.params.perPage);
     }
 }
