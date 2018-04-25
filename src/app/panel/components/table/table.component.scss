@@ -3,11 +3,11 @@
 app-table {
   > div {
     @include card();
-    padding: 0;
-    @include respond-to(from-sm) {
-      margin-bottom: 20px;
-    }
 
+    @include respond-to(xs) {
+      padding: 0;
+    }
+    margin-bottom: 20px;
     &.loading {
       > header {
         > .progress {
@@ -20,8 +20,17 @@ app-table {
         }
       }
     }
-    > div.multilang {
+
+    > div.select.multilang {
       margin-bottom: 20px;
+      > ng-select.ng-select {
+        > div.ng-control {
+          @include respond-to(xs) {
+            border-top: none;
+            border-left: none;
+          }
+        }
+      }
     }
 
     > div.table-wrapper {
@@ -34,20 +43,14 @@ app-table {
         position: absolute;
         top: -#{$cardPaddingY};
         left: -#{$cardPaddingY};
-        width: calc(100% + (#{$cardPaddingY}*2));
-        height: calc(100% + (#{$cardPaddingY}*2));
+        width: calc(100% + (#{$cardPaddingY} * 2));
+        height: calc(100% + (#{$cardPaddingY} * 2));
         background: #4c4c4c;
         opacity: 0.2;
       }
 
       div.table-responsive {
         border: none;
-        @include respond-to(from-sm) {
-          margin: 20px 30px;
-        }
-        @include respond-to(xs) {
-          margin: 0;
-        }
         table {
           @include respond-to(xs) {
             border-top: none;
@@ -57,12 +60,21 @@ app-table {
         }
       }
 
+      &.multi-lang {
+        div.table-responsive {
+          table {
+            @include respond-to(xs) {
+              border-top: 1px solid $lightGrey;
+            }
+          }
+        }
+      }
+
       div.pagination-wrapper {
         @include clearfix;
         @include respond-to(from-sm) {
-          margin: 20px 30px;
+          margin: 20px 0;
         }
-
         @include respond-to(xs) {
           margin: 20px -1px;
         }
@@ -70,12 +82,7 @@ app-table {
 
       div.general-actions {
         @include clearfix;
-        @include respond-to(from-sm) {
-          margin: 20px 30px;
-        }
-        @include respond-to(xs) {
-          margin: 20px 0 0;
-        }
+        margin: 20px 0 0;
       }
     }
   }

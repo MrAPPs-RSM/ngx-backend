@@ -6,7 +6,7 @@
         </div>
     </header>
 
-    <div class="multilang" *ngIf="isMultiLangEnabled">
+    <div class="select multilang" *ngIf="isMultiLangEnabled">
         <ng-select [items]="_languageService.getContentLanguages()"
                    [clearable]="false"
                    [searchable]="false"
@@ -23,7 +23,7 @@
         </ng-select>
     </div>
 
-    <div class="table-wrapper">
+    <div class="table-wrapper" [ngClass]="{'multi-lang': isMultiLangEnabled}">
         <ng2-smart-table [settings]="settings"
                          [source]="data"
                          [count]="count"
