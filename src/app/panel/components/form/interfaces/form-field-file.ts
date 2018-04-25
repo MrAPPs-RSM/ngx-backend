@@ -22,6 +22,15 @@ export interface MediaLibraryOptions {
     endpoint: string;
 }
 
+// Query params to add to retrieve medias
+export interface MediaLibraryParams {
+    types?: any;
+    search?: string;
+    page?: number;
+    perPage?: number;
+    skipIds?: any;
+}
+
 export interface Media {
     id: number;
     type: string;
