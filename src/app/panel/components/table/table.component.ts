@@ -17,6 +17,7 @@ import {Language, LanguageService} from '../../services/language.service';
 import {ToastsService} from '../../../services/toasts.service';
 import {PageRefreshService} from '../../../services/page-refresh.service';
 import {Subscription} from 'rxjs/Subscription';
+import {GlobalState} from '../../../global.state';
 
 @Component({
     selector: 'app-table',
@@ -41,12 +42,10 @@ export class TableComponent implements OnInit, OnDestroy {
     isLoading = false;
 
     public data: any[];
-    public activeFilters: TableActiveFilters = {}; // Need for table, not for API
+    public activeFilters: TableActiveFilters = {sort: []}; // Need for table, not for API
     public count: number;
 
     private filter: any = {}; // Need for API, not for table
-    private sort: TableSort;
-    private pagination: TablePagination;
 
     private resetPagination: boolean;
 
@@ -58,6 +57,7 @@ export class TableComponent implements OnInit, OnDestroy {
     constructor(public _languageService: LanguageService,
                 private _pageRefresh: PageRefreshService,
                 private _apiService: ApiService,
+                private _state: GlobalState,
                 private _router: Router,
                 private _route: ActivatedRoute,
                 private _toast: ToastsService,
@@ -70,10 +70,9 @@ export class TableComponent implements OnInit, OnDestroy {
         this._subscription = this._route.queryParams.subscribe(params => {
             this.activeFilters.sort = [];
             this.activeFilters.pagination = {
-                page: params && params['page'] ? parseInt(params['page'], 10) : 1,
-                perPage: params && params['perPage'] ? parseInt(params['perPage'], 10) : this.preparePerPage(),
+                page: 1,
+                perPage: this.preparePerPage(),
             };
-            this.pagination = this.activeFilters.pagination;
 
             /** Read fixed filter from settings if set */
             if (this.settings.api.filter) {
@@ -82,15 +81,25 @@ export class TableComponent implements OnInit, OnDestroy {
 
             if (params && params['listParams']) {
                 const queryParamsFilter = JSON.parse(this._route.snapshot.queryParams['listParams']);
+
                 this.filter = UtilsService.mergeDeep(this.filter, queryParamsFilter);
+
+                this.activeFilters.pagination.perPage = 'limit' in queryParamsFilter ? queryParamsFilter['limit'] : this.preparePerPage();
+                this.activeFilters.pagination.page = 'skip' in queryParamsFilter ? queryParamsFilter['skip'] / this.activeFilters.pagination.perPage + 1 : 1;
             }
 
-            if ('order' in this.filter) {
-                const sort = this.filter.order.split(' ');
-                this.sort = {
-                    field: sort[0],
-                    direction: sort[1]
-                };
+            if ('order' in this.filter && this.filter['order'] != null) {
+
+                const sortArray = this.filter.order.split(',');
+
+                for (let i = 0; i < sortArray.length; i++) {
+                    const splittedSort = sortArray[i].trim().split(' ');
+
+                    this.activeFilters.sort.push({
+                        field: splittedSort[0],
+                        direction: splittedSort[1]
+                    });
+                }
             }
 
             this.prepareColumns();
@@ -258,9 +267,9 @@ export class TableComponent implements OnInit, OnDestroy {
 
         if (!countParams) {
             /** Pagination */
-            if (this.pagination) {
-                params.limit = this.pagination.perPage;
-                params.skip = (this.pagination.page - 1) * params.limit;
+            if (this.activeFilters.pagination) {
+                params.limit = this.activeFilters.pagination.perPage;
+                params.skip = (this.activeFilters.pagination.page - 1) * params.limit;
             }
 
             /** Sort (if drag enabled, always sort by weight ascending) */
@@ -268,8 +277,16 @@ export class TableComponent implements OnInit, OnDestroy {
                 params.order = this.settings.drag.sortField ? this.settings.drag.sortField : this.DEFAULTS.drag.sortField;
                 params.order += ' ASC';
             } else {
-                if (this.sort) {
-                    params.order = this.sort.field + ' ' + this.sort.direction.toUpperCase();
+                if (this.activeFilters.sort.length > 0) {
+
+                    let order = '';
+
+                    for (let i = 0; i < this.activeFilters.sort.length; i++) {
+                        const sort = this.activeFilters.sort[i];
+                        order += (order.length > 0 ? ',' : '') + sort.field + ' ' + sort.direction.toUpperCase();
+                    }
+
+                    params.order = order;
                 }
             }
         }
@@ -278,34 +295,68 @@ export class TableComponent implements OnInit, OnDestroy {
         if (this.filter) {
 
             if (this.filter.where) {
-                Object.keys(this.filter.where).forEach((key) => {
-                    const condition = {};
-                    if (this.settings.columns[key]) {
-                        switch (this.settings.columns[key].type) {
-                            case 'boolean': {
+
+                if ('and' in this.filter.where) {
+
+                    this.filter.where['and'].forEach((object) => {
+                            const condition = {};
+                            const key = Object.keys(object)[0];
+                            if (this.settings.columns[key]) {
+                                switch (this.settings.columns[key].type) {
+                                    case 'boolean': {
+                                        condition[key] = object[key];
+                                    }
+                                        break;
+                                    case 'date': {
+                                        condition[key] = {
+                                            between: [object[key].from, object[key].to]
+                                        };
+                                    }
+                                        break;
+                                    default: {
+                                        condition[key] = {
+                                            like: '%' + object[key] + '%'
+                                        };
+                                    }
+                                        break;
+                                }
+                            } else {
+                                condition[key] = object[key];
+                            }
+                            params.where.and.push(condition);
+                    });
+
+                } else {
+                    Object.keys(this.filter.where).forEach((key) => {
+                            const condition = {};
+                            if (this.settings.columns[key]) {
+                                switch (this.settings.columns[key].type) {
+                                    case 'boolean': {
+                                        condition[key] = this.filter.where[key];
+                                    }
+                                        break;
+                                    case 'date': {
+                                        condition[key] = {
+                                            between: [this.filter.where[key].from, this.filter.where[key].to]
+                                        };
+                                    }
+                                        break;
+                                    default: {
+                                        condition[key] = {
+                                            like: '%' + this.filter.where[key] + '%'
+                                        };
+                                    }
+                                        break;
+                                }
+                            } else {
                                 condition[key] = this.filter.where[key];
                             }
-                                break;
-                            case 'date': {
-                                condition[key] = {
-                                    between: [this.filter.where[key].from, this.filter.where[key].to]
-                                };
-                            }
-                                break;
-                            default: {
-                                condition[key] = {
-                                    like: '%' + this.filter.where[key] + '%'
-                                };
-                            }
-                                break;
-                        }
-                    } else {
-                        condition[key] = this.filter.where[key];
-                    }
-                    params.where.and.push(condition);
-                });
+                            params.where.and.push(condition);
+                    });
+                }
 
                 if (this.resetPagination && !countParams) {
+                    this.resetPagination = false;
                     params.skip = 0; // reset pagination if filters
                 }
             }
@@ -314,8 +365,6 @@ export class TableComponent implements OnInit, OnDestroy {
                 params['include'] = this.filter.include;
             }
         }
-
-        // console.log(params);
 
         const response = {
             filter: JSON.stringify(params),
@@ -614,6 +663,12 @@ export class TableComponent implements OnInit, OnDestroy {
         }
     }
 
+    refreshTable() {
+        const params = this.composeParams();
+        this._state.replaceLastPath = true;
+        this._router.navigate([], {queryParams: {listParams: params['filter']}});
+    }
+
     onFilter(filter: TableFilter) {
         if (this.filter.where) {
             Object.keys(filter).forEach((key) => {
@@ -623,6 +678,7 @@ export class TableComponent implements OnInit, OnDestroy {
                 } else {
                     this.resetPagination = false;
                     delete this.filter.where[key];
+                    delete filter[key];
                 }
             });
         } else {
@@ -633,24 +689,23 @@ export class TableComponent implements OnInit, OnDestroy {
                     }
                 });
             }
-
-            this.filter.where = filter;
         }
 
-        this.getData();
+        this.filter.where = filter;
         this.activeFilters.filter = filter;
+
+        this.refreshTable();
     }
 
     onPagination(pagination: TablePagination) {
-        const queryParams = UtilsService.mergeDeep(this._route.snapshot.queryParams, pagination);
-        this._router.navigate([], {queryParams: queryParams});
+        this.activeFilters.pagination = pagination;
+        this.refreshTable();
     }
 
     onSort(sort: TableSort) {
-        this.sort = sort;
-        this.getData();
         this.activeFilters.sort = [];
-        this.activeFilters.sort.push(this.sort);
+        this.activeFilters.sort.push(sort);
+        this.refreshTable();
     }
 
     onLanguageChange(language: Language) {

@@ -76,7 +76,6 @@ export class AppComponent implements OnInit, OnDestroy {
                         this._menuService.breadcrumbs = [activeLink];
                     } else {
                         let found = false;
-                        let add = false;
 
                         for (let i = this._menuService.breadcrumbs.length; i--;) {
                             const breadcrumb = this._menuService.breadcrumbs[i];
@@ -89,22 +88,18 @@ export class AppComponent implements OnInit, OnDestroy {
                                 this._menuService.breadcrumbs.splice(i + 1);
                                 break;
                             } else if (breadcrumbUrl === linkUrl) {
-                                found = true;
-                                add = true;
+                                found = false;
                                 this._menuService.breadcrumbs.splice(this._menuService.breadcrumbs.length - 1);
                                 break;
                             }
                         }
 
                         if (!found) {
-                            if (this._apiService.isRedirecting) {
+                            if (this._apiService.isRedirecting || this._state.replaceLastPath) {
+                                this._state.replaceLastPath = false;
                                 this._menuService.breadcrumbs.splice(this._menuService.breadcrumbs.length - 1);
                             }
 
-                            this._menuService.breadcrumbs.push(activeLink);
-                        }
-
-                        if (add) {
                             this._menuService.breadcrumbs.push(activeLink);
                         }
                     }

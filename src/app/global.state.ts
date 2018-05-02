@@ -5,8 +5,10 @@ import {Subject} from 'rxjs/Subject';
 export class GlobalState {
 
     public _activePageSubject: Subject<any>;
+    public replaceLastPath: boolean;
 
     constructor() {
         this._activePageSubject = new Subject<any>();
+        this.replaceLastPath = false;
     }
 }
