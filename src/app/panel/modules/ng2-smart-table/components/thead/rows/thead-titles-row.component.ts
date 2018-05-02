@@ -16,7 +16,7 @@ import {DataSource} from '../../../lib/data-source/data-source';
         <th *ngFor="let column of grid.getVisibleColumns()" class="ng2-smart-th {{ column.id }}" [ngClass]="column.class">
             <ng2-st-column-title [source]="source" [column]="column" (sort)="sort.emit($event)" [ngStyle]="{'width':column.width,'display':'inline-block'}"></ng2-st-column-title>
         </th>
-        <th ng2-st-actions-title *ngIf="areActionsEnabled" [grid]="grid"></th>
+        <th ng2-st-actions-title *ngIf="showActionsColumn" [grid]="grid"></th>
     `,
 })
 export class TheadTitlesRowComponent implements OnChanges {
@@ -31,12 +31,12 @@ export class TheadTitlesRowComponent implements OnChanges {
 
     isMultiSelectVisible: boolean;
 
-    areActionsEnabled: boolean;
+    showActionsColumn: boolean;
 
     ngOnChanges() {
         this.isMultiSelectVisible = this.grid.isMultiSelectVisible();
         const actions = this.grid.getSetting('actions');
-        this.areActionsEnabled = actions.hasOwnProperty('add') || actions.hasOwnProperty('list');
+        this.showActionsColumn = (actions.hasOwnProperty('add') && actions.add != null) || (actions.hasOwnProperty('list') && actions.list != null && actions.list.length > 0);
     }
 
 }

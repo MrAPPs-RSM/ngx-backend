@@ -27,7 +27,7 @@
         </ng2-smart-table-cell>
     </td>
 
-    <td *ngIf="!row.isInEditing" class="ng2-smart-actions">
+    <td *ngIf="!row.isInEditing && showActionsColumn" class="ng2-smart-actions">
         <ng2-st-tbody-actions
                 [row]="row"
                 [grid]="grid"

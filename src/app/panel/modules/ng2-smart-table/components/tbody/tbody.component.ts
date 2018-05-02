@@ -24,10 +24,16 @@ export class Ng2SmartTableTbodyComponent implements OnChanges {
     mode: string;
     isActionAdd: boolean;
     noDataMessage: boolean;
+    showActionsColumn: boolean;
+
 
     ngOnChanges() {
         this.isMultiSelectVisible = this.grid.isMultiSelectVisible();
         this.mode = this.grid.getSetting('mode');
+
+        const actions = this.grid.getSetting('actions');
+        this.showActionsColumn = (actions.hasOwnProperty('add') && actions.add != null) || (actions.hasOwnProperty('list') && actions.list != null && actions.list.length > 0);
+
         this.isActionAdd = this.grid.getSetting('actions.add');
         this.noDataMessage = this.grid.getSetting('noDataMessage');
     }
