@@ -70,8 +70,8 @@ export class TableComponent implements OnInit, OnDestroy {
         this._subscription = this._route.queryParams.subscribe(params => {
             this.activeFilters.sort = [];
             this.activeFilters.pagination = {
-                page: params && params['page'] ? params['page'] : 1,
-                perPage: params && params['perPage'] ? params['perPage'] : this.preparePerPage(),
+                page: params && params['page'] ? parseInt(params['page'], 10) : 1,
+                perPage: params && params['perPage'] ? parseInt(params['perPage'], 10) : this.preparePerPage(),
             };
             this.pagination = this.activeFilters.pagination;
 
