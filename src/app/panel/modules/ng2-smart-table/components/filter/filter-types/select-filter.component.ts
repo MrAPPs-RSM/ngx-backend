@@ -30,7 +30,9 @@ declare const $: any;
 })
 export class SelectFilterComponent extends DefaultFilter implements OnInit, OnChanges {
 
+    @Input() filterValue: any;
     @Input() reloadOptions;
+
     formGroup: FormGroup;
     inputControl = new FormControl();
     options: any[] = [];
@@ -68,6 +70,11 @@ export class SelectFilterComponent extends DefaultFilter implements OnInit, OnCh
             });
 
         this.onScroll();
+
+        if (this.filterValue) {
+            this.query = this.filterValue;
+            this.inputControl.setValue(this.filterValue, {emitEvent: false});
+        }
     }
 
     private loadOptions(): void {

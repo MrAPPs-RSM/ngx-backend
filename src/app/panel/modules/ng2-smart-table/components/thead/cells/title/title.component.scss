@@ -3,7 +3,7 @@ a.sort {
   &.asc, &.desc {
     font-weight: bold;
 
-    &::after {
+    &::before {
       content: '';
       display: inline-block;
       width: 0;
@@ -16,9 +16,15 @@ a.sort {
     }
   }
 
-  &.desc::after {
+  &.desc::before {
     -webkit-transform: rotate(-180deg);
             transform: rotate(-180deg);
     margin-bottom: -2px;
   }
+}
+
+span.remove-sort {
+  cursor: pointer;
+  font-weight: 300;
+  margin-left: 5px;
 }

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/skip';
@@ -29,6 +29,8 @@ import {FormControl} from '@angular/forms';
     `
 })
 export class DateFilterComponent extends DefaultFilter implements OnInit {
+
+    @Input() filterValue: any;
 
     inputControl = new FormControl();
     delay = 0;

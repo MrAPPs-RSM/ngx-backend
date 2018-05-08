@@ -10,6 +10,7 @@ import {Grid} from '../../lib/grid';
         <div class="ng2-smart-filter" *ngIf="column.isFilterable" [ngSwitch]="column.getFilterType()">
             <select-filter *ngSwitchCase="'select'"
                            [query]="query"
+                           [filterValue]="filterValue"
                            [grid]="grid"
                            [reloadOptions]="reloadSelectOptions"
                            [ngClass]="inputClass"
@@ -18,18 +19,21 @@ import {Grid} from '../../lib/grid';
             </select-filter>
             <date-filter *ngSwitchCase="'date'"
                          [query]="query"
+                         [filterValue]="filterValue"
                          [ngClass]="inputClass"
                          [column]="column"
                          (filter)="onFilter($event, column)">
             </date-filter>
             <checkbox-filter *ngSwitchCase="'checkbox'"
                              [query]="query"
+                             [filterValue]="filterValue"
                              [ngClass]="inputClass"
                              [column]="column"
                              (filter)="onFilter($event, column)">
             </checkbox-filter>
             <input-filter *ngSwitchDefault
                           [query]="query"
+                          [filterValue]="filterValue"
                           [ngClass]="inputClass"
                           [column]="column"
                           (filter)="onFilter($event, column)">
@@ -42,6 +46,7 @@ export class FilterComponent implements OnInit, OnChanges {
     @Input() grid: Grid;
     @Input() column: Column;
     @Input() source: DataSource;
+    @Input() filterValue: any;
     @Input() inputClass = '';
 
     @Output() filter = new EventEmitter<any>();

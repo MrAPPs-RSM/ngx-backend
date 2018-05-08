@@ -11,8 +11,8 @@ export class DataSet {
     protected selectedRow: Row;
     protected willSelect: string = 'first';
 
-    constructor(data: Array<any> = [], protected columnSettings: Object) {
-        this.createColumns(columnSettings);
+    constructor(data: Array<any> = [], protected columnSettings: Object, dragEnabled?: boolean) {
+        this.createColumns(columnSettings, dragEnabled);
         this.setData(data);
     }
 
@@ -129,12 +129,13 @@ export class DataSet {
     /**
      * Create columns by mapping from the settings
      * @param settings
+     * @param dragEnabled
      * @private
      */
-    createColumns(settings: any) {
+    createColumns(settings: any, dragEnabled?: boolean) {
         for (const id in settings) {
             if (settings.hasOwnProperty(id)) {
-                this.columns.push(new Column(id, settings[id], this));
+                this.columns.push(new Column(id, settings[id], this, dragEnabled));
             }
         }
     }

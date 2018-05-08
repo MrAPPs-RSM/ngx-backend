@@ -42,7 +42,10 @@ export class TableComponent implements OnInit, OnDestroy {
     isLoading = false;
 
     public data: any[];
-    public activeFilters: TableActiveFilters = {sort: []}; // Need for table, not for API
+    public activeFilters: TableActiveFilters = { // Need for table, not for API
+        sort: [],
+        filter: {}
+    };
     public count: number;
 
     private filter: any = {}; // Need for API, not for table
@@ -68,7 +71,6 @@ export class TableComponent implements OnInit, OnDestroy {
         this.translateLabels();
         this.resetPagination = false;
         this._subscription = this._route.queryParams.subscribe(params => {
-            this.activeFilters.sort = [];
             this.activeFilters.pagination = {
                 page: 1,
                 perPage: this.preparePerPage(),
@@ -85,22 +87,25 @@ export class TableComponent implements OnInit, OnDestroy {
                 this.filter = UtilsService.mergeDeep(this.filter, queryParamsFilter);
 
                 this.activeFilters.pagination.perPage = 'limit' in queryParamsFilter ? queryParamsFilter['limit'] : this.preparePerPage();
-                this.activeFilters.pagination.page = 'skip' in queryParamsFilter ? queryParamsFilter['skip'] / this.activeFilters.pagination.perPage + 1 : 1;
+                this.activeFilters.pagination.page = 'skip' in queryParamsFilter ?
+                    queryParamsFilter['skip'] / this.activeFilters.pagination.perPage + 1 : 1;
             }
 
-            if ('order' in this.filter && this.filter['order'] != null) {
+            this.activeFilters.filter = this.filter.where;
 
+            if ('order' in this.filter && this.filter['order'] !== null) {
                 const sortArray = this.filter.order.split(',');
-
+                this.filter.order = [];
                 for (let i = 0; i < sortArray.length; i++) {
                     const splittedSort = sortArray[i].trim().split(' ');
-
-                    this.activeFilters.sort.push({
+                    this.filter.order.push({
                         field: splittedSort[0],
                         direction: splittedSort[1]
                     });
                 }
             }
+
+            this.activeFilters.sort = this.filter.order;
 
             this.prepareColumns();
             this.getData();
@@ -245,7 +250,7 @@ export class TableComponent implements OnInit, OnDestroy {
         return this._apiService.get(endpoint, this.composeCountParams());
     }
 
-    private composeParams(countParams?: boolean): Object {
+    private composeParams(countParams?: boolean, queryParams?: boolean): Object {
         if (countParams === null) {
             countParams = false;
         }
@@ -277,81 +282,78 @@ export class TableComponent implements OnInit, OnDestroy {
                 params.order = this.settings.drag.sortField ? this.settings.drag.sortField : this.DEFAULTS.drag.sortField;
                 params.order += ' ASC';
             } else {
-                if (this.activeFilters.sort.length > 0) {
-
+                if (this.filter.order && this.filter.order.length > 0) {
                     let order = '';
-
-                    for (let i = 0; i < this.activeFilters.sort.length; i++) {
-                        const sort = this.activeFilters.sort[i];
-                        order += (order.length > 0 ? ',' : '') + sort.field + ' ' + sort.direction.toUpperCase();
+                    for (let i = 0; i < this.filter.order.length; i++) {
+                        const sort = this.filter.order[i];
+                        order += (order.length > 0 ? ', ' : '') + sort.field + ' ' + sort.direction.toUpperCase();
                     }
-
                     params.order = order;
                 }
             }
         }
 
         /** Filters */
-        if (this.filter) {
+        if (this.filter && !queryParams) {
 
             if (this.filter.where) {
 
                 if ('and' in this.filter.where) {
 
                     this.filter.where['and'].forEach((object) => {
-                            const condition = {};
-                            const key = Object.keys(object)[0];
-                            if (this.settings.columns[key]) {
-                                switch (this.settings.columns[key].type) {
-                                    case 'boolean': {
-                                        condition[key] = object[key];
-                                    }
-                                        break;
-                                    case 'date': {
-                                        condition[key] = {
-                                            between: [object[key].from, object[key].to]
-                                        };
-                                    }
-                                        break;
-                                    default: {
-                                        condition[key] = {
-                                            like: '%' + object[key] + '%'
-                                        };
-                                    }
-                                        break;
+                        const condition = {};
+                        const key = Object.keys(object)[0];
+                        if (this.settings.columns[key]) {
+                            switch (this.settings.columns[key].type) {
+                                case 'boolean': {
+                                    condition[key] = object[key];
                                 }
-                            } else {
-                                condition[key] = object[key];
+                                    break;
+                                case 'date': {
+                                    condition[key] = {
+                                        between: [object[key].from, object[key].to]
+                                    };
+                                }
+                                    break;
+                                default: {
+                                    condition[key] = {
+                                        like: '%' + object[key] + '%'
+                                    };
+                                }
+                                    break;
                             }
-                            params.where.and.push(condition);
+                        } else {
+                            condition[key] = object[key];
+                        }
+                        params.where.and.push(condition);
                     });
 
                 } else {
                     Object.keys(this.filter.where).forEach((key) => {
-                            const condition = {};
-                            if (this.settings.columns[key]) {
-                                switch (this.settings.columns[key].type) {
-                                    case 'boolean': {
-                                        condition[key] = this.filter.where[key];
-                                    }
-                                        break;
-                                    case 'date': {
-                                        condition[key] = {
-                                            between: [this.filter.where[key].from, this.filter.where[key].to]
-                                        };
-                                    }
-                                        break;
-                                    default: {
-                                        condition[key] = {
-                                            like: '%' + this.filter.where[key] + '%'
-                                        };
-                                    }
-                                        break;
+                        const condition = {};
+                        if (this.settings.columns[key]) {
+                            switch (this.settings.columns[key].type) {
+                                case 'boolean': {
+                                    condition[key] = this.filter.where[key];
                                 }
-                            } else {
-                                condition[key] = this.filter.where[key];
+                                    break;
+                                case 'date': {
+                                    condition[key] = {
+                                        between: [this.filter.where[key].from, this.filter.where[key].to]
+                                    };
+                                }
+                                    break;
+                                default: {
+                                    condition[key] = {
+                                        like: '%' + this.filter.where[key] + '%'
+                                    };
+                                }
+                                    break;
                             }
-                            params.where.and.push(condition);
+                        } else {
+                            condition[key] = this.filter.where[key];
+                        }
+                        params.where.and.push(condition);
                     });
                 }
 
@@ -364,6 +366,10 @@ export class TableComponent implements OnInit, OnDestroy {
             if (this.filter.include) {
                 params['include'] = this.filter.include;
             }
+        }
+
+        if (queryParams) {
+            params.where = this.filter.where;
         }
 
         const response = {
@@ -664,36 +670,30 @@ export class TableComponent implements OnInit, OnDestroy {
     }
 
     refreshTable() {
-        const params = this.composeParams();
+        const params = this.composeParams(false, true);
         this._state.replaceLastPath = true;
         this._router.navigate([], {queryParams: {listParams: params['filter']}});
     }
 
     onFilter(filter: TableFilter) {
-        if (this.filter.where) {
-            Object.keys(filter).forEach((key) => {
-                if (filter[key] !== null && filter[key] !== '') {
-                    this.resetPagination = true;
-                    this.filter.where[key] = filter[key];
-                } else {
-                    this.resetPagination = false;
-                    delete this.filter.where[key];
-                    delete filter[key];
-                }
-            });
-        } else {
-            for (let i = 0; i < Object.keys(filter).length; i++) {
-                Object.keys(filter).forEach((key) => {
-                    if (filter[key] === null || filter[key] === '') {
-                        delete filter[key];
-                    }
-                });
-            }
+        if (typeof this.filter.where === 'undefined') {
+            this.filter.where = {};
         }
 
-        this.filter.where = filter;
-        this.activeFilters.filter = filter;
+        this.resetPagination = true;
 
+        Object.keys(filter).forEach((key) => {
+            if (filter[key] !== null && filter[key] !== '') {
+                this.resetPagination = this.resetPagination && false;
+                this.filter.where[key] = filter[key];
+            } else {
+                if (this.filter.where[key]) {
+                    delete this.filter.where[key];
+                }
+            }
+        });
+
+        this.resetPagination = !this.resetPagination;
         this.refreshTable();
     }
 
@@ -702,9 +702,8 @@ export class TableComponent implements OnInit, OnDestroy {
         this.refreshTable();
     }
 
-    onSort(sort: TableSort) {
-        this.activeFilters.sort = [];
-        this.activeFilters.sort.push(sort);
+    onSort(sort: TableSort[]) {
+        this.filter.order = sort;
         this.refreshTable();
     }
 

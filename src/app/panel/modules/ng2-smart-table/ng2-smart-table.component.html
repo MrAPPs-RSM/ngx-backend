@@ -3,6 +3,7 @@
 
         <thead ng2-st-thead *ngIf="!isHideHeader || !isHideSubHeader"
                [grid]="grid"
+               [activeFilters]="activeFilters"
                [isAllSelected]="isAllSelected"
                [isDragEnabled]="isDragEnabled"
                [source]="source"
