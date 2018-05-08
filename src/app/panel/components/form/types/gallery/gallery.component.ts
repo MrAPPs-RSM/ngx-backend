@@ -1,8 +1,11 @@
-import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {AfterViewInit, Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {Gallery} from '../../interfaces/gallery';
 import {ApiService} from '../../../../../api/api.service';
 import {ToastsService} from '../../../../../services/toasts.service';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute} from '@angular/router';
+import {environment} from '../../../../../../environments/environment';
+
+declare const $: any;
 
 @Component({
     selector: 'app-gallery',
@@ -10,7 +13,7 @@ import {ActivatedRoute} from "@angular/router";
     styleUrls: ['./gallery.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class GalleryComponent implements OnInit {
+export class GalleryComponent implements OnInit, AfterViewInit {
 
     @Input() field: Gallery;
 
@@ -27,6 +30,17 @@ export class GalleryComponent implements OnInit {
         this.loadGallery();
     }
 
+    ngAfterViewInit() {
+        $('[data-fancybox]').fancybox({
+            buttons: [
+                'zoom',
+                'download',
+                'thumbs',
+                'close'
+            ]
+        });
+    }
+
     private loadGallery(): void {
         this.isLoading = true;
         let endpoint = this.field.options.endpoint;
@@ -40,6 +54,10 @@ export class GalleryComponent implements OnInit {
             this.isLoading = false;
             this._toast.error(err);
         });
+    }
+
+    onImageError($event: any, media: Media): void {
+       media.url = environment.assets.imageError;
     }
 }
 
