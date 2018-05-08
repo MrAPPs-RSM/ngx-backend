@@ -7,6 +7,7 @@ import 'rxjs/add/operator/skip';
 import {DefaultFilter} from './default-filter';
 import {ApiService, ErrorResponse} from '../../../../../../api/api.service';
 import {Language, LanguageService} from '../../../../../services/language.service';
+import {type} from "os";
 
 declare const $: any;
 
@@ -72,8 +73,12 @@ export class SelectFilterComponent extends DefaultFilter implements OnInit, OnCh
         this.onScroll();
 
         if (this.filterValue) {
-            this.query = this.filterValue;
-            this.inputControl.setValue(this.filterValue, {emitEvent: false});
+            let value = this.filterValue;
+            if (typeof this.filterValue === 'object') {
+                value = this.filterValue['inq'];
+            }
+            this.query = value;
+            this.inputControl.setValue(value, {emitEvent: false});
         }
     }
 
