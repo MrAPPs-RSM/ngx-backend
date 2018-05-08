@@ -1,5 +1,6 @@
 import {DataSource} from '../data-source';
 import {deepExtend} from '../../helpers';
+import {Local} from "protractor/built/driverProviders";
 
 export class LocalDataSource extends DataSource {
 
@@ -81,6 +82,43 @@ export class LocalDataSource extends DataSource {
         }
 
         super.setSort(conf, doEmit);
+        return this;
+    }
+
+    addSort(conf: any, doEmit = true): LocalDataSource {
+        if (conf !== null) {
+            if (this.sortConf.length > 0) {
+                let indexToDelete = -1;
+                this.sortConf.forEach((item, index) => {
+                    if (item.field === conf.field) {
+                        indexToDelete = index;
+                    }
+                });
+                this.sortConf.push(conf);
+
+                if (indexToDelete > -1) {
+                    this.sortConf.splice(indexToDelete, 1);
+                }
+            } else {
+                this.sortConf.push(conf);
+            }
+        }
+
+        super.addSort(conf, doEmit);
+        return this;
+    }
+
+    removeSort(key: string, doEmit = true): LocalDataSource {
+        let indexToDelete = -1;
+        this.sortConf.forEach((item, index) => {
+            if (item.field === key) {
+                indexToDelete = index;
+            }
+        });
+        if (indexToDelete > -1) {
+            this.sortConf.splice(indexToDelete, 1);
+        }
+        super.removeSort(key, doEmit);
         return this;
     }
 

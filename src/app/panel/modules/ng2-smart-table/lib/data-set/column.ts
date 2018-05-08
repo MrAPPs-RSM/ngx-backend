@@ -22,7 +22,7 @@ export class Column {
     filterFunction: Function;
     onComponentInitFunction: Function;
 
-    constructor(public id: string, protected settings: any, protected dataSet: DataSet) {
+    constructor(public id: string, protected settings: any, protected dataSet: DataSet, protected dragEnabled?: boolean) {
         this.process();
     }
 
@@ -72,7 +72,13 @@ export class Column {
         this.isFilterable = typeof this.settings['filter'] === 'undefined' ? true : !!this.settings['filter'];
         this.defaultSortDirection = ['asc', 'desc']
             .indexOf(this.settings['sortDirection']) !== -1 ? this.settings['sortDirection'] : '';
-        this.isSortable = typeof this.settings['sort'] === 'undefined' ? true : !!this.settings['sort'];
+
+        if (this.dragEnabled) {
+            this.isSortable = false;
+        } else {
+            this.isSortable = typeof this.settings['sort'] === 'undefined' ? true : !!this.settings['sort'];
+        }
+
         this.isEditable = typeof this.settings['editable'] === 'undefined' ? true : !!this.settings['editable'];
         this.isAddable = typeof this.settings['addable'] === 'undefined' ? true : !!this.settings['addable'];
         this.sortDirection = this.prepareSortDirection();

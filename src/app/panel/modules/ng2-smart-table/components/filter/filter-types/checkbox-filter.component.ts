@@ -1,4 +1,4 @@
-import {Component, OnChanges, OnInit, SimpleChange} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChange} from '@angular/core';
 import {FormControl} from '@angular/forms';
 
 import {DefaultFilter} from './default-filter';
@@ -24,6 +24,8 @@ import 'rxjs/add/operator/debounceTime';
     ]
 })
 export class CheckboxFilterComponent extends DefaultFilter implements OnInit, OnChanges {
+
+    @Input() filterValue: any;
 
     filterActive: boolean = false;
     inputControl = new FormControl();
@@ -51,6 +53,11 @@ export class CheckboxFilterComponent extends DefaultFilter implements OnInit, On
                 this.query = checked;
                 this.setFilter();
             });
+
+        if (this.filterValue) {
+            this.filterActive = true;
+            this.inputControl.setValue(this.filterValue, {emitEvent: false});
+        }
     }
 
     resetFilter(event: any) {

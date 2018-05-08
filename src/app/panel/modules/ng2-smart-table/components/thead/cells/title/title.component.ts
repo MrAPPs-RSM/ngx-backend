@@ -1,5 +1,4 @@
-import {Component, Input, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core';
-import {Subscription} from 'rxjs/Subscription';
+import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
 
 import {DataSource} from '../../../../lib/data-source/data-source';
 import {Column} from '../../../../lib/data-set/column';
@@ -14,45 +13,50 @@ import {Column} from '../../../../lib/data-set/column';
            [ngClass]="currentDirection">
             {{ column.title }}
         </a>
+        <span class="ng2-smart-sort remove-sort"
+              (click)="_sort($event, null)"
+              *ngIf="column.isSortable && currentDirection != ''">×</span>
         <span class="ng2-smart-sort" *ngIf="!column.isSortable">{{ column.title }}</span>
     `,
 })
-export class TitleComponent implements OnChanges {
+export class TitleComponent implements OnInit {
 
     currentDirection = '';
     @Input() column: Column;
     @Input() source: DataSource;
+    @Input() activeSort: any[];
+
     @Output() sort = new EventEmitter<any>();
 
-    protected dataChangedSub: Subscription;
-
-    ngOnChanges(changes: SimpleChanges) {
-        if (changes.source) {
-            if (!changes.source.firstChange) {
-                this.dataChangedSub.unsubscribe();
-            }
-            this.dataChangedSub = this.source.onChanged().subscribe((dataChanges) => {
-                const sortConf = this.source.getSort();
-                if (sortConf.length > 0 && sortConf[0]['field'] === this.column.id) {
-                    this.currentDirection = sortConf[0]['direction'];
-                } else {
-                    this.currentDirection = '';
+    ngOnInit() {
+        if (this.activeSort && this.activeSort.length > 0) {
+            const key = this.column.key ? this.column.key : this.column.id;
+            this.activeSort.forEach((item) => {
+                if (item.field === key) {
+                    this.currentDirection = item.direction.toLowerCase();
                 }
             });
         }
     }
 
-    _sort(event: any) {
+    _sort(event: any, column: any) {
         event.preventDefault();
-        this.changeSortDirection();
-        this.source.setSort([
-            {
-                field: this.column.key ? this.column.key : this.column.id,
-                direction: this.currentDirection,
-                compare: this.column.getCompareFunction(),
-            },
-        ]);
-        this.sort.emit({field: this.column.key ? this.column.key : this.column.id, direction: this.currentDirection});
+
+        if (column) {
+            this.changeSortDirection();
+            this.source.addSort(
+                {
+                    field: this.column.key ? this.column.key : this.column.id,
+                    direction: this.currentDirection,
+                    compare: this.column.getCompareFunction(),
+                },
+            );
+        } else {
+            this.removeSort();
+            this.source.removeSort(this.column.key ? this.column.key : this.column.id);
+        }
+
+        this.sort.emit(this.source.getSort());
     }
 
     changeSortDirection(): string {
@@ -62,5 +66,9 @@ export class TitleComponent implements OnChanges {
             this.currentDirection = this.column.sortDirection;
         }
         return this.currentDirection;
+    }
+
+    removeSort(): void {
+        this.currentDirection = '';
     }
 }

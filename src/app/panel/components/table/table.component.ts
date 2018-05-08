@@ -17,6 +17,7 @@ import {Language, LanguageService} from '../../services/language.service';
 import {ToastsService} from '../../../services/toasts.service';
 import {PageRefreshService} from '../../../services/page-refresh.service';
 import {Subscription} from 'rxjs/Subscription';
+import {GlobalState} from '../../../global.state';
 
 @Component({
     selector: 'app-table',
@@ -41,12 +42,13 @@ export class TableComponent implements OnInit, OnDestroy {
     isLoading = false;
 
     public data: any[];
-    public activeFilters: TableActiveFilters = {}; // Need for table, not for API
+    public activeFilters: TableActiveFilters = { // Need for table, not for API
+        sort: [],
+        filter: {}
+    };
     public count: number;
 
     private filter: any = {}; // Need for API, not for table
-    private sort: TableSort;
-    private pagination: TablePagination;
 
     private resetPagination: boolean;
 
@@ -58,6 +60,7 @@ export class TableComponent implements OnInit, OnDestroy {
     constructor(public _languageService: LanguageService,
                 private _pageRefresh: PageRefreshService,
                 private _apiService: ApiService,
+                private _state: GlobalState,
                 private _router: Router,
                 private _route: ActivatedRoute,
                 private _toast: ToastsService,
@@ -68,12 +71,10 @@ export class TableComponent implements OnInit, OnDestroy {
         this.translateLabels();
         this.resetPagination = false;
         this._subscription = this._route.queryParams.subscribe(params => {
-            this.activeFilters.sort = [];
             this.activeFilters.pagination = {
-                page: params && params['page'] ? parseInt(params['page'], 10) : 1,
-                perPage: params && params['perPage'] ? parseInt(params['perPage'], 10) : this.preparePerPage(),
+                page: 1,
+                perPage: this.preparePerPage(),
             };
-            this.pagination = this.activeFilters.pagination;
 
             /** Read fixed filter from settings if set */
             if (this.settings.api.filter) {
@@ -82,16 +83,29 @@ export class TableComponent implements OnInit, OnDestroy {
 
             if (params && params['listParams']) {
                 const queryParamsFilter = JSON.parse(this._route.snapshot.queryParams['listParams']);
+
                 this.filter = UtilsService.mergeDeep(this.filter, queryParamsFilter);
+
+                this.activeFilters.pagination.perPage = 'limit' in queryParamsFilter ? queryParamsFilter['limit'] : this.preparePerPage();
+                this.activeFilters.pagination.page = 'skip' in queryParamsFilter ?
+                    queryParamsFilter['skip'] / this.activeFilters.pagination.perPage + 1 : 1;
             }
 
-            if ('order' in this.filter) {
-                const sort = this.filter.order.split(' ');
-                this.sort = {
-                    field: sort[0],
-                    direction: sort[1]
-                };
+            this.activeFilters.filter = this.filter.where;
+
+            if ('order' in this.filter && this.filter['order'] !== null) {
+                const sortArray = this.filter.order.split(',');
+                this.filter.order = [];
+                for (let i = 0; i < sortArray.length; i++) {
+                    const splittedSort = sortArray[i].trim().split(' ');
+                    this.filter.order.push({
+                        field: splittedSort[0],
+                        direction: splittedSort[1]
+                    });
+                }
             }
+
+            this.activeFilters.sort = this.filter.order;
 
             this.prepareColumns();
             this.getData();
@@ -236,7 +250,7 @@ export class TableComponent implements OnInit, OnDestroy {
         return this._apiService.get(endpoint, this.composeCountParams());
     }
 
-    private composeParams(countParams?: boolean): Object {
+    private composeParams(countParams?: boolean, queryParams?: boolean): Object {
         if (countParams === null) {
             countParams = false;
         }
@@ -258,9 +272,9 @@ export class TableComponent implements OnInit, OnDestroy {
 
         if (!countParams) {
             /** Pagination */
-            if (this.pagination) {
-                params.limit = this.pagination.perPage;
-                params.skip = (this.pagination.page - 1) * params.limit;
+            if (this.activeFilters.pagination) {
+                params.limit = this.activeFilters.pagination.perPage;
+                params.skip = (this.activeFilters.pagination.page - 1) * params.limit;
             }
 
             /** Sort (if drag enabled, always sort by weight ascending) */
@@ -268,44 +282,83 @@ export class TableComponent implements OnInit, OnDestroy {
                 params.order = this.settings.drag.sortField ? this.settings.drag.sortField : this.DEFAULTS.drag.sortField;
                 params.order += ' ASC';
             } else {
-                if (this.sort) {
-                    params.order = this.sort.field + ' ' + this.sort.direction.toUpperCase();
+                if (this.filter.order && this.filter.order.length > 0) {
+                    let order = '';
+                    for (let i = 0; i < this.filter.order.length; i++) {
+                        const sort = this.filter.order[i];
+                        order += (order.length > 0 ? ', ' : '') + sort.field + ' ' + sort.direction.toUpperCase();
+                    }
+                    params.order = order;
                 }
             }
         }
 
         /** Filters */
-        if (this.filter) {
+        if (this.filter && !queryParams) {
 
             if (this.filter.where) {
-                Object.keys(this.filter.where).forEach((key) => {
-                    const condition = {};
-                    if (this.settings.columns[key]) {
-                        switch (this.settings.columns[key].type) {
-                            case 'boolean': {
-                                condition[key] = this.filter.where[key];
+
+                if ('and' in this.filter.where) {
+
+                    this.filter.where['and'].forEach((object) => {
+                        const condition = {};
+                        const key = Object.keys(object)[0];
+                        if (this.settings.columns[key]) {
+                            switch (this.settings.columns[key].type) {
+                                case 'boolean': {
+                                    condition[key] = object[key];
+                                }
+                                    break;
+                                case 'date': {
+                                    condition[key] = {
+                                        between: [object[key].from, object[key].to]
+                                    };
+                                }
+                                    break;
+                                default: {
+                                    condition[key] = {
+                                        like: '%' + object[key] + '%'
+                                    };
+                                }
+                                    break;
                             }
-                                break;
-                            case 'date': {
-                                condition[key] = {
-                                    between: [this.filter.where[key].from, this.filter.where[key].to]
-                                };
-                            }
-                                break;
-                            default: {
-                                condition[key] = {
-                                    like: '%' + this.filter.where[key] + '%'
-                                };
-                            }
-                                break;
+                        } else {
+                            condition[key] = object[key];
                         }
-                    } else {
-                        condition[key] = this.filter.where[key];
-                    }
-                    params.where.and.push(condition);
-                });
+                        params.where.and.push(condition);
+                    });
+
+                } else {
+                    Object.keys(this.filter.where).forEach((key) => {
+                        const condition = {};
+                        if (this.settings.columns[key]) {
+                            switch (this.settings.columns[key].type) {
+                                case 'boolean': {
+                                    condition[key] = this.filter.where[key];
+                                }
+                                    break;
+                                case 'date': {
+                                    condition[key] = {
+                                        between: [this.filter.where[key].from, this.filter.where[key].to]
+                                    };
+                                }
+                                    break;
+                                default: {
+                                    condition[key] = {
+                                        like: '%' + this.filter.where[key] + '%'
+                                    };
+                                }
+                                    break;
+                            }
+                        } else {
+                            condition[key] = this.filter.where[key];
+                        }
+                        params.where.and.push(condition);
+                    });
+                }
 
                 if (this.resetPagination && !countParams) {
+                    this.resetPagination = false;
                     params.skip = 0; // reset pagination if filters
                 }
             }
@@ -315,7 +368,9 @@ export class TableComponent implements OnInit, OnDestroy {
             }
         }
 
-        // console.log(params);
+        if (queryParams) {
+            params.where = this.filter.where;
+        }
 
         const response = {
             filter: JSON.stringify(params),
@@ -614,43 +669,42 @@ export class TableComponent implements OnInit, OnDestroy {
         }
     }
 
-    onFilter(filter: TableFilter) {
-        if (this.filter.where) {
-            Object.keys(filter).forEach((key) => {
-                if (filter[key] !== null && filter[key] !== '') {
-                    this.resetPagination = true;
-                    this.filter.where[key] = filter[key];
-                } else {
-                    this.resetPagination = false;
-                    delete this.filter.where[key];
-                }
-            });
-        } else {
-            for (let i = 0; i < Object.keys(filter).length; i++) {
-                Object.keys(filter).forEach((key) => {
-                    if (filter[key] === null || filter[key] === '') {
-                        delete filter[key];
-                    }
-                });
-            }
+    refreshTable() {
+        const params = this.composeParams(false, true);
+        this._state.replaceLastPath = true;
+        this._router.navigate([], {queryParams: {listParams: params['filter']}});
+    }
 
-            this.filter.where = filter;
+    onFilter(filter: TableFilter) {
+        if (typeof this.filter.where === 'undefined') {
+            this.filter.where = {};
         }
 
-        this.getData();
-        this.activeFilters.filter = filter;
+        this.resetPagination = true;
+
+        Object.keys(filter).forEach((key) => {
+            if (filter[key] !== null && filter[key] !== '') {
+                this.resetPagination = this.resetPagination && false;
+                this.filter.where[key] = filter[key];
+            } else {
+                if (this.filter.where[key]) {
+                    delete this.filter.where[key];
+                }
+            }
+        });
+
+        this.resetPagination = !this.resetPagination;
+        this.refreshTable();
     }
 
     onPagination(pagination: TablePagination) {
-        const queryParams = UtilsService.mergeDeep(this._route.snapshot.queryParams, pagination);
-        this._router.navigate([], {queryParams: queryParams});
+        this.activeFilters.pagination = pagination;
+        this.refreshTable();
     }
 
-    onSort(sort: TableSort) {
-        this.sort = sort;
-        this.getData();
-        this.activeFilters.sort = [];
-        this.activeFilters.sort.push(this.sort);
+    onSort(sort: TableSort[]) {
+        this.filter.order = sort;
+        this.refreshTable();
     }
 
     onLanguageChange(language: Language) {

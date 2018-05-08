@@ -88,6 +88,7 @@ export class Ng2SmartTableComponent implements OnChanges, OnInit, OnDestroy {
         } else {
             this.initGrid();
         }
+
         this.tableId = this.grid.getSetting('attr.id');
         this.tableClass = this.grid.getSetting('attr.class');
         this.isHideHeader = this.grid.getSetting('hideHeader');
@@ -141,7 +142,9 @@ export class Ng2SmartTableComponent implements OnChanges, OnInit, OnDestroy {
         const source = new LocalDataSource(this.source);
         source.setCount(this.count);
         if (this.activeFilters) {
-            source.setSort(this.activeFilters.sort);
+            if (this.activeFilters.sort) {
+                source.setSort(this.activeFilters.sort);
+            }
             source.setPaging(this.activeFilters.pagination.page, this.activeFilters.pagination.perPage);
         }
         return source;
@@ -156,7 +159,7 @@ export class Ng2SmartTableComponent implements OnChanges, OnInit, OnDestroy {
         this.resetAllSelector();
     }
 
-    onSort($event: TableSort) {
+    onSort($event: TableSort[]) {
         this.sort.emit($event);
         this.resetAllSelector();
     }

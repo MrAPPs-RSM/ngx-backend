@@ -2,6 +2,7 @@ import {Component, Input, Output, EventEmitter, OnChanges} from '@angular/core';
 
 import {Grid} from '../../../lib/grid';
 import {DataSource} from '../../../lib/data-source/data-source';
+import {Column} from "../../../lib/data-set/column";
 
 @Component({
     selector: '[ng2-st-thead-filters-row]',
@@ -12,6 +13,7 @@ import {DataSource} from '../../../lib/data-source/data-source';
             <ng2-smart-table-filter [source]="source"
                                     [grid]="grid"
                                     [column]="column"
+                                    [filterValue]="getFilterValue(column)"
                                     [inputClass]="filterInputClass"
                                     (filter)="filter.emit($event)">
             </ng2-smart-table-filter>
@@ -29,6 +31,7 @@ export class TheadFitlersRowComponent implements OnChanges {
     @Input() grid: Grid;
     @Input() source: DataSource;
     @Input() isDragEnabled: boolean;
+    @Input() activeFilters: any;
 
     @Output() create = new EventEmitter<any>();
     @Output() filter = new EventEmitter<any>();
@@ -36,6 +39,14 @@ export class TheadFitlersRowComponent implements OnChanges {
     isMultiSelectVisible: boolean;
     filterInputClass: string;
     showActionsColumn: boolean;
+
+    getFilterValue(column: Column) {
+        if (this.activeFilters) {
+            return column.key ? this.activeFilters[column.key] : this.activeFilters[column.id];
+        }
+
+        return null;
+    }
 
     ngOnChanges() {
         this.isMultiSelectVisible = this.grid.isMultiSelectVisible();

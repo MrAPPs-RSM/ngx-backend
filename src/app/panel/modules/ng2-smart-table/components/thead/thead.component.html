@@ -1,6 +1,7 @@
 <tr ng2-st-thead-titles-row *ngIf="!isHideHeader"
     class="ng2-smart-titles"
     [grid]="grid"
+    [activeSort]="activeFilters.sort"
     [isDragEnabled]="isDragEnabled"
     [isAllSelected]="isAllSelected"
     [source]="source"
@@ -10,6 +11,7 @@
 
 <tr ng2-st-thead-filters-row *ngIf="!isHideSubHeader"
     class="ng2-smart-filters"
+    [activeFilters]="activeFilters.filter"
     [isDragEnabled]="isDragEnabled"
     [grid]="grid"
     [source]="source"

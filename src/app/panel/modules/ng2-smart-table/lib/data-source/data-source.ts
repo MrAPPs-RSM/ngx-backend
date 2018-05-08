@@ -44,6 +44,18 @@ export abstract class DataSource {
         return Promise.resolve();
     }
 
+    addSort(conf: any, doEmit?: boolean) {
+        if (doEmit) {
+            this.emitOnChanged('sort');
+        }
+    }
+
+    removeSort(key: string, doEmit?: boolean) {
+        if (doEmit) {
+            this.emitOnChanged('sort');
+        }
+    }
+
     setSort(conf: Array<any>, doEmit?: boolean) {
         if (doEmit) {
             this.emitOnChanged('sort');

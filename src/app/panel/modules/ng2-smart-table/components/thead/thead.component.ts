@@ -13,6 +13,7 @@ export class Ng2SmartTableTheadComponent implements OnInit, OnChanges {
     @Input() source: DataSource;
     @Input() isAllSelected: boolean;
     @Input() isDragEnabled: boolean;
+    @Input() activeFilters: any;
 
     @Output() sort = new EventEmitter<any>();
     @Output() selectAllRows = new EventEmitter<any>();
@@ -26,7 +27,6 @@ export class Ng2SmartTableTheadComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges() {
-
         this.isHideHeader = this.grid.getSetting('hideHeader');
         this.isHideSubHeader = this.grid.getSetting('hideSubHeader');
     }
