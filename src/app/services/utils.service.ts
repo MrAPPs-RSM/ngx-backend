@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import * as _ from 'lodash';
+import * as moment from 'moment';
 
 @Injectable()
 export class UtilsService {
@@ -103,24 +104,12 @@ export class UtilsService {
         return response;
     }
 
-    private static addLeadingZero(value: any): any {
-        return value < 10 ? '0' + value : value;
-    }
+    public static timeConverter(timestamp: number, format?: string) {
+        if (!format) {
+            format = 'DD/MM/YYYY, HH:mm';
+        }
 
-    public static timeConverter(timestamp: number) {
-        const a = new Date(timestamp);
-        const year = a.getFullYear();
-        let month = a.getMonth() + 1;
-        let date = a.getDate();
-        let hour = a.getHours();
-        let min = a.getMinutes();
-
-        month = UtilsService.addLeadingZero(month);
-        date = UtilsService.addLeadingZero(date);
-        hour = UtilsService.addLeadingZero(hour);
-        min = UtilsService.addLeadingZero(min);
-
-        return date + '/' + month + '/' + year + ', ' + hour + ':' + min;
+        return moment(timestamp).format(format);
     }
 
     public static isValidURL(str) {

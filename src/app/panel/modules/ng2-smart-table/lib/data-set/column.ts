@@ -5,6 +5,7 @@ export class Column {
     key: string = '';
     title: string = '';
     type: string = '';
+    dateFormat?: string = ''; // only for type=date (eg: YYYY-MM-DD)
     class: string = '';
     hidden: boolean = false;
     width: string = '';
@@ -64,6 +65,7 @@ export class Column {
         this.class = this.settings['class'];
         this.width = this.settings['width'];
         this.type = this.prepareType();
+        this.dateFormat = typeof this.settings['dateFormat'] === 'undefined' ? null : this.settings['dateFormat'];
         this.editor = this.settings['editor'];
         this.hidden = typeof this.settings['hidden'] === 'undefined' ? false : !!this.settings['hidden'];
         this.filter = this.settings['filter'];
@@ -83,6 +85,7 @@ export class Column {
         this.isAddable = typeof this.settings['addable'] === 'undefined' ? true : !!this.settings['addable'];
         this.sortDirection = this.prepareSortDirection();
 
+        // TODO: valutare se rimuovere queste parti, tanto sono inutilizzate da noi
         this.compareFunction = this.settings['compareFunction'];
         this.valuePrepareFunction = this.settings['valuePrepareFunction'];
         this.filterFunction = this.settings['filterFunction'];
