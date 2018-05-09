@@ -178,11 +178,13 @@ export class TableComponent implements OnInit, OnDestroy {
         if (this.DEFAULTS.perPageValues.indexOf(perPage) > -1) {
             return perPage;
         } else {
-            if (perPage > 50) {
+            if (perPage >= 100) {
+                return 100;
+            } else if (perPage >= 50) {
                 return 50;
-            } else if (perPage > 25) {
+            } else if (perPage >= 25) {
                 return 25;
-            } else if (perPage > 10) {
+            } else if (perPage >= 10) {
                 return 10;
             } else {
                 return 5;

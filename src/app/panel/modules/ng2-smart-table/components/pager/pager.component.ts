@@ -100,8 +100,7 @@ export class PagerComponent implements OnChanges {
 
     initPerPage() {
         if (this.perPageOptions.length <= 0) {
-
-            this.perPageOptions = [5, 10, 25, 50];
+            this.perPageOptions = [5, 10, 25, 50, 100];
         }
     }
 
