@@ -5,6 +5,7 @@
         </label>
         <ng-select [disabled]="field.disabled || onlyView"
                    [items]="options"
+                   [addTag]="!!field.addTag"
                    [multiple]="!!field.multiple"
                    bindLabel="text"
                    placeholder="{{field.placeholder}}"
