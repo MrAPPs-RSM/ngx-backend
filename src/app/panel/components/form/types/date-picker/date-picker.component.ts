@@ -43,7 +43,7 @@ export class DatePickerComponent extends BaseInputComponent implements OnInit, O
     }
 
     allowClear(): boolean {
-        return this.getControl().value !== null;
+        return this.getControl().value !== null && !this.onlyView && !this.field.disabled;
     }
 
     setValue(value: any, options?: {emitEvent: boolean}) {

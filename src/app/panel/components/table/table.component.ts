@@ -492,7 +492,7 @@ export class TableComponent implements OnInit, OnDestroy {
             }
 
             if (action.config.method) {
-                this.handleActionApi(action, endpoint, data)
+                this.handleActionApi(action, endpoint, action.config.endpointData, data)
                     .then(() => {
                         if (action.config.refreshAfter !== false) {
                             this.getData();
@@ -505,7 +505,7 @@ export class TableComponent implements OnInit, OnDestroy {
         }
     }
 
-    private handleActionApi(action: TableAction, endpoint: string, data?: any): Promise<any> {
+    private handleActionApi(action: TableAction, endpoint: string, endpointData?: any, data?: any): Promise<any> {
         return new Promise((resolve, reject) => {
             switch (action.config.method) {
                 case 'post': { // TODO (only if necessary)
@@ -516,11 +516,45 @@ export class TableComponent implements OnInit, OnDestroy {
                     resolve();
                 }
                     break;
-                case 'patch': { // TODO (only if necessary)
-                    resolve();
+                case 'patch': {
+                    if (typeof endpointData !== 'undefined' && endpointData) {
+                        if (action.config.confirm) {
+                            this._modal.confirm()
+                                .then(() => {
+                                    if (action.config.refreshAfter !== false) {
+                                        this.isLoading = true;
+                                    }
+                                    this._apiService.patch(endpoint, JSON.parse(endpointData))
+                                        .then((response) => {
+                                            this.handleResponseApi(action, response)
+                                                .then(() => resolve())
+                                                .catch((error) => reject(error));
+                                        })
+                                        .catch((response: ErrorResponse) => {
+                                            reject(response);
+                                        });
+                                })
+                                .catch(() => {
+                                });
+                        } else {
+                            if (action.config.refreshAfter !== false) {
+                                this.isLoading = true;
+                            }
+                            this._apiService.patch(endpoint, JSON.parse(endpointData))
+                                .then((response) => {
+                                    this.handleResponseApi(action, response)
+                                        .then(() => resolve())
+                                        .catch((error) => reject(error));
+                                })
+                                .catch((response: ErrorResponse) => {
+                                    reject(response);
+                                });
+                        }
+                    } else {
+                        resolve();
+                    }
                 }
                     break;
-
                 case 'get': {
                     if (action.config.confirm) {
                         this._modal.confirm()
