@@ -78,6 +78,8 @@ export class FormComponent implements OnInit, OnDestroy {
                 this.loadData();
             }
 
+            this.closeErrors();
+
             if (params.formParams) {
                 const values = JSON.parse(params.formParams);
                 const newValues = {};
