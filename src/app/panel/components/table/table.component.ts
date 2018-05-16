@@ -602,9 +602,13 @@ export class TableComponent implements OnInit, OnDestroy {
                                     .then((response) => {
                                         this.handleResponseApi(action, response)
                                             .then(() => resolve())
-                                            .catch((error) => reject(error));
+                                            .catch((error) => {
+                                                this.isLoading = false;
+                                                reject(error);
+                                            });
                                     })
                                     .catch((response: ErrorResponse) => {
+                                        this.isLoading = false;
                                         reject(response);
                                     });
                             })
