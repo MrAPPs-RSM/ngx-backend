@@ -86,6 +86,7 @@ export class TableComponent implements OnInit, OnDestroy {
 
                 this.filter = UtilsService.mergeDeep(this.filter, queryParamsFilter);
 
+
                 this.activeFilters.pagination.perPage = 'limit' in queryParamsFilter ? queryParamsFilter['limit'] : this.preparePerPage();
                 this.activeFilters.pagination.page = 'skip' in queryParamsFilter ?
                     queryParamsFilter['skip'] / this.activeFilters.pagination.perPage + 1 : 1;
