@@ -18,9 +18,7 @@
                [grid]="grid"
                [source]="source"
                (action)="action.emit($event)"
-               (userSelectRow)="onUserSelectRow($event)"
                (multipleSelectRow)="multipleSelectRow($event)"
-               (rowHover)="onRowHover($event)"
                [isDragEnabled]="true"
                [dragula]="'bag'"
                [dragulaModel]="grid.getRows()">
@@ -31,9 +29,7 @@
                [grid]="grid"
                [source]="source"
                (action)="action.emit($event)"
-               (userSelectRow)="onUserSelectRow($event)"
                (multipleSelectRow)="multipleSelectRow($event)"
-               (rowHover)="onRowHover($event)"
                [isDragEnabled]="false">
         </tbody>
 

@@ -48,7 +48,7 @@ export class Ng2SmartTableComponent implements OnChanges, OnInit, OnDestroy {
     grid: Grid;
     defaultSettings: Object = {
         mode: 'inline', // inline|external|click-to-edit
-        selectMode: 'single', // single|multi
+        selectMode: 'multi', // single|multi
         hideHeader: false,
         hideSubHeader: false,
         columns: {},
@@ -104,23 +104,12 @@ export class Ng2SmartTableComponent implements OnChanges, OnInit, OnDestroy {
         }
     }
 
-
-    onUserSelectRow(row: Row) {
-        if (this.grid.getSetting('selectMode') !== 'multi') {
-            this.grid.selectRow(row);
+    multipleSelectRow(row: Row) {
+        if (this.grid.getSetting('selectMode') === 'multi') {
+            this.grid.multipleSelectRow(row);
             this.emitUserSelectRow(row);
             this.emitSelectRow(row);
         }
-    }
-
-    onRowHover(row: Row) {
-        this.rowHover.emit(row);
-    }
-
-    multipleSelectRow(row: Row) {
-        this.grid.multipleSelectRow(row);
-        this.emitUserSelectRow(row);
-        this.emitSelectRow(row);
     }
 
     onSelectAllRows($event: any) {

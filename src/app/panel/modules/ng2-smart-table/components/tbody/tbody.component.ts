@@ -16,9 +16,7 @@ export class Ng2SmartTableTbodyComponent implements OnChanges {
     @Input() isDragEnabled: boolean;
 
     @Output() action = new EventEmitter<any>();
-    @Output() userSelectRow = new EventEmitter<any>();
     @Output() multipleSelectRow = new EventEmitter<any>();
-    @Output() rowHover = new EventEmitter<any>();
 
     isMultiSelectVisible: boolean;
     mode: string;
