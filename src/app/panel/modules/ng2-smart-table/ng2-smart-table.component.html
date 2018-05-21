@@ -13,16 +13,24 @@
                (filter)="onFilter($event)">
         </thead>
 
-        <tbody ng2-st-tbody
+        <tbody *ngIf="isDragEnabled"
+                ng2-st-tbody
                [grid]="grid"
                [source]="source"
                (action)="action.emit($event)"
-               (userSelectRow)="onUserSelectRow($event)"
                (multipleSelectRow)="multipleSelectRow($event)"
-               (rowHover)="onRowHover($event)"
-               [isDragEnabled]="isDragEnabled"
+               [isDragEnabled]="true"
                [dragula]="'bag'"
                [dragulaModel]="grid.getRows()">
+        </tbody>
+
+        <tbody *ngIf="!isDragEnabled"
+               ng2-st-tbody
+               [grid]="grid"
+               [source]="source"
+               (action)="action.emit($event)"
+               (multipleSelectRow)="multipleSelectRow($event)"
+               [isDragEnabled]="false">
         </tbody>
 
     </table>

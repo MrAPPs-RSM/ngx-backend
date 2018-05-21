@@ -56,7 +56,7 @@ export class DateRangePickerComponent extends BaseInputComponent implements OnIn
 
     allowClear(): boolean {
         return this.getControl(this.field.fromKey).value !== null
-        && this.getControl(this.field.toKey).value !== null;
+        && this.getControl(this.field.toKey).value !== null && !this.onlyView && !this.field.disabled;
     }
 
     clearValue() {

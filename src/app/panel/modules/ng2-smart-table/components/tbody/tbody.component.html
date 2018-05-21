@@ -1,6 +1,4 @@
 <tr *ngFor="let row of grid.getRows()"
-    (click)="userSelectRow.emit(row)"
-    (mouseover)="rowHover.emit(row)"
     class="ng2-smart-row"
     [ngClass]="{selected: row.isSelected}">
 

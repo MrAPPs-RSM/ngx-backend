@@ -94,10 +94,10 @@ export class LocalDataSource extends DataSource {
                         indexToDelete = index;
                     }
                 });
-                this.sortConf.push(conf);
+                this.sortConf.unshift(conf);
 
                 if (indexToDelete > -1) {
-                    this.sortConf.splice(indexToDelete, 1);
+                    this.sortConf.splice(indexToDelete + 1, 1);
                 }
             } else {
                 this.sortConf.push(conf);

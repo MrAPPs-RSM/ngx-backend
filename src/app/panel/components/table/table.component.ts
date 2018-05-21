@@ -86,6 +86,7 @@ export class TableComponent implements OnInit, OnDestroy {
 
                 this.filter = UtilsService.mergeDeep(this.filter, queryParamsFilter);
 
+
                 this.activeFilters.pagination.perPage = 'limit' in queryParamsFilter ? queryParamsFilter['limit'] : this.preparePerPage();
                 this.activeFilters.pagination.page = 'skip' in queryParamsFilter ?
                     queryParamsFilter['skip'] / this.activeFilters.pagination.perPage + 1 : 1;
@@ -178,11 +179,13 @@ export class TableComponent implements OnInit, OnDestroy {
         if (this.DEFAULTS.perPageValues.indexOf(perPage) > -1) {
             return perPage;
         } else {
-            if (perPage > 50) {
+            if (perPage >= 100) {
+                return 100;
+            } else if (perPage >= 50) {
                 return 50;
-            } else if (perPage > 25) {
+            } else if (perPage >= 25) {
                 return 25;
-            } else if (perPage > 10) {
+            } else if (perPage >= 10) {
                 return 10;
             } else {
                 return 5;
@@ -490,7 +493,7 @@ export class TableComponent implements OnInit, OnDestroy {
             }
 
             if (action.config.method) {
-                this.handleActionApi(action, endpoint, data)
+                this.handleActionApi(action, endpoint, action.config.endpointData, data)
                     .then(() => {
                         if (action.config.refreshAfter !== false) {
                             this.getData();
@@ -503,7 +506,7 @@ export class TableComponent implements OnInit, OnDestroy {
         }
     }
 
-    private handleActionApi(action: TableAction, endpoint: string, data?: any): Promise<any> {
+    private handleActionApi(action: TableAction, endpoint: string, endpointData?: any, data?: any): Promise<any> {
         return new Promise((resolve, reject) => {
             switch (action.config.method) {
                 case 'post': { // TODO (only if necessary)
@@ -514,11 +517,45 @@ export class TableComponent implements OnInit, OnDestroy {
                     resolve();
                 }
                     break;
-                case 'patch': { // TODO (only if necessary)
-                    resolve();
+                case 'patch': {
+                    if (typeof endpointData !== 'undefined' && endpointData) {
+                        if (action.config.confirm) {
+                            this._modal.confirm()
+                                .then(() => {
+                                    if (action.config.refreshAfter !== false) {
+                                        this.isLoading = true;
+                                    }
+                                    this._apiService.patch(endpoint, JSON.parse(endpointData))
+                                        .then((response) => {
+                                            this.handleResponseApi(action, response)
+                                                .then(() => resolve())
+                                                .catch((error) => reject(error));
+                                        })
+                                        .catch((response: ErrorResponse) => {
+                                            reject(response);
+                                        });
+                                })
+                                .catch(() => {
+                                });
+                        } else {
+                            if (action.config.refreshAfter !== false) {
+                                this.isLoading = true;
+                            }
+                            this._apiService.patch(endpoint, JSON.parse(endpointData))
+                                .then((response) => {
+                                    this.handleResponseApi(action, response)
+                                        .then(() => resolve())
+                                        .catch((error) => reject(error));
+                                })
+                                .catch((response: ErrorResponse) => {
+                                    reject(response);
+                                });
+                        }
+                    } else {
+                        resolve();
+                    }
                 }
                     break;
-
                 case 'get': {
                     if (action.config.confirm) {
                         this._modal.confirm()
@@ -566,9 +603,13 @@ export class TableComponent implements OnInit, OnDestroy {
                                     .then((response) => {
                                         this.handleResponseApi(action, response)
                                             .then(() => resolve())
-                                            .catch((error) => reject(error));
+                                            .catch((error) => {
+                                                this.isLoading = false;
+                                                reject(error);
+                                            });
                                     })
                                     .catch((response: ErrorResponse) => {
+                                        this.isLoading = false;
                                         reject(response);
                                     });
                             })

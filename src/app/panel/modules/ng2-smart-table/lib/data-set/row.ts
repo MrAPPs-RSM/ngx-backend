@@ -1,6 +1,7 @@
 import {Cell} from './cell';
 import {Column} from './column';
 import {DataSet} from './data-set';
+import {UtilsService} from '../../../../../services/utils.service';
 
 export class Row {
 
@@ -56,12 +57,7 @@ export class Row {
          * Support for sub-properties
          */
         if (column.id.indexOf('.') !== -1) {
-            const baseField = column.id.split('.')[0];
-            const subField = column.id.split('.')[1];
-
-            if (typeof this.data[baseField] === 'object' && this.data[baseField].hasOwnProperty(subField)) {
-                value = this.data[baseField][subField];
-            }
+            value = UtilsService.objectByString(this.data, column.id);
         } else {
             value = typeof this.data[column.id] === 'undefined' ? defValue : this.data[column.id];
         }

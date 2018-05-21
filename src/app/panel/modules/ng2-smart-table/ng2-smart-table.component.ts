@@ -99,26 +99,17 @@ export class Ng2SmartTableComponent implements OnChanges, OnInit, OnDestroy {
 
 
     ngOnDestroy() {
-        this._dragulaService.destroy('bag');
-    }
-
-
-    onUserSelectRow(row: Row) {
-        if (this.grid.getSetting('selectMode') !== 'multi') {
-            this.grid.selectRow(row);
-            this.emitUserSelectRow(row);
-            this.emitSelectRow(row);
+        if (this.isDragEnabled && this._dragulaService) {
+            this._dragulaService.destroy('bag');
         }
     }
 
-    onRowHover(row: Row) {
-        this.rowHover.emit(row);
-    }
-
     multipleSelectRow(row: Row) {
-        this.grid.multipleSelectRow(row);
-        this.emitUserSelectRow(row);
-        this.emitSelectRow(row);
+        if (this.grid.getSetting('selectMode') === 'multi') {
+            this.grid.multipleSelectRow(row);
+            this.emitUserSelectRow(row);
+            this.emitSelectRow(row);
+        }
     }
 
     onSelectAllRows($event: any) {
