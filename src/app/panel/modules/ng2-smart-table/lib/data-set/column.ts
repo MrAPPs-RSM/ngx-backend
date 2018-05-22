@@ -75,7 +75,7 @@ export class Column {
         this.defaultSortDirection = ['asc', 'desc']
             .indexOf(this.settings['sortDirection']) !== -1 ? this.settings['sortDirection'] : '';
 
-        if (this.dragEnabled) {
+        if (this.dragEnabled === true) {
             this.isSortable = false;
         } else {
             this.isSortable = typeof this.settings['sort'] === 'undefined' ? true : !!this.settings['sort'];

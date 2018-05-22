@@ -26,7 +26,13 @@ export class Grid {
 
     setSettings(settings: Object) {
         this.settings = settings;
-        this.dataSet = new DataSet([], this.getSetting('columns'), !!this.getSetting('drag'));
+
+        const dragSettings = this.getSetting('drag');
+        let dragEnabled = false;
+        if (dragSettings === true || dragSettings.sortField || dragSettings.endpoint || dragSettings.method) {
+            dragEnabled = true;
+        }
+        this.dataSet = new DataSet([], this.getSetting('columns'), dragEnabled);
 
         if (this.source) {
             this.source.refresh();
