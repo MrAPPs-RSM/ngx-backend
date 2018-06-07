@@ -72,7 +72,7 @@ export class FormPageComponent implements OnInit, OnDestroy, ComponentCanDeactiv
                  */
                 this._modalService.alert(
                     'Response',
-                    '<pre>' + response + '</pre>',
+                    '<pre>' + JSON.stringify(response, null, 2) + '</pre>',
                     'terminal'
                 );
             }

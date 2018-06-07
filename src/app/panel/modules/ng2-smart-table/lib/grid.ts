@@ -29,8 +29,10 @@ export class Grid {
 
         const dragSettings = this.getSetting('drag');
         let dragEnabled = false;
-        if (dragSettings === true || dragSettings.sortField || dragSettings.endpoint || dragSettings.method) {
-            dragEnabled = true;
+        if (dragSettings) {
+            if (dragSettings === true || dragSettings.sortField || dragSettings.endpoint || dragSettings.method) {
+                dragEnabled = true;
+            }
         }
         this.dataSet = new DataSet([], this.getSetting('columns'), dragEnabled);
 
