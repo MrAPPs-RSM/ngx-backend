@@ -565,7 +565,7 @@ export class TableComponent implements OnInit, OnDestroy {
                                 }
                                 this._apiService.get(endpoint)
                                     .then((response) => {
-                                        this.handleResponseApi(action, response)
+                                        this.handleResponseApi(action, response, data)
                                             .then(() => resolve())
                                             .catch((error) => reject(error));
                                     })
@@ -635,7 +635,7 @@ export class TableComponent implements OnInit, OnDestroy {
         });
     }
 
-    private handleResponseApi(action: TableAction, response: any): Promise<any> {
+    private handleResponseApi(action: TableAction, response: any, data?: any): Promise<any> {
         return new Promise((resolve, reject) => {
             if (action.config.responseType) {
                 switch (action.config.responseType) {
@@ -643,7 +643,12 @@ export class TableComponent implements OnInit, OnDestroy {
                         if (action.config.file) {
                             const now = new Date();
 
-                            const name = (action.config.file.name) ? action.config.file.name : 'table';
+                            let name = 'file';
+                            if (action.config.file.name && action.config.file.name.indexOf(':') > -1) {
+                                if (data[action.config.file.name.substr(1)]) {
+                                    name = data[action.config.file.name.substr(1)];
+                                }
+                            }
 
                             const fileName = name + '_' + now.toISOString().substring(0, 19) + '.' + action.config.file.extension;
                             const fileType = UtilsService.getFileType(action.config.file.extension);
