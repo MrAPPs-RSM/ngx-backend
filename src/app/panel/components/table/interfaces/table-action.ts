@@ -23,6 +23,7 @@ export interface TableAction {
         method?: string; // post | patch | put | delete
         refreshAfter?: boolean; // default = true, determines what to do after api,
         responseType?: string; // 'file_download'
+        forceDownload?: boolean;
         file?: { // file to download configuration (only if response type == file_download)
             name?: string; // default = 'table'
             extension: string; // required (csv, txt, jpeg)

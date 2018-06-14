@@ -563,41 +563,42 @@ export class TableComponent implements OnInit, OnDestroy {
                                 if (action.config.refreshAfter !== false) {
                                     this.isLoading = true;
                                 }
-                                this._apiService.get(endpoint)
-                                    .then((response) => {
-                                        if (action.config.responseType === 'file_download' && !UtilsService.isValidJSON(response)) {
-                                            (window as any).open(this._apiService.composeUrl(endpoint, true));
-                                            resolve();
-                                        } else {
+                                if (action.config.responseType === 'file_download' && action.config.forceDownload) {
+                                    (window as any).open(this._apiService.composeUrl(endpoint, true));
+                                    resolve();
+                                } else {
+                                    this._apiService.get(endpoint)
+                                        .then((response) => {
                                             this.handleResponseApi(action, response)
                                                 .then(() => resolve())
                                                 .catch((error) => reject(error));
-                                        }
-                                    })
-                                    .catch((response: ErrorResponse) => {
-                                        reject(response);
-                                    });
+                                        })
+                                        .catch((response: ErrorResponse) => {
+                                            reject(response);
+                                        });
+                                }
+
                             }).catch(() => {
                         });
                     } else {
                         if (action.config.refreshAfter !== false) {
                             this.isLoading = true;
                         }
-                        // Adding countParams to filter without pagination and sort
-                        this._apiService.get(endpoint, action.config.addFilters ? this.composeCountParams() : null)
-                            .then((response) => {
-                                if (action.config.responseType === 'file_download' && !UtilsService.isValidJSON(response)) {
-                                    (window as any).open(this._apiService.composeUrl(endpoint, true));
-                                    resolve();
-                                } else {
+                        if (action.config.responseType === 'file_download' && action.config.forceDownload) {
+                            (window as any).open(this._apiService.composeUrl(endpoint, true));
+                            resolve();
+                        } else {
+                            // Adding countParams to filter without pagination and sort
+                            this._apiService.get(endpoint, action.config.addFilters ? this.composeCountParams() : null)
+                                .then((response) => {
                                     this.handleResponseApi(action, response)
                                         .then(() => resolve())
                                         .catch((error) => reject(error));
-                                }
-                            })
-                            .catch((response: ErrorResponse) => {
-                                reject(response);
-                            });
+                                })
+                                .catch((response: ErrorResponse) => {
+                                    reject(response);
+                                });
+                        }
                     }
                 }
                     break;
