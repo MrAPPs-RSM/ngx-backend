@@ -9,6 +9,7 @@ export let formConfig = {
         NUMBER: 'number',
         CHECKBOX: 'checkbox',
         SELECT: 'select',
+        SELECT_2: 'select2',
         DATE: 'date',
         DATE_RANGE: 'date_range',
         TIMETABLE: 'timetable',
