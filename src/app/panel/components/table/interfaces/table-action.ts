@@ -20,6 +20,12 @@ export interface TableAction {
         endpointData?: string; // api data
         addFilters?: boolean; // useful for general actions, if filters need to be passed (eg: export csv)
         confirm?: boolean; // if true opens confirmation modal before api
+        modal?: { // if confirm true, modal option to text
+            delete?: { // TODO: support multiple methods if necessary
+                title?: string;
+                body?: string;
+            }
+        }
         method?: string; // post | patch | put | delete
         refreshAfter?: boolean; // default = true, determines what to do after api,
         responseType?: string; // 'file_download'

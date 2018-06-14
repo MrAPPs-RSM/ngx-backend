@@ -604,7 +604,11 @@ export class TableComponent implements OnInit, OnDestroy {
                     break;
                 case 'delete': {
                     if (action.config.confirm) {
-                        this._modal.confirm()
+                        const title = action.config.modal && action.config.modal.delete && action.config.modal.delete.title ?
+                            action.config.modal.delete.title : null;
+                        const body = action.config.modal && action.config.modal.delete && action.config.modal.delete.body ?
+                            action.config.modal.delete.body : null;
+                        this._modal.confirm(title, body)
                             .then(() => {
                                 if (action.config.refreshAfter !== false) {
                                     this.isLoading = true;
