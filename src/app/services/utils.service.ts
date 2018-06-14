@@ -170,4 +170,13 @@ export class UtilsService {
         }
         return list;
     }
+
+    public static isValidJSON(string) {
+        try {
+            JSON.parse(string);
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
 }

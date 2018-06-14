@@ -565,9 +565,14 @@ export class TableComponent implements OnInit, OnDestroy {
                                 }
                                 this._apiService.get(endpoint)
                                     .then((response) => {
-                                        this.handleResponseApi(action, response, data)
-                                            .then(() => resolve())
-                                            .catch((error) => reject(error));
+                                        if (action.config.responseType === 'file_download' && !UtilsService.isValidJSON(response)) {
+                                            (window as any).open(this._apiService.composeUrl(endpoint, true));
+                                            resolve();
+                                        } else {
+                                            this.handleResponseApi(action, response)
+                                                .then(() => resolve())
+                                                .catch((error) => reject(error));
+                                        }
                                     })
                                     .catch((response: ErrorResponse) => {
                                         reject(response);
@@ -581,9 +586,14 @@ export class TableComponent implements OnInit, OnDestroy {
                         // Adding countParams to filter without pagination and sort
                         this._apiService.get(endpoint, action.config.addFilters ? this.composeCountParams() : null)
                             .then((response) => {
-                                this.handleResponseApi(action, response)
-                                    .then(() => resolve())
-                                    .catch((error) => reject(error));
+                                if (action.config.responseType === 'file_download' && !UtilsService.isValidJSON(response)) {
+                                    (window as any).open(this._apiService.composeUrl(endpoint, true));
+                                    resolve();
+                                } else {
+                                    this.handleResponseApi(action, response)
+                                        .then(() => resolve())
+                                        .catch((error) => reject(error));
+                                }
                             })
                             .catch((response: ErrorResponse) => {
                                 reject(response);
@@ -635,7 +645,7 @@ export class TableComponent implements OnInit, OnDestroy {
         });
     }
 
-    private handleResponseApi(action: TableAction, response: any, data?: any): Promise<any> {
+    private handleResponseApi(action: TableAction, response: any): Promise<any> {
         return new Promise((resolve, reject) => {
             if (action.config.responseType) {
                 switch (action.config.responseType) {
@@ -643,12 +653,7 @@ export class TableComponent implements OnInit, OnDestroy {
                         if (action.config.file) {
                             const now = new Date();
 
-                            let name = 'file';
-                            if (action.config.file.name && action.config.file.name.indexOf(':') > -1) {
-                                if (data[action.config.file.name.substr(1)]) {
-                                    name = data[action.config.file.name.substr(1)];
-                                }
-                            }
+                            const name = (action.config.file.name) ? action.config.file.name : 'table';
 
                             const fileName = name + '_' + now.toISOString().substring(0, 19) + '.' + action.config.file.extension;
                             const fileType = UtilsService.getFileType(action.config.file.extension);
@@ -716,6 +721,7 @@ export class TableComponent implements OnInit, OnDestroy {
     }
 
     refreshTable() {
+        console.log('refresh table');
         const params = this.composeParams(false, true);
         this._state.replaceLastPath = true;
         this._router.navigate([], {queryParams: {listParams: params['filter']}});
