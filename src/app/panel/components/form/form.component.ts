@@ -71,6 +71,10 @@ export class FormComponent implements OnInit, OnDestroy {
             this.settings.onlyView = false;
         }
 
+        if (typeof this.settings.putFilesOnLanguages === 'undefined') {
+            this.settings.putFilesOnLanguages = false;
+        }
+
         this._subscription = this._route.queryParams.subscribe((params: any) => {
             this.form = this.setupForms();
 

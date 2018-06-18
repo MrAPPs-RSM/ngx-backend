@@ -12,7 +12,7 @@ import {UtilsService} from '../../../../../services/utils.service';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {ToastsService} from '../../../../../services/toasts.service';
 import {Subscription} from 'rxjs/Subscription';
-import {Language} from '../../../../services/language.service';
+import {Language, LanguageService} from '../../../../services/language.service';
 
 declare const $: any;
 
@@ -25,6 +25,7 @@ declare const $: any;
 export class FileUploadComponent extends BaseInputComponent implements OnInit, OnDestroy {
 
     @Input() field: FormFieldFile;
+    @Input() putFilesOnLanguages: boolean;
     @Input() currentLang: Language;
 
     options: UploaderOptions = {
@@ -55,11 +56,15 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
 
     constructor(private _renderer: Renderer,
                 private _toastsService: ToastsService,
-                private _apiService: ApiService) {
+                private _apiService: ApiService,
+                private _langService: LanguageService) {
         super();
     }
 
     ngOnInit() {
+        if (this.putFilesOnLanguages) {
+            console.log(this.form.parent.controls);
+        }
         if (this.field.options.multiple) {
             this.maxFiles = this.field.options.maxFiles ? this.field.options.maxFiles : 0;
         } else {
@@ -237,7 +242,14 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
             formFiles.push(uploadedFile.id);
         }
 
-        this.getControl().setValue(formFiles.length > 0 ? formFiles : null);
+        console.log(formFiles);
+
+        if (this.putFilesOnLanguages) {
+            this.form.parent.controls['en'].controls[this.field.key].setValue(formFiles.length > 0 ? formFiles : null);
+            this.form.parent.controls['it'].controls[this.field.key].setValue(formFiles.length > 0 ? formFiles : null);
+        } else {
+            this.getControl().setValue(formFiles.length > 0 ? formFiles : null);
+        }
     }
 
     private removeUploadedFile(file: UploadedFile): void {
