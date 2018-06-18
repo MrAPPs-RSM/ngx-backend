@@ -13,6 +13,7 @@ import {BaseInputComponent} from '../base-input/base-input.component';
 import {ToastsService} from '../../../../../services/toasts.service';
 import {Subscription} from 'rxjs/Subscription';
 import {Language, LanguageService} from '../../../../services/language.service';
+import {AbstractControl} from '@angular/forms';
 
 declare const $: any;
 
@@ -39,9 +40,6 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     /* Max num of files to upload */
     maxFiles: number;
 
-    /* Files already uploaded */
-    uploadedFiles: UploadedFile[] = [];
-
     uploadInput: EventEmitter<UploadInput>;
 
     rejected: boolean = false;
@@ -62,7 +60,6 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     }
 
     ngOnInit() {
-        console.log('[FILE UPLOAD] On Init');
         if (this.field.options.multiple) {
             this.maxFiles = this.field.options.maxFiles ? this.field.options.maxFiles : 0;
         } else {
@@ -74,20 +71,14 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         this.createAllowedContentTypes();
 
         /** Load entity image (if added from duplicate or edit) */
-        if (!this.putFilesOnLanguages || this.isEdit) { // TODO: test when duplicate from list
-            this._subscription = this.getControl().valueChanges.first().subscribe(data => {
-                if (this.uploadedFiles.length === 0) {
-                    if (data instanceof Array) {
-                        data.forEach((item) => {
-                            this.handleResponse(item, 200);
-                        });
-                    } else {
-                        this.handleResponse(data, 200);
-                    }
-                }
-            });
-        }
-
+        this._subscription = this.getControl().valueChanges.first().subscribe(data => {
+            console.log('passo qui');
+            if (data instanceof Array) {
+                this.getControl().setValue(data);
+            } else {
+                this.getControl().setValue([data]);
+            }
+        });
     }
 
     ngOnDestroy() {
@@ -96,7 +87,6 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         }
 
         this.removeAllFiles();
-        this.uploadedFiles = [];
     }
 
     private createAllowedContentTypes(): void {
@@ -125,7 +115,8 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     }
 
     canUpload(): boolean {
-        return this.uploadedFiles.length === 0 || ((this.maxFiles > 0 && this.uploadedFiles.length < this.maxFiles) || this.maxFiles === 0);
+        return (!this.getControl().value || (this.getControl().value && this.getControl().value.length === 0)) ||
+            ((this.maxFiles > 0 && this.getControl().value && this.getControl().value.length < this.maxFiles) || this.maxFiles === 0);
     }
 
     onUploadOutput(output: UploadOutput): void {
@@ -219,45 +210,49 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
             if (statusCode !== 200 || response.error) {
                 this._toastsService.error('error' in response ? response.error : {});
             } else {
-                this.addToUpdatedFiles({
+                this.updateFormValue({
                     id: response.id,
                     url: response.url,
                     type: response.type
-                });
+                }, false);
             }
         }
     }
 
-    private addToUpdatedFiles(file: UploadedFile): void {
-        this.uploadedFiles.push(file);
-        this.updateFormValue();
-    }
-
-    private updateFormValue(): void {
-        const formFiles = [];
-
-        for (const uploadedFile of this.uploadedFiles) {
-            formFiles.push(uploadedFile.id);
-        }
-
-        console.log(formFiles);
-
-        if (this.putFilesOnLanguages) {
-            this._langService.getContentLanguages().forEach((lang: Language) => {
-                Object.keys(this.form.parent.controls).forEach((key) => {
-                    if (lang.isoCode === key) {
-                        this.form.parent.controls[key].controls[this.field.key].setValue(formFiles.length > 0 ? formFiles : null);
-                    }
-                });
-            });
+    private updateFormValue(file: UploadedFile, remove?: boolean): void {
+        console.log('Updating form Value with file:');
+        console.log(file);
+        console.log(remove ? 'Remove' : 'Add');
+        let files = this.getControl().value || [];
+        if (remove) {
+            files = UtilsService.removeObjectFromArray(file, files);
         } else {
-            this.getControl().setValue(formFiles.length > 0 ? formFiles : null);
+            files.push(file);
         }
+        if (this.putFilesOnLanguages) {
+            if (!remove) {
+                this._langService.getContentLanguages().forEach((lang: Language) => {
+                    Object.keys(this.form.parent.controls).forEach((key) => {
+                        if (lang.isoCode === key) {
+                            this.form.parent.controls[key].controls[this.field.key].setValue(
+                                files.length > 0 ? files.slice() : null,
+                                {emitEvent: false});
+                        }
+                    });
+                });
+            } else {
+                this.getControl().setValue(files.length > 0 ? files : null, {emitEvent: false});
+            }
+        } else {
+            this.getControl().setValue(files.length > 0 ? files : null, {emitEvent: false});
+       }
+
+        console.log(this.form.parent.value);
     }
 
     private removeUploadedFile(file: UploadedFile): void {
-        this.uploadedFiles = UtilsService.removeObjectFromArray(file, this.uploadedFiles);
-        this.updateFormValue();
+        // TODO: this.updateFormValue(file);
+        this.updateFormValue(file, true);
     }
 
     /** Media library  */
@@ -272,11 +267,11 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     onConfirmMediaLibrarySelection(selection: Media[] | any): void {
         if (selection) {
             (selection as Media[]).forEach((media: Media) => {
-                this.addToUpdatedFiles({
+                this.updateFormValue({
                     id: media.id,
                     url: media.url,
                     type: media.type
-                });
+                }, false);
             });
         }
 

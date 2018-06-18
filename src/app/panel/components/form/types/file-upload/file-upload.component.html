@@ -35,7 +35,7 @@
         <div class="drop-container" *ngIf="!onlyView">
             <div>
                 <span *ngIf="isLoading">{{'forms.inputs.uploading_files' | translate}}</span>
-                <span *ngIf="(maxFiles > 0 && uploadedFiles.length >= maxFiles) && !isLoading">{{'forms.inputs.max_files' | translate}}: {{maxFiles}}</span>
+                <span *ngIf="(maxFiles > 0 && getControl().value && getControl().value.length >= maxFiles) && !isLoading">{{'forms.inputs.max_files' | translate}}: {{maxFiles}}</span>
                 <span *ngIf="canUpload() && !isLoading">
                     <span class="choose btn btn-sm btn-default"
                           (click)="bringFileSelector()">{{'forms.inputs.upload_files' | translate}}</span>
@@ -54,21 +54,21 @@
                (uploadOutput)="onUploadOutput($event)"
                [multiple]="!!field.options.multiple">
 
-        <app-media-library
+       <app-media-library
                 *ngIf="!!field.options.mediaLibrary"
                 [show]="showMediaLibrary"
                 [allowedContentTypes]="options.allowedContentTypes"
-                [uploadedFiles]="uploadedFiles"
+                [uploadedFiles]="getControl().value"
                 [options]="field.options.mediaLibrary"
                 [maxFiles]="maxFiles"
                 (confirm)="onConfirmMediaLibrarySelection($event)"
         ></app-media-library>
 
         <div class="uploaded-files-container"
-             *ngIf="uploadedFiles.length > 0">
+             *ngIf="getControl().value">
             <label class="uploaded-files-label" *ngIf="!onlyView">Uploaded file(s)</label>
             <ul>
-                <li *ngFor="let file of uploadedFiles">
+                <li *ngFor="let file of getControl().value">
                     <div class="file-wrapper">
                         <div [ngSwitch]="file.type">
                             <i *ngSwitchCase="'text/plain'" class="fa fa-file-text-o txt"></i>
