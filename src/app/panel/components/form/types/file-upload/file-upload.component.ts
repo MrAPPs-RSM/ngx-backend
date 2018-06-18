@@ -62,9 +62,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     }
 
     ngOnInit() {
-        if (this.putFilesOnLanguages) {
-            console.log(this.form.parent.controls);
-        }
+        console.log('[FILE UPLOAD] On Init');
         if (this.field.options.multiple) {
             this.maxFiles = this.field.options.maxFiles ? this.field.options.maxFiles : 0;
         } else {
@@ -76,17 +74,19 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         this.createAllowedContentTypes();
 
         /** Load entity image (if added from duplicate or edit) */
-        this._subscription = this.getControl().valueChanges.first().subscribe(data => {
-                    if (this.uploadedFiles.length === 0) {
-                        if (data instanceof Array) {
-                            data.forEach((item) => {
-                                this.handleResponse(item, 200);
-                            });
-                        } else {
-                            this.handleResponse(data, 200);
-                        }
+        if (!this.putFilesOnLanguages || this.isEdit) { // TODO: test when duplicate from list
+            this._subscription = this.getControl().valueChanges.first().subscribe(data => {
+                if (this.uploadedFiles.length === 0) {
+                    if (data instanceof Array) {
+                        data.forEach((item) => {
+                            this.handleResponse(item, 200);
+                        });
+                    } else {
+                        this.handleResponse(data, 200);
                     }
-                });
+                }
+            });
+        }
 
     }
 
@@ -129,7 +129,6 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     }
 
     onUploadOutput(output: UploadOutput): void {
-        console.log(output);
         switch (output.type) {
             case 'allAddedToQueue': {
                 if (this.files.length > 0) {
@@ -178,7 +177,6 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
             case 'done': {
                 this.isLoading = false;
                 this.removeFile(output.file.id);
-                console.log(output.file);
                 this.handleResponse(output.file.response, output.file.responseStatus);
             }
                 break;
@@ -215,6 +213,8 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     }
 
     private handleResponse(response: any, statusCode: number): void {
+        console.log('[HANDLE RESPONSE]');
+        console.log(response);
         if (response) {
             if (statusCode !== 200 || response.error) {
                 this._toastsService.error('error' in response ? response.error : {});
@@ -226,8 +226,6 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
                 });
             }
         }
-
-        console.log(this.uploadedFiles);
     }
 
     private addToUpdatedFiles(file: UploadedFile): void {
@@ -244,9 +242,14 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
 
         console.log(formFiles);
 
-        if (this.putFilesOnLanguages) {
-            this.form.parent.controls['en'].controls[this.field.key].setValue(formFiles.length > 0 ? formFiles : null);
-            this.form.parent.controls['it'].controls[this.field.key].setValue(formFiles.length > 0 ? formFiles : null);
+        if (this.putFilesOnLanguages) {
+            this._langService.getContentLanguages().forEach((lang: Language) => {
+                Object.keys(this.form.parent.controls).forEach((key) => {
+                    if (lang.isoCode === key) {
+                        this.form.parent.controls[key].controls[this.field.key].setValue(formFiles.length > 0 ? formFiles : null);
+                    }
+                });
+            });
         } else {
             this.getControl().setValue(formFiles.length > 0 ? formFiles : null);
         }
