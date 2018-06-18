@@ -22,7 +22,7 @@ export class Select2Component extends BaseInputComponent implements OnInit, OnDe
     private endpoint: string;
 
     public options: SelectData[] = [];
-    public selected: any[] = [];
+    public selected: [{id: number | null, text: string}] = [];
     private params = {
         where: {
             and: []
