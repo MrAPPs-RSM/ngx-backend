@@ -1,4 +1,9 @@
 /* Modals */
+bs-modal-container {
+  &.show {
+    opacity: 1;
+  }
+}
 
 div.modal-content {
   padding: 0 15px;
