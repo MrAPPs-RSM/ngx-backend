@@ -7,6 +7,7 @@ export interface FormFieldFile extends FormField {
         },
         maxFiles?: number; // only if multiple
         multiple?: boolean;
+        canDrag?: boolean;
         mediaLibrary?: MediaLibraryOptions;
         allowedContentTypes?: string[];
     };
