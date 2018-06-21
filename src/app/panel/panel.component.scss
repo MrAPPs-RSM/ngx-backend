@@ -74,6 +74,7 @@ app-panel {
       height: 100%;
       position: fixed;
       z-index: 1029;
+      top: 0;
       left: 0;
       background-color: $sidebar;
       @include _transition(all 0.5s);
