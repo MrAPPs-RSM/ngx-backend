@@ -5,6 +5,7 @@
         </label>
         <ng-select [disabled]="field.disabled || onlyView"
                    [items]="options"
+                   [typeahead]="field.search ? typeAhead : null"
                    [addTag]="true"
                    [multiple]="true"
                    bindLabel="text"
@@ -14,6 +15,7 @@
                    [ngModelOptions]="{standalone: true}"
         >
         </ng-select>
+
         <span *ngIf="field.description" class="help-block sub-little-text">{{field.description}}</span>
     </div>
 </div>

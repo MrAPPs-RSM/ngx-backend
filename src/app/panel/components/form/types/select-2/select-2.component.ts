@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit} from '@angular/core';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {ActivatedRoute} from '@angular/router';
 import {Language, LanguageService} from '../../../../services/language.service';
@@ -7,13 +7,16 @@ import {FormFieldSelect} from '../../interfaces/form-field-select';
 import {Subject} from 'rxjs/Subject';
 import {SelectData} from '../select/select.component';
 import {Subscription} from 'rxjs/Subscription';
+import {Observable} from 'rxjs/Observable';
+import {of} from 'rxjs/observable/of';
+import {concat, debounceTime, distinctUntilChanged, catchError, switchMap, tap} from 'rxjs/operators';
 
 @Component({
     selector: 'app-select-2',
     templateUrl: './select-2.component.html',
     styleUrls: ['./select-2.component.scss']
 })
-export class Select2Component extends BaseInputComponent implements OnInit, OnDestroy  {
+export class Select2Component extends BaseInputComponent implements OnInit, OnDestroy {
 
     @Input() field: FormFieldSelect;
     @Input() isEdit: boolean;
@@ -21,8 +24,12 @@ export class Select2Component extends BaseInputComponent implements OnInit, OnDe
 
     private endpoint: string;
 
+    /* Fixed options */
     public options: SelectData[] = [];
-    public selected: [{id: number | null, text: string}] = [];
+    public typeAhead: EventEmitter<string> = new EventEmitter<string>();
+
+    public selected: [{ id: number | null, text: string }] = [];
+
     private params = {
         where: {
             and: []
@@ -35,12 +42,21 @@ export class Select2Component extends BaseInputComponent implements OnInit, OnDe
     private _subFieldSubscription = Subscription.EMPTY;
 
     constructor(private _apiService: ApiService,
+                private _cd: ChangeDetectorRef,
                 private _languageService: LanguageService,
                 private _route: ActivatedRoute) {
         super();
     }
 
     ngOnInit() {
+        if (this.field.search && this.field.search.endpoint) {
+            this.typeListener();
+        }
+
+        if (!this.field.options) {
+            this.field.options = [];
+        }
+        // Fixed options
         this.addQueryParams();
         this.loadOptions().then(() => {
             if (this.isEdit) {
@@ -107,6 +123,21 @@ export class Select2Component extends BaseInputComponent implements OnInit, OnDe
                 });
             }
         }
+    }
+
+    /* When type in select */
+    private typeListener(): void {
+        this.typeAhead.pipe(
+            distinctUntilChanged(),
+            debounceTime(300),
+            switchMap(tag => this._apiService.get(this.field.search.endpoint, {search: tag}))
+        ).subscribe(data => {
+            this._cd.markForCheck();
+            this.options = data;
+        }, (err) => {
+            console.log(err);
+            this.options = [];
+        });
     }
 
     ngOnDestroy() {

@@ -1,7 +1,10 @@
 import {FormField} from './form-field';
 
 export interface FormFieldSelect extends FormField {
-    options: any;
+    options?: any;
+    search?: {
+        endpoint: string;
+    };
     multiple?: boolean;
     lang?: boolean; // if lang needed
     dependsOn?: any; // if options of the select depends on a field of the current form
