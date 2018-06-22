@@ -59,6 +59,8 @@ import {TimetablePickerComponent} from './components/form/types/timetable-picker
 import {GeoSearchComponent} from './components/form/types/geo-search/geo-search.component';
 import { GalleryComponent } from './components/form/types/gallery/gallery.component';
 import { Select2Component } from './components/form/types/select-2/select-2.component';
+import { CloudinaryLibraryComponent } from './components/form/types/cloudinary-library/cloudinary-library.component';
+
 
 const COMPONENTS = [
     PanelComponent,
@@ -91,7 +93,10 @@ const COMPONENTS = [
     DateRangePickerComponent,
     MediaLibraryComponent,
     TimetablePickerComponent,
-    GeoSearchComponent
+    GeoSearchComponent,
+    GalleryComponent,
+    Select2Component,
+    CloudinaryLibraryComponent
 ];
 
 const PROVIDERS = [
@@ -161,8 +166,6 @@ const routes: Routes = [
     ],
     declarations: [
         ...COMPONENTS,
-        GalleryComponent,
-        Select2Component
     ],
     providers: [
         ...PROVIDERS

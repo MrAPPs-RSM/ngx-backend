@@ -39,5 +39,13 @@ export interface Media {
     url: string;
     name: string;
     selected?: boolean;
+    tags?: any[];
 }
 
+export interface CloudinaryField extends FormField {
+    options: {
+        searchEndpoint: string;
+        page?: number;
+        perPage?: number;
+    };
+}
