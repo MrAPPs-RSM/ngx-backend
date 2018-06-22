@@ -1,4 +1,5 @@
-<div [ngSwitch]="field.type">
+<div [ngSwitch]="field.type"
+     *ngIf="isVisible()">
 
     <app-separator
             *ngSwitchCase="formConfig.noInputTypes.SEPARATOR"

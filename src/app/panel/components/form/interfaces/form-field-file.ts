@@ -9,6 +9,7 @@ export interface FormFieldFile extends FormField {
         multiple?: boolean;
         mediaLibrary?: MediaLibraryOptions;
         allowedContentTypes?: string[];
+        visibilityCondition?: any[];
     };
 }
 
