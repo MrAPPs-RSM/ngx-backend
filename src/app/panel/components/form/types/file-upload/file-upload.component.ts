@@ -68,7 +68,6 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         }
 
         const field = this.field;
-        console.log(this.field.options.canDrag);
 
         this._dragulaService.setOptions(this.getUniqueKey(), {
             moves: function (el, container, handle) {

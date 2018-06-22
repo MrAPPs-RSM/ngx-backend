@@ -50,6 +50,7 @@ export class FormTypeSwitcherComponent implements OnInit {
     }
 
     ngOnInit() {
+        console.log(this.field.visibleOn);
     }
 
 }
