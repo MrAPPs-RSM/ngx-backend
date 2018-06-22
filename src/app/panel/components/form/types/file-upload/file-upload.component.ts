@@ -13,7 +13,6 @@ import {BaseInputComponent} from '../base-input/base-input.component';
 import {ToastsService} from '../../../../../services/toasts.service';
 import {Subscription} from 'rxjs/Subscription';
 import {Language, LanguageService} from '../../../../services/language.service';
-import {AbstractControl} from '@angular/forms';
 import {DragulaService} from 'ng2-dragula/components/dragula.provider';
 
 declare const $: any;
@@ -68,7 +67,8 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
             this.maxFiles = 1;
         }
 
-        let field = this.field;
+        const field = this.field;
+        console.log(this.field.options.canDrag);
 
         this._dragulaService.setOptions(this.getUniqueKey(), {
             moves: function (el, container, handle) {
@@ -82,7 +82,6 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
 
         /** Load entity image (if added from duplicate or edit) */
         this._subscription = this.getControl().valueChanges.first().subscribe(data => {
-            console.log('passo qui');
             if (data instanceof Array) {
                 this.getControl().setValue(data);
             } else {
