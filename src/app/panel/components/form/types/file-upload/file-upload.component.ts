@@ -258,8 +258,6 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         } else {
             this.getControl().setValue(files.length > 0 ? files : null, {emitEvent: false});
         }
-
-        console.log(this.form.parent.value);
     }
 
     private removeUploadedFile(file: UploadedFile): void {
