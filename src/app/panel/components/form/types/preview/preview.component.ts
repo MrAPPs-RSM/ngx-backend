@@ -80,11 +80,11 @@ export class PreviewComponent extends BaseInputComponent implements OnInit, OnDe
                 if (value instanceof Array) {
                     this.isVisible = value && value.length > 0;
                     if (this.isVisible) {
-                        this.fileId = value[0];
+                        this.fileId = value[0].id;
                     }
                 } else {
                     this.isVisible = !!value;
-                    this.fileId = value.id;
+                    this.fileId = value['id'];
                 }
                 this.getData();
             } else {

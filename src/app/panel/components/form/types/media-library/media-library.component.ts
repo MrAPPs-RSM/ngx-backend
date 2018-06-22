@@ -128,7 +128,7 @@ export class MediaLibraryComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private composeParams(): void {
-        if (this.uploadedFiles.length > 0) {
+        if (this.uploadedFiles && this.uploadedFiles.length > 0) {
             const skipIds = [];
             this.uploadedFiles.forEach((file: UploadedFile) => {
                 skipIds.push(file.id);

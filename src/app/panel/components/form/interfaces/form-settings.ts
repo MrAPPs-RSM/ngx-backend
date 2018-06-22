@@ -6,6 +6,7 @@ export interface FormSettings {
         filter?: string;
     };
     putTranslationsFirst: boolean;
+    putFilesOnLanguages?: boolean;
     fields: any;
     isEdit?: boolean;
     onlyView?: boolean; // does GET but does not allow submit

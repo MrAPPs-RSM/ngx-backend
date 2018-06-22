@@ -71,6 +71,10 @@ export class FormComponent implements OnInit, OnDestroy {
             this.settings.onlyView = false;
         }
 
+        if (typeof this.settings.putFilesOnLanguages === 'undefined') {
+            this.settings.putFilesOnLanguages = false;
+        }
+
         this._subscription = this._route.queryParams.subscribe((params: any) => {
             this.form = this.setupForms();
 
@@ -300,10 +304,72 @@ export class FormComponent implements OnInit, OnDestroy {
         }
     }
 
+    private fixFiles(value: any): any {
+        const components = [];
+        this.settings.fields.base.forEach((field) => {
+            if (field.type === 'file') {
+                components.push(field.key);
+            }
+        });
+
+        this._languageService.getContentLanguages().forEach((lang: Language) => {
+            this.settings.fields[lang.isoCode].forEach((field) => {
+                if (field.type === 'file') {
+                    components.push(field.key);
+                }
+            });
+        });
+
+        const rawValue = value;
+
+        if (components.length > 0) {
+            components.forEach((fileKey) => {
+                Object.keys(rawValue).forEach((key) => {
+                    if (key === fileKey) {
+                        if (rawValue[key]) {
+                            const array = [];
+                            rawValue[key].forEach((item) => {
+                                if (item.id) {
+                                    array.push(item.id);
+                                }
+                            });
+                            if (array.length > 0) {
+                                rawValue[key] = array.slice();
+                            }
+                        }
+                    }
+                });
+
+                this._languageService.getContentLanguages().forEach((lang: Language) => {
+                    Object.keys(rawValue[lang.isoCode]).forEach((key) => {
+                        if (key === fileKey) {
+                            console.log(rawValue[lang.isoCode][key]);
+                            if (rawValue[lang.isoCode][key]) {
+                                const array = [];
+                                rawValue[lang.isoCode][key].forEach((item) => {
+                                    if (item.id) {
+                                        array.push(item.id);
+                                    }
+                                });
+                                if (array.length > 0) {
+                                    rawValue[lang.isoCode][key] = array.slice();
+                                }
+                            }
+                        }
+                    });
+                });
+            });
+        }
+
+        return rawValue;
+    }
+
     submit(): void {
         /** Using getRawValue() because form.value is not changed when FormArray order changes
          *  Useful to support drag&drop on list detail */
-        const value = this.form.getRawValue();
+        let value = this.fixFiles(this.form.getRawValue());
+
+        console.log(value);
 
         if (value['geosearch']) { // TODO: valutare se fare meglio
             delete value['geosearch'];

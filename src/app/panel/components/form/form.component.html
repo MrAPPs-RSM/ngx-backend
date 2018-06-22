@@ -46,6 +46,8 @@
             <div *ngIf="!settings.putTranslationsFirst">
                 <div *ngFor="let field of settings.fields.base">
                     <app-form-type-switcher [form]="form"
+                                            [putFilesOnLanguages]="settings.putFilesOnLanguages"
+                                            [currentLang]="currentLang"
                                             [field]="field"
                                             [onlyView]="settings.onlyView"
                                             [isEdit]="settings.isEdit"></app-form-type-switcher>
@@ -57,6 +59,8 @@
                              *ngFor="let field of valueOfSettingsField(key)">
                             <app-form-type-switcher [groupName]="key"
                                                     [form]="form.get(key)"
+                                                    [putFilesOnLanguages]="settings.putFilesOnLanguages"
+                                                    [currentLang]="currentLang"
                                                     [field]="field"
                                                     [onlyView]="settings.onlyView"
                                                     [isEdit]="settings.isEdit"></app-form-type-switcher>
@@ -71,7 +75,8 @@
                         <div [formGroupName]="key" [hidden]="currentLang.isoCode != key"
                              *ngFor="let field of valueOfSettingsField(key)">
                             <app-form-type-switcher [groupName]="key" 
-                                                    [form]="form.get(key)" 
+                                                    [form]="form.get(key)"
+                                                    [putFilesOnLanguages]="settings.putFilesOnLanguages"
                                                     [field]="field"
                                                     [currentLang]="currentLang"
                                                     [onlyView]="settings.onlyView"
@@ -81,6 +86,8 @@
                 </div>
                 <div *ngFor="let field of settings.fields.base">
                     <app-form-type-switcher [form]="form" [field]="field"
+                                            [putFilesOnLanguages]="settings.putFilesOnLanguages"
+                                            [currentLang]="currentLang"
                                             [onlyView]="settings.onlyView"
                                             [isEdit]="settings.isEdit"></app-form-type-switcher>
                 </div>

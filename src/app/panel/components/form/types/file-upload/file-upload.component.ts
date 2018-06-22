@@ -12,7 +12,8 @@ import {UtilsService} from '../../../../../services/utils.service';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {ToastsService} from '../../../../../services/toasts.service';
 import {Subscription} from 'rxjs/Subscription';
-import {Language} from '../../../../services/language.service';
+import {Language, LanguageService} from '../../../../services/language.service';
+import {DragulaService} from 'ng2-dragula/components/dragula.provider';
 
 declare const $: any;
 
@@ -25,6 +26,7 @@ declare const $: any;
 export class FileUploadComponent extends BaseInputComponent implements OnInit, OnDestroy {
 
     @Input() field: FormFieldFile;
+    @Input() putFilesOnLanguages: boolean;
     @Input() currentLang: Language;
 
     options: UploaderOptions = {
@@ -37,9 +39,6 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
 
     /* Max num of files to upload */
     maxFiles: number;
-
-    /* Files already uploaded */
-    uploadedFiles: UploadedFile[] = [];
 
     uploadInput: EventEmitter<UploadInput>;
 
@@ -55,7 +54,9 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
 
     constructor(private _renderer: Renderer,
                 private _toastsService: ToastsService,
-                private _apiService: ApiService) {
+                private _apiService: ApiService,
+                private _langService: LanguageService,
+                private _dragulaService: DragulaService) {
         super();
     }
 
@@ -66,32 +67,37 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
             this.maxFiles = 1;
         }
 
+        const field = this.field;
+        console.log(this.field.options.canDrag);
+
+        this._dragulaService.setOptions(this.getUniqueKey(), {
+            moves: function (el, container, handle) {
+                return field.options.canDrag;
+            }
+        });
+
         this.files = []; // local uploading files array
         this.uploadInput = new EventEmitter<UploadInput>(); // input events, we use this to emit data to ngx-uploader
         this.createAllowedContentTypes();
 
         /** Load entity image (if added from duplicate or edit) */
         this._subscription = this.getControl().valueChanges.first().subscribe(data => {
-                    if (this.uploadedFiles.length === 0) {
-                        if (data instanceof Array) {
-                            data.forEach((item) => {
-                                this.handleResponse(item, 200);
-                            });
-                        } else {
-                            this.handleResponse(data, 200);
-                        }
-                    }
-                });
-
+            if (data instanceof Array) {
+                this.getControl().setValue(data);
+            } else {
+                this.getControl().setValue([data]);
+            }
+        });
     }
 
     ngOnDestroy() {
+        this._dragulaService.destroy(this.getUniqueKey());
+
         if (this._subscription !== null) {
             this._subscription.unsubscribe();
         }
 
         this.removeAllFiles();
-        this.uploadedFiles = [];
     }
 
     private createAllowedContentTypes(): void {
@@ -120,11 +126,11 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     }
 
     canUpload(): boolean {
-        return this.uploadedFiles.length === 0 || ((this.maxFiles > 0 && this.uploadedFiles.length < this.maxFiles) || this.maxFiles === 0);
+        return (!this.getControl().value || (this.getControl().value && this.getControl().value.length === 0)) ||
+            ((this.maxFiles > 0 && this.getControl().value && this.getControl().value.length < this.maxFiles) || this.maxFiles === 0);
     }
 
     onUploadOutput(output: UploadOutput): void {
-        console.log(output);
         switch (output.type) {
             case 'allAddedToQueue': {
                 if (this.files.length > 0) {
@@ -173,7 +179,6 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
             case 'done': {
                 this.isLoading = false;
                 this.removeFile(output.file.id);
-                console.log(output.file);
                 this.handleResponse(output.file.response, output.file.responseStatus);
             }
                 break;
@@ -210,39 +215,53 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     }
 
     private handleResponse(response: any, statusCode: number): void {
+        console.log('[HANDLE RESPONSE]');
+        console.log(response);
         if (response) {
             if (statusCode !== 200 || response.error) {
                 this._toastsService.error('error' in response ? response.error : {});
             } else {
-                this.addToUpdatedFiles({
+                this.updateFormValue({
                     id: response.id,
                     url: response.url,
                     type: response.type
-                });
+                }, false);
             }
         }
-
-        console.log(this.uploadedFiles);
     }
 
-    private addToUpdatedFiles(file: UploadedFile): void {
-        this.uploadedFiles.push(file);
-        this.updateFormValue();
-    }
-
-    private updateFormValue(): void {
-        const formFiles = [];
-
-        for (const uploadedFile of this.uploadedFiles) {
-            formFiles.push(uploadedFile.id);
+    private updateFormValue(file: UploadedFile, remove?: boolean): void {
+        console.log('Updating form Value with file:');
+        console.log(file);
+        console.log(remove ? 'Remove' : 'Add');
+        let files = this.getControl().value || [];
+        if (remove) {
+            files = UtilsService.removeObjectFromArray(file, files);
+        } else {
+            files.push(file);
         }
-
-        this.getControl().setValue(formFiles.length > 0 ? formFiles : null);
+        if (this.putFilesOnLanguages) {
+            if (!remove) {
+                this._langService.getContentLanguages().forEach((lang: Language) => {
+                    Object.keys(this.form.parent.controls).forEach((key) => {
+                        if (lang.isoCode === key) {
+                            this.form.parent.controls[key].controls[this.field.key].setValue(
+                                files.length > 0 ? files.slice() : null,
+                                {emitEvent: false});
+                        }
+                    });
+                });
+            } else {
+                this.getControl().setValue(files.length > 0 ? files : null, {emitEvent: false});
+            }
+        } else {
+            this.getControl().setValue(files.length > 0 ? files : null, {emitEvent: false});
+        }
     }
 
     private removeUploadedFile(file: UploadedFile): void {
-        this.uploadedFiles = UtilsService.removeObjectFromArray(file, this.uploadedFiles);
-        this.updateFormValue();
+        // TODO: this.updateFormValue(file);
+        this.updateFormValue(file, true);
     }
 
     /** Media library  */
@@ -257,11 +276,11 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     onConfirmMediaLibrarySelection(selection: Media[] | any): void {
         if (selection) {
             (selection as Media[]).forEach((media: Media) => {
-                this.addToUpdatedFiles({
+                this.updateFormValue({
                     id: media.id,
                     url: media.url,
                     type: media.type
-                });
+                }, false);
             });
         }
 
