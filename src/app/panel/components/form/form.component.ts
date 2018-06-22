@@ -313,11 +313,13 @@ export class FormComponent implements OnInit, OnDestroy {
         });
 
         this._languageService.getContentLanguages().forEach((lang: Language) => {
-            this.settings.fields[lang.isoCode].forEach((field) => {
-                if (field.type === 'file') {
-                    components.push(field.key);
-                }
-            });
+            if (this.settings.fields[lang.isoCode]) {
+                this.settings.fields[lang.isoCode].forEach((field) => {
+                    if (field.type === 'file') {
+                        components.push(field.key);
+                    }
+                });
+            }
         });
 
         const rawValue = value;
@@ -341,22 +343,24 @@ export class FormComponent implements OnInit, OnDestroy {
                 });
 
                 this._languageService.getContentLanguages().forEach((lang: Language) => {
-                    Object.keys(rawValue[lang.isoCode]).forEach((key) => {
-                        if (key === fileKey) {
-                            console.log(rawValue[lang.isoCode][key]);
-                            if (rawValue[lang.isoCode][key]) {
-                                const array = [];
-                                rawValue[lang.isoCode][key].forEach((item) => {
-                                    if (item.id) {
-                                        array.push(item.id);
+                    if (rawValue[lang.isoCode]) {
+                        Object.keys(rawValue[lang.isoCode]).forEach((key) => {
+                            if (key === fileKey) {
+                                console.log(rawValue[lang.isoCode][key]);
+                                if (rawValue[lang.isoCode][key]) {
+                                    const array = [];
+                                    rawValue[lang.isoCode][key].forEach((item) => {
+                                        if (item.id) {
+                                            array.push(item.id);
+                                        }
+                                    });
+                                    if (array.length > 0) {
+                                        rawValue[lang.isoCode][key] = array.slice();
                                     }
-                                });
-                                if (array.length > 0) {
-                                    rawValue[lang.isoCode][key] = array.slice();
                                 }
                             }
-                        }
-                    });
+                        });
+                    }
                 });
             });
         }
@@ -367,7 +371,7 @@ export class FormComponent implements OnInit, OnDestroy {
     submit(): void {
         /** Using getRawValue() because form.value is not changed when FormArray order changes
          *  Useful to support drag&drop on list detail */
-        let value = this.fixFiles(this.form.getRawValue());
+        const value = this.fixFiles(this.form.getRawValue());
 
         console.log(value);
 
