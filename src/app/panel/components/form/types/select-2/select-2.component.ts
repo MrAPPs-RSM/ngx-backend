@@ -7,9 +7,7 @@ import {FormFieldSelect} from '../../interfaces/form-field-select';
 import {Subject} from 'rxjs/Subject';
 import {SelectData} from '../select/select.component';
 import {Subscription} from 'rxjs/Subscription';
-import {Observable} from 'rxjs/Observable';
-import {of} from 'rxjs/observable/of';
-import {concat, debounceTime, distinctUntilChanged, catchError, switchMap, tap} from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
 
 @Component({
     selector: 'app-select-2',
