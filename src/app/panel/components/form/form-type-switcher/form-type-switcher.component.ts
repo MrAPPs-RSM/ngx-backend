@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {AbstractControl, FormGroup} from '@angular/forms';
 import {formConfig} from '../form.config';
 import {Language} from '../../../services/language.service';
 import {forEach} from '@angular/router/src/utils/collection';
@@ -31,19 +31,25 @@ export class FormTypeSwitcherComponent implements OnInit {
         if (!this.field.visibleOn) {
             return true;
         } else {
-            // TODO: check related fields to enable visibility
-            let obj = this.field.visibleOn;
-
-            Object.keys(obj).forEach((key) => {
-                let control = this.form.parent.get(key);
-                console.log(control);
-                console.log('Value expected: ' + obj[key]);
+            let response = true;
+            Object.keys(this.field.visibleOn).forEach((key) => {
+                let control: AbstractControl;
+                if (key.indexOf('.') > -1) {
+                    control = this.form.get(key.split('.')[1]);
+                } else {
+                    control = this.form.parent.get(key);
+                }
+                if (control.value === this.field.visibleOn[key]) {
+                    response = response && true;
+                } else {
+                    response = response && false;
+                }
             });
+            return response;
         }
     }
 
     ngOnInit() {
-        console.log(this.field);
     }
 
 }
