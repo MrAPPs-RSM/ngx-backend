@@ -35,14 +35,15 @@ export class FormTypeSwitcherComponent implements OnInit {
             let obj = this.field.visibleOn;
 
             Object.keys(obj).forEach((key) => {
-                let control = this.form.get(key);
+                let control = this.form.parent.get(key);
                 console.log(control);
-
+                console.log('Value expected: ' + obj[key]);
             });
         }
     }
 
     ngOnInit() {
+        console.log(this.field);
     }
 
 }
