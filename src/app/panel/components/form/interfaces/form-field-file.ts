@@ -10,6 +10,7 @@ export interface FormFieldFile extends FormField {
         canDrag?: boolean;
         mediaLibrary?: MediaLibraryOptions;
         allowedContentTypes?: string[];
+        visibilityCondition?: any[];
     };
 }
 
