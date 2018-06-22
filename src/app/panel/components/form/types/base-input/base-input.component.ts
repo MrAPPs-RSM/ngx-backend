@@ -22,6 +22,10 @@ export class BaseInputComponent implements OnInit {
     ngOnInit() {
     }
 
+    public getUniqueKey(): string {
+        return this.groupName + '-' + this.field.key;
+    }
+
     public checkDisabled(): void {
         if (this.field.disabled || this.onlyView) {
             this.getControl().disable();

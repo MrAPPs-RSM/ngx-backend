@@ -14,6 +14,7 @@ import {ToastsService} from '../../../../../services/toasts.service';
 import {Subscription} from 'rxjs/Subscription';
 import {Language, LanguageService} from '../../../../services/language.service';
 import {AbstractControl} from '@angular/forms';
+import {DragulaService} from 'ng2-dragula/components/dragula.provider';
 
 declare const $: any;
 
@@ -55,7 +56,8 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     constructor(private _renderer: Renderer,
                 private _toastsService: ToastsService,
                 private _apiService: ApiService,
-                private _langService: LanguageService) {
+                private _langService: LanguageService,
+                private _dragulaService: DragulaService) {
         super();
     }
 
@@ -65,6 +67,14 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         } else {
             this.maxFiles = 1;
         }
+
+        let field = this.field;
+
+        this._dragulaService.setOptions(this.getUniqueKey(), {
+            moves: function (el, container, handle) {
+                return field.options.canDrag;
+            }
+        });
 
         this.files = []; // local uploading files array
         this.uploadInput = new EventEmitter<UploadInput>(); // input events, we use this to emit data to ngx-uploader
@@ -82,6 +92,8 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     }
 
     ngOnDestroy() {
+        this._dragulaService.destroy(this.getUniqueKey());
+
         if (this._subscription !== null) {
             this._subscription.unsubscribe();
         }
@@ -245,7 +257,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
             }
         } else {
             this.getControl().setValue(files.length > 0 ? files : null, {emitEvent: false});
-       }
+        }
 
         console.log(this.form.parent.value);
     }

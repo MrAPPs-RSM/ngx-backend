@@ -162,6 +162,7 @@ body {
   margin: 0 !important;
   z-index: 9999 !important;
   opacity: 1 !important;
+  list-style: none;
 
   /* List detail items - COPIED FROM list-details.component.scss */
   &.list-detail-item {
@@ -193,6 +194,11 @@ body {
         text-rendering: auto;
         -webkit-font-smoothing: antialiased;
       }
+    }
+  }
+  &.uploaded-file {
+    > .file-name {
+      display: none;
     }
   }
 
