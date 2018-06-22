@@ -111,6 +111,18 @@
             [index]="index">
     </app-select>
 
+    <app-select-2
+            *ngSwitchCase="formConfig.types.SELECT_2"
+            [isSubField]="isSubField"
+            [onlyView]="onlyView"
+            [groupName]="groupName"
+            [unique]="unique"
+            [form]="form"
+            [field]="field"
+            [isEdit]="isEdit"
+            [index]="index">
+    </app-select-2>
+
     <app-input-email
             *ngSwitchCase="formConfig.types.EMAIL"
             [isSubField]="isSubField"
