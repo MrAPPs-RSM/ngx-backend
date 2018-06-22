@@ -26,7 +26,7 @@ export class Select2Component extends BaseInputComponent implements OnInit, OnDe
     public options: SelectData[] = [];
     public typeAhead: EventEmitter<string> = new EventEmitter<string>();
 
-    public selected: [{ id: number | null, text: string }] = [];
+    public selected: SelectData[] = [];
 
     private params = {
         where: {
@@ -218,17 +218,11 @@ export class Select2Component extends BaseInputComponent implements OnInit, OnDe
         if (this.selected || (this.selected && this.selected.length > 0)) {
             let keepValue = false;
             this.options.forEach((option) => {
-                if (this.field.multiple === true) {
-                    (this.selected as SelectData[]).forEach((selection) => {
-                        if (option.id === selection.id) {
-                            keepValue = true;
-                        }
-                    });
-                } else {
-                    if (this.selected && option.id === this.selected.id) {
+                this.selected.forEach((selection) => {
+                    if (option.id === selection.id) {
                         keepValue = true;
                     }
-                }
+                });
             });
 
             if (!keepValue) {
@@ -348,4 +342,8 @@ export class Select2Component extends BaseInputComponent implements OnInit, OnDe
             this.getControl().setValue([]);
         }
     }
+}
+
+export interface SelectData {
+
 }

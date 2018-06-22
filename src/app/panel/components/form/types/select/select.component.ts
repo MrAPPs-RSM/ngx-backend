@@ -353,6 +353,6 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
 }
 
 export interface SelectData {
-    id: string | number;
+    id: string | number | null;
     text: string;
 }
