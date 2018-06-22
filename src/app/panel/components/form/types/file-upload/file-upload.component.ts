@@ -82,9 +82,17 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         /** Load entity image (if added from duplicate or edit) */
         this._subscription = this.getControl().valueChanges.first().subscribe(data => {
             if (data instanceof Array) {
-                this.getControl().setValue(data);
+                const array = [];
+                data.forEach((item) => {
+                    if (item) {
+                        array.push(item);
+                    }
+                });
+                this.getControl().setValue(array);
             } else {
-                this.getControl().setValue([data]);
+                if (data) {
+                    this.getControl().setValue([data]);
+                }
             }
         });
     }
