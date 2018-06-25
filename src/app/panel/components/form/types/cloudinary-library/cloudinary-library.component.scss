@@ -146,6 +146,7 @@ app-cloudinary-library {
             }
 
             .tags-handler {
+              margin-top: 20px;
               > ng-select {
                 float: left;
                 width: calc(100% - 140px);

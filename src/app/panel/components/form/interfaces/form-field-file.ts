@@ -44,8 +44,12 @@ export interface Media {
 
 export interface CloudinaryField extends FormField {
     options: {
-        searchEndpoint: string;
-        dataEndpoint: string;
+        api: {
+            searchEndpoint: string;
+            dataEndpoint: string;
+            deleteTagsEndpoint: string;
+            addTagsEndpoint: string;
+        },
         page?: number;
         perPage?: number;
     };

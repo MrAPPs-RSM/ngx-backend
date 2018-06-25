@@ -1,26 +1,23 @@
 import {
     ChangeDetectorRef,
-    Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChange,
+    Component, EventEmitter, Input, OnDestroy, OnInit,
     ViewEncapsulation
 } from '@angular/core';
 import {
     CloudinaryField,
     Media,
     MediaLibraryParams,
-    UploadedFile
 } from '../../interfaces/form-field-file';
 import {ApiService, ErrorResponse} from '../../../../../api/api.service';
 import {UtilsService} from '../../../../../services/utils.service';
 import {ToastsService} from '../../../../../services/toasts.service';
 import {environment} from '../../../../../../environments/environment';
-import {FormControl} from '@angular/forms';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/skip';
-import {Subscription} from 'rxjs/Subscription';
 import {BaseInputComponent} from '../base-input/base-input.component';
-import {debounceTime, distinctUntilChanged, switchMap} from "rxjs/operators";
-import {SelectData} from "../select/select.component";
+import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
+import {SelectData} from '../select/select.component';
 
 declare const $: any;
 
@@ -53,8 +50,6 @@ export class CloudinaryLibraryComponent extends BaseInputComponent implements On
     tagsOptions: SelectData[];
     tags: any;
 
-    subscriptionInputControl = Subscription.EMPTY;
-
     constructor(private _apiService: ApiService,
                 private _cd: ChangeDetectorRef,
                 private _toast: ToastsService) {
@@ -71,7 +66,6 @@ export class CloudinaryLibraryComponent extends BaseInputComponent implements On
     }
 
     ngOnDestroy() {
-        this.subscriptionInputControl.unsubscribe();
     }
 
     // When user types in select
@@ -80,7 +74,7 @@ export class CloudinaryLibraryComponent extends BaseInputComponent implements On
         this.typeAhead.pipe(
             distinctUntilChanged(),
             debounceTime(300),
-            switchMap(tag => this._apiService.get(this.field.options.searchEndpoint, {search: tag}))
+            switchMap(tag => this._apiService.get(this.field.options.api.searchEndpoint, {search: tag}))
         ).subscribe(data => {
             this._cd.markForCheck();
             this.searchOptions = data;
@@ -93,7 +87,7 @@ export class CloudinaryLibraryComponent extends BaseInputComponent implements On
         this.typeAhead_tag.pipe(
             distinctUntilChanged(),
             debounceTime(300),
-            switchMap(tag => this._apiService.get(this.field.options.searchEndpoint, {search: tag}))
+            switchMap(tag => this._apiService.get(this.field.options.api.searchEndpoint, {search: tag}))
         ).subscribe(data => {
             this._cd.markForCheck();
             this.tagsOptions = data;
@@ -106,8 +100,7 @@ export class CloudinaryLibraryComponent extends BaseInputComponent implements On
     reset() {
         this.params = {
             page: 1,
-            perPage: 12,
-            search: null,
+            perPage: 12
         };
         this.data = [];
 
@@ -137,7 +130,17 @@ export class CloudinaryLibraryComponent extends BaseInputComponent implements On
     }
 
     removeTag(tag: { id: number, name: string }) {
-        // TODO: remove tag from activeMedia
+        console.log('Remove tag from media');
+        console.log(tag);
+
+        this._apiService.post(this.field.options.api.deleteTagsEndpoint, {
+            medias: this.activeMedia,
+            tag: tag
+        }).then((response) => {
+            this.reload();
+        }).catch((response: ErrorResponse) => {
+            this._toast.error(response.error);
+        });
     }
 
     onImageError($event: any): void {
@@ -192,7 +195,6 @@ export class CloudinaryLibraryComponent extends BaseInputComponent implements On
 
     // -------------------------------------------------------------------------------
 
-
     activateMedia($event: any, media: Media): void {
         $event.preventDefault();
         $event.stopPropagation();
@@ -201,13 +203,21 @@ export class CloudinaryLibraryComponent extends BaseInputComponent implements On
     }
 
     onSearch() {
-        console.log(this.search);
-        // TODO: search and reload library
+        this.reload();
     }
 
-    onTags() {
+    addTags() {
         console.log('Add tags to selection');
         console.log(this.tags);
+
+        this._apiService.post(this.field.options.api.addTagsEndpoint, {
+            medias: this.selection,
+            tags: this.tags
+        }).then((response) => {
+            this.reload();
+        }).catch((response: ErrorResponse) => {
+            this._toast.error(response.error);
+        });
     }
 
 
@@ -230,13 +240,13 @@ export class CloudinaryLibraryComponent extends BaseInputComponent implements On
 
     private getCount(): Promise<any> {
         this.composeParams();
-        return this._apiService.get(this.field.options.dataEndpoint + '/count', this.params);
+        return this._apiService.get(this.field.options.api.dataEndpoint + '/count', this.params);
     }
 
     private getData(): void {
         this.isLoading = true;
         this.composeParams();
-        this._apiService.get(this.field.options.dataEndpoint, this.params)
+        this._apiService.get(this.field.options.api.dataEndpoint, this.params)
             .then((data) => {
                 this.isLoading = false;
                 this.data = data;
@@ -249,8 +259,8 @@ export class CloudinaryLibraryComponent extends BaseInputComponent implements On
     }
 
     private composeParams(): void {
-        // TODO: parse params if necessary
-        if (!this.params.search) {
+        this.params.search = JSON.stringify(this.search);
+        if (this.params.search.length === 0) {
             this.params.search = '';
         }
     }
@@ -297,14 +307,4 @@ export class CloudinaryLibraryComponent extends BaseInputComponent implements On
             });
         });
     }
-
-    // -------------------------------------------------------------------------------
-
-
-    /*
-    confirmSelection(): void {
-        this.confirm.emit(this.selection);
-        this.subscriptionInputControl.unsubscribe();
-        this.reset();
-    } */
 }
