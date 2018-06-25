@@ -61,7 +61,7 @@ app-cloudinary-library {
             > div {
               margin: 15px 0;
               cursor: pointer;
-              > * {
+              > *:not(span.selected) {
                 pointer-events: none;
               }
               > div.media {
@@ -78,26 +78,28 @@ app-cloudinary-library {
                   height: 100%;
                 }
 
-                &.selected {
-                  border: 2px solid $primary;
-                  border-bottom: none;
-                  + div.info {
-                    border: 2px solid $primary;
-                    border-top: none;
-                  }
-                  > span.selected {
-                    display: block;
-                  }
-                }
-
                 > span.selected {
-                  display: none;
                   position: absolute;
                   top: 0;
                   right: 0;
-                  padding: 2px 5px;
-                  background: $primary;
+                  padding: 0 3px;
                   color: #ffffff;
+                }
+
+                &:not(.selected) {
+                  > span.selected {
+                    background: #ffffff;
+                  }
+                }
+
+                &.selected {
+                  border-color: $primary;
+                  + div.info {
+                    border-color: $primary;
+                  }
+                  > span.selected {
+                    background: $primary;
+                  }
                 }
               }
               > div.info {
@@ -119,7 +121,7 @@ app-cloudinary-library {
           &.selection {
             margin-top: 15px;
             > div {
-              margin-left: -5px;
+              // margin-left: -5px;
               > p {
                 color: $default;
                 font-size: 13px;
@@ -140,6 +142,21 @@ app-cloudinary-library {
                   color: $default;
                   text-align: center;
                 }
+              }
+            }
+
+            .tags-handler {
+              > ng-select {
+                float: left;
+                width: calc(100% - 140px);
+              }
+              > a {
+                float: left;
+                height: 45px;
+                padding: 12px 0 !important;
+                text-align: center !important;
+                width: 130px;
+                margin-left: 10px;
               }
             }
           }

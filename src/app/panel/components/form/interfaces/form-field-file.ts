@@ -45,6 +45,7 @@ export interface Media {
 export interface CloudinaryField extends FormField {
     options: {
         searchEndpoint: string;
+        dataEndpoint: string;
         page?: number;
         perPage?: number;
     };
