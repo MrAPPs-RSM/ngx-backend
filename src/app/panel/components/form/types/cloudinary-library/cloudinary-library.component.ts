@@ -99,36 +99,36 @@ export class CloudinaryLibraryComponent extends BaseInputComponent implements On
                 id: 1,
                 type: 'image/jpg',
                 url: 'http://via.placeholder.com/350x150/02b98f',
-                name: 'test image',
-                tags: [{name: 'tag1'}, {name: 'tag2'}]
+                name: 'test image with a very very long long long long name',
+                tags: [{id: 1, name: 'tag1'}, {id: 2, name: 'tag2'}]
             },
             {
                 id: 2,
                 type: 'image/jpg',
                 url: 'http://via.placeholder.com/350x350/2ca9d6',
                 name: 'test image',
-                tags: [{name: 'tag1'}, {name: 'tag2'}]
+                tags: [{id: 1, name: 'tag1'}, {id: 2, name: 'tag2'}]
             },
             {
                 id: 3,
                 type: 'image/jpg',
                 url: 'http://via.placeholder.com/800x200/fdc02f',
                 name: 'test image',
-                tags: [{name: 'tag5'}]
+                tags: [{id: 5, name: 'tag5'}]
             },
             {
                 id: 4,
                 type: 'image/jpg',
                 url: 'http://via.placeholder.com/700x750/67c2dd',
                 name: 'test image',
-                tags: [{name: 'tag5'}, {name: 'tag2'}]
+                tags: [{id: 5, name: 'tag5'}, {id: 2, name: 'tag2'}]
             },
             {
                 id: 5,
                 type: 'image/jpg',
                 url: 'http://via.placeholder.com/150x150/f66d6e',
                 name: 'test image',
-                tags: [{name: 'tag3'}, {name: 'tag2'}]
+                tags: [{id: 3, name: 'tag3'}, {id: 2, name: 'tag2'}]
             }
             ];
         this.selection = [];
@@ -138,7 +138,7 @@ export class CloudinaryLibraryComponent extends BaseInputComponent implements On
         console.log('Remove tag from media');
         console.log(tag);
 
-        const index = UtilsService.containsObject(this.activeMedia, tag);
+        const index = UtilsService.containsObject(tag, this.activeMedia.tags);
         this.activeMedia.tags.splice(index, 1);
 
         this._apiService.post(this.field.options.api.deleteTagsEndpoint, {
