@@ -1,20 +1,9 @@
-import {
-    ChangeDetectorRef,
-    Component, EventEmitter, Input, OnDestroy, OnInit,
-    ViewEncapsulation
-} from '@angular/core';
-import {
-    CloudinaryField,
-    Media,
-    MediaLibraryParams,
-} from '../../interfaces/form-field-file';
+import {ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
+import {CloudinaryField, Media, MediaLibraryParams} from '../../interfaces/form-field-file';
 import {ApiService, ErrorResponse} from '../../../../../api/api.service';
 import {UtilsService} from '../../../../../services/utils.service';
 import {ToastsService} from '../../../../../services/toasts.service';
 import {environment} from '../../../../../../environments/environment';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/skip';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
 import {SelectData} from '../select/select.component';
@@ -109,29 +98,48 @@ export class CloudinaryLibraryComponent extends BaseInputComponent implements On
             {
                 id: 1,
                 type: 'image/jpg',
-                url: 'http://via.placeholder.com/350x150/green',
+                url: 'http://via.placeholder.com/350x150/02b98f',
                 name: 'test image',
                 tags: [{name: 'tag1'}, {name: 'tag2'}]
             },
             {
                 id: 2,
                 type: 'image/jpg',
-                url: 'http://placehold.it/200x200?color=green',
-                name: 'test image 2'
-            }];
+                url: 'http://via.placeholder.com/350x350/2ca9d6',
+                name: 'test image',
+                tags: [{name: 'tag1'}, {name: 'tag2'}]
+            },
+            {
+                id: 3,
+                type: 'image/jpg',
+                url: 'http://via.placeholder.com/800x200/fdc02f',
+                name: 'test image',
+                tags: [{name: 'tag5'}]
+            },
+            {
+                id: 4,
+                type: 'image/jpg',
+                url: 'http://via.placeholder.com/700x750/67c2dd',
+                name: 'test image',
+                tags: [{name: 'tag5'}, {name: 'tag2'}]
+            },
+            {
+                id: 5,
+                type: 'image/jpg',
+                url: 'http://via.placeholder.com/150x150/f66d6e',
+                name: 'test image',
+                tags: [{name: 'tag3'}, {name: 'tag2'}]
+            }
+            ];
         this.selection = [];
-    }
-
-    closeMedia() {
-        $('#library-wrapper').addClass('media-closed');
-        setTimeout(() => {
-            this.activeMedia = null;
-        }, 500);
     }
 
     removeTag(tag: { id: number, name: string }) {
         console.log('Remove tag from media');
         console.log(tag);
+
+        const index = UtilsService.containsObject(this.activeMedia, tag);
+        this.activeMedia.tags.splice(index, 1);
 
         this._apiService.post(this.field.options.api.deleteTagsEndpoint, {
             medias: this.activeMedia,
@@ -202,6 +210,28 @@ export class CloudinaryLibraryComponent extends BaseInputComponent implements On
         $('#library-wrapper').removeClass('media-closed');
     }
 
+    closeMedia() {
+        $('#library-wrapper').addClass('media-closed');
+        setTimeout(() => {
+            this.activeMedia = null;
+        }, 500);
+    }
+
+    bulkSelection($event: any) {
+        $event.preventDefault();
+        $event.stopPropagation();
+
+        if (this.selection.length === this.data.length) {
+            this.data.forEach((media: Media) => {
+                this.selectMedia($event, media, false);
+            });
+        } else {
+            this.data.forEach((media: Media) => {
+                this.selectMedia($event, media, true);
+            });
+        }
+    }
+
     onSearch() {
         this.reload();
     }
@@ -259,9 +289,10 @@ export class CloudinaryLibraryComponent extends BaseInputComponent implements On
     }
 
     private composeParams(): void {
-        this.params.search = JSON.stringify(this.search);
-        if (this.params.search.length === 0) {
-            this.params.search = '';
+        if (this.search.length === 0) {
+            this.params.search = null;
+        } else {
+            this.params.search = JSON.stringify(this.search);
         }
     }
 
@@ -269,33 +300,20 @@ export class CloudinaryLibraryComponent extends BaseInputComponent implements On
 
 
     // ------------------------- Selection  -----------------------------------------
-    selectMedia($event: any, media: Media): void {
+    selectMedia($event: any, media: Media, add?: boolean): void {
         $event.preventDefault();
         $event.stopPropagation();
+
         const index = UtilsService.containsObject(media, this.selection);
         if (index > -1) {
-            media.selected = false;
-            this.selection.splice(index, 1);
+            if (!add) {
+                media.selected = false;
+                this.selection.splice(index, 1);
+            }
         } else {
             media.selected = true;
             this.selection.push(media);
         }
-    }
-
-    unSelectMedia($event: any, media: Media): void {
-        $event.preventDefault();
-        $event.stopPropagation();
-        const index = UtilsService.containsObject(media, this.selection);
-        if (index > -1) {
-            media.selected = false;
-            this.selection.splice(index, 1);
-        }
-
-        this.data.forEach((item: Media) => {
-            if (item.id === media.id) {
-                item.selected = false;
-            }
-        });
     }
 
     private checkSelection(): void {

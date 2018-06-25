@@ -26,6 +26,11 @@
             </div>
             <div class="container-fluid media-closed" id="library-wrapper">
                 <div class="medias">
+                    <div class="row buttons">
+                        <div class="col-sm-12">
+                            <a class="btn btn-default" (click)="bulkSelection($event)">{{ selection.length === data.length ? ('forms.inputs.deselect_all' | translate) : ('forms.inputs.select_all' | translate)}}</a>
+                        </div>
+                    </div>
                     <div class="row library">
                         <div class="col-xs-4 col-sm-3 col-md-3 col-lg-2" *ngFor="let media of data"
                              (click)="activateMedia($event, media)">
@@ -41,13 +46,7 @@
                     </div>
                     <div class="row selection" *ngIf="selection.length > 0">
                         <div class="col-sm-12">
-                            <p>{{'forms.inputs.selected_files' | translate}} ({{selection.length}}):</p>
-                        </div>
-                        <div class="col-sm-12">
-                            <div class="media" *ngFor="let media of selection">
-                                <img [src]="media.url" (error)="onImageError($event)">
-                                <span (click)="unSelectMedia($event, media)">×</span>
-                            </div>
+                            <p>{{'forms.inputs.selected_files' | translate}}: {{selection.length}}</p>
                         </div>
                         <div class="col-sm-12">
                             <div class="tags-handler">
@@ -91,8 +90,6 @@
                                     </li>
                                 </ul>
                             </nav>
-
-                            <!--<span class="pull-right btn btn-sm btn-primary" (click)="confirmSelection()">Confirm</span> -->
                         </div>
                     </div>
                 </div>

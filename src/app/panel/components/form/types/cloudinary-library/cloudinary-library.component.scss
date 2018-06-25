@@ -25,6 +25,7 @@ app-cloudinary-library {
       margin-top: 20px;
       > div.filters {
         div.input-wrapper {
+          margin: 0 5px;
           position: relative;
           > input {
             height: 40px;
@@ -49,7 +50,6 @@ app-cloudinary-library {
       }
     }
     > div.container-fluid#library-wrapper {
-      margin-top: 20px;
       min-height: 500px;
       overflow: hidden;
       $sidebarWidth: 300px;
@@ -121,13 +121,12 @@ app-cloudinary-library {
           &.selection {
             margin-top: 15px;
             > div {
-              // margin-left: -5px;
               > p {
+                margin: 0;
                 color: $default;
                 font-size: 13px;
-                margin-left: 5px;
               }
-              > div.media {
+              /*> div.media {
                 display: inline-block;
                 border: 1px solid $lightGrey;
                 margin: 5px;
@@ -142,11 +141,11 @@ app-cloudinary-library {
                   color: $default;
                   text-align: center;
                 }
-              }
+              }*/
             }
 
             .tags-handler {
-              margin-top: 20px;
+              margin-top: 10px;
               > ng-select {
                 float: left;
                 width: calc(100% - 140px);
@@ -229,7 +228,7 @@ app-cloudinary-library {
         overflow-y: auto;
         position: absolute;
         height: 100%;
-        top: 0;
+        top: 15px;
         right: 0;
         border-top: 1px solid $grey;
         border-left: 1px solid $grey;
@@ -284,8 +283,11 @@ app-cloudinary-library {
             cursor: pointer;
             position: absolute;
             font-size: 18px;
-            top: 5px;
-            right: 8px;
+            top: 0;
+            right: 0;
+            padding: 0 4px;
+            background: #000000;
+            color: #ffffff;
           }
         }
       }
