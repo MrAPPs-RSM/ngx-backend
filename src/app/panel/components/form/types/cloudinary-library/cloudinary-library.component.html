@@ -28,7 +28,7 @@
                 <div class="medias">
                     <div class="row buttons">
                         <div class="col-sm-12">
-                            <a class="btn btn-default" (click)="bulkSelection($event)">{{ selection.length === data.length ? ('forms.inputs.deselect_all' | translate) : ('forms.inputs.select_all' | translate)}}</a>
+                            <a *ngIf="data.length > 0 && count <= params.perPage" class="btn btn-default" (click)="bulkSelection($event)">{{ selection.length === data.length ? ('forms.inputs.deselect_all' | translate) : ('forms.inputs.select_all' | translate)}}</a>
                         </div>
                     </div>
                     <div class="row library">
@@ -103,7 +103,7 @@
                         <div class="tags" *ngIf="activeMedia.tags && activeMedia.tags.length > 0">
                             <p>Tags:</p>
                             <ul>
-                                <li *ngFor="let tag of activeMedia.tags">{{tag.name}}
+                                <li *ngFor="let tag of activeMedia.tags">{{tag}}
                                     <span class="remove" (click)="removeTag(tag)">×</span>
                                 </li>
                             </ul>

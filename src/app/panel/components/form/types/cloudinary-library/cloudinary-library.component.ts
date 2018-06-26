@@ -32,12 +32,12 @@ export class CloudinaryLibraryComponent extends BaseInputComponent implements On
     // Search
     typeAhead: EventEmitter<string> = new EventEmitter<string>();
     searchOptions: SelectData[];
-    search: any;
+    search: any[] = [];
 
     // Tags
     typeAhead_tag: EventEmitter<string> = new EventEmitter<string>();
     tagsOptions: SelectData[];
-    tags: any;
+    tags: any[];
 
     constructor(private _apiService: ApiService,
                 private _cd: ChangeDetectorRef,
@@ -50,7 +50,7 @@ export class CloudinaryLibraryComponent extends BaseInputComponent implements On
         this.count = 0;
         this.reset();
         this.initPages();
-        // TODO: call this.reload();
+        this.reload();
         this.typeListener();
     }
 
@@ -92,58 +92,21 @@ export class CloudinaryLibraryComponent extends BaseInputComponent implements On
             perPage: 12
         };
         this.data = [];
-
-        // TODO: remove mock when api available
-        this.data = [
-            {
-                id: 1,
-                type: 'image/jpg',
-                url: 'http://via.placeholder.com/350x150/02b98f',
-                name: 'test image with a very very long long long long name',
-                tags: [{id: 1, name: 'tag1'}, {id: 2, name: 'tag2'}]
-            },
-            {
-                id: 2,
-                type: 'image/jpg',
-                url: 'http://via.placeholder.com/350x350/2ca9d6',
-                name: 'test image',
-                tags: [{id: 1, name: 'tag1'}, {id: 2, name: 'tag2'}]
-            },
-            {
-                id: 3,
-                type: 'image/jpg',
-                url: 'http://via.placeholder.com/800x200/fdc02f',
-                name: 'test image',
-                tags: [{id: 5, name: 'tag5'}]
-            },
-            {
-                id: 4,
-                type: 'image/jpg',
-                url: 'http://via.placeholder.com/700x750/67c2dd',
-                name: 'test image',
-                tags: [{id: 5, name: 'tag5'}, {id: 2, name: 'tag2'}]
-            },
-            {
-                id: 5,
-                type: 'image/jpg',
-                url: 'http://via.placeholder.com/150x150/f66d6e',
-                name: 'test image',
-                tags: [{id: 3, name: 'tag3'}, {id: 2, name: 'tag2'}]
-            }
-            ];
         this.selection = [];
     }
 
-    removeTag(tag: { id: number, name: string }) {
+    removeTag(tag: string) {
         console.log('Remove tag from media');
         console.log(tag);
 
-        const index = UtilsService.containsObject(tag, this.activeMedia.tags);
-        this.activeMedia.tags.splice(index, 1);
+        const index = this.activeMedia.tags.indexOf(tag);
+        if (index > -1) {
+            this.activeMedia.tags.splice(index, 1);
+        }
 
         this._apiService.post(this.field.options.api.deleteTagsEndpoint, {
-            medias: this.activeMedia,
-            tag: tag
+            documentIds: [this.activeMedia.id],
+            tags: [tag]
         }).then((response) => {
             this.reload();
         }).catch((response: ErrorResponse) => {
@@ -184,7 +147,7 @@ export class CloudinaryLibraryComponent extends BaseInputComponent implements On
 
     paginate(page: number): boolean {
         this.params.page = page;
-        // this.getData();
+        this.getData();
         this.initPages();
         return false;
     }
@@ -218,8 +181,10 @@ export class CloudinaryLibraryComponent extends BaseInputComponent implements On
     }
 
     bulkSelection($event: any) {
-        $event.preventDefault();
-        $event.stopPropagation();
+        if ($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+        }
 
         if (this.selection.length === this.data.length) {
             this.data.forEach((media: Media) => {
@@ -239,11 +204,25 @@ export class CloudinaryLibraryComponent extends BaseInputComponent implements On
     addTags() {
         console.log('Add tags to selection');
         console.log(this.tags);
+        const tags = [];
+        this.tags.forEach((tag) => {
+            tags.push(tag.text);
+        });
+
+        const ids = [];
+        this.selection.forEach((item) => {
+            ids.push(item.id);
+        });
 
         this._apiService.post(this.field.options.api.addTagsEndpoint, {
-            medias: this.selection,
-            tags: this.tags
+            documentIds: ids,
+            tags: tags
         }).then((response) => {
+            this.selection = [];
+            this.data.forEach((item) => {
+                item.selected = false;
+            });
+            this.tags = [];
             this.reload();
         }).catch((response: ErrorResponse) => {
             this._toast.error(response.error);
@@ -280,7 +259,7 @@ export class CloudinaryLibraryComponent extends BaseInputComponent implements On
             .then((data) => {
                 this.isLoading = false;
                 this.data = data;
-                // TODO: this.checkSelection();
+                this.checkSelection();
             })
             .catch((response: ErrorResponse) => {
                 this.isLoading = false;
@@ -289,11 +268,11 @@ export class CloudinaryLibraryComponent extends BaseInputComponent implements On
     }
 
     private composeParams(): void {
-        if (this.search.length === 0) {
-            this.params.search = null;
-        } else {
-            this.params.search = JSON.stringify(this.search);
-        }
+        const search = [];
+        this.search.forEach((item) => {
+            search.push(item.text);
+        });
+        this.params.search = JSON.stringify(search);
     }
 
     // -------------------------------------------------------------------------------
