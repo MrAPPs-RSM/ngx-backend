@@ -47,7 +47,7 @@ export class PasswordChangeComponent implements OnInit, OnDestroy {
             .then((response) => {
                 this.isLoading = false;
                 this._toastsService.success('Success', 'Password changed successfully', {timeOut: 5000});
-                this._router.navigate(['login']);
+                this._router.navigate(['../login'], {relativeTo: this._route});
             })
             .catch((response: ErrorResponse) => {
                 this.isLoading = false;

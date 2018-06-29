@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {environment} from '../../environments/environment';
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from '@angular/common/http';
 import {UserService, TOKEN_KEY, LOGIN_ENDPOINT} from '../auth/services/user.service';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 
 const API_URL = environment.api.baseUrl;
 
@@ -14,6 +14,7 @@ export class ApiService {
 
     constructor(private _http: HttpClient,
                 private _userService: UserService,
+                private _route: ActivatedRoute,
                 private _router: Router) {
     }
 
@@ -239,7 +240,7 @@ export class ApiService {
     private redirectToLogin(): void {
         this._userService.removeUser();
         this._userService.removeToken();
-        this._router.navigate(['login']);
+        this._router.navigate(['../login'], {relativeTo: this._route});
     }
 
     /**

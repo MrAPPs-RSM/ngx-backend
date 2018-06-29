@@ -35,6 +35,8 @@ export class PanelComponent implements OnInit, AfterViewInit {
 
     ngOnInit() {
 
+        console.log('SUCCESS PANEL RESOLVER');
+
         /** When start, if current lang not set, set it from the enviroment defaults */
         if (this._languageService.isMultiLang() && !this._languageService.getCurrentLang()) {
             this._languageService.setCurrentLang(environment['currentLang']);
@@ -47,8 +49,17 @@ export class PanelComponent implements OnInit, AfterViewInit {
 
         /** Search for home page */
         (this._router.config as any).every((item: Route) => {
-            if (item.path === 'panel') {
-                (item.children as any).every((child) => {
+            if (environment.domains) {
+                let panelConfig = null;
+                environment.domains.forEach((domain) => {
+                    if (this._router.url.indexOf(domain.name) > -1) {
+                        if (item.path === domain.name) {
+                            panelConfig = item.children[0];
+                        }
+                    }
+                });
+
+                (panelConfig.children as any).every((child) => {
                     if ('data' in child && 'isHomePage' in child.data && child.data['isHomePage']) {
                         this.homePage = child.path;
                         return false;
@@ -56,18 +67,29 @@ export class PanelComponent implements OnInit, AfterViewInit {
                         return true;
                     }
                 });
-                return false;
             } else {
-                return true;
+                if (item.path === 'panel') {
+                    (item.children as any).every((child) => {
+                        if ('data' in child && 'isHomePage' in child.data && child.data['isHomePage']) {
+                            this.homePage = child.path;
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    });
+                    return false;
+                } else {
+                    return true;
+                }
             }
         });
 
         const redirectTo404 = () => {
-            this._router.navigate(['panel/404']);
+            this._router.navigate(['../panel/404'], {relativeTo: this._route});
         };
 
         if (this._router.url === '/panel') {
-            this._router.navigate(['panel/' + this.homePage]).catch(redirectTo404);
+            this._router.navigate(['../panel/' + this.homePage], {relativeTo: this._route}).catch(redirectTo404);
         } else {
             this._router.navigateByUrl(this._router.url).catch(redirectTo404);
         }
@@ -86,11 +108,11 @@ export class PanelComponent implements OnInit, AfterViewInit {
         this._userService.removeUser();
         this._languageService.removeLang();
         this._pageRefresh.reset();
-        this._router.navigate(['login']);
+        this._router.navigate(['../login'], {relativeTo: this._route});
     }
 
     redirect(route: string): void {
-        this._router.navigate(['panel/' + route]);
+        this._router.navigate(['../panel/' + route], {relativeTo: this._route});
 
         if ($(window).width() <= 768) {
             this.toggleSidebar();

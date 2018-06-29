@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {environment} from '../../../environments/environment';
 import {ApiService, ErrorResponse} from '../../api/api.service';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {ToastsService} from '../../services/toasts.service';
 
 @Component({
@@ -15,6 +15,7 @@ export class PasswordResetComponent implements OnInit {
     public isLoading = false;
 
     constructor(private _apiService: ApiService,
+                private _route: ActivatedRoute,
                 private _toastsService: ToastsService,
                 private _router: Router) {
     }
@@ -32,7 +33,7 @@ export class PasswordResetComponent implements OnInit {
                     'Check your email for further instructions',
                     {timeOut: 5000}
                 );
-                this._router.navigate(['login']);
+                this._router.navigate(['../login'], {relativeTo: this._route});
             })
             .catch((response: ErrorResponse) => {
                 this.isLoading = false;

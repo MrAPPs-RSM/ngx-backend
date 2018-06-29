@@ -451,7 +451,7 @@ export class FormComponent implements OnInit, OnDestroy {
                     listParams: buttonParams
                 };
             }
-            this._router.navigate([path], {queryParams: queryParams});
+            this._router.navigate(['../' + path], {queryParams: queryParams, relativeTo: this._route.parent});
         }
         // TODO: implement same logic like action parsing in table.component.ts
     }

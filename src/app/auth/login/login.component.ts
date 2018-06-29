@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {environment} from '../../../environments/environment';
 import {ApiService, ErrorResponse} from '../../api/api.service';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {UserService} from '../services/user.service';
 import {ToastsService} from '../../services/toasts.service';
 import {SetupService} from '../../panel/services/setup.service';
@@ -18,6 +18,7 @@ export class LoginComponent implements OnInit {
     public isLoading = false;
 
     constructor(private _toastsService: ToastsService,
+                private _route: ActivatedRoute,
                 private _setupService: SetupService,
                 private _apiService: ApiService,
                 private _userService: UserService,
@@ -41,8 +42,7 @@ export class LoginComponent implements OnInit {
                 this._userService.storeUser(response.user);
                 this._userService.storeToken(response.id);
 
-                console.log('START NAVIGATION TO PANEL');
-                this._router.navigate(['panel']);
+                this._router.navigate(['../panel'], {relativeTo: this._route});
             })
             .catch((response: ErrorResponse) => {
                 this.isLoading = false;

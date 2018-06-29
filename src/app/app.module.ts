@@ -2,7 +2,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {NgModule} from '@angular/core';
 import {HttpClientModule} from '@angular/common/http';
-import {RouterModule, Routes} from '@angular/router';
+import {Router, RouterModule, Routes} from '@angular/router';
 import {PanelModule} from './panel/panel.module';
 import {ReactiveFormsModule} from '@angular/forms';
 import {ToastrModule, ToastNoAnimation, ToastNoAnimationModule} from 'ngx-toastr';
@@ -24,6 +24,10 @@ import {PasswordResetComponent} from './auth/password-reset/password-reset.compo
 import {PasswordChangeComponent} from './auth/password-change/password-change.component';
 import {ToastsService} from './services/toasts.service';
 import {PendingChangesGuard} from './auth/guards/pending-changes.guard';
+import {environment} from '../environments/environment';
+import {PanelComponent} from "./panel/panel.component";
+import {AuthGuard} from "./auth/guards/auth.guard";
+import {PanelResolver} from "./panel/resolvers/panel.resolver";
 
 const routes: Routes = [
     {
@@ -96,4 +100,29 @@ const routes: Routes = [
     bootstrap: [AppComponent]
 })
 export class AppModule {
+
+    constructor(private _router: Router) {
+        if (environment.domains) {
+            this.addDomains();
+        }
+    }
+
+    private addDomains(): void {
+
+        const routerConfig = this._router.config;
+
+        const newConfiguration = [];
+
+        environment.domains.forEach((domain) => {
+            newConfiguration.push({
+                path: domain.name,
+                children: routerConfig,
+                pathMatch: 'prefix'
+            });
+        });
+
+        this._router.resetConfig(newConfiguration);
+
+        console.log(this._router.config);
+    }
 }

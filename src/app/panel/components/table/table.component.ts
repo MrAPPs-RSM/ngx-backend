@@ -411,11 +411,11 @@ export class TableComponent implements OnInit, OnDestroy {
                         params[association.formKey] = UtilsService.objectByString(this.filter, queryKey);
                     });
 
-                    extraParams = {queryParams: {formParams: JSON.stringify(params)}};
+                    extraParams = {queryParams: {formParams: JSON.stringify(params)}, relativeTo: this._route.parent};
 
-                    this._router.navigate(['panel/' + path], extraParams);
+                    this._router.navigate(['../panel/' + path], extraParams);
                 } else {
-                    this._router.navigateByUrl('panel/' + path);
+                    this._router.navigate(['../panel/' + path], {relativeTo: this._route.parent});
                 }
             } else {
 
@@ -483,8 +483,9 @@ export class TableComponent implements OnInit, OnDestroy {
                 /**
                  * If is table auto-update (sub categories for example), refresh same component
                  */
+                extraParams['relativeTo'] = this._route.parent;
 
-                this._router.navigate(['panel/' + path], extraParams);
+                this._router.navigate(['../panel/' + path], extraParams);
             }
         } else if (action.config.endpoint) {
             let endpoint = action.config.endpoint;

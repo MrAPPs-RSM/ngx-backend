@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot} from '@angular/router';
+import {ActivatedRoute, ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot} from '@angular/router';
 import {PanelComponent} from '../panel.component';
 import {SetupService} from '../services/setup.service';
 import {Observable} from 'rxjs/Observable';
@@ -15,6 +15,7 @@ export class PanelResolver implements Resolve<PanelComponent> {
 
     constructor(private _setupService: SetupService,
                 private _router: Router,
+                private _route: ActivatedRoute,
                 private _languageService: LanguageService,
                 private _pageRefresh: PageRefreshService,
                 private _userService: UserService,
@@ -28,7 +29,7 @@ export class PanelResolver implements Resolve<PanelComponent> {
             this._userService.removeUser();
             this._languageService.removeLang();
             this._pageRefresh.reset();
-            this._router.navigate(['login']);
+            this._router.navigate(['../login'], {relativeTo: this._route});
             return Observable.empty();
         });
     }
