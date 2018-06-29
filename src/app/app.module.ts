@@ -25,9 +25,6 @@ import {PasswordChangeComponent} from './auth/password-change/password-change.co
 import {ToastsService} from './services/toasts.service';
 import {PendingChangesGuard} from './auth/guards/pending-changes.guard';
 import {environment} from '../environments/environment';
-import {PanelComponent} from "./panel/panel.component";
-import {AuthGuard} from "./auth/guards/auth.guard";
-import {PanelResolver} from "./panel/resolvers/panel.resolver";
 
 const routes: Routes = [
     {
@@ -113,16 +110,12 @@ export class AppModule {
 
         const newConfiguration = [];
 
-        environment.domains.forEach((domain) => {
-            newConfiguration.push({
-                path: domain.name,
-                children: routerConfig,
-                pathMatch: 'prefix'
-            });
+        newConfiguration.push({
+            path: ':domain',
+            children: routerConfig,
+            pathMatch: 'prefix'
         });
 
         this._router.resetConfig(newConfiguration);
-
-        console.log(this._router.config);
     }
 }

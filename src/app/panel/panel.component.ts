@@ -48,18 +48,15 @@ export class PanelComponent implements OnInit, AfterViewInit {
         this.menu = this._menuService.getMenu();
 
         /** Search for home page */
-        (this._router.config as any).every((item: Route) => {
-            if (environment.domains) {
-                let panelConfig = null;
-                environment.domains.forEach((domain) => {
-                    if (this._router.url.indexOf(domain.name) > -1) {
-                        if (item.path === domain.name) {
-                            panelConfig = item.children[0];
-                        }
-                    }
-                });
+        let routerConfig = this._router.config;
+        if (environment.domains) {
+            routerConfig = this._router.config[0].children;
+        }
 
-                (panelConfig.children as any).every((child) => {
+        (routerConfig as any).every((item: Route) => {
+            console.log(item);
+            if (item.path === 'panel') {
+                (item.children as any).every((child) => {
                     if ('data' in child && 'isHomePage' in child.data && child.data['isHomePage']) {
                         this.homePage = child.path;
                         return false;
@@ -67,20 +64,9 @@ export class PanelComponent implements OnInit, AfterViewInit {
                         return true;
                     }
                 });
+                return false;
             } else {
-                if (item.path === 'panel') {
-                    (item.children as any).every((child) => {
-                        if ('data' in child && 'isHomePage' in child.data && child.data['isHomePage']) {
-                            this.homePage = child.path;
-                            return false;
-                        } else {
-                            return true;
-                        }
-                    });
-                    return false;
-                } else {
-                    return true;
-                }
+                return true;
             }
         });
 
@@ -88,7 +74,7 @@ export class PanelComponent implements OnInit, AfterViewInit {
             this._router.navigate(['../panel/404'], {relativeTo: this._route});
         };
 
-        if (this._router.url === '/panel') {
+        if (this._router.url.endsWith('/panel')) {
             this._router.navigate(['../panel/' + this.homePage], {relativeTo: this._route}).catch(redirectTo404);
         } else {
             this._router.navigateByUrl(this._router.url).catch(redirectTo404);

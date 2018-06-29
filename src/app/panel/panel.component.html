@@ -11,7 +11,7 @@
             <ul class="nav navbar-nav">
                 <li class="hidden-sm hidden-md hidden-lg"><a class="toggler" (click)="toggleSidebar($event)"><i
                         class="fa fa-bars"></i></a></li>
-                <li><a class="user" [routerLink]="'/panel/profile'" routerLinkActive="active"><i class="fa fa-user"></i>
+                <li><a class="user" [routerLink]="'../panel/profile'" routerLinkActive="active"><i class="fa fa-user"></i>
                     <span class="hidden-xs">{{user.username}}</span></a></li>
                 <li><a (click)="logout()" class="logout"><i class="fa fa-power-off"></i> <span
                         class="hidden-xs">Logout</span></a></li>

@@ -108,9 +108,7 @@ export class SetupService {
         }
 
         if (environment.domains) {
-            environment.domains.forEach((domain, index) => {
-                routerConfig[index].children[0].children = routes;
-            });
+            routerConfig[0].children[0].children = routes;
         } else {
             routerConfig[0].children = routes;
         }
