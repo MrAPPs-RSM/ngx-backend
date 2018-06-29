@@ -25,6 +25,7 @@ import {PasswordChangeComponent} from './auth/password-change/password-change.co
 import {ToastsService} from './services/toasts.service';
 import {PendingChangesGuard} from './auth/guards/pending-changes.guard';
 import {environment} from '../environments/environment';
+import {StorageService} from './services/storage.service';
 
 const routes: Routes = [
     {
@@ -92,7 +93,8 @@ const routes: Routes = [
         UtilsService,
         FormGeneratorService,
         PageRefreshService,
-        ToastsService
+        ToastsService,
+        StorageService
     ],
     bootstrap: [AppComponent]
 })

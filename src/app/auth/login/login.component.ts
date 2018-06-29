@@ -5,6 +5,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {UserService} from '../services/user.service';
 import {ToastsService} from '../../services/toasts.service';
 import {SetupService} from '../../panel/services/setup.service';
+import {StorageService} from "../../services/storage.service";
 
 @Component({
     selector: 'app-login',
@@ -19,6 +20,7 @@ export class LoginComponent implements OnInit {
 
     constructor(private _toastsService: ToastsService,
                 private _route: ActivatedRoute,
+                private _storageService: StorageService,
                 private _setupService: SetupService,
                 private _apiService: ApiService,
                 private _userService: UserService,
@@ -27,10 +29,18 @@ export class LoginComponent implements OnInit {
 
     ngOnInit() {
         this._setupService._lastRouteLoading = null;
+
+        if (environment.domains) {
+            this._storageService.setValue('domain', this._route.snapshot.params['domain']);
+        }
     }
 
-    onSubmit(data): void {
+    onSubmit(data: any): void {
         this.isLoading = true;
+
+        if (environment.domains) {
+            data.domain = this._storageService.getValue('domain');
+        }
 
         this._apiService.login(data)
             .then((response) => {

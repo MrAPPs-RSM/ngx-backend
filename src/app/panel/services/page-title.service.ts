@@ -10,9 +10,6 @@ export class PageTitleService {
     }
 
     public set(route?: ActivatedRoute | string): void {
-
-        console.log(route);
-
         if (route instanceof ActivatedRoute) {
 
             if ('menu' in route.snapshot.data) {

@@ -49,6 +49,15 @@ export class AppComponent implements OnInit, OnDestroy {
             .filter((route) => route.outlet === 'primary')
             .subscribe((activatedRoute: any) => {
 
+                /* TODO:
+                se url indexOf panel (cioè utente autenticato e dentro al pannello)
+                verficare che il :domain sia uguale a quello salvato su _storageService
+                se è diverso, vuol dire che è stato scritto a mano l'url quindi forzare
+                la logout
+                */
+
+                console.log(activatedRoute);
+
                 if (activatedRoute.component.name !== 'PanelComponent') {
                     // skipping for first panel redirect to the current route
                     if (this.firstRoute) {
