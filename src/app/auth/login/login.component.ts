@@ -39,7 +39,12 @@ export class LoginComponent implements OnInit {
         this.isLoading = true;
 
         if (environment.domains) {
-            data.domain = this._storageService.getValue('domain');
+            const currentDomain = this._storageService.getValue('domain');
+            if (environment.auth.credentials.hasOwnProperty('domain')) {
+                data[environment.auth.credentials['domain']] = currentDomain;
+            } else {
+                data.domain = currentDomain;
+            }
         }
 
         this._apiService.login(data)
