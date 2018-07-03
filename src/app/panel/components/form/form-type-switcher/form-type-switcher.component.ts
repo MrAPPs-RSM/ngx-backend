@@ -2,7 +2,6 @@ import {Component, Input, OnInit} from '@angular/core';
 import {AbstractControl, FormGroup} from '@angular/forms';
 import {formConfig} from '../form.config';
 import {Language} from '../../../services/language.service';
-import {forEach} from '@angular/router/src/utils/collection';
 
 @Component({
     selector: 'app-form-type-switcher',
@@ -50,7 +49,6 @@ export class FormTypeSwitcherComponent implements OnInit {
     }
 
     ngOnInit() {
-        console.log(this.field.visibleOn);
     }
 
 }
