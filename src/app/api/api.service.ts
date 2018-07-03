@@ -285,9 +285,9 @@ export class ApiService {
                     this.isRedirecting = true;
 
                     resolve();
-                    if ('redirectAfter' in errorthis.manageErrorObject(response.error)) {
+                    if ('redirectAfter' in errorResponse.error) {
                         setTimeout(() => {
-                            this._router.navigateByUrl(errorthis.manageErrorObject(response.error)['redirectAfter']);
+                            this._router.navigateByUrl(errorResponse.error['redirectAfter']);
                         }, 200);
                     }
                 }
