@@ -8,6 +8,9 @@ import {Subscription} from 'rxjs/Subscription';
 import {UtilsService} from './services/utils.service';
 import {environment} from '../environments/environment';
 import {ApiService} from './api/api.service';
+import {StorageService} from "./services/storage.service";
+import {UserService} from "./auth/services/user.service";
+import {PageRefreshService} from "./services/page-refresh.service";
 
 @Component({
     selector: 'app-root',
@@ -24,6 +27,9 @@ export class AppComponent implements OnInit, OnDestroy {
     constructor(private _router: Router,
                 private _route: ActivatedRoute,
                 private _state: GlobalState,
+                private _userService: UserService,
+                private _pageRefresh: PageRefreshService,
+                private _storageService: StorageService,
                 private _languageService: LanguageService,
                 private _apiService: ApiService,
                 private _pageTitle: PageTitleService,
@@ -49,14 +55,28 @@ export class AppComponent implements OnInit, OnDestroy {
             .filter((route) => route.outlet === 'primary')
             .subscribe((activatedRoute: any) => {
 
-                /* TODO:
-                se url indexOf panel (cioè utente autenticato e dentro al pannello)
-                verficare che il :domain sia uguale a quello salvato su _storageService
-                se è diverso, vuol dire che è stato scritto a mano l'url quindi forzare
-                la logout
-                */
+                if (environment.domains) {
+                    const currentPath: string = activatedRoute.snapshot['_routerState'].url;
+                    const currentDomain: string = this._storageService.getValue('domain');
 
-                console.log(activatedRoute);
+                    if (currentPath.indexOf('panel') > -1) {
+                        if (!activatedRoute.parent.snapshot.params.hasOwnProperty('domain') ||
+                            activatedRoute.parent.snapshot.params.domain !== currentDomain) {
+
+                            this._userService.removeToken();
+                            this._userService.removeUser();
+                            this._languageService.removeLang();
+                            this._pageRefresh.reset();
+                            this._storageService.clearValue('domain');
+
+                            if (activatedRoute.parent.snapshot.params.hasOwnProperty('domain')) {
+                                this._router.navigate(['/' + activatedRoute.parent.snapshot.params.domain + '/login']);
+                            } else {
+                                // TODO: may never happen but, what to do in this case?
+                            }
+                        }
+                    }
+                }
 
                 if (activatedRoute.component.name !== 'PanelComponent') {
                     // skipping for first panel redirect to the current route

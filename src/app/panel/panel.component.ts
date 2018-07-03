@@ -7,6 +7,7 @@ import {LanguageService} from './services/language.service';
 
 import 'rxjs/add/operator/map';
 import {MenuService} from './services/menu.service';
+import {StorageService} from "../services/storage.service";
 
 declare const $: any;
 
@@ -28,6 +29,7 @@ export class PanelComponent implements OnInit, AfterViewInit {
     constructor(private _router: Router,
                 private _userService: UserService,
                 private _route: ActivatedRoute,
+                private _storageService: StorageService,
                 private _languageService: LanguageService,
                 private _pageRefresh: PageRefreshService,
                 private _menuService: MenuService) {
@@ -95,6 +97,10 @@ export class PanelComponent implements OnInit, AfterViewInit {
         this._languageService.removeLang();
         this._pageRefresh.reset();
         this._router.navigate(['../login'], {relativeTo: this._route});
+
+        if (environment.domains) {
+            this._storageService.clearValue('domain');
+        }
     }
 
     redirect(route: string): void {
