@@ -63,7 +63,7 @@ export class ApiService {
                                             resolve(data);
                                         })
                                         .catch((response: HttpErrorResponse) => {
-                                            reject(response.error);
+                                            reject(this.manageErrorObject(response.error));
                                         });
                                 } else {
                                     resolve(null);
@@ -71,7 +71,7 @@ export class ApiService {
 
                             })
                             .catch((response: HttpErrorResponse) => {
-                                reject(response.error);
+                                reject(this.manageErrorObject(response.error));
                             });
                     }
                 );
@@ -106,7 +106,7 @@ export class ApiService {
                                             resolve(data);
                                         })
                                         .catch((response: HttpErrorResponse) => {
-                                            reject(response.error);
+                                            reject(this.manageErrorObject(response.error));
                                         });
                                 } else {
                                     resolve(null);
@@ -114,7 +114,7 @@ export class ApiService {
 
                             })
                             .catch((response: HttpErrorResponse) => {
-                                reject(response.error);
+                                reject(this.manageErrorObject(response.error));
                             });
                     }
                 );
@@ -146,14 +146,14 @@ export class ApiService {
                                             resolve(data);
                                         })
                                         .catch((response: HttpErrorResponse) => {
-                                            reject(response.error);
+                                            reject(this.manageErrorObject(response.error));
                                         });
                                 } else {
                                     resolve(null);
                                 }
                             })
                             .catch((response: HttpErrorResponse) => {
-                                reject(response.error);
+                                reject(this.manageErrorObject(response.error));
                             });
                     }
                 );
@@ -185,14 +185,14 @@ export class ApiService {
                                             resolve(data);
                                         })
                                         .catch((response: HttpErrorResponse) => {
-                                            reject(response.error);
+                                            reject(this.manageErrorObject(response.error));
                                         });
                                 } else {
                                     resolve(null);
                                 }
                             })
                             .catch((response: HttpErrorResponse) => {
-                                reject(response.error);
+                                reject(this.manageErrorObject(response.error));
                             });
                     }
                 );
@@ -223,14 +223,14 @@ export class ApiService {
                                             resolve(data);
                                         })
                                         .catch((response: HttpErrorResponse) => {
-                                            reject(response.error);
+                                            reject(this.manageErrorObject(response.error));
                                         });
                                 } else {
                                     resolve(null);
                                 }
                             })
                             .catch((response: HttpErrorResponse) => {
-                                reject(response.error);
+                                reject(this.manageErrorObject(response.error));
                             });
                     }
                 );
@@ -285,9 +285,9 @@ export class ApiService {
                     this.isRedirecting = true;
 
                     resolve();
-                    if ('redirectAfter' in errorResponse.error) {
+                    if ('redirectAfter' in errorthis.manageErrorObject(response.error)) {
                         setTimeout(() => {
-                            this._router.navigateByUrl(errorResponse.error['redirectAfter']);
+                            this._router.navigateByUrl(errorthis.manageErrorObject(response.error)['redirectAfter']);
                         }, 200);
                     }
                 }
@@ -336,6 +336,19 @@ export class ApiService {
             return new HttpParams({
                 fromObject: obj
             });
+        }
+    }
+
+    private manageErrorObject(input: any): any {
+        if (input.error) {
+            return input;
+        } else {
+            return {
+                error: {
+                    code: input.code,
+                    message: input.message,
+                }
+            };
         }
     }
 
