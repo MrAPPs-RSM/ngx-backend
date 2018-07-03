@@ -3,19 +3,33 @@ import {environment} from '../../environments/environment';
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from '@angular/common/http';
 import {UserService, TOKEN_KEY, LOGIN_ENDPOINT} from '../auth/services/user.service';
 import {ActivatedRoute, Router} from '@angular/router';
+import {StorageService} from '../services/storage.service';
 
 const API_URL = environment.api.baseUrl;
 
 @Injectable()
 export class ApiService {
 
-    private headers = new HttpHeaders({'Content-Type': 'application/json'});
+    private readonly headers = new HttpHeaders({'Content-Type': 'application/json'});
+    private readonly headerParametersKey: string = 'ngxBackend-Parameters';
+
     public isRedirecting = false;
 
     constructor(private _http: HttpClient,
                 private _userService: UserService,
+                private _storageService: StorageService,
                 private _route: ActivatedRoute,
                 private _router: Router) {
+        if (environment.domains) {
+            const value = {};
+            const domainKey = environment.auth.credentials.domain ?
+                environment.auth.credentials.domain : 'domain';
+            value[domainKey] = this._storageService.getValue('domain');
+
+            if (!this.headers.has(this.headerParametersKey)) {
+                this.headers = this.headers.append(this.headerParametersKey, JSON.stringify(value));
+            }
+        }
     }
 
     /**
@@ -311,6 +325,7 @@ export class ApiService {
             params: this.setAuth(params),
             headers: this.headers
         };
+
         if (!withoutHeaders) {
             return requestOptions;
         } else {
