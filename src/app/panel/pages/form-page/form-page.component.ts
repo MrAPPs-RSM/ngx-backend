@@ -6,12 +6,12 @@ import {FormSettings} from '../../components/form/interfaces/form-settings';
 import {ModalService} from '../../services/modal.service';
 import {UtilsService} from '../../../services/utils.service';
 import {ToastsService} from '../../../services/toasts.service';
-import {ApiService, ErrorResponse} from '../../../api/api.service';
 import {MenuService} from '../../services/menu.service';
 import {Subscription} from 'rxjs/Subscription';
-import {FormComponent} from '../../components/form/form.component';
 import {ComponentCanDeactivate} from '../../../auth/guards/pending-changes.guard';
 import {Observable} from 'rxjs/Observable';
+import {ApiService, ErrorResponse} from '../../../api/api.service';
+import {FormComponent} from '../../components/form/form.component';
 
 @Component({
     selector: 'app-form-page',
@@ -57,7 +57,7 @@ export class FormPageComponent implements OnInit, OnDestroy, ComponentCanDeactiv
     private redirectIfNeeded(form: FormSettings) {
         if (!this._apiService.isRedirecting && form.submit && form.submit.redirectAfter) {
             if (!this._menuService.goBack()) {
-                this._router.navigate(['../panel/' + form.submit.redirectAfter], {relativeTo: this._route});
+                this._router.navigate(['../panel/' + form.submit.redirectAfter], {relativeTo: this._route.parent});
             }
         }
     }

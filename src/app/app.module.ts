@@ -26,6 +26,7 @@ import {ToastsService} from './services/toasts.service';
 import {PendingChangesGuard} from './auth/guards/pending-changes.guard';
 import {environment} from '../environments/environment';
 import {StorageService} from './services/storage.service';
+import {DomainNotFoundComponent} from './auth/domain-not-found/domain-not-found.component';
 
 const routes: Routes = [
     {
@@ -48,11 +49,6 @@ const routes: Routes = [
             LoginGuard
         ],
         component: LoginComponent
-    },
-    {
-        path: '',
-        redirectTo: 'login',
-        pathMatch: 'full'
     }
 ];
 
@@ -61,7 +57,8 @@ const routes: Routes = [
         AppComponent,
         LoginComponent,
         PasswordResetComponent,
-        PasswordChangeComponent
+        PasswordChangeComponent,
+        DomainNotFoundComponent
     ],
     imports: [
         RouterModule.forRoot(routes, {useHash: false, onSameUrlNavigation: 'reload'}),
@@ -96,7 +93,10 @@ const routes: Routes = [
         ToastsService,
         StorageService
     ],
-    bootstrap: [AppComponent]
+    bootstrap: [AppComponent],
+    entryComponents: [
+        DomainNotFoundComponent
+    ]
 })
 export class AppModule {
 
@@ -112,11 +112,22 @@ export class AppModule {
 
         const newConfiguration = [];
 
-        newConfiguration.push({
-            path: ':domain',
-            children: routerConfig,
-            pathMatch: 'prefix'
+        routerConfig.push({
+            path: '',
+            redirectTo: 'login',
+            pathMatch: 'full'
         });
+
+        newConfiguration.push({
+                path: ':domain',
+                children: routerConfig,
+                pathMatch: 'prefix'
+            },
+            {
+                path: '**',
+                component: DomainNotFoundComponent
+            }
+        );
 
         this._router.resetConfig(newConfiguration);
     }
