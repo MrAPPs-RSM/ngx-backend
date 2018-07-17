@@ -13,17 +13,17 @@ export class PasswordResetGuard implements CanActivate {
     canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
         if (environment.auth.passwordReset) { // If password reset form is defined
             if (this._userService.getToken() !== null) {
-                this._router.navigate(['../panel'], {relativeTo: this._route});
+                this._router.navigate(['/' + next.params.domain + '/panel']);
                 return false;
             } else {
                 return true;
             }
         } else {
             if (this._userService.getToken() !== null) {
-                this._router.navigate(['../panel'], {relativeTo: this._route});
+                this._router.navigate(['/' + next.params.domain + '/panel']);
                 return false;
             } else {
-                this._router.navigate(['../login'], {relativeTo: this._route});
+                this._router.navigate(['/' + next.params.domain + '/login']);
                 return false;
             }
         }
