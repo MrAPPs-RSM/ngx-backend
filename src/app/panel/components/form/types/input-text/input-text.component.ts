@@ -36,6 +36,14 @@ export class InputTextComponent extends BaseInputComponent implements OnInit, On
                 }
             }
         }
+
+        if (this.isEdit) {
+            if (!this.getControl().value) {
+                if (this.field.value !== null && typeof this.field.value !== 'undefined') {
+                    this.getControl().setValue(this.field.value);
+                }
+            }
+        }
     }
 
     ngOnDestroy() {
