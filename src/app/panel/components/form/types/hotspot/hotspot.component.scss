@@ -1,0 +1,31 @@
+@import '../../../../../../assets/sass/partials/imports';
+
+app-hotspot {
+  .hotSpot-wrapper {
+    .img-wrapper {
+      max-height: 800px;
+      overflow: scroll;
+      position: relative;
+      > .hotSpot {
+        position: absolute;
+        background: $sidebarDark;
+        padding: 6px 9px;
+        font-size: 16px;
+        border-radius: 50%;
+        color: #fff;
+        cursor: move;
+          > div.edit {
+            position: absolute;
+            background: $warning;
+            color: #ffffff;
+            border-radius: 50%;
+            cursor: pointer;
+            padding: 2px 3px 0;
+            font-size: 12px;
+            top: -5px;
+            right: -5px;
+          }
+      }
+    }
+  }
+}

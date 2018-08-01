@@ -1,0 +1,27 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <div class="form-group">
+        <div class="hotSpot-wrapper">
+            <div class="header">
+                Hotspot
+            </div>
+
+            <div class="img-wrapper" #imageWrapper
+                 [style.width]="image.width > 0 ? image.width + 'px' : '100%'">
+                <img [src]="imageUrl" #image (click)="add($event)">
+                <div *ngFor="let hotSpot of hotSpots" ngDraggable
+                     class="hotSpot"
+                     [preventDefaultEvent]="true"
+                     (endOffset)="onDragEnd($event, hotSpot)"
+                     [bounds]="imageWrapper"
+                     [inBounds]="true"
+                     [style.top]="hotSpot.y + 'px'"
+                     [style.left]="hotSpot.x + 'px'"
+                ><i class="fa fa-arrows"></i>
+                    <div class="edit">
+                        <i class="fa fa-pencil"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

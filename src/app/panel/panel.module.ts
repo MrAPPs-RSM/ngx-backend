@@ -13,6 +13,7 @@ import {NouisliderModule} from 'ng2-nouislider';
 import {OwlDateTimeModule, OwlNativeDateTimeModule} from 'ng-pick-datetime';
 import {CKEditorModule} from 'ng2-ckeditor';
 import {TextMaskModule} from 'angular2-text-mask';
+import { AngularDraggableModule } from 'angular2-draggable';
 
 
 import {PanelComponent} from './panel.component';
@@ -59,6 +60,7 @@ import {TimetablePickerComponent} from './components/form/types/timetable-picker
 import {GeoSearchComponent} from './components/form/types/geo-search/geo-search.component';
 import { GalleryComponent } from './components/form/types/gallery/gallery.component';
 import { Select2Component } from './components/form/types/select-2/select-2.component';
+import { HotspotComponent } from './components/form/types/hotspot/hotspot.component';
 
 const COMPONENTS = [
     PanelComponent,
@@ -91,7 +93,10 @@ const COMPONENTS = [
     DateRangePickerComponent,
     MediaLibraryComponent,
     TimetablePickerComponent,
-    GeoSearchComponent
+    GeoSearchComponent,
+    GalleryComponent,
+    Select2Component,
+    HotspotComponent
 ];
 
 const PROVIDERS = [
@@ -152,7 +157,8 @@ const routes: Routes = [
         OwlDateTimeModule,
         OwlNativeDateTimeModule,
         CKEditorModule,
-        TextMaskModule
+        TextMaskModule,
+        AngularDraggableModule
     ],
     exports: [
         FormComponent,
@@ -160,9 +166,7 @@ const routes: Routes = [
         InputPasswordComponent
     ],
     declarations: [
-        ...COMPONENTS,
-        GalleryComponent,
-        Select2Component
+        ...COMPONENTS
     ],
     providers: [
         ...PROVIDERS

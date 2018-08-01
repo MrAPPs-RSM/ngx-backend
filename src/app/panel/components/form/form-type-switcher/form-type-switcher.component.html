@@ -11,6 +11,11 @@
             [field]="field">
     </app-gallery>
 
+    <app-hotspot
+            *ngSwitchCase="formConfig.types.HOTSPOT"
+            [field]="field">
+    </app-hotspot>
+
     <app-input-text
             *ngSwitchCase="formConfig.types.TEXT"
             [isSubField]="isSubField"
