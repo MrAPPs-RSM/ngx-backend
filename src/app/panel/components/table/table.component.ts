@@ -86,7 +86,6 @@ export class TableComponent implements OnInit, OnDestroy {
 
                 this.filter = UtilsService.mergeDeep(this.filter, queryParamsFilter);
 
-
                 this.activeFilters.pagination.perPage = 'limit' in queryParamsFilter ? queryParamsFilter['limit'] : this.preparePerPage();
                 this.activeFilters.pagination.page = 'skip' in queryParamsFilter ?
                     queryParamsFilter['skip'] / this.activeFilters.pagination.perPage + 1 : 1;
@@ -253,7 +252,7 @@ export class TableComponent implements OnInit, OnDestroy {
         return this._apiService.get(endpoint, this.composeCountParams());
     }
 
-    private composeParams(countParams?: boolean, queryParams?: boolean): Object {
+    private composeParams(countParams?: boolean, queryParams?: boolean, addInclude?: boolean): Object {
         if (countParams === null) {
             countParams = false;
         }
@@ -367,6 +366,12 @@ export class TableComponent implements OnInit, OnDestroy {
             }
 
             if (this.filter.include) {
+                params['include'] = this.filter.include;
+            }
+        }
+
+        if (addInclude) {
+            if (this.filter.include && !params['include']) {
                 params['include'] = this.filter.include;
             }
         }
@@ -727,7 +732,7 @@ export class TableComponent implements OnInit, OnDestroy {
 
     refreshTable() {
         console.log('refresh table');
-        const params = this.composeParams(false, true);
+        const params = this.composeParams(false, true, true);
         this._state.replaceLastPath = true;
         this._router.navigate([], {queryParams: {listParams: params['filter']}});
     }
