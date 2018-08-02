@@ -6,8 +6,11 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import {ModalService} from "../../../../services/modal.service";
-import {UtilsService} from "../../../../../services/utils.service";
+import {UtilsService} from '../../../../../services/utils.service';
+import {FormFieldHotspot} from '../../interfaces/form-field-hotspot';
+import {FormArray, FormGroup} from '@angular/forms';
+import {BaseInputComponent} from '../base-input/base-input.component';
+import {FormGeneratorService} from "../../../../services/form-generator.service";
 
 @Component({
     selector: 'app-hotspot',
@@ -15,84 +18,79 @@ import {UtilsService} from "../../../../../services/utils.service";
     styleUrls: ['./hotspot.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class HotspotComponent implements OnInit {
+export class HotspotComponent extends BaseInputComponent implements OnInit {
 
-    @Input() field: any;
+    @Input() field: FormFieldHotspot;
+    @Input() form: FormGroup;
+    @Input() isEdit = false;
 
     public imageUrl: string;
-    public hotSpots: HotSpot[];
-    public activeHotSpot: HotSpot;
+    public activeHotSpot: number = null;
 
     @ViewChild('imageWrapper') imageWrapper: ElementRef;
     @ViewChild('image') image: ElementRef;
 
-    constructor() {
+    constructor(private _formGenerator: FormGeneratorService) {
+        super();
     }
 
     ngOnInit() {
         this.imageUrl = 'http://via.placeholder.com/1900x1800';
-        this.hotSpots = [
-            {
-                x: 10,
-                y: 5
-            },
-            {
-                x: 50,
-                y: 89
-            }
-        ];
+    }
+
+    public getControl(): FormArray {
+        return this.form.get(this.field.key) as FormArray;
+    }
+
+    public getActiveForm(): FormGroup {
+        return this.getControl().controls[this.activeHotSpot] as FormGroup;
     }
 
     private add($event: any) {
-        const item: HotSpot = {
-            x: $event.offsetX,
-            y: $event.offsetY
-        };
-        this.hotSpots.push(item);
+        this.getControl().push(new FormGroup(this._formGenerator.generateFormFields(this.field.fields)));
+        this.getControl().controls[this.getControl().controls.length - 1].patchValue({x: $event.offsetX, y: $event.offsetY});
     }
 
-    private onDrag($event: any, hotSpot: HotSpot) {
-        hotSpot.isDragging = true;
+    private onDrag($event: any, index: number) {
+        $event.target.style.opacity = '0';
+        $event.target.style.visibility = 'hidden';
     }
 
-    private onDragEnd($event: any, hotSpot: HotSpot) {
-        hotSpot.isDragging = false;
+    private onDragEnd($event: any, index: number) {
+        $event.target.style.opacity = '1';
+        $event.target.style.visibility = 'visible';
+        const hotSpot = this.getControl().controls[index];
         if (this.isInBounds($event, hotSpot))  {
-            hotSpot.x += $event.offsetX;
-            hotSpot.y += $event.offsetY;
+            const x = parseInt(hotSpot.value.x + $event.offsetX, 10);
+            const y = parseInt(hotSpot.value.y + $event.offsetY, 10);
+            hotSpot.patchValue({x: x, y: y});
         }
     }
 
-    private isInBounds($event: any, hotSpot: HotSpot) {
-        const x = parseInt($event.offsetX + hotSpot.x, 10);
-        const y = parseInt($event.offsetY + hotSpot.y, 10);
+    private isInBounds($event: any, hotSpot: any) {
+        const x = parseInt($event.offsetX + hotSpot.value.x, 10);
+        const y = parseInt($event.offsetY + hotSpot.value.y, 10);
 
         return (x <= this.image.nativeElement.width && x >= 0) &&
             (y <= this.image.nativeElement.height && y >= 0);
     }
 
-    private onEdit($event: any, hotSpot: HotSpot) {
+    private onEdit($event: any, index: number) {
         $event.preventDefault();
         console.log('On edit');
-        this.activeHotSpot = hotSpot;
+        this.activeHotSpot = index;
     }
 
     private onSave($event: any) {
-        console.log('On save');
+        this.activeHotSpot = null;
+    }
+
+    private onClose($event: any) {
+        this.activeHotSpot = null;
     }
 
     private onDelete($event: any) {
-        const index = UtilsService.containsObject(this.activeHotSpot, this.hotSpots);
-        if (index > -1) {
-            this.hotSpots.splice(index, 1);
-        }
         this.activeHotSpot = null;
+        this.getControl().removeAt(this.activeHotSpot);
     }
-}
-
-interface HotSpot {
-    x: number;
-    y: number;
-    isDragging?: boolean;
-    data?: any;
 }

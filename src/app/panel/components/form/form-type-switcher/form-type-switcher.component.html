@@ -11,11 +11,6 @@
             [field]="field">
     </app-gallery>
 
-    <app-hotspot
-            *ngSwitchCase="formConfig.types.HOTSPOT"
-            [field]="field">
-    </app-hotspot>
-
     <app-input-text
             *ngSwitchCase="formConfig.types.TEXT"
             [isSubField]="isSubField"
@@ -223,6 +218,15 @@
             [isEdit]="isEdit"
             [index]="index">
     </app-list-details>
+
+    <app-hotspot
+            *ngSwitchCase="formConfig.types.HOTSPOT"
+            [field]="field"
+            [groupName]="groupName"
+            [form]="form"
+            [isEdit]="isEdit"
+            [index]="index">
+    </app-hotspot>
 
     <!--
 

@@ -7,23 +7,22 @@
 
             <div class="img-wrapper" #imageWrapper>
                 <img [src]="imageUrl" #image (click)="add($event)">
-                <div *ngFor="let hotSpot of hotSpots"
+                <div *ngFor="let hotSpot of getControl().controls, index"
                      class="hotSpot"
-                     [ngClass]="{'isDragging': hotSpot.isDragging}"
-                     (drag)="onDrag($event, hotSpot)"
-                     (dragend)="onDragEnd($event, hotSpot)"
+                     (drag)="onDrag($event, index)"
+                     (dragend)="onDragEnd($event, index)"
                      [draggable]="true"
-                     [style.top]="hotSpot.y + 'px'"
-                     [style.left]="hotSpot.x + 'px'"
+                     [style.top]="hotSpot.value.y + 'px'"
+                     [style.left]="hotSpot.value.x + 'px'"
                 ><i class="fa fa-arrows"></i>
-                    <div class="edit" (click)="onEdit($event, hotSpot)"
+                    <div class="edit" (click)="onEdit($event, index)"
                          data-toggle="modal" data-target="#myModal">
                         <i class="fa fa-pencil"></i>
                     </div>
                 </div>
             </div>
 
-            <div id="myModal" class="modal fade" role="dialog">
+            <div id="myModal" class="modal fade" role="dialog" *ngIf="activeHotSpot != null">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -31,10 +30,16 @@
                             <h4 class="modal-title">Hotspot</h4>
                         </div>
                         <div class="modal-body">
-                            <p>Some text in the modal.</p>
+                            <div *ngFor="let controlField of field.fields" class="row">
+                                <app-form-type-switcher [form]="getActiveForm()"
+                                                        [isSubField]="true"
+                                                        [field]="controlField"
+                                                        [isEdit]="isEdit">
+                                </app-form-type-switcher>
+                            </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal" (click)="onClose($event)">Close</button>
                             <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="onDelete($event)">Delete</button>
                             <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onSave($event)">Save</button>
                         </div>

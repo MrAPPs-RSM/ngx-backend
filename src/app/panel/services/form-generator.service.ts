@@ -84,10 +84,16 @@ export class FormGeneratorService {
                  * Generating FormControls based on field type
                  */
                 switch (field.type) {
-
                     case formConfig.types.LIST_DETAILS: {
                         group[field.key] = new FormArray(
                             [new FormGroup(this.generateFormFields(field.fields))],
+                            validators.length > 0 ? Validators.compose(validators) : null
+                        );
+                    }
+                        break;
+                    case formConfig.types.HOTSPOT: {
+                        group[field.key] = new FormArray(
+                            [],
                             validators.length > 0 ? Validators.compose(validators) : null
                         );
                     }
