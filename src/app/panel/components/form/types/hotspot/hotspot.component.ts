@@ -6,6 +6,8 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import {ModalService} from "../../../../services/modal.service";
+import {UtilsService} from "../../../../../services/utils.service";
 
 @Component({
     selector: 'app-hotspot',
@@ -19,6 +21,7 @@ export class HotspotComponent implements OnInit {
 
     public imageUrl: string;
     public hotSpots: HotSpot[];
+    public activeHotSpot: HotSpot;
 
     @ViewChild('imageWrapper') imageWrapper: ElementRef;
     @ViewChild('image') image: ElementRef;
@@ -71,6 +74,19 @@ export class HotspotComponent implements OnInit {
     private onEdit($event: any, hotSpot: HotSpot) {
         $event.preventDefault();
         console.log('On edit');
+        this.activeHotSpot = hotSpot;
+    }
+
+    private onSave($event: any) {
+        console.log('On save');
+    }
+
+    private onDelete($event: any) {
+        const index = UtilsService.containsObject(this.activeHotSpot, this.hotSpots);
+        if (index > -1) {
+            this.hotSpots.splice(index, 1);
+        }
+        this.activeHotSpot = null;
     }
 }
 
@@ -78,4 +94,5 @@ interface HotSpot {
     x: number;
     y: number;
     isDragging?: boolean;
+    data?: any;
 }

@@ -16,9 +16,30 @@
                      [style.top]="hotSpot.y + 'px'"
                      [style.left]="hotSpot.x + 'px'"
                 ><i class="fa fa-arrows"></i>
-                    <div class="edit" (click)="onEdit($event, hotSpot)">
+                    <div class="edit" (click)="onEdit($event, hotSpot)"
+                         data-toggle="modal" data-target="#myModal">
                         <i class="fa fa-pencil"></i>
                     </div>
+                </div>
+            </div>
+
+            <div id="myModal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Hotspot</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>Some text in the modal.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="onDelete($event)">Delete</button>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onSave($event)">Save</button>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
