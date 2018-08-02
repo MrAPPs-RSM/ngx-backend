@@ -6,6 +6,8 @@ app-hotspot {
       max-height: 800px;
       overflow: scroll;
       position: relative;
+      > img {
+      }
       > .hotSpot {
         position: absolute;
         background: $sidebarDark;
@@ -14,17 +16,22 @@ app-hotspot {
         border-radius: 50%;
         color: #fff;
         cursor: move;
-          > div.edit {
-            position: absolute;
-            background: $warning;
-            color: #ffffff;
-            border-radius: 50%;
-            cursor: pointer;
-            padding: 2px 3px 0;
-            font-size: 12px;
-            top: -5px;
-            right: -5px;
-          }
+
+        &.isDragging {
+          opacity: 0;
+          visibility: hidden;
+        }
+        > div.edit {
+          position: absolute;
+          background: $warning;
+          color: #ffffff;
+          border-radius: 50%;
+          cursor: pointer;
+          padding: 2px 3px 0;
+          font-size: 12px;
+          top: -5px;
+          right: -5px;
+        }
       }
     }
   }

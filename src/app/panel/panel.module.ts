@@ -13,8 +13,6 @@ import {NouisliderModule} from 'ng2-nouislider';
 import {OwlDateTimeModule, OwlNativeDateTimeModule} from 'ng-pick-datetime';
 import {CKEditorModule} from 'ng2-ckeditor';
 import {TextMaskModule} from 'angular2-text-mask';
-import { AngularDraggableModule } from 'angular2-draggable';
-
 
 import {PanelComponent} from './panel.component';
 import {FormPageComponent} from './pages/form-page/form-page.component';
@@ -157,8 +155,7 @@ const routes: Routes = [
         OwlDateTimeModule,
         OwlNativeDateTimeModule,
         CKEditorModule,
-        TextMaskModule,
-        AngularDraggableModule
+        TextMaskModule
     ],
     exports: [
         FormComponent,

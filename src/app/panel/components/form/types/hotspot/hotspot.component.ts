@@ -19,13 +19,15 @@ export class HotspotComponent implements OnInit {
 
     public imageUrl: string;
     public hotSpots: HotSpot[];
+
     @ViewChild('imageWrapper') imageWrapper: ElementRef;
+    @ViewChild('image') image: ElementRef;
 
     constructor() {
     }
 
     ngOnInit() {
-        this.imageUrl = 'http://via.placeholder.com/500x600';
+        this.imageUrl = 'http://via.placeholder.com/1900x1800';
         this.hotSpots = [
             {
                 x: 10,
@@ -36,7 +38,6 @@ export class HotspotComponent implements OnInit {
                 y: 89
             }
         ];
-        this.imageWrapper.nativeElement.width = 600;
     }
 
     private add($event: any) {
@@ -47,15 +48,34 @@ export class HotspotComponent implements OnInit {
         this.hotSpots.push(item);
     }
 
+    private onDrag($event: any, hotSpot: HotSpot) {
+        hotSpot.isDragging = true;
+    }
+
     private onDragEnd($event: any, hotSpot: HotSpot) {
-        setTimeout(() => {
-            hotSpot.x = $event.x;
-            hotSpot.y = $event.y;
-        }, 500);
+        hotSpot.isDragging = false;
+        if (this.isInBounds($event, hotSpot))  {
+            hotSpot.x += $event.offsetX;
+            hotSpot.y += $event.offsetY;
+        }
+    }
+
+    private isInBounds($event: any, hotSpot: HotSpot) {
+        const x = parseInt($event.offsetX + hotSpot.x, 10);
+        const y = parseInt($event.offsetY + hotSpot.y, 10);
+
+        return (x <= this.image.nativeElement.width && x >= 0) &&
+            (y <= this.image.nativeElement.height && y >= 0);
+    }
+
+    private onEdit($event: any, hotSpot: HotSpot) {
+        $event.preventDefault();
+        console.log('On edit');
     }
 }
 
 interface HotSpot {
     x: number;
     y: number;
+    isDragging?: boolean;
 }

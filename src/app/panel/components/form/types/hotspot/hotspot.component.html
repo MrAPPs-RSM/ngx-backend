@@ -5,19 +5,18 @@
                 Hotspot
             </div>
 
-            <div class="img-wrapper" #imageWrapper
-                 [style.width]="image.width > 0 ? image.width + 'px' : '100%'">
+            <div class="img-wrapper" #imageWrapper>
                 <img [src]="imageUrl" #image (click)="add($event)">
-                <div *ngFor="let hotSpot of hotSpots" ngDraggable
+                <div *ngFor="let hotSpot of hotSpots"
                      class="hotSpot"
-                     [preventDefaultEvent]="true"
-                     (endOffset)="onDragEnd($event, hotSpot)"
-                     [bounds]="imageWrapper"
-                     [inBounds]="true"
+                     [ngClass]="{'isDragging': hotSpot.isDragging}"
+                     (drag)="onDrag($event, hotSpot)"
+                     (dragend)="onDragEnd($event, hotSpot)"
+                     [draggable]="true"
                      [style.top]="hotSpot.y + 'px'"
                      [style.left]="hotSpot.x + 'px'"
                 ><i class="fa fa-arrows"></i>
-                    <div class="edit">
+                    <div class="edit" (click)="onEdit($event, hotSpot)">
                         <i class="fa fa-pencil"></i>
                     </div>
                 </div>
