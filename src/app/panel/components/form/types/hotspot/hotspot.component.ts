@@ -6,11 +6,10 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import {UtilsService} from '../../../../../services/utils.service';
 import {FormFieldHotspot} from '../../interfaces/form-field-hotspot';
 import {FormArray, FormGroup} from '@angular/forms';
 import {BaseInputComponent} from '../base-input/base-input.component';
-import {FormGeneratorService} from "../../../../services/form-generator.service";
+import {FormGeneratorService} from '../../../../services/form-generator.service';
 
 @Component({
     selector: 'app-hotspot',
@@ -24,7 +23,6 @@ export class HotspotComponent extends BaseInputComponent implements OnInit {
     @Input() form: FormGroup;
     @Input() isEdit = false;
 
-    public imageUrl: string;
     public activeHotSpot: number = null;
 
     @ViewChild('imageWrapper') imageWrapper: ElementRef;
@@ -35,20 +33,23 @@ export class HotspotComponent extends BaseInputComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.imageUrl = 'http://via.placeholder.com/1900x1800';
     }
 
-    public getControl(): FormArray {
-        return this.form.get(this.field.key) as FormArray;
+    public getControl(): FormGroup {
+        return this.form.get(this.field.key) as FormGroup;
     }
 
-    public getActiveForm(): FormGroup {
+    public getFormArray(): FormArray {
+        return this.getControl()['controls'].hotSpots as FormArray;
+    }
+
+    public getActiveForm(): FormGroup | any {
         return this.getControl().controls[this.activeHotSpot] as FormGroup;
     }
 
     private add($event: any) {
-        this.getControl().push(new FormGroup(this._formGenerator.generateFormFields(this.field.fields)));
-        this.getControl().controls[this.getControl().controls.length - 1].patchValue({x: $event.offsetX, y: $event.offsetY});
+        this.getFormArray().push(new FormGroup(this._formGenerator.generateFormFields(this.field.fields)));
+        this.getFormArray().controls[this.getFormArray().controls.length - 1].patchValue({x: $event.offsetX, y: $event.offsetY});
     }
 
     private onDrag($event: any, index: number) {
@@ -59,7 +60,8 @@ export class HotspotComponent extends BaseInputComponent implements OnInit {
     private onDragEnd($event: any, index: number) {
         $event.target.style.opacity = '1';
         $event.target.style.visibility = 'visible';
-        const hotSpot = this.getControl().controls[index];
+
+        const hotSpot = this.getFormArray().controls[index];
         if (this.isInBounds($event, hotSpot))  {
             const x = parseInt(hotSpot.value.x + $event.offsetX, 10);
             const y = parseInt(hotSpot.value.y + $event.offsetY, 10);
@@ -90,7 +92,7 @@ export class HotspotComponent extends BaseInputComponent implements OnInit {
     }
 
     private onDelete($event: any) {
+        this.getFormArray().removeAt(this.activeHotSpot);
         this.activeHotSpot = null;
-        this.getControl().removeAt(this.activeHotSpot);
     }
 }

@@ -2,6 +2,11 @@
 
 app-hotspot {
   .hotSpot-wrapper {
+    > .header {
+      margin-bottom: 10px;
+      font-size: 13px;
+      color: $default;
+    }
     .img-wrapper {
       max-height: 800px;
       overflow: scroll;
@@ -17,10 +22,6 @@ app-hotspot {
         color: #fff;
         cursor: move;
 
-        &.isDragging {
-          opacity: 0;
-          visibility: hidden;
-        }
         > div.edit {
           position: absolute;
           background: $warning;

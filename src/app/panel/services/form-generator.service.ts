@@ -92,10 +92,13 @@ export class FormGeneratorService {
                     }
                         break;
                     case formConfig.types.HOTSPOT: {
-                        group[field.key] = new FormArray(
-                            [],
-                            validators.length > 0 ? Validators.compose(validators) : null
-                        );
+                        group[field.key] = new FormGroup({
+                            image: new FormControl(null, null),
+                            hotSpots: new FormArray(
+                                [],
+                                null
+                            )
+                        });
                     }
                         break;
                     case formConfig.types.CHECKBOX: {

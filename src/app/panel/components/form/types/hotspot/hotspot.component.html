@@ -6,16 +6,16 @@
             </div>
 
             <div class="img-wrapper" #imageWrapper>
-                <img [src]="imageUrl" #image (click)="add($event)">
-                <div *ngFor="let hotSpot of getControl().controls, index"
+                <img [src]="getControl().value.image" #image (click)="add($event)">
+                <div *ngFor="let hotSpot of getFormArray().controls; let i = index"
                      class="hotSpot"
-                     (drag)="onDrag($event, index)"
-                     (dragend)="onDragEnd($event, index)"
+                     (drag)="onDrag($event, i)"
+                     (dragend)="onDragEnd($event, i)"
                      [draggable]="true"
                      [style.top]="hotSpot.value.y + 'px'"
                      [style.left]="hotSpot.value.x + 'px'"
                 ><i class="fa fa-arrows"></i>
-                    <div class="edit" (click)="onEdit($event, index)"
+                    <div class="edit" (click)="onEdit($event, i)"
                          data-toggle="modal" data-target="#myModal">
                         <i class="fa fa-pencil"></i>
                     </div>
