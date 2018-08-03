@@ -91,7 +91,12 @@ export class HotspotComponent extends BaseInputComponent implements OnInit {
 
     private onClose($event: any) {
         if (!this.savedForms[this.activeHotSpot]) {
-            this.getActiveForm().reset();
+            const keys = Object.keys(this.getActiveForm().controls);
+            keys.forEach((key) => {
+               if (key !== 'x' && key !== 'y') {
+                   this.getActiveForm().controls[key].reset();
+               }
+            });
         }
         this.activeHotSpot = null;
     }
