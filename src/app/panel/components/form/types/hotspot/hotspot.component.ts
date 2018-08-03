@@ -24,6 +24,7 @@ export class HotspotComponent extends BaseInputComponent implements OnInit {
     @Input() isEdit = false;
 
     public activeHotSpot: number = null;
+    private savedForms: any = {};
 
     @ViewChild('imageWrapper') imageWrapper: ElementRef;
     @ViewChild('image') image: ElementRef;
@@ -44,7 +45,7 @@ export class HotspotComponent extends BaseInputComponent implements OnInit {
     }
 
     public getActiveForm(): FormGroup | any {
-        return this.getControl().controls[this.activeHotSpot] as FormGroup;
+        return this.getFormArray().controls[this.activeHotSpot] as FormGroup;
     }
 
     private add($event: any) {
@@ -84,10 +85,14 @@ export class HotspotComponent extends BaseInputComponent implements OnInit {
     }
 
     private onSave($event: any) {
+        this.savedForms[this.activeHotSpot] = true;
         this.activeHotSpot = null;
     }
 
     private onClose($event: any) {
+        if (!this.savedForms[this.activeHotSpot]) {
+            this.getActiveForm().reset();
+        }
         this.activeHotSpot = null;
     }
 
