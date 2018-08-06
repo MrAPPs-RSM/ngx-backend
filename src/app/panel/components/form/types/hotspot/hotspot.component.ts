@@ -10,6 +10,7 @@ import {FormFieldHotspot} from '../../interfaces/form-field-hotspot';
 import {FormArray, FormGroup} from '@angular/forms';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {FormGeneratorService} from '../../../../services/form-generator.service';
+import {ApiService} from "../../../../../api/api.service";
 
 @Component({
     selector: 'app-hotspot',
@@ -29,7 +30,7 @@ export class HotspotComponent extends BaseInputComponent implements OnInit {
     @ViewChild('imageWrapper') imageWrapper: ElementRef;
     @ViewChild('image') image: ElementRef;
 
-    constructor(private _formGenerator: FormGeneratorService) {
+    constructor(private _formGenerator: FormGeneratorService, private _apiService: ApiService) {
         super();
     }
 
@@ -86,6 +87,16 @@ export class HotspotComponent extends BaseInputComponent implements OnInit {
 
     private onSave($event: any) {
         this.savedForms[this.activeHotSpot] = true;
+        if (this.field.saveEndpoint) {
+            // TODO: handle errors
+            this._apiService.post(this.field.saveEndpoint, this.getActiveForm().value)
+                .then(() => {
+
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
         this.activeHotSpot = null;
     }
 
