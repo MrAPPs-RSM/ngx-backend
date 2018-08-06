@@ -27,7 +27,7 @@ export class DateRangePickerComponent extends BaseInputComponent implements OnIn
             if (fromValue) {
                 this._toSubscription = this.getControl(this.field.toKey).valueChanges.first().subscribe((toValue) => {
                     if (toValue) {
-                        this.getControl().setValue([new Date(fromValue), new Date(toValue)]);
+                        this.getControl().setValue([new Date(fromValue).setSeconds(0), new Date(toValue).setSeconds(0)]);
                         this._toSubscription.unsubscribe();
                     }
                 });
