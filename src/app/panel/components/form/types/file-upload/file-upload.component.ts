@@ -231,7 +231,8 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
                 this.updateFormValue({
                     id: response.id,
                     url: response.url,
-                    type: response.type
+                    type: response.type,
+                    name: response.name
                 }, false);
             }
         }
