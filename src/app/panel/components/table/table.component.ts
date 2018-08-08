@@ -514,8 +514,39 @@ export class TableComponent implements OnInit, OnDestroy {
     private handleActionApi(action: TableAction, endpoint: string, endpointData?: any, data?: any): Promise<any> {
         return new Promise((resolve, reject) => {
             switch (action.config.method) {
-                case 'post': { // TODO (only if necessary)
-                    resolve();
+                case 'post': {
+                    if (action.config.confirm) {
+                        this._modal.confirm()
+                            .then(() => {
+                                if (action.config.refreshAfter !== false) {
+                                    this.isLoading = true;
+                                }
+                                this._apiService.post(endpoint, {})
+                                    .then((response) => {
+                                        this.handleResponseApi(action, response)
+                                            .then(() => resolve())
+                                            .catch((error) => reject(error));
+                                    })
+                                    .catch((response: ErrorResponse) => {
+                                        reject(response);
+                                    });
+                            })
+                            .catch(() => {
+                            });
+                    } else {
+                        if (action.config.refreshAfter !== false) {
+                            this.isLoading = true;
+                        }
+                        this._apiService.post(endpoint, {})
+                            .then((response) => {
+                                this.handleResponseApi(action, response)
+                                    .then(() => resolve())
+                                    .catch((error) => reject(error));
+                            })
+                            .catch((response: ErrorResponse) => {
+                                reject(response);
+                            });
+                    }
                 }
                     break;
                 case 'put': { // TODO (only if necessary)
