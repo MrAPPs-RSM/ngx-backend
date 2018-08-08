@@ -1,12 +1,19 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {Cell} from '../../../../lib/data-set/cell';
-import {environment} from '../../../../../../../../environments/environment';
-import {UtilsService} from '../../../../../../../services/utils.service';
+import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {Cell} from '../../../../../lib/data-set/cell';
+import {environment} from '../../../../../../../../../environments/environment';
+import {UtilsService} from '../../../../../../../../services/utils.service';
 
 @Component({
     selector: 'image-view-component',
-    template: `<img [src]="renderValue" (error)="retryUrl($event)">`,
-    styles: ['img { max-width: 70px; }']
+    template: `
+        <div class="img-wrapper">
+            <a [href]="renderValue" download></a>
+            <img [src]="renderValue" (error)="retryUrl($event)">
+            <i class="fa fa-download"></i>
+        </div>
+    `,
+    styleUrls: ['./image-view.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class ImageViewComponent implements OnInit {
 
