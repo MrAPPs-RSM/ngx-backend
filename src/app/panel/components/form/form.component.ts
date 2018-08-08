@@ -398,10 +398,15 @@ export class FormComponent implements OnInit, OnDestroy {
         this.isLoading = true;
         if (this.settings.isEdit) {
 
-            const endpoint = this.settings.submit && this.settings.submit.endpoint ?
+            let endpoint = this.settings.submit && this.settings.submit.endpoint ?
                 this.settings.submit.endpoint : this.settings.api.endpoint;
 
-            this._apiService.patch(endpoint + '/' + this._route.snapshot.params['id'], value)
+            const id = this._route.snapshot.params['id'];
+            if (id) {
+                endpoint = endpoint + '/' + id;
+            }
+
+            this._apiService.patch(endpoint, value)
                 .then((response) => {
                     this.isLoading = false;
                     this.dataStored = true;

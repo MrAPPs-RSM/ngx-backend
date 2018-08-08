@@ -504,7 +504,7 @@ export class TableComponent implements OnInit, OnDestroy {
                             this.getData();
                         }
                     })
-                    .catch((response: ErrorResponse) => {
+                    .catch((response: ErrorResponse | any) => {
                         this.isLoading = false;
                         this._toast.error(response.error);
                     });
@@ -562,15 +562,20 @@ export class TableComponent implements OnInit, OnDestroy {
                                     if (action.config.refreshAfter !== false) {
                                         this.isLoading = true;
                                     }
-                                    this._apiService.patch(endpoint, JSON.parse(endpointData))
-                                        .then((response) => {
-                                            this.handleResponseApi(action, response)
-                                                .then(() => resolve())
-                                                .catch((error) => reject(error));
-                                        })
-                                        .catch((response: ErrorResponse) => {
-                                            reject(response);
-                                        });
+                                    try {
+                                        const body = JSON.parse(endpointData);
+                                        this._apiService.patch(endpoint, body)
+                                            .then((response) => {
+                                                this.handleResponseApi(action, response)
+                                                    .then(() => resolve())
+                                                    .catch((error) => reject(error));
+                                            })
+                                            .catch((response: ErrorResponse) => {
+                                                reject(response);
+                                            });
+                                    } catch (e) {
+                                        reject({error: {message: 'endpointData is not a valid JSON'}});
+                                    }
                                 })
                                 .catch(() => {
                                 });
