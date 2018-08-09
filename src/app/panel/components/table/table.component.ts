@@ -606,10 +606,10 @@ export class TableComponent implements OnInit, OnDestroy {
                                     this.isLoading = true;
                                 }
                                 if (action.config.responseType === 'file_download' && action.config.forceDownload) {
-                                    (window as any).open(this._apiService.composeUrl(endpoint, true));
+                                    (window as any).open(this._apiService.composeUrl(endpoint, true, action.config.addFilters ? this.composeCountParams() : null));
                                     resolve();
                                 } else {
-                                    this._apiService.get(endpoint)
+                                    this._apiService.get(endpoint, action.config.addFilters ? this.composeCountParams() : null)
                                         .then((response) => {
                                             this.handleResponseApi(action, response)
                                                 .then(() => resolve())
@@ -627,7 +627,7 @@ export class TableComponent implements OnInit, OnDestroy {
                             this.isLoading = true;
                         }
                         if (action.config.responseType === 'file_download' && action.config.forceDownload) {
-                            (window as any).open(this._apiService.composeUrl(endpoint, true));
+                            (window as any).open(this._apiService.composeUrl(endpoint, true, action.config.addFilters ? this.composeCountParams() : null));
                             resolve();
                         } else {
                             // Adding countParams to filter without pagination and sort
