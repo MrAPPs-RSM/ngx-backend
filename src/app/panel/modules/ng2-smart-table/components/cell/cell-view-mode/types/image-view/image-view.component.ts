@@ -6,8 +6,10 @@ import {UtilsService} from '../../../../../../../../services/utils.service';
 @Component({
     selector: 'image-view-component',
     template: `
-        <div class="img-wrapper">
-            <a [href]="renderValue" download></a>
+        <div class="img-wrapper" [ngClass]="{'isDownloadable': isDownloadable}">
+            <a [href]="renderValue" download
+               (click)="onClick($event)"
+            ></a>
             <img [src]="renderValue" (error)="retryUrl($event)">
             <i class="fa fa-download"></i>
         </div>
@@ -20,6 +22,7 @@ export class ImageViewComponent implements OnInit {
     @Input() cell: Cell;
 
     renderValue: string;
+    isDownloadable: boolean = true;
     private count: number;
 
     ngOnInit() {
@@ -39,6 +42,7 @@ export class ImageViewComponent implements OnInit {
             }
         } else {
             this.renderValue = environment.assets.imageError;
+            this.isDownloadable = false;
         }
     }
 
@@ -51,6 +55,13 @@ export class ImageViewComponent implements OnInit {
             }, 2000);
         } else {
             this.renderValue = environment.assets.imageError;
+        }
+    }
+
+    onClick($event: any): void {
+        if (!this.isDownloadable) {
+            $event.preventDefault();
+            $event.stopPropagation();
         }
     }
 }

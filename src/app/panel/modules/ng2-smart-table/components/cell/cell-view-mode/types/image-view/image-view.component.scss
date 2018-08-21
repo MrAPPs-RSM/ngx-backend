@@ -6,6 +6,7 @@ image-view-component {
     position: relative;
     margin: 0 auto;
     > a {
+      cursor: default;
       position: absolute;
       top: 0;
       left: 0;
@@ -44,14 +45,16 @@ image-view-component {
       left: 0;
     }
 
-    &:hover {
-      cursor: pointer;
-      > i {
-        opacity: 1;
-        visibility: visible;
-      }
-      &::after {
-        opacity: 0.40;
+    &.isDownloadable {
+      &:hover {
+        cursor: pointer;
+        > i {
+          opacity: 1;
+          visibility: visible;
+        }
+        &::after {
+          opacity: 0.40;
+        }
       }
     }
   }
