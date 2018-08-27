@@ -57,7 +57,15 @@ export class FormPageComponent implements OnInit, OnDestroy, ComponentCanDeactiv
     private redirectIfNeeded(form: FormSettings) {
         if (!this._apiService.isRedirecting && form.submit && form.submit.redirectAfter) {
             if (!this._menuService.goBack()) {
-                this._router.navigate(['panel/' + form.submit.redirectAfter]);
+
+                // If same route redirectAfter, workaround to reset form, ugly but works
+                if (this._route.url.value[0].path === form.submit.redirectAfter) {
+                    this._router.navigate(['panel']).then(() => {
+                        this._router.navigate(['panel/' + form.submit.redirectAfter]);
+                    });
+                } else {
+                    this._router.navigate(['panel/' + form.submit.redirectAfter]);
+                }
             }
         }
     }
