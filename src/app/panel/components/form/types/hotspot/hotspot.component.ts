@@ -49,17 +49,17 @@ export class HotspotComponent extends BaseInputComponent implements OnInit {
         return this.getFormArray().controls[this.activeHotSpot] as FormGroup;
     }
 
-    private add($event: any) {
+    public add($event: any) {
         this.getFormArray().push(new FormGroup(this._formGenerator.generateFormFields(this.field.fields)));
         this.getFormArray().controls[this.getFormArray().controls.length - 1].patchValue({x: $event.offsetX, y: $event.offsetY});
     }
 
-    private onDrag($event: any, index: number) {
+    public onDrag($event: any, index: number) {
         $event.target.style.opacity = '0';
         $event.target.style.visibility = 'hidden';
     }
 
-    private onDragEnd($event: any, index: number) {
+    public onDragEnd($event: any, index: number) {
         $event.target.style.opacity = '1';
         $event.target.style.visibility = 'visible';
 
@@ -79,13 +79,13 @@ export class HotspotComponent extends BaseInputComponent implements OnInit {
             (y <= this.image.nativeElement.height && y >= 0);
     }
 
-    private onEdit($event: any, index: number) {
+    public onEdit($event: any, index: number) {
         $event.preventDefault();
         console.log('On edit');
         this.activeHotSpot = index;
     }
 
-    private onSave($event: any) {
+    public onSave($event: any) {
         this.savedForms[this.activeHotSpot] = true;
         if (this.field.saveEndpoint) {
             // TODO: handle errors
@@ -100,7 +100,7 @@ export class HotspotComponent extends BaseInputComponent implements OnInit {
         this.activeHotSpot = null;
     }
 
-    private onClose($event: any) {
+    public onClose($event: any) {
         if (!this.savedForms[this.activeHotSpot]) {
             const keys = Object.keys(this.getActiveForm().controls);
             keys.forEach((key) => {
@@ -112,7 +112,7 @@ export class HotspotComponent extends BaseInputComponent implements OnInit {
         this.activeHotSpot = null;
     }
 
-    private onDelete($event: any) {
+    public onDelete($event: any) {
         this.getFormArray().removeAt(this.activeHotSpot);
         this.activeHotSpot = null;
     }
