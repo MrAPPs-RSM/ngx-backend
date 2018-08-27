@@ -1,5 +1,4 @@
 import {
-    AfterViewInit,
     Component,
     ElementRef,
     Input,
@@ -11,7 +10,7 @@ import {FormFieldHotspot} from '../../interfaces/form-field-hotspot';
 import {FormArray, FormGroup} from '@angular/forms';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {FormGeneratorService} from '../../../../services/form-generator.service';
-import {ApiService} from "../../../../../api/api.service";
+import {ApiService} from '../../../../../api/api.service';
 
 @Component({
     selector: 'app-hotspot',
@@ -19,7 +18,7 @@ import {ApiService} from "../../../../../api/api.service";
     styleUrls: ['./hotspot.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class HotspotComponent extends BaseInputComponent implements OnInit, AfterViewInit {
+export class HotspotComponent extends BaseInputComponent implements OnInit {
 
     @Input() field: FormFieldHotspot;
     @Input() form: FormGroup;
@@ -36,9 +35,6 @@ export class HotspotComponent extends BaseInputComponent implements OnInit, Afte
     }
 
     ngOnInit() {
-    }
-
-    ngAfterViewInit() {
     }
 
     public getControl(): FormGroup {
@@ -82,11 +78,7 @@ export class HotspotComponent extends BaseInputComponent implements OnInit, Afte
 
         $event.preventDefault();
         const id = $event.dataTransfer.getData('text/plain');
-        // $event.dataTransfer.clearData();
-        console.log(id);
         const index = parseInt(id.split('_')[1], 10);
-
-        console.log(index);
 
         const hotSpot = this.getFormArray().controls[index];
         if (this.isInBounds($event.layerX, $event.layerY)) {
