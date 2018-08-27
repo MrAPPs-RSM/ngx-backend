@@ -5,13 +5,18 @@
                 Hotspot
             </div>
 
-            <div class="img-wrapper" #imageWrapper>
+            <div class="img-wrapper" #imageWrapper
+                 (dragover)="onDragOver($event)"
+                 (drop)="onDrop($event)"
+            >
                 <img [src]="getControl().value.image" #image (click)="add($event)">
                 <div *ngFor="let hotSpot of getFormArray().controls; let i = index"
                      class="hotSpot"
+                     [draggable]="true"
+                     [id]="'hotSpot_' + i"
+                     (dragstart)="onDragStart($event, i)"
                      (drag)="onDrag($event, i)"
                      (dragend)="onDragEnd($event, i)"
-                     [draggable]="true"
                      [style.top]="hotSpot.value.y + 'px'"
                      [style.left]="hotSpot.value.x + 'px'"
                 ><i class="fa fa-arrows"></i>

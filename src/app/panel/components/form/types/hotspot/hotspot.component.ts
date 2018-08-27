@@ -1,4 +1,5 @@
 import {
+    AfterViewInit,
     Component,
     ElementRef,
     Input,
@@ -18,7 +19,7 @@ import {ApiService} from "../../../../../api/api.service";
     styleUrls: ['./hotspot.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class HotspotComponent extends BaseInputComponent implements OnInit {
+export class HotspotComponent extends BaseInputComponent implements OnInit, AfterViewInit {
 
     @Input() field: FormFieldHotspot;
     @Input() form: FormGroup;
@@ -35,6 +36,9 @@ export class HotspotComponent extends BaseInputComponent implements OnInit {
     }
 
     ngOnInit() {
+    }
+
+    ngAfterViewInit() {
     }
 
     public getControl(): FormGroup {
@@ -54,6 +58,10 @@ export class HotspotComponent extends BaseInputComponent implements OnInit {
         this.getFormArray().controls[this.getFormArray().controls.length - 1].patchValue({x: $event.offsetX, y: $event.offsetY});
     }
 
+    public onDragStart($event: any, index: number) {
+        $event.dataTransfer.setData('text/plain', $event.target.id);
+    }
+
     public onDrag($event: any, index: number) {
         $event.target.style.opacity = '0';
         $event.target.style.visibility = 'hidden';
@@ -62,19 +70,31 @@ export class HotspotComponent extends BaseInputComponent implements OnInit {
     public onDragEnd($event: any, index: number) {
         $event.target.style.opacity = '1';
         $event.target.style.visibility = 'visible';
+    }
+
+    public onDragOver($event: any) {
+        $event.preventDefault();
+    }
+
+    public onDrop($event: any) {
+        console.log('ondrop');
+        console.log($event);
+
+        $event.preventDefault();
+        const id = $event.dataTransfer.getData('text/plain');
+        // $event.dataTransfer.clearData();
+        console.log(id);
+        const index = parseInt(id.split('_')[1], 10);
+
+        console.log(index);
 
         const hotSpot = this.getFormArray().controls[index];
-        if (this.isInBounds($event, hotSpot))  {
-            const x = parseInt(hotSpot.value.x + $event.offsetX, 10);
-            const y = parseInt(hotSpot.value.y + $event.offsetY, 10);
-            hotSpot.patchValue({x: x, y: y});
+        if (this.isInBounds($event.layerX, $event.layerY)) {
+            hotSpot.patchValue({x: $event.layerX, y: $event.layerY});
         }
     }
 
-    private isInBounds($event: any, hotSpot: any) {
-        const x = parseInt($event.offsetX + hotSpot.value.x, 10);
-        const y = parseInt($event.offsetY + hotSpot.value.y, 10);
-
+    private isInBounds(x, y) {
         return (x <= this.image.nativeElement.width && x >= 0) &&
             (y <= this.image.nativeElement.height && y >= 0);
     }
