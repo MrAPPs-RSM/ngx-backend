@@ -21,6 +21,7 @@
                 <div class="value" *ngIf="max > 0">
                     <input type="number"
                            [(ngModel)]="offset"
+                           (ngModelChange)="onChange()"
                            [ngModelOptions]="{standalone: true}"
                            [min]="min"
                            [max]="max"

@@ -66,7 +66,9 @@ export class PreviewComponent extends BaseInputComponent implements OnInit, OnDe
     }
 
     onChange() {
-        this.getData();
+        if (this.offset > 0) {
+            this.getData();
+        }
     }
 
     onImageError() {
