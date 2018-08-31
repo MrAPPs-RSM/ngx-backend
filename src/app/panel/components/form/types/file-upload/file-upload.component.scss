@@ -100,10 +100,10 @@ app-file-upload {
               padding: 2px 3px;
               background-color: #ffffff;
               margin-right: 5px;
-              > span{
+
+              span {
                 &:not(.remove) {
-                  max-width: 50px;
-                  display: inline-block;
+                  display: block;
                 }
                 &.remove {
                   cursor: pointer;
