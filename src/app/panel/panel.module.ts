@@ -14,7 +14,6 @@ import {OwlDateTimeModule, OwlNativeDateTimeModule} from 'ng-pick-datetime';
 import {CKEditorModule} from 'ng2-ckeditor';
 import {TextMaskModule} from 'angular2-text-mask';
 
-
 import {PanelComponent} from './panel.component';
 import {FormPageComponent} from './pages/form-page/form-page.component';
 import {TablePageComponent} from './pages/table-page/table-page.component';
@@ -59,6 +58,7 @@ import {TimetablePickerComponent} from './components/form/types/timetable-picker
 import {GeoSearchComponent} from './components/form/types/geo-search/geo-search.component';
 import { GalleryComponent } from './components/form/types/gallery/gallery.component';
 import { Select2Component } from './components/form/types/select-2/select-2.component';
+import { HotspotComponent } from './components/form/types/hotspot/hotspot.component';
 
 const COMPONENTS = [
     PanelComponent,
@@ -91,7 +91,10 @@ const COMPONENTS = [
     DateRangePickerComponent,
     MediaLibraryComponent,
     TimetablePickerComponent,
-    GeoSearchComponent
+    GeoSearchComponent,
+    GalleryComponent,
+    Select2Component,
+    HotspotComponent
 ];
 
 const PROVIDERS = [
@@ -160,9 +163,7 @@ const routes: Routes = [
         InputPasswordComponent
     ],
     declarations: [
-        ...COMPONENTS,
-        GalleryComponent,
-        Select2Component
+        ...COMPONENTS
     ],
     providers: [
         ...PROVIDERS

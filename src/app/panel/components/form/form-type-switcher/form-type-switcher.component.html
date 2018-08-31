@@ -219,6 +219,15 @@
             [index]="index">
     </app-list-details>
 
+    <app-hotspot
+            *ngSwitchCase="formConfig.types.HOTSPOT"
+            [field]="field"
+            [groupName]="groupName"
+            [form]="form"
+            [isEdit]="isEdit"
+            [index]="index">
+    </app-hotspot>
+
     <!--
 
                      <calendar

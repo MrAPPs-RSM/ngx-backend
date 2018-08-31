@@ -504,7 +504,8 @@ export class TableComponent implements OnInit, OnDestroy {
                             this.getData();
                         }
                     })
-                    .catch((response: ErrorResponse) => {
+                    .catch((response: ErrorResponse | any) => {
+                        this.isLoading = false;
                         this._toast.error(response.error);
                     });
             }
@@ -514,8 +515,39 @@ export class TableComponent implements OnInit, OnDestroy {
     private handleActionApi(action: TableAction, endpoint: string, endpointData?: any, data?: any): Promise<any> {
         return new Promise((resolve, reject) => {
             switch (action.config.method) {
-                case 'post': { // TODO (only if necessary)
-                    resolve();
+                case 'post': {
+                    if (action.config.confirm) {
+                        this._modal.confirm()
+                            .then(() => {
+                                if (action.config.refreshAfter !== false) {
+                                    this.isLoading = true;
+                                }
+                                this._apiService.post(endpoint, {})
+                                    .then((response) => {
+                                        this.handleResponseApi(action, response)
+                                            .then(() => resolve())
+                                            .catch((error) => reject(error));
+                                    })
+                                    .catch((response: ErrorResponse) => {
+                                        reject(response);
+                                    });
+                            })
+                            .catch(() => {
+                            });
+                    } else {
+                        if (action.config.refreshAfter !== false) {
+                            this.isLoading = true;
+                        }
+                        this._apiService.post(endpoint, {})
+                            .then((response) => {
+                                this.handleResponseApi(action, response)
+                                    .then(() => resolve())
+                                    .catch((error) => reject(error));
+                            })
+                            .catch((response: ErrorResponse) => {
+                                reject(response);
+                            });
+                    }
                 }
                     break;
                 case 'put': { // TODO (only if necessary)
@@ -530,15 +562,20 @@ export class TableComponent implements OnInit, OnDestroy {
                                     if (action.config.refreshAfter !== false) {
                                         this.isLoading = true;
                                     }
-                                    this._apiService.patch(endpoint, JSON.parse(endpointData))
-                                        .then((response) => {
-                                            this.handleResponseApi(action, response)
-                                                .then(() => resolve())
-                                                .catch((error) => reject(error));
-                                        })
-                                        .catch((response: ErrorResponse) => {
-                                            reject(response);
-                                        });
+                                    try {
+                                        const body = JSON.parse(endpointData);
+                                        this._apiService.patch(endpoint, body)
+                                            .then((response) => {
+                                                this.handleResponseApi(action, response)
+                                                    .then(() => resolve())
+                                                    .catch((error) => reject(error));
+                                            })
+                                            .catch((response: ErrorResponse) => {
+                                                reject(response);
+                                            });
+                                    } catch (e) {
+                                        reject({error: {message: 'endpointData is not a valid JSON'}});
+                                    }
                                 })
                                 .catch(() => {
                                 });
@@ -569,10 +606,10 @@ export class TableComponent implements OnInit, OnDestroy {
                                     this.isLoading = true;
                                 }
                                 if (action.config.responseType === 'file_download' && action.config.forceDownload) {
-                                    (window as any).open(this._apiService.composeUrl(endpoint, true));
+                                    (window as any).open(this._apiService.composeUrl(endpoint, true, action.config.addFilters ? this.composeCountParams() : null));
                                     resolve();
                                 } else {
-                                    this._apiService.get(endpoint)
+                                    this._apiService.get(endpoint, action.config.addFilters ? this.composeCountParams() : null)
                                         .then((response) => {
                                             this.handleResponseApi(action, response)
                                                 .then(() => resolve())
@@ -590,7 +627,7 @@ export class TableComponent implements OnInit, OnDestroy {
                             this.isLoading = true;
                         }
                         if (action.config.responseType === 'file_download' && action.config.forceDownload) {
-                            (window as any).open(this._apiService.composeUrl(endpoint, true));
+                            (window as any).open(this._apiService.composeUrl(endpoint, true, action.config.addFilters ? this.composeCountParams() : null));
                             resolve();
                         } else {
                             // Adding countParams to filter without pagination and sort
