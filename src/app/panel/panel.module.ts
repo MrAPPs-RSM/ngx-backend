@@ -14,7 +14,6 @@ import {OwlDateTimeModule, OwlNativeDateTimeModule} from 'ng-pick-datetime';
 import {CKEditorModule} from 'ng2-ckeditor';
 import {TextMaskModule} from 'angular2-text-mask';
 
-
 import {PanelComponent} from './panel.component';
 import {FormPageComponent} from './pages/form-page/form-page.component';
 import {TablePageComponent} from './pages/table-page/table-page.component';
@@ -60,7 +59,7 @@ import {GeoSearchComponent} from './components/form/types/geo-search/geo-search.
 import { GalleryComponent } from './components/form/types/gallery/gallery.component';
 import { Select2Component } from './components/form/types/select-2/select-2.component';
 import { CloudinaryLibraryComponent } from './components/form/types/cloudinary-library/cloudinary-library.component';
-
+import { HotspotComponent } from './components/form/types/hotspot/hotspot.component';
 
 const COMPONENTS = [
     PanelComponent,
@@ -97,6 +96,7 @@ const COMPONENTS = [
     GalleryComponent,
     Select2Component,
     CloudinaryLibraryComponent
+    HotspotComponent
 ];
 
 const PROVIDERS = [
@@ -165,7 +165,7 @@ const routes: Routes = [
         InputPasswordComponent
     ],
     declarations: [
-        ...COMPONENTS,
+        ...COMPONENTS
     ],
     providers: [
         ...PROVIDERS

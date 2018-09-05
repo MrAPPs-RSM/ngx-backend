@@ -18,6 +18,7 @@ export interface UploadedFile {
     id: number;
     url?: string;
     type: string;
+    name?: string;
 }
 
 export interface MediaLibraryOptions {

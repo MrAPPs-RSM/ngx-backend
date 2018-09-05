@@ -78,6 +78,7 @@
                             <i *ngSwitchCase="'text/csv'" class="fa fa-file-code-o code"></i>
                             <i *ngSwitchCase="'application/pdf'" class="fa fa-file-pdf-o pdf"></i>
                             <i *ngSwitchCase="'application/zip'" class="fa fa-file-zip-o zip"></i>
+                            <i *ngSwitchCase="'video/mp4'" class="fa fa-file-video-o video"></i>
                             <i *ngSwitchDefault class="fa fa-file-o default"></i>
                             <img *ngSwitchCase="'image/jpeg'" [src]="file.url" (error)="retryUrl($event, file.url)"/>
                             <img *ngSwitchCase="'image/jpg'" [src]="file.url" (error)="retryUrl($event, file.url)"/>
@@ -88,6 +89,7 @@
                         </div>
                     </div>
                     <span class="file-name" *ngIf="!onlyView">
+                        <span *ngIf="file.type == 'video/mp4'">{{file.name}}&nbsp;&nbsp;</span>
                         <span class="remove"
                               (click)="removeUploadedFile(file)">×</span>
                     </span>

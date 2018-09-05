@@ -1,8 +1,8 @@
 div.toast-container {
   z-index: 1030;
-  position: absolute;
+  position: fixed;
   border-radius: $borderRadius;
-  top: 20px;
+  top: 55px;
   right: 20px;
   width: 300px;
   > div.toast {

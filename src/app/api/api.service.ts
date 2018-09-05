@@ -21,9 +21,10 @@ export class ApiService {
      * Return composed url based on ENV
      * @param endpoint
      * @param addAuth
+     * @param params
      * @returns {string}
      */
-    public composeUrl(endpoint: string, addAuth?: boolean): string {
+    public composeUrl(endpoint: string, addAuth?: boolean, extraParams?: Object): string {
         this.isRedirecting = false;
 
         let url = API_URL + endpoint;
@@ -35,6 +36,11 @@ export class ApiService {
                 url += '?' + authorization;
             }
         }
+
+        if (extraParams) {
+            url += '&filter=' + extraParams['filter'];
+        }
+
         return url;
     }
 

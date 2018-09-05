@@ -5,6 +5,8 @@
         </label>
         <ng-select [disabled]="field.disabled || onlyView"
                    [items]="options"
+                   [typeahead]="field.search ? typeAhead : null"
+                   [addTag]="false"
                    [multiple]="!!field.multiple"
                    bindLabel="text"
                    placeholder="{{field.placeholder}}"
