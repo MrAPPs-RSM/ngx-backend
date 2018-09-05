@@ -21,7 +21,9 @@ export const translations = {
                 max_files: 'Numero di file consentito',
                 selected_files: 'File selezionati',
                 uploading_files: 'Caricamento in corso, attendere',
-                search_address: 'Inizia a digitare l\'indirizzo'
+                search_address: 'Inizia a digitare l\'indirizzo',
+                select_all: 'Seleziona tutto',
+                deselect_all: 'Deseleziona tutto'
             },
             errors: {
                 required: 'è richiesto',
@@ -92,7 +94,9 @@ export const translations = {
                 max_files: 'Max files',
                 selected_files: 'Selected files',
                 uploading_files: 'Uploading, please wait',
-                search_address: 'Type to search address'
+                search_address: 'Type to search address',
+                select_all: 'Select all',
+                deselect_all: 'Deselect all'
             },
             errors: {
                 required: 'is required',

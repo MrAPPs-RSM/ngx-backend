@@ -1,0 +1,304 @@
+@import '../../../../../../assets/sass/partials/imports';
+
+app-cloudinary-library {
+  div.cloudinary-library {
+    border: 1px solid $primary;
+    margin-top: 15px;
+    > div.header {
+      position: relative;
+      padding: 10px 20px;
+      background-color: $primary;
+      color: #ffffff;
+      font-weight: $regular;
+      > span {
+        font-weight: $light;
+        &.remove {
+          cursor: pointer;
+          position: absolute;
+          font-size: 18px;
+          top: 5px;
+          right: 8px;
+        }
+      }
+    }
+    > div.container-fluid#filters-wrapper {
+      margin-top: 20px;
+      > div.filters {
+        div.input-wrapper {
+          margin: 0 5px;
+          position: relative;
+          > input {
+            height: 40px;
+            padding-right: 30px;
+          }
+          > i {
+            position: absolute;
+            top: 11px;
+            font-size: 18px;
+            right: 8px;
+            color: $default;
+          }
+        }
+
+        ng-select.ng-select.bottom {
+          > div.ng-control {
+            min-width: 150px;
+            height: 40px;
+            font-weight: $light;
+          }
+        }
+      }
+    }
+    > div.container-fluid#library-wrapper {
+      min-height: 500px;
+      overflow: hidden;
+      $sidebarWidth: 300px;
+      position: relative;
+      padding: 15px 20px;
+      > div.medias {
+        > div.row {
+          &.library {
+            > div {
+              margin: 15px 0;
+              cursor: pointer;
+              > *:not(span.selected) {
+                pointer-events: none;
+              }
+              > div.media {
+                border: 2px solid $lightGrey;
+                border-bottom: none;
+                position: relative;
+                padding-top: 100%;
+
+                > img {
+                  position: absolute;
+                  top: 0;
+                  left: 0;
+                  width: 100%;
+                  height: 100%;
+                }
+
+                > span.selected {
+                  position: absolute;
+                  top: 0;
+                  right: 0;
+                  padding: 0 3px;
+                  color: #ffffff;
+                }
+
+                &:not(.selected) {
+                  > span.selected {
+                    background: #ffffff;
+                  }
+                }
+
+                &.selected {
+                  border-color: $primary;
+                  + div.info {
+                    border-color: $primary;
+                  }
+                  > span.selected {
+                    background: $primary;
+                  }
+                }
+              }
+              > div.info {
+                background-color: #ffffff;
+                border: 2px solid $lightGrey;
+                border-top: none;
+                padding: 3px 5px;
+                > span {
+                  @include ellipsis-multiline(1, 12px, 1.3);
+                  font-size: 12px;
+                  display: block;
+                  &.name {
+                    font-weight: $regular;
+                  }
+                }
+              }
+            }
+          }
+          &.selection {
+            margin-top: 15px;
+            > div {
+              > p {
+                margin: 0;
+                color: $default;
+                font-size: 13px;
+              }
+              /*> div.media {
+                display: inline-block;
+                border: 1px solid $lightGrey;
+                margin: 5px;
+                > img {
+                  width: 60px;
+                  height: 60px;
+                }
+                > span {
+                  cursor: pointer;
+                  display: block;
+                  width: 60px;
+                  color: $default;
+                  text-align: center;
+                }
+              }*/
+            }
+
+            .tags-handler {
+              margin-top: 10px;
+              > ng-select {
+                float: left;
+                width: calc(100% - 140px);
+              }
+              > a {
+                float: left;
+                height: 45px;
+                padding: 12px 0 !important;
+                text-align: center !important;
+                width: 130px;
+                margin-left: 10px;
+              }
+            }
+          }
+          &.footer {
+            margin-top: 15px;
+            > div {
+              > nav.pagination {
+                margin: 0;
+                > ul {
+                  margin: 0;
+                  padding-left: 0;
+                  display: inline-block;
+                  list-style: none;
+                  > li {
+                    display: inline;
+                    &.disabled {
+                      > span, > a {
+                        cursor: not-allowed;
+                        &:hover {
+                          background-color: inherit;
+                        }
+                      }
+                    }
+                    &.active {
+                      > span, > a {
+                        border-color: $primary;
+                        background-color: $primary;
+                        color: #ffffff;
+                        &:hover {
+                          border-color: darken($primary, 10);
+                          background-color: darken($primary, 10);
+                          color: #ffffff;
+                        }
+                        > span {
+                          color: #ffffff;
+                        }
+                      }
+                    }
+                    > a, > span {
+                      @include _transition(all 0.3s);
+                      padding: 6px 12px;
+                      cursor: pointer;
+                      color: $primary;
+                      border-radius: $borderRadius;
+                      position: relative;
+                      float: left;
+                      margin-left: -1px;
+                      text-decoration: none;
+                      background-color: #fff;
+                      border: 1px solid $lightGrey;
+
+                      &:hover {
+                        background-color: #eee;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        float: left;
+        @include _transition(all 0.5s);
+        width: calc(100% - #{$sidebarWidth});
+      }
+      > div.media-detail {
+        width: $sidebarWidth;
+        overflow-y: auto;
+        position: absolute;
+        height: 100%;
+        top: 15px;
+        right: 0;
+        border-top: 1px solid $grey;
+        border-left: 1px solid $grey;
+        @include _transition(all 0.5s);
+
+        > .wrapper {
+          position: relative;
+          > img {
+            border-bottom: 1px solid $grey;
+            width: 100%;
+          }
+          > div.info {
+            border-bottom: 1px solid $lightGrey;
+            border-top: none;
+            padding: 3px 5px;
+            > span {
+              font-size: 14px;
+              display: block;
+              &.name {
+                font-weight: $regular;
+              }
+            }
+          }
+          > div.tags {
+            padding: 10px;
+            > ul {
+              list-style: none;
+              margin: 0;
+              padding: 0;
+              > li {
+                display: inline-block;
+                border: 1px solid $sidebar;
+                padding: 2px 10px;
+                background: $primary;
+                color: #fff;
+                font-size: 13px;
+                margin-bottom: 10px;
+                &:not(:last-child) {
+                  margin-right: 10px;
+                }
+
+                > span.remove {
+                  margin-left: 5px;
+                  cursor: pointer;
+                  font-size: 15px;
+                  font-weight: $regular;
+                }
+              }
+            }
+          }
+          > span.remove {
+            cursor: pointer;
+            position: absolute;
+            font-size: 18px;
+            top: 0;
+            right: 0;
+            padding: 0 4px;
+            color: $lightGrey;
+          }
+        }
+      }
+
+      &.media-closed {
+        > .media-detail {
+          @include _transform(translateX(100%));
+        }
+        > .medias {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
