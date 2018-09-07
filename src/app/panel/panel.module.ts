@@ -95,7 +95,7 @@ const COMPONENTS = [
     GeoSearchComponent,
     GalleryComponent,
     Select2Component,
-    CloudinaryLibraryComponent
+    CloudinaryLibraryComponent,
     HotspotComponent
 ];
 
