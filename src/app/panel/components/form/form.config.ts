@@ -19,6 +19,7 @@ export let formConfig = {
         PLAIN: 'plain',
         PREVIEW: 'preview',
         GEOSEARCH: 'geosearch',
+        CLOUDINARY: 'cloudinary',
         HOTSPOT: 'hotspot'
     },
     noInputTypes: {
