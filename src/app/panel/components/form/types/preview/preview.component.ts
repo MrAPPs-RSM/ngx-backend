@@ -31,7 +31,7 @@ export class PreviewComponent extends BaseInputComponent implements OnInit, OnDe
 
     min: number;
     max: number;
-    offset: number;
+    offset: number = 1;
 
     url: string;
     private fileId: number;
@@ -90,7 +90,7 @@ export class PreviewComponent extends BaseInputComponent implements OnInit, OnDe
                 }
                 this.getData();
             } else {
-                this.offset = 0;
+                this.offset = 1;
                 this.isVisible = false;
             }
         });
@@ -119,7 +119,7 @@ export class PreviewComponent extends BaseInputComponent implements OnInit, OnDe
     private reset() {
         this.min = 0;
         this.max = 0;
-        this.offset = 0;
+        this.offset = 1;
     }
 }
 
