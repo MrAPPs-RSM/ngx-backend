@@ -10,8 +10,9 @@ const API_URL = environment.api.baseUrl;
 @Injectable()
 export class ApiService {
 
-    private readonly headers = new HttpHeaders({'Content-Type': 'application/json'});
+    private headers = new HttpHeaders({'Content-Type': 'application/json'});
     private readonly headerParametersKey: string = 'ngxBackend-Parameters';
+    private readonly domainKey = environment.auth.credentials.domain ? environment.auth.credentials.domain : 'domain';
 
     public isRedirecting = false;
 
@@ -20,16 +21,6 @@ export class ApiService {
                 private _storageService: StorageService,
                 private _route: ActivatedRoute,
                 private _router: Router) {
-        if (environment.domains) {
-            const value = {};
-            const domainKey = environment.auth.credentials.domain ?
-                environment.auth.credentials.domain : 'domain';
-            value[domainKey] = this._storageService.getValue('domain');
-
-            if (!this.headers.has(this.headerParametersKey)) {
-                this.headers = this.headers.append(this.headerParametersKey, JSON.stringify(value));
-            }
-        }
     }
 
     /**
@@ -322,16 +313,23 @@ export class ApiService {
      */
     private setOptions(params: Object | null, withoutHeaders?: boolean): RequestOptions {
         const requestOptions: RequestOptions = {
-            params: this.setAuth(params),
-            headers: this.headers
+            params: this.setAuth(params)
         };
 
         if (!withoutHeaders) {
-            return requestOptions;
-        } else {
-            delete requestOptions.headers;
-            return requestOptions;
+            if (environment.domains) {
+                const value = {};
+                value[this.domainKey] = this._storageService.getValue('domain');
+                if (!this.headers.has(this.headerParametersKey)) {
+                    this.headers = this.headers.append(this.headerParametersKey, JSON.stringify(value));
+                } else {
+                    this.headers = this.headers.set(this.headerParametersKey, JSON.stringify(value));
+                }
+            }
+            requestOptions.headers = this.headers;
         }
+
+        return requestOptions;
     }
 
     /**

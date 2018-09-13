@@ -29,10 +29,6 @@ export class LoginComponent implements OnInit {
 
     ngOnInit() {
         this._setupService._lastRouteLoading = null;
-
-        if (environment.domains) {
-            this._storageService.setValue('domain', this._route.snapshot.params['domain']);
-        }
     }
 
     onSubmit(data: any): void {

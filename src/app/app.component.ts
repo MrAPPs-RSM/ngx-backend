@@ -1,16 +1,16 @@
-import {Component, ViewEncapsulation, OnInit, OnDestroy} from '@angular/core';
-import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
-import {PageTitleService} from './panel/services/page-title.service';
-import {LanguageService} from './panel/services/language.service';
-import {MenuService} from './panel/services/menu.service';
-import {GlobalState} from './global.state';
-import {Subscription} from 'rxjs/Subscription';
-import {UtilsService} from './services/utils.service';
-import {environment} from '../environments/environment';
-import {ApiService} from './api/api.service';
-import {StorageService} from "./services/storage.service";
-import {UserService} from "./auth/services/user.service";
-import {PageRefreshService} from "./services/page-refresh.service";
+import { Component, ViewEncapsulation, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { PageTitleService } from './panel/services/page-title.service';
+import { LanguageService } from './panel/services/language.service';
+import { MenuService } from './panel/services/menu.service';
+import { GlobalState } from './global.state';
+import { Subscription } from 'rxjs/Subscription';
+import { UtilsService } from './services/utils.service';
+import { environment } from '../environments/environment';
+import { ApiService } from './api/api.service';
+import { StorageService } from "./services/storage.service";
+import { UserService } from "./auth/services/user.service";
+import { PageRefreshService } from "./services/page-refresh.service";
 
 @Component({
     selector: 'app-root',
@@ -25,15 +25,15 @@ export class AppComponent implements OnInit, OnDestroy {
     private firstRoute = true;
 
     constructor(private _router: Router,
-                private _route: ActivatedRoute,
-                private _state: GlobalState,
-                private _userService: UserService,
-                private _pageRefresh: PageRefreshService,
-                private _storageService: StorageService,
-                private _languageService: LanguageService,
-                private _apiService: ApiService,
-                private _pageTitle: PageTitleService,
-                private _menuService: MenuService) {
+        private _route: ActivatedRoute,
+        private _state: GlobalState,
+        private _userService: UserService,
+        private _pageRefresh: PageRefreshService,
+        private _storageService: StorageService,
+        private _languageService: LanguageService,
+        private _apiService: ApiService,
+        private _pageTitle: PageTitleService,
+        private _menuService: MenuService) {
     }
 
     ngOnInit() {
@@ -59,21 +59,21 @@ export class AppComponent implements OnInit, OnDestroy {
                     const currentPath: string = activatedRoute.snapshot['_routerState'].url;
                     const currentDomain: string = this._storageService.getValue('domain');
 
-                    if (currentPath.indexOf('panel') > -1) {
-                        if (!activatedRoute.parent.snapshot.params.hasOwnProperty('domain') ||
-                            activatedRoute.parent.snapshot.params.domain !== currentDomain) {
+                    if (!activatedRoute.parent.snapshot.params.hasOwnProperty('domain') ||
+                        activatedRoute.parent.snapshot.params.domain !== currentDomain) {
 
-                            this._userService.removeToken();
-                            this._userService.removeUser();
-                            this._languageService.removeLang();
-                            this._pageRefresh.reset();
-                            this._storageService.clearValue('domain');
+                        this._userService.removeToken();
+                        this._userService.removeUser();
+                        this._languageService.removeLang();
+                        this._pageRefresh.reset();
+                        this._storageService.setValue('domain', activatedRoute.parent.snapshot.params.domain);
 
-                            if (activatedRoute.parent.snapshot.params.hasOwnProperty('domain')) {
+                        if (activatedRoute.parent.snapshot.params.hasOwnProperty('domain')) {
+                            if (currentPath.indexOf('login') === -1) {
                                 this._router.navigate(['/' + activatedRoute.parent.snapshot.params.domain + '/login']);
-                            } else {
-                                // TODO: may never happen but, what to do in this case?
                             }
+                        } else {
+                            // TODO: may never happen but, what to do in this case?
                         }
                     }
                 }
