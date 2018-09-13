@@ -18,6 +18,7 @@ export interface UploadedFile {
     id: number;
     url?: string;
     type: string;
+    name?: string;
 }
 
 export interface MediaLibraryOptions {
@@ -39,5 +40,18 @@ export interface Media {
     url: string;
     name: string;
     selected?: boolean;
+    tags?: any[];
 }
 
+export interface CloudinaryField extends FormField {
+    options: {
+        api: {
+            searchEndpoint: string;
+            dataEndpoint: string;
+            deleteTagsEndpoint: string;
+            addTagsEndpoint: string;
+        },
+        page?: number;
+        perPage?: number;
+    };
+}

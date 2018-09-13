@@ -1,0 +1,117 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <div class="form-group">
+        <div class="cloudinary-library">
+            <div class="header">
+                Cloudinary library
+            </div>
+            <div class="progress" [ngClass]="{'visible': isLoading}">
+                <div class="indeterminate"></div>
+            </div>
+            <div class="container-fluid" id="filters-wrapper">
+                <div class="row filters">
+                    <div class="col-sm-12">
+                        <div class="input-wrapper">
+                            <ng-select [items]="searchOptions"
+                                       [typeahead]="typeAhead"
+                                       [addTag]="false"
+                                       [(ngModel)]="search"
+                                       (change)="onSearch()"
+                                       [multiple]="true"
+                                       bindLabel="text"
+                                       [placeholder]="'Cerca per tag'">
+                            </ng-select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid media-closed" id="library-wrapper">
+                <div class="medias">
+                    <div class="row buttons">
+                        <div class="col-sm-12">
+                            <a *ngIf="data.length > 0 && count <= params.perPage" class="btn btn-default" (click)="bulkSelection($event)">{{ selection.length === data.length ? ('forms.inputs.deselect_all' | translate) : ('forms.inputs.select_all' | translate)}}</a>
+                        </div>
+                    </div>
+                    <div class="row library">
+                        <div class="col-xs-4 col-sm-3 col-md-3 col-lg-2" *ngFor="let media of data"
+                             (click)="activateMedia($event, media)">
+                            <div class="media" [ngClass]="{selected: media.selected}">
+                                <img [src]="media.url" (error)="onImageError($event)">
+                                <span class="selected" (click)="selectMedia($event, media)"><i class="fa fa-check"></i></span>
+                            </div>
+                            <div class="info">
+                                <span class="name">{{media.name}}</span>
+                                <span class="type">{{media.type}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row selection" *ngIf="selection.length > 0">
+                        <div class="col-sm-12">
+                            <p>{{'forms.inputs.selected_files' | translate}}: {{selection.length}}</p>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="tags-handler">
+                                <ng-select [items]="tagsOptions"
+                                           [typeahead]="typeAhead_tag"
+                                           [addTag]="true"
+                                           [(ngModel)]="tags"
+                                           [multiple]="true"
+                                           bindLabel="text"
+                                           [placeholder]="'Aggiungi tag alla selezione'">
+                                </ng-select>
+                                <a class="btn btn-primary" (click)="addTags($event)">Aggiungi tag(s)</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row footer">
+                        <div class="col-sm-12">
+                            <nav *ngIf="shouldShowPagination()" class="pagination pull-left">
+                                <ul>
+                                    <li class="page-item" [ngClass]="{disabled: getCurrentPage() == 1}">
+                                        <a class="page-link" href="#"
+                                           (click)="getCurrentPage() == 1 ? false : paginate(1)" aria-label="First">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+
+                                    <li class="page-item" [ngClass]="{active: getCurrentPage() == page}"
+                                        *ngFor="let page of getPages()">
+                                        <span class="page-link" *ngIf="getCurrentPage() == page">{{ page }}</span>
+                                        <a class="page-link" href="#"
+                                           (click)="paginate(page)" *ngIf="getCurrentPage() != page">{{ page }}</a>
+                                    </li>
+
+                                    <li class="page-item"
+                                        [ngClass]="{disabled: getCurrentPage() == getLastPage()}">
+                                        <a class="ng2-smart-page-link page-link" href="#"
+                                           (click)="getCurrentPage() == getLastPage() ? false : paginate(getLastPage())"
+                                           aria-label="Last">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+                <div class="media-detail">
+                    <div class="wrapper" *ngIf="activeMedia">
+                        <img [src]="activeMedia.url" (error)="onImageError($event)">
+                        <div class="info">
+                            <span class="name">{{activeMedia.name}}</span>
+                            <span class="type">{{activeMedia.type}}</span>
+                        </div>
+                        <div class="tags" *ngIf="activeMedia.tags && activeMedia.tags.length > 0">
+                            <p>Tags:</p>
+                            <ul>
+                                <li *ngFor="let tag of activeMedia.tags">{{tag}}
+                                    <span class="remove" (click)="removeTag(tag)">×</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <span class="remove" (click)="closeMedia()">×</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

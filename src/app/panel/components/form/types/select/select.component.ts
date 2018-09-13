@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {ApiService, ErrorResponse} from '../../../../../api/api.service';
 import {ActivatedRoute} from '@angular/router';
 import {FormFieldSelect} from '../../interfaces/form-field-select';
@@ -6,6 +6,7 @@ import {BaseInputComponent} from '../base-input/base-input.component';
 import {Subject} from 'rxjs/Subject';
 import {Language, LanguageService} from '../../../../services/language.service';
 import {Subscription} from 'rxjs/Subscription';
+import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
 
 @Component({
     selector: 'app-select',
@@ -27,6 +28,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
     };
     private observable: Subject<any>;
     public options: SelectData[] = [];
+    public typeAhead: EventEmitter<string> = new EventEmitter<string>();
     public selected: any;
 
     private _subscription = Subscription.EMPTY;
@@ -34,15 +36,25 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
     private _subFieldSubscription = Subscription.EMPTY;
 
     constructor(private _apiService: ApiService,
+                private _cd: ChangeDetectorRef,
                 private _languageService: LanguageService,
                 private _route: ActivatedRoute) {
         super();
     }
 
     ngOnInit() {
-        this.selected = this.field.multiple === true ? [] : null;
-        this.addQueryParams();
+        if (this.field.search && this.field.search.endpoint) {
+            this.typeListener();
+            const value = this.getControl().value;
+            if (value) {
+                this.options = [value];
+                this.selected = value;
+            }
+        }
 
+        this.selected = this.field.multiple === true ? [] : null;
+
+        this.addQueryParams();
         this.loadOptions().then(() => {
             if (this.isEdit) {
                 /** Only if subField of list-detail-component */
@@ -110,6 +122,21 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
         }
     }
 
+    /* When type in select */
+    private typeListener(): void {
+        this.typeAhead.pipe(
+            distinctUntilChanged(),
+            debounceTime(300),
+            switchMap(tag => this._apiService.get(this.field.search.endpoint, {search: tag}))
+        ).subscribe(data => {
+            this._cd.markForCheck();
+            this.options = data;
+        }, (err) => {
+            console.log(err);
+            this.options = [];
+        });
+    }
+
     /** Used in edit mode, but also in create if value is pre-set from table or query params */
     listenValueChange(): void {
         /** If value already set, update select options */
@@ -156,7 +183,6 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
 
     onChange($event: any): void {
         this.refreshFormValue($event);
-
         if (this.observable) {
             this.observable.next();
         }
@@ -164,6 +190,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
 
     private loadOptions(forceReload?: boolean): Promise<any> {
         return new Promise((resolve, reject) => {
+            if (this.field.search) resolve();
             if (this.endpoint) {
                 if (this.options.length === 0 || forceReload === true) {
                     const queryParams = {
@@ -217,6 +244,10 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
     }
 
     private addQueryParams(): void {
+        if (this.field.search) {
+            return null;
+        }
+
         if (this.field.options instanceof Array) {
             this.endpoint = null;
             return null;
@@ -340,7 +371,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
                 });
                 this.getControl().setValue(ids, options);
             } else {
-                if (typeof value === 'object') {
+                if (typeof value === 'object' && !this.field.search) {
                     this.getControl().setValue(value.id, options);
                 } else {
                     this.getControl().setValue(value, options);

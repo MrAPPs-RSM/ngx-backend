@@ -1,0 +1,61 @@
+@import '../../../../../../../../../assets/sass/partials/imports';
+
+image-view-component {
+  div.img-wrapper {
+    width: 70px;
+    position: relative;
+    margin: 0 auto;
+    > a {
+      cursor: default;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    > img {
+      pointer-events: none;
+      width: 100%;
+    }
+
+    > i {
+      pointer-events: none;
+      opacity: 0;
+      visibility: hidden;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      @include _transform(translate(-50%, -50%));
+      color: #ffffff;
+      font-size: 25px;
+      z-index: 1;
+      @include _transition(all 0.3s);
+    }
+
+    &::after {
+      pointer-events: none;
+      @include _transition(all 0.3s);
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      background: #000000;
+      top: 0;
+      left: 0;
+    }
+
+    &.isDownloadable {
+      &:hover {
+        cursor: pointer;
+        > i {
+          opacity: 1;
+          visibility: visible;
+        }
+        &::after {
+          opacity: 0.40;
+        }
+      }
+    }
+  }
+}

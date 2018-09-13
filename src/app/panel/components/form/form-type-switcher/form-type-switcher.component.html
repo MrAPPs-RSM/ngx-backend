@@ -192,6 +192,15 @@
             [index]="index"
     ></app-file-upload>
 
+    <app-cloudinary-library
+            *ngSwitchCase="formConfig.types.CLOUDINARY"
+            [groupName]="groupName"
+            [form]="form"
+            [field]="field"
+            [isEdit]="isEdit"
+            [index]="index"
+    ></app-cloudinary-library>
+
     <app-preview
             *ngSwitchCase="formConfig.types.PREVIEW"
             [groupName]="groupName"
@@ -218,6 +227,15 @@
             [isEdit]="isEdit"
             [index]="index">
     </app-list-details>
+
+    <app-hotspot
+            *ngSwitchCase="formConfig.types.HOTSPOT"
+            [field]="field"
+            [groupName]="groupName"
+            [form]="form"
+            [isEdit]="isEdit"
+            [index]="index">
+    </app-hotspot>
 
     <!--
 

@@ -244,14 +244,21 @@ export class FormComponent implements OnInit, OnDestroy {
                     this.isLoading = false;
 
                     const listDetailKeys = [];
-
                     const listDetailsFields = {};
+
+                    const hotSpotKeys = [];
+                    let hotSpotFields = [];
 
                     Object.keys(response).forEach((key) => {
                         this.settings.fields.base.forEach((field) => {
                             if (field.key === key && field.type === formConfig.types.LIST_DETAILS) {
                                 listDetailKeys.push(key);
                                 listDetailsFields[key] = field.fields;
+                            }
+
+                            if (field.key === key && field.type === formConfig.types.HOTSPOT) {
+                                hotSpotKeys.push(key);
+                                hotSpotFields = field.fields;
                             }
                         });
                     });
@@ -266,7 +273,16 @@ export class FormComponent implements OnInit, OnDestroy {
                         });
                     }
 
-                    console.log(response);
+                    if (hotSpotKeys.length > 0) {
+                        hotSpotKeys.forEach((key) => {
+                            for (let i = 0; i < response[key]['hotSpots'].length; i++) {
+                                ((this.form.controls[key] as any).controls['hotSpots'] as FormArray).push(
+                                    new FormGroup(this._formGenerator.generateFormFields(hotSpotFields))
+                                );
+                            }
+                        });
+                    }
+
                     this.form.patchValue(response);
                 })
                 .catch((response: ErrorResponse) => {
@@ -382,10 +398,15 @@ export class FormComponent implements OnInit, OnDestroy {
         this.isLoading = true;
         if (this.settings.isEdit) {
 
-            const endpoint = this.settings.submit && this.settings.submit.endpoint ?
+            let endpoint = this.settings.submit && this.settings.submit.endpoint ?
                 this.settings.submit.endpoint : this.settings.api.endpoint;
 
-            this._apiService.patch(endpoint + '/' + this._route.snapshot.params['id'], value)
+            const id = this._route.snapshot.params['id'];
+            if (id) {
+                endpoint = endpoint + '/' + id;
+            }
+
+            this._apiService.patch(endpoint, value)
                 .then((response) => {
                     this.isLoading = false;
                     this.dataStored = true;
