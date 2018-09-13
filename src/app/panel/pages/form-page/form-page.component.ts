@@ -12,6 +12,7 @@ import {ComponentCanDeactivate} from '../../../auth/guards/pending-changes.guard
 import {Observable} from 'rxjs/Observable';
 import {ApiService, ErrorResponse} from '../../../api/api.service';
 import {FormComponent} from '../../components/form/form.component';
+import { environment } from '../../../../environments/_projects/scm_lm.environment';
 
 @Component({
     selector: 'app-form-page',
@@ -57,15 +58,19 @@ export class FormPageComponent implements OnInit, OnDestroy, ComponentCanDeactiv
     private redirectIfNeeded(form: FormSettings) {
         if (!this._apiService.isRedirecting && form.submit && form.submit.redirectAfter) {
             if (!this._menuService.goBack()) {
-                // MULTIPLE SUB: this._router.navigate(['../panel/' + form.submit.redirectAfter], {relativeTo: this._route.parent});
 
                 // If same route redirectAfter, workaround to reset form, ugly but works
-                if (this._route.url['value'][0].path === form.submit.redirectAfter) {
-                    this._router.navigate(['panel']).then(() => {
-                        this._router.navigate(['panel/' + form.submit.redirectAfter]);
-                    });
+                // TODO: verificare con multiple domains
+                if (!environment.domains) {
+                    if (this._route.url['value'][0].path === form.submit.redirectAfter) {
+                        this._router.navigate(['panel']).then(() => {
+                            this._router.navigate(['panel/' + form.submit.redirectAfter]);
+                        });
+                    } else {
+                        this._router.navigate(['../panel/' + form.submit.redirectAfter], {relativeTo: this._route.parent});
+                    }
                 } else {
-                    this._router.navigate(['panel/' + form.submit.redirectAfter]);
+                    this._router.navigate(['../panel/' + form.submit.redirectAfter], {relativeTo: this._route.parent});
                 }
             }
         }
