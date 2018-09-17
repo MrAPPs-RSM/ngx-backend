@@ -48,6 +48,8 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
 
     showMediaLibrary: boolean = false;
 
+    copyToLang: boolean = false; // putFilesOnLanguage checkbox
+
     @ViewChild('fileUpload') _fileUpload: ElementRef;
 
     private _subscription = Subscription.EMPTY;
@@ -88,9 +90,11 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
                         array.push(item);
                     }
                 });
+                console.log('passo in questo mannaggia');
                 this.getControl().setValue(array);
             } else {
                 if (data) {
+                    console.log('passo in quest altro mannaggia');
                     this.getControl().setValue([data]);
                 }
             }
@@ -240,7 +244,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
 
     private updateFormValue(file: UploadedFile, remove?: boolean): void {
         console.log('Updating form Value with file:');
-        console.log(file);
+        console.log(file.id);
         console.log(remove ? 'Remove' : 'Add');
         let files = this.getControl().value || [];
         if (remove) {
@@ -248,27 +252,28 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         } else {
             files.push(file);
         }
-        if (this.putFilesOnLanguages) {
-            if (!remove) {
-                this._langService.getContentLanguages().forEach((lang: Language) => {
-                    Object.keys(this.form.parent.controls).forEach((key) => {
-                        if (lang.isoCode === key) {
-                            this.form.parent.controls[key].controls[this.field.key].setValue(
-                                files.length > 0 ? files.slice() : null,
-                                {emitEvent: false});
-                        }
-                    });
+
+        if (this.copyToLang && !remove) {
+            this._langService.getContentLanguages().forEach((lang: Language) => {
+                Object.keys(this.form.parent.controls).forEach((key) => {
+                    if (lang.isoCode === key) {
+                        const currentValue = this.form.parent.controls[key].controls[this.field.key].value || [];
+                        currentValue.push(file);
+                        let unique = UtilsService.uniqueArray(currentValue, 'id');
+
+                        console.log(unique);
+                        this.form.parent.controls[key].controls[this.field.key].setValue(
+                            unique.length > 0 ? unique : null,
+                            {emitEvent: false});
+                    }
                 });
-            } else {
-                this.getControl().setValue(files.length > 0 ? files : null, {emitEvent: false});
-            }
+            });
         } else {
             this.getControl().setValue(files.length > 0 ? files : null, {emitEvent: false});
         }
     }
 
     private removeUploadedFile(file: UploadedFile): void {
-        // TODO: this.updateFormValue(file);
         this.updateFormValue(file, true);
     }
 
@@ -293,5 +298,9 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         }
 
         this.closeMediaLibrary();
+    }
+
+    onCopyToLangChange($event: any): void {
+        console.log($event);
     }
 }
