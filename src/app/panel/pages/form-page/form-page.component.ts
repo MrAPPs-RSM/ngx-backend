@@ -12,7 +12,7 @@ import {ComponentCanDeactivate} from '../../../auth/guards/pending-changes.guard
 import {Observable} from 'rxjs/Observable';
 import {ApiService, ErrorResponse} from '../../../api/api.service';
 import {FormComponent} from '../../components/form/form.component';
-import { environment } from '../../../../environments/_projects/scm_lm.environment';
+import { environment } from '../../../../environments/environment';
 
 @Component({
     selector: 'app-form-page',
