@@ -38,7 +38,8 @@ export class ModalService {
                 .open();
 
             dialog.result
-                .then(() => resolve());
+                .then(() => resolve())
+                .catch(() => resolve());
         });
     }
 }

@@ -490,7 +490,16 @@ export class TableComponent implements OnInit, OnDestroy {
                  */
                 extraParams['relativeTo'] = this._route.parent;
 
+                if (this.isMultiLangEnabled) {
+                    if (extraParams.hasOwnProperty('queryParams')) {
+                        extraParams['queryParams']['currentLang'] = this.currentLang.isoCode;
+                    } else {
+                        extraParams = {queryParams: {currentLang: this.currentLang.isoCode}};
+                    }
+                }
+
                 this._router.navigate(['../panel/' + path], extraParams);
+                //this._router.navigate(['panel/' + path], extraParams);
             }
         } else if (action.config.endpoint) {
             let endpoint = action.config.endpoint;
