@@ -499,7 +499,6 @@ export class TableComponent implements OnInit, OnDestroy {
                 }
 
                 this._router.navigate(['../panel/' + path], extraParams);
-                //this._router.navigate(['panel/' + path], extraParams);
             }
         } else if (action.config.endpoint) {
             let endpoint = action.config.endpoint;
