@@ -8,6 +8,18 @@ export class UtilsService {
     constructor() {
     }
 
+    public static uniqueArray(array: any[], key: string): any[] {
+        const unique = {};
+        const distinct = [];
+        for (const i in array) {
+            if (typeof(unique[array[i][key]]) === 'undefined') {
+                distinct.push(array[i]);
+            }
+            unique[array[i][key]] = 0;
+        }
+        return distinct;
+    }
+
     public static getDateObjectFromString(date: string): Date | null {
         if (date === 'now') {
             return new Date();

@@ -43,12 +43,13 @@ export class FormComponent implements OnInit, OnDestroy {
     public isMultiLangEnabled = false;
     objectKeys = Object.keys;
 
-
     // Local validation errors
     errors: any = {}; // Object that re-uses form group structure
     errorsList: any = []; // Array to display errors in a human-readable way
 
     private _subscription = Subscription.EMPTY;
+
+    private unauthorized: boolean = false;
 
     valueOfSettingsField(key: string) {
         return this.settings.fields[key];
@@ -76,7 +77,8 @@ export class FormComponent implements OnInit, OnDestroy {
         }
 
         this._subscription = this._route.queryParams.subscribe((params: any) => {
-            this.form = this.setupForms();
+            const currentLangFromTable = params.currentLang ? params.currentLang : null;
+            this.form = this.setupForms(currentLangFromTable);
 
             if (this.settings.isEdit) {
                 this.loadData();
@@ -116,7 +118,7 @@ export class FormComponent implements OnInit, OnDestroy {
     }
 
     public canDeactivate(): Observable<boolean> | boolean {
-        return (!this.form.dirty || this.dataStored) && !this.isLoading;
+        return this.unauthorized || ((!this.form.dirty || this.dataStored) && !this.isLoading);
     }
 
     private _extractErrors(form: FormGroup, parentKey?: string): void {
@@ -185,14 +187,19 @@ export class FormComponent implements OnInit, OnDestroy {
         });
     }
 
-    setupForms(): FormGroup {
+    setupForms(currentLang?: string | null): FormGroup {
         this.isMultiLangEnabled = 'en' in this.settings.fields && this._languageService.getContentLanguages().length > 0;
 
         if (this.isMultiLangEnabled) {
             for (const contentLanguage of this._languageService.getContentLanguages()) {
-
-                if (contentLanguage.isDefault) {
-                    this.currentLang = contentLanguage;
+                if (currentLang) {
+                    if (contentLanguage.isoCode === currentLang) {
+                        this.currentLang = contentLanguage;
+                    }
+                } else {
+                    if (contentLanguage.isDefault) {
+                        this.currentLang = contentLanguage;
+                    }
                 }
             }
         }
@@ -417,6 +424,9 @@ export class FormComponent implements OnInit, OnDestroy {
                     }
                 })
                 .catch((response: ErrorResponse) => {
+                    if (response.error.statusCode === 401) {
+                        this.unauthorized = true;
+                    }
                     this.isLoading = false;
                     this.response.emit(response);
                 });
@@ -432,6 +442,9 @@ export class FormComponent implements OnInit, OnDestroy {
                     }
                 })
                 .catch((response: ErrorResponse) => {
+                    if (response.error.statusCode === 401) {
+                        this.unauthorized = true;
+                    }
                     this.isLoading = false;
                     this.response.emit(response);
                 });
