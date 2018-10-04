@@ -11,13 +11,15 @@ export class PasswordChangeGuard implements CanActivate {
     }
 
     canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
+        const prefix = environment.domains ? '/' + next.params.domain + '/' : '';
+
         if (environment.auth.passwordChange) {
             if (this._userService.getToken() !== null) {
-                this._router.navigate(['/' + next.params.domain + '/panel']);
+                this._router.navigate([prefix + 'panel']);
                 return false;
             } else {
                 if (!('access_token' in next.queryParams)) {
-                    this._router.navigate(['/' + next.params.domain + '/login']);
+                    this._router.navigate([prefix + 'login']);
                     return false;
                 } else {
                     return true;
@@ -25,10 +27,10 @@ export class PasswordChangeGuard implements CanActivate {
             }
         } else {
             if (this._userService.getToken() !== null) {
-                this._router.navigate(['/' + next.params.domain + '/panel']);
+                this._router.navigate([prefix + 'panel']);
                 return false;
             } else {
-                this._router.navigate(['/' + next.params.domain + '/login']);
+                this._router.navigate([prefix + 'login']);
                 return false;
             }
         }

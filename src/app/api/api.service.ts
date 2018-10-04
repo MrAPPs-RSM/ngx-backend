@@ -260,8 +260,7 @@ export class ApiService {
                 this.unauthorized = false;
             });
         } else {
-            // TODO: this must be tested
-            this._router.navigate(['/login']).then(() => {
+            this._router.navigate(['login']).then(() => {
                 this.unauthorized = false;
             });
         }

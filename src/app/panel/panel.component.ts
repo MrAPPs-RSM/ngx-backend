@@ -36,9 +36,6 @@ export class PanelComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
-
-        console.log('SUCCESS PANEL RESOLVER');
-
         /** When start, if current lang not set, set it from the enviroment defaults */
         if (this._languageService.isMultiLang() && !this._languageService.getCurrentLang()) {
             this._languageService.setCurrentLang(environment['currentLang']);

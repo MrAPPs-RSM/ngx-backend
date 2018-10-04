@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router, ActivatedRoute} from '@angular/router';
 import {Observable} from 'rxjs/Observable';
 import {UserService} from '../services/user.service';
+import {environment} from '../../../environments/environment';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -15,7 +16,11 @@ export class AuthGuard implements CanActivate {
         if (this._userService.getToken() !== null) {
             return true;
         } else {
-            this._router.navigate(['/' + next.params.domain + '/login']);
+            if (environment.domains) {
+                this._router.navigate(['/' + next.params.domain + '/login']);
+            } else {
+                this._router.navigate(['login']);
+            }
             return false;
         }
     }
