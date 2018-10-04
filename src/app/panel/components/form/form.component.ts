@@ -49,8 +49,6 @@ export class FormComponent implements OnInit, OnDestroy {
 
     private _subscription = Subscription.EMPTY;
 
-    private unauthorized: boolean = false;
-
     valueOfSettingsField(key: string) {
         return this.settings.fields[key];
     }
@@ -118,7 +116,7 @@ export class FormComponent implements OnInit, OnDestroy {
     }
 
     public canDeactivate(): Observable<boolean> | boolean {
-        return this.unauthorized || ((!this.form.dirty || this.dataStored) && !this.isLoading);
+        return this._apiService.unauthorized || ((!this.form.dirty || this.dataStored) && !this.isLoading);
     }
 
     private _extractErrors(form: FormGroup, parentKey?: string): void {
@@ -424,9 +422,6 @@ export class FormComponent implements OnInit, OnDestroy {
                     }
                 })
                 .catch((response: ErrorResponse) => {
-                    if (response.error.statusCode === 401) {
-                        this.unauthorized = true;
-                    }
                     this.isLoading = false;
                     this.response.emit(response);
                 });
@@ -442,9 +437,6 @@ export class FormComponent implements OnInit, OnDestroy {
                     }
                 })
                 .catch((response: ErrorResponse) => {
-                    if (response.error.statusCode === 401) {
-                        this.unauthorized = true;
-                    }
                     this.isLoading = false;
                     this.response.emit(response);
                 });

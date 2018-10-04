@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {environment} from '../../environments/environment';
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from '@angular/common/http';
 import {UserService, TOKEN_KEY, LOGIN_ENDPOINT} from '../auth/services/user.service';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, ActivatedRouteSnapshot, Router} from '@angular/router';
 import {StorageService} from '../services/storage.service';
 
 const API_URL = environment.api.baseUrl;
@@ -16,10 +16,11 @@ export class ApiService {
 
     public isRedirecting = false;
 
+    public unauthorized: boolean = false;
+
     constructor(private _http: HttpClient,
                 private _userService: UserService,
                 private _storageService: StorageService,
-                private _route: ActivatedRoute,
                 private _router: Router) {
     }
 
@@ -249,9 +250,21 @@ export class ApiService {
     }
 
     private redirectToLogin(): void {
+        this.unauthorized = true;
         this._userService.removeUser();
         this._userService.removeToken();
-        this._router.navigate(['../login'], {relativeTo: this._route});
+
+        if (environment.domains) {
+            const domain = this._storageService.getValue('domain');
+            this._router.navigate(['/' + domain + '/login']).then(() => {
+                this.unauthorized = false;
+            });
+        } else {
+            // TODO: this must be tested
+            this._router.navigate(['/login']).then(() => {
+                this.unauthorized = false;
+            });
+        }
     }
 
     /**
@@ -265,7 +278,6 @@ export class ApiService {
 
             switch (errorResponse.status) {
                 case 401: {
-
                     if (fromLogin) {
                         this.redirectToLogin();
                         reject(errorResponse);
