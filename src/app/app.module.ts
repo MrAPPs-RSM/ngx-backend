@@ -1,32 +1,32 @@
-import {BrowserModule} from '@angular/platform-browser';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {NgModule} from '@angular/core';
-import {HttpClientModule} from '@angular/common/http';
-import {Router, RouterModule, Routes} from '@angular/router';
-import {PanelModule} from './panel/panel.module';
-import {ReactiveFormsModule} from '@angular/forms';
-import {ToastrModule, ToastNoAnimation, ToastNoAnimationModule} from 'ngx-toastr';
-import {AppComponent} from './app.component';
-import {LoginComponent} from './auth/login/login.component';
-import {ModalModule} from 'ngx-modialog';
-import {BootstrapModalModule} from 'ngx-modialog/plugins/bootstrap';
+import { BrowserModule } from '@angular/platform-browser';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { NgModule } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
+import { Router, RouterModule, Routes } from '@angular/router';
+import { PanelModule } from './panel/panel.module';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ToastrModule, ToastNoAnimation, ToastNoAnimationModule } from 'ngx-toastr';
+import { AppComponent } from './app.component';
+import { LoginComponent } from './auth/login/login.component';
+import { ModalModule } from 'ngx-modialog';
+import { BootstrapModalModule } from 'ngx-modialog/plugins/bootstrap';
 
-import {GlobalState} from './global.state';
-import {ApiService} from './api/api.service';
-import {LoginGuard} from './auth/guards/login.guard';
-import {PasswordChangeGuard} from './auth/guards/password-change.guard';
-import {PasswordResetGuard} from './auth/guards/password-reset.guard';
-import {UtilsService} from './services/utils.service';
-import {FormGeneratorService} from './panel/services/form-generator.service';
-import {PageRefreshService} from './services/page-refresh.service';
-import {UserService} from './auth/services/user.service';
-import {PasswordResetComponent} from './auth/password-reset/password-reset.component';
-import {PasswordChangeComponent} from './auth/password-change/password-change.component';
-import {ToastsService} from './services/toasts.service';
-import {PendingChangesGuard} from './auth/guards/pending-changes.guard';
-import {environment} from '../environments/environment';
-import {StorageService} from './services/storage.service';
-import {DomainNotFoundComponent} from './auth/domain-not-found/domain-not-found.component';
+import { GlobalState } from './global.state';
+import { ApiService } from './api/api.service';
+import { LoginGuard } from './auth/guards/login.guard';
+import { PasswordChangeGuard } from './auth/guards/password-change.guard';
+import { PasswordResetGuard } from './auth/guards/password-reset.guard';
+import { UtilsService } from './services/utils.service';
+import { FormGeneratorService } from './panel/services/form-generator.service';
+import { PageRefreshService } from './services/page-refresh.service';
+import { UserService } from './auth/services/user.service';
+import { PasswordResetComponent } from './auth/password-reset/password-reset.component';
+import { PasswordChangeComponent } from './auth/password-change/password-change.component';
+import { ToastsService } from './services/toasts.service';
+import { PendingChangesGuard } from './auth/guards/pending-changes.guard';
+import { environment } from '../environments/environment';
+import { StorageService } from './services/storage.service';
+import { DomainNotFoundComponent } from './auth/domain-not-found/domain-not-found.component';
 
 const routes: Routes = [
     {
@@ -61,7 +61,7 @@ const routes: Routes = [
         DomainNotFoundComponent
     ],
     imports: [
-        RouterModule.forRoot(routes, {useHash: false, onSameUrlNavigation: 'reload'}),
+        RouterModule.forRoot(routes, { useHash: false, onSameUrlNavigation: 'reload' }),
         ReactiveFormsModule,
         BrowserModule,
         NoopAnimationsModule,
@@ -101,16 +101,14 @@ const routes: Routes = [
 export class AppModule {
 
     constructor(private _router: Router) {
-        if (environment.domains) {
-            this.addDomains();
-        }
+        this.configRoutes(environment.domains);
     }
 
-    private addDomains(): void {
+    private configRoutes(domains?: boolean): void {
 
         const routerConfig = this._router.config;
 
-        const newConfiguration = [];
+        let newConfiguration = [];
 
         routerConfig.push({
             path: '',
@@ -118,16 +116,21 @@ export class AppModule {
             pathMatch: 'full'
         });
 
-        newConfiguration.push({
+
+        if (domains) {
+            newConfiguration.push({
                 path: ':domain',
                 children: routerConfig,
                 pathMatch: 'prefix'
             },
-            {
-                path: '**',
-                component: DomainNotFoundComponent
-            }
-        );
+                {
+                    path: '**',
+                    component: DomainNotFoundComponent
+                }
+            );
+        } else {
+            newConfiguration = routerConfig;
+        }
 
         this._router.resetConfig(newConfiguration);
     }
