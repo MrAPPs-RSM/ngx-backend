@@ -17,6 +17,7 @@
                             <div class="media">
                                 <img [src]="media.url" (error)="onImageError($event, media)">
                             </div>
+                            <div *ngIf="media.title">{{media.title}}</div>
                         </a>
                     </div>
                 </div>

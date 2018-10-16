@@ -63,4 +63,5 @@ export class GalleryComponent implements OnInit, AfterViewInit {
 
 interface Media {
     url: string;
+    title: string;
 }
