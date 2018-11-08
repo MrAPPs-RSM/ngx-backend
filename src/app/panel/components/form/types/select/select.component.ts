@@ -190,7 +190,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
 
     private loadOptions(forceReload?: boolean): Promise<any> {
         return new Promise((resolve, reject) => {
-            if (this.field.search) resolve();
+            if (this.field.search) return resolve();
             if (this.endpoint) {
                 if (this.options.length === 0 || forceReload === true) {
                     const queryParams = {
