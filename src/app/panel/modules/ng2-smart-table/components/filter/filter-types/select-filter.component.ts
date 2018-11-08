@@ -127,9 +127,7 @@ export class SelectFilterComponent extends DefaultFilter implements OnInit, OnCh
                     endpoint = this.column.getFilterConfig().options;
                 }
             }
-
             if (endpoint.trim().length === 0) {
-                console.log('Endpoint is empty!');
                 return;
             }
 
