@@ -1,5 +1,5 @@
 import {
-    Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Renderer, ViewChild,
+    Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Renderer2, ViewChild,
     ViewEncapsulation
 } from '@angular/core';
 import {
@@ -54,7 +54,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
 
     private _subscription = Subscription.EMPTY;
 
-    constructor(private _renderer: Renderer,
+    constructor(private _renderer: Renderer2,
                 private _toastsService: ToastsService,
                 private _apiService: ApiService,
                 private _langService: LanguageService,
