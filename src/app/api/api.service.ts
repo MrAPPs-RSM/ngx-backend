@@ -302,8 +302,7 @@ export class ApiService {
                 }
                     break;
                 case 301:
-                case 302:
-                {
+                case 302: {
                     this.isRedirecting = true;
 
                     resolve();
@@ -359,7 +358,9 @@ export class ApiService {
             const obj = {};
             if (params) {
                 Object.keys(params).forEach((key) => {
-                    obj[key] = params[key];
+                    if (params[key]) {
+                        obj[key] = params[key];
+                    }
                 });
             }
             obj[TOKEN_KEY] = this._userService.getToken();

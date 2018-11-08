@@ -7,7 +7,10 @@ import 'rxjs/add/operator/skip';
 import {DefaultFilter} from './default-filter';
 import {ApiService, ErrorResponse} from '../../../../../../api/api.service';
 import {Language, LanguageService} from '../../../../../services/language.service';
-import {type} from "os";
+import {type} from 'os';
+import {Subject} from 'rxjs/Subject';
+import 'rxjs/add/operator/debounceTime';
+
 
 declare const $: any;
 
@@ -22,6 +25,7 @@ declare const $: any;
                        [appendTo]="'nav'"
                        [closeOnSelect]="true"
                        bindLabel="text"
+                       (keyup)="onSearchType($event.target.value)"
                        bindValue="id"
                        [placeholder]="column.getFilterConfig().placeholder"
             >
@@ -38,12 +42,16 @@ export class SelectFilterComponent extends DefaultFilter implements OnInit, OnCh
     inputControl = new FormControl();
     options: any[] = [];
 
+    private searchSubject: Subject<string> = new Subject();
+    private searchTerm: string;
+
     constructor(private _apiService: ApiService, private _languageService: LanguageService) {
         super();
         this.formGroup = new FormGroup({
             select: this.inputControl
         });
         this.delay = 0;
+        this.searchTerm = '';
     }
 
     ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
@@ -60,8 +68,11 @@ export class SelectFilterComponent extends DefaultFilter implements OnInit, OnCh
         }
     }
 
+    public onSearchType(value: string): void {
+        this.searchSubject.next(value);
+    }
+
     ngOnInit() {
-        this.loadOptions();
         (this.inputControl.valueChanges as any)
             .skip(1)
             .distinctUntilChanged()
@@ -80,9 +91,15 @@ export class SelectFilterComponent extends DefaultFilter implements OnInit, OnCh
             this.query = value;
             this.inputControl.setValue(value, {emitEvent: false});
         }
+
+        this.searchSubject.debounceTime(500).subscribe(value => {
+            this.searchTerm = value;
+            this.loadOptions();
+        });
     }
 
     private loadOptions(): void {
+
         if (this.column.getFilterConfig().options instanceof Array) {
             this.options = this.column.getFilterConfig().options;
         } else {
@@ -90,8 +107,15 @@ export class SelectFilterComponent extends DefaultFilter implements OnInit, OnCh
 
             /** Add lang if table is multilang */
             const queryParams = {
-                lang: null
+                lang: null,
+                search: null
             };
+
+            /** Search term */
+            if (this.searchTerm) {
+                queryParams.search = this.searchTerm.trim();
+            }
+
             if (this.grid.getSetting('lang')) {
                 const lang = this._languageService.getCurrentContentTableLang();
                 if (lang) {
@@ -111,7 +135,7 @@ export class SelectFilterComponent extends DefaultFilter implements OnInit, OnCh
     }
 
     private onScroll(): void {
-        $('.table-responsive').scroll(function() {
+        $('.table-responsive').scroll(function () {
             $('.table-responsive').click();
         });
     }
