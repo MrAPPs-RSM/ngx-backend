@@ -42,7 +42,8 @@ export class SelectFilterComponent extends DefaultFilter implements OnInit, OnCh
     inputControl = new FormControl();
     options: any[] = [];
 
-    private searchSubject: Subject<string> = new Subject();
+    private searchEnabled: boolean;
+    private searchSubject: Subject<string>;
     private searchTerm: string;
 
     constructor(private _apiService: ApiService, private _languageService: LanguageService) {
@@ -51,11 +52,10 @@ export class SelectFilterComponent extends DefaultFilter implements OnInit, OnCh
             select: this.inputControl
         });
         this.delay = 0;
-        this.searchTerm = '';
     }
 
     ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
-        if (changes['reloadOptions']) {
+        if (!this.searchEnabled && changes['reloadOptions']) {
             this.loadOptions();
         }
 
@@ -69,10 +69,24 @@ export class SelectFilterComponent extends DefaultFilter implements OnInit, OnCh
     }
 
     public onSearchType(value: string): void {
-        this.searchSubject.next(value);
+        if (this.searchEnabled) {
+            this.searchSubject.next(value);
+        }
     }
 
     ngOnInit() {
+
+        this.searchTerm = '';
+        this.searchEnabled = 'search' in this.column.getFilterConfig();
+
+        if (this.searchEnabled) {
+            this.searchSubject = new Subject();
+        }
+
+        if (!this.searchEnabled) {
+            this.loadOptions();
+        }
+
         (this.inputControl.valueChanges as any)
             .skip(1)
             .distinctUntilChanged()
@@ -92,18 +106,32 @@ export class SelectFilterComponent extends DefaultFilter implements OnInit, OnCh
             this.inputControl.setValue(value, {emitEvent: false});
         }
 
-        this.searchSubject.debounceTime(500).subscribe(value => {
-            this.searchTerm = value;
-            this.loadOptions();
-        });
+        if (this.searchEnabled) {
+            this.searchSubject.debounceTime(500).subscribe(value => {
+                this.searchTerm = value;
+                this.loadOptions();
+            });
+        }
     }
 
     private loadOptions(): void {
 
-        if (this.column.getFilterConfig().options instanceof Array) {
+        if (!this.searchEnabled && 'options' in this.column.getFilterConfig() && this.column.getFilterConfig().options instanceof Array) {
             this.options = this.column.getFilterConfig().options;
         } else {
-            const endpoint = this.column.getFilterConfig().options;
+            let endpoint = '';
+            if (this.searchEnabled) {
+                endpoint = this.column.getFilterConfig().search.endpoint;
+            } else {
+                if ('options' in this.column.getFilterConfig()) {
+                    endpoint = this.column.getFilterConfig().options;
+                }
+            }
+
+            if (endpoint.trim().length === 0) {
+                console.log('Endpoint is empty!');
+                return;
+            }
 
             /** Add lang if table is multilang */
             const queryParams = {
@@ -112,7 +140,7 @@ export class SelectFilterComponent extends DefaultFilter implements OnInit, OnCh
             };
 
             /** Search term */
-            if (this.searchTerm) {
+            if (this.searchEnabled && this.searchTerm) {
                 queryParams.search = this.searchTerm.trim();
             }
 
