@@ -14,7 +14,7 @@ import {ColumnTitleComponent} from './cells/column-title.component';
 import {TitleComponent} from './cells/title/title.component';
 import {TheadFitlersRowComponent} from './rows/thead-filters-row.component';
 import {TheadTitlesRowComponent} from './rows/thead-titles-row.component';
-import {TooltipModule} from 'ngx-tooltip';
+// import {TooltipModule} from 'ngx-tooltip';
 
 const THEAD_COMPONENTS = [
     ActionsTitleComponent,
@@ -33,8 +33,7 @@ const THEAD_COMPONENTS = [
         CommonModule,
         FormsModule,
         FilterModule,
-        CellModule,
-        TooltipModule
+        CellModule
 
     ],
     declarations: [

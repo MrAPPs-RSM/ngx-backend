@@ -3,14 +3,17 @@ import {Component, Input, Output, EventEmitter, AfterViewInit, ElementRef, OnCha
 import {Grid} from '../../../lib/grid';
 import {DataSource} from '../../../lib/data-source/data-source';
 
-@Component({
-    selector: '[ng2-st-add-button]',
-    template: `
-        <a *ngIf="isActionAdd" href="#"
+/* TODO: new tooltip
            [tooltip]="grid.getSetting('actions.add.name')"
            [tooltipDisabled]="false"
            [tooltipAnimation]="true"
            [tooltipPlacement]="'top'"
+ */
+
+@Component({
+    selector: '[ng2-st-add-button]',
+    template: `
+        <a *ngIf="isActionAdd" href="#"
            [class]="'ng2-smart-action ng2-smart-action-add-add ' + grid.getSetting('actions.add.class')"
            [innerHTML]="addNewButtonContent" (click)="onAdd($event)"></a>
     `,
