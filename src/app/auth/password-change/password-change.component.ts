@@ -3,7 +3,7 @@ import {environment} from '../../../environments/environment';
 import {ApiService, ErrorResponse} from '../../api/api.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ToastsService} from '../../services/toasts.service';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {TOKEN_KEY} from '../services/user.service';
 
 @Component({

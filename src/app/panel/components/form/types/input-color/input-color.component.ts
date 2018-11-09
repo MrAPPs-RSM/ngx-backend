@@ -1,8 +1,10 @@
+
+import {first} from 'rxjs/operators';
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import 'rxjs/add/operator/first';
+
 import {FormField} from '../../interfaces/form-field';
 import {BaseInputComponent} from '../base-input/base-input.component';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-input-color',
@@ -20,8 +22,8 @@ export class InputColorComponent extends BaseInputComponent implements OnInit, O
     ngOnInit() {
         this.onColorChange(null);
 
-        this._subscription = this.getControl().valueChanges
-            .first()
+        this._subscription = this.getControl().valueChanges.pipe(
+            first())
             .subscribe(
                 value => {
                     this.onColorChange(value);

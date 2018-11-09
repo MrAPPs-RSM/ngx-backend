@@ -4,7 +4,7 @@ import { PageTitleService } from './panel/services/page-title.service';
 import { LanguageService } from './panel/services/language.service';
 import { MenuService } from './panel/services/menu.service';
 import { GlobalState } from './global.state';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { UtilsService } from './services/utils.service';
 import { environment } from '../environments/environment';
 import { ApiService } from './api/api.service';

@@ -1,15 +1,17 @@
+
+import {debounceTime} from 'rxjs/operators';
 import {Component, Input, OnChanges, OnInit, SimpleChange} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/skip';
+
+
+
 
 import {DefaultFilter} from './default-filter';
 import {ApiService, ErrorResponse} from '../../../../../../api/api.service';
 import {Language, LanguageService} from '../../../../../services/language.service';
 import {type} from 'os';
-import {Subject} from 'rxjs/Subject';
-import 'rxjs/add/operator/debounceTime';
+import {Subject} from 'rxjs';
+
 
 
 declare const $: any;
@@ -107,7 +109,7 @@ export class SelectFilterComponent extends DefaultFilter implements OnInit, OnCh
         }
 
         if (this.searchEnabled) {
-            this.searchSubject.debounceTime(500).subscribe(value => {
+            this.searchSubject.pipe(debounceTime(500)).subscribe(value => {
                 this.searchTerm = value;
                 this.loadOptions();
             });

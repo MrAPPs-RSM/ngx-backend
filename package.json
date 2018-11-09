@@ -48,8 +48,7 @@
     "nouislider": "^12.1.0",
     "rxjs": "^6.3.3",
     "ssri": "^6.0.1",
-    "zone.js": "^0.8.26",
-    "rxjs-compat": "^6.0.0-rc.0"
+    "zone.js": "^0.8.26"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.10.5",

@@ -2,7 +2,7 @@ import {Component, Input, OnChanges, OnInit, SimpleChange} from '@angular/core';
 import {FormControl} from '@angular/forms';
 
 import {DefaultFilter} from './default-filter';
-import 'rxjs/add/operator/debounceTime';
+
 
 @Component({
     selector: 'checkbox-filter',

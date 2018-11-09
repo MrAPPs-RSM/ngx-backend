@@ -1,3 +1,5 @@
+
+import {from as observableFrom, Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {ApiService} from '../../api/api.service';
 import {Router} from '@angular/router';
@@ -9,8 +11,7 @@ import {ProfilePageComponent} from '../pages/profile-page/profile-page.component
 import {LanguageService} from './language.service';
 import {MenuService} from './menu.service';
 import {NotfoundPageComponent} from '../pages/notfound-page/notfound-page.component';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/observable/fromPromise';
+
 import {PendingChangesGuard} from '../../auth/guards/pending-changes.guard';
 
 
@@ -65,7 +66,7 @@ export class SetupService {
             }
         });
 
-        return Observable.fromPromise(promise);
+        return observableFrom(promise);
     }
 
     private remapRoutesData(data: any): Array<any> {

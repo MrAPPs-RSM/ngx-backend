@@ -11,7 +11,7 @@ import {ApiService} from '../../../../../api/api.service';
 import {UtilsService} from '../../../../../services/utils.service';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {ToastsService} from '../../../../../services/toasts.service';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {Language, LanguageService} from '../../../../services/language.service';
 import {DragulaService} from 'ng2-dragula/components/dragula.provider';
 

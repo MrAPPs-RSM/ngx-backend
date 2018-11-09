@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {FormControl, FormGroup} from '@angular/forms';
 import {isNullOrUndefined} from 'util';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {Time} from "@angular/common";
 
 @Component({

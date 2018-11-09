@@ -4,9 +4,8 @@ import {ActivatedRoute} from '@angular/router';
 import {Language, LanguageService} from '../../../../services/language.service';
 import {ApiService, ErrorResponse} from '../../../../../api/api.service';
 import {FormFieldSelect} from '../../interfaces/form-field-select';
-import {Subject} from 'rxjs/Subject';
+import {Subject, Subscription} from 'rxjs';
 import {SelectData} from '../select/select.component';
-import {Subscription} from 'rxjs/Subscription';
 import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
 
 @Component({

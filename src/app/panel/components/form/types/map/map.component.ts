@@ -1,7 +1,7 @@
 import {Component, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {FormFieldMap} from '../../interfaces/form-field-map';
 import {BaseInputComponent} from '../base-input/base-input.component';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-map',

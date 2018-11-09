@@ -2,7 +2,7 @@ import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {FormFieldDate} from '../../interfaces/form-field-date';
 import {UtilsService} from '../../../../../services/utils.service';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-date-picker',

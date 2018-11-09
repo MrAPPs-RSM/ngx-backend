@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/skip';
+
+
+
 
 import {DefaultFilter} from './default-filter';
 import {FormControl} from '@angular/forms';

@@ -5,7 +5,7 @@ import {FormArray, FormGroup} from '@angular/forms';
 import {FormGeneratorService} from '../../../../services/form-generator.service';
 import {SelectComponent, SelectData} from '../select/select.component';
 import {formConfig} from '../../form.config';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import {DragulaService} from 'ng2-dragula';
 
 @Component({

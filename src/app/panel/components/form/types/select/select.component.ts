@@ -3,9 +3,8 @@ import {ApiService, ErrorResponse} from '../../../../../api/api.service';
 import {ActivatedRoute} from '@angular/router';
 import {FormFieldSelect} from '../../interfaces/form-field-select';
 import {BaseInputComponent} from '../base-input/base-input.component';
-import {Subject} from 'rxjs/Subject';
+import {Subject, Subscription} from 'rxjs';
 import {Language, LanguageService} from '../../../../services/language.service';
-import {Subscription} from 'rxjs/Subscription';
 import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
 
 @Component({
