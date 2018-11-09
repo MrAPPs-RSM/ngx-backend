@@ -13,7 +13,7 @@ import {BaseInputComponent} from '../base-input/base-input.component';
 import {ToastsService} from '../../../../../services/toasts.service';
 import {Subscription} from 'rxjs';
 import {Language, LanguageService} from '../../../../services/language.service';
-import {DragulaService} from 'ng2-dragula/components/dragula.provider';
+import { DragulaService } from 'ng2-dragula';
 import { first } from 'rxjs/operators';
 
 declare const $: any;
