@@ -4,6 +4,7 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {isNullOrUndefined} from 'util';
 import {Subscription} from 'rxjs';
 import {Time} from "@angular/common";
+import { first } from 'rxjs/operators';
 
 @Component({
     selector: 'app-timetable-picker',
@@ -50,7 +51,7 @@ export class TimetablePickerComponent extends BaseInputComponent implements OnIn
                     }
                 });
             } else {
-                this._subscription = this.getControl().valueChanges.first().subscribe((value) => {
+                this._subscription = this.getControl().valueChanges.pipe(first()).subscribe((value) => {
                     this.subForm.patchValue(value);
                 });
             }

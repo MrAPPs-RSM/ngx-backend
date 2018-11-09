@@ -5,7 +5,7 @@ import {FormFieldSelect} from '../../interfaces/form-field-select';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {Subject, Subscription} from 'rxjs';
 import {Language, LanguageService} from '../../../../services/language.service';
-import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
+import {first, debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
 
 @Component({
     selector: 'app-select',
@@ -142,7 +142,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
         if (this.getControl().value !== null && typeof this.getControl().value !== 'undefined') {
             this.updateSelectedOptions(this.getControl().value);
         } else { /* Else, listen to first change */
-            this._subscription = this.getControl().valueChanges.first().subscribe((value) => {
+            this._subscription = this.getControl().valueChanges.pipe(first()).subscribe((value) => {
                 this.updateSelectedOptions(value);
                 this.refreshFormValue(value, {emitEvent: false});
                 this._subscription.unsubscribe();

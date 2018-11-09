@@ -14,6 +14,7 @@ import {ToastsService} from '../../../../../services/toasts.service';
 import {Subscription} from 'rxjs';
 import {Language, LanguageService} from '../../../../services/language.service';
 import {DragulaService} from 'ng2-dragula/components/dragula.provider';
+import { first } from 'rxjs/operators';
 
 declare const $: any;
 
@@ -82,7 +83,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         this.createAllowedContentTypes();
 
         /** Load entity image (if added from duplicate or edit) */
-        this._subscription = this.getControl().valueChanges.first().subscribe(data => {
+        this._subscription = this.getControl().valueChanges.pipe(first()).subscribe(data => {
             if (data instanceof Array) {
                 const array = [];
                 data.forEach((item) => {
@@ -125,7 +126,10 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         if (this.showMediaLibrary) {
             this.closeMediaLibrary();
         }
-        this._renderer.invokeElementMethod(this._fileUpload.nativeElement, 'click');
+        /** invokeElementMethod removed from Renderer2 */
+        // this._renderer.invokeElementMethod(this._fileUpload.nativeElement, 'click');
+        this._fileUpload.nativeElement.focus();
+
         return false;
     }
 

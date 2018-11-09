@@ -6,7 +6,7 @@ import {ApiService, ErrorResponse} from '../../../../../api/api.service';
 import {FormFieldSelect} from '../../interfaces/form-field-select';
 import {Subject, Subscription} from 'rxjs';
 import {SelectData} from '../select/select.component';
-import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
+import {first, debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
 
 @Component({
     selector: 'app-select-2',
@@ -153,7 +153,7 @@ export class Select2Component extends BaseInputComponent implements OnInit, OnDe
         if (this.getControl().value !== null && typeof this.getControl().value !== 'undefined') {
             this.updateSelectedOptions(this.getControl().value);
         } else { /* Else, listen to first change */
-            this._subscription = this.getControl().valueChanges.first().subscribe((value) => {
+            this._subscription = this.getControl().valueChanges.pipe(first()).subscribe((value) => {
                 this.updateSelectedOptions(value);
                 this.refreshFormValue(value, {emitEvent: false});
                 this._subscription.unsubscribe();

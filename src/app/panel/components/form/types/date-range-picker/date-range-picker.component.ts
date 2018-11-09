@@ -3,6 +3,7 @@ import {BaseInputComponent} from '../base-input/base-input.component';
 import {FormFieldDateRange} from '../../interfaces/form-field-date-range';
 import {UtilsService} from '../../../../../services/utils.service';
 import {Subscription} from 'rxjs';
+import { first } from 'rxjs/operators';
 
 @Component({
     selector: 'app-date-range-picker',
@@ -23,9 +24,9 @@ export class DateRangePickerComponent extends BaseInputComponent implements OnIn
         this.checkDisabled();
         this.initMaxMin();
 
-        this._fromSubscription = this.getControl(this.field.fromKey).valueChanges.first().subscribe((fromValue) => {
+        this._fromSubscription = this.getControl(this.field.fromKey).valueChanges.pipe(first()).subscribe((fromValue) => {
             if (fromValue) {
-                this._toSubscription = this.getControl(this.field.toKey).valueChanges.first().subscribe((toValue) => {
+                this._toSubscription = this.getControl(this.field.toKey).valueChanges.pipe(first()).subscribe((toValue) => {
                     if (toValue) {
                         this.getControl().setValue([new Date(fromValue).setSeconds(0), new Date(toValue).setSeconds(0)]);
                         this._toSubscription.unsubscribe();

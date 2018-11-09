@@ -10,6 +10,7 @@ export interface FormField {
     value?: any;
     class?: string;
     description?: string;
+    dependsOn?: any[];
     validators?: {
         required?: boolean,
         minLength?: number,
