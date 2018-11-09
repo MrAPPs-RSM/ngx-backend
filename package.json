@@ -27,7 +27,7 @@
     "@ng-select/ng-select": "^2",
     "@tinymce/tinymce-angular": "^2.3",
     "angular2-text-mask": "^9.0.0",
-    "bootstrap": "^4.1",
+    "bootstrap": "^3",
     "core-js": "^2.5.7",
     "file-saver": "^2.0.0-rc.4",
     "flag-icon-css": "^3.2.1",
