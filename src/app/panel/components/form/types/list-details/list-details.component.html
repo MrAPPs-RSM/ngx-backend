@@ -6,7 +6,7 @@
         </label>
         <div class="wrapper">
             <div [dragula]="'bag'"
-                 [dragulaModel]="getControl().controls">
+                 [(dragulaModel)]="getControl().controls">
                 <div [formGroupName]="i"
                      class="list-detail-item"
                      *ngFor="let control of getControl().controls; let i = index">

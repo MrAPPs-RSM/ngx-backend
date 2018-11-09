@@ -65,7 +65,7 @@ export class Ng2SmartTableComponent implements OnChanges, OnInit, OnDestroy {
 
     ngOnInit() {
         if (this.isDragEnabled) {
-            this._dragulaService.setOptions('bag', {
+            this._dragulaService.createGroup('bag', {
                 moves: function (el, container, handle) {
                     return handle.className === 'drag';
                 }

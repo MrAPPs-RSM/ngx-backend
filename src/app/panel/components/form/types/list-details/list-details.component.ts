@@ -33,7 +33,7 @@ export class ListDetailsComponent extends BaseInputComponent implements OnInit, 
             this.deleteDetail(0);
         }
 
-        this._dragulaService.setOptions('bag', {
+        this._dragulaService.createGroup('bag', {
             moves: function (el, container, handle) {
                 return handle.className === 'drag';
             }
