@@ -8,9 +8,9 @@ import { Subscription } from 'rxjs';
 import { UtilsService } from './services/utils.service';
 import { environment } from '../environments/environment';
 import { ApiService } from './api/api.service';
-import { StorageService } from "./services/storage.service";
-import { UserService } from "./auth/services/user.service";
-import { PageRefreshService } from "./services/page-refresh.service";
+import { StorageService } from './services/storage.service';
+import { UserService } from './auth/services/user.service';
+import { PageRefreshService } from './services/page-refresh.service';
 
 @Component({
     selector: 'app-root',
