@@ -70,7 +70,7 @@ export class Ng2SmartTableComponent implements OnChanges, OnInit, OnDestroy {
                     return handle.className === 'drag';
                 }
             });
-            this._dragulaService.drop.subscribe((value) => {
+            this._dragulaService.drop('bag').subscribe((value) => {
                 this.onDrop();
             });
         }
