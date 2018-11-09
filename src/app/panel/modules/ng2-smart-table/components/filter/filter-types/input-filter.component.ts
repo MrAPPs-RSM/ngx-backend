@@ -1,19 +1,17 @@
-
 import {debounceTime, distinctUntilChanged, skip} from 'rxjs/operators';
 import {Component, Input, OnChanges, OnInit, SimpleChange} from '@angular/core';
 import {FormControl} from '@angular/forms';
 
 
-
-
 import {DefaultFilter} from './default-filter';
+import {Subject} from 'rxjs/internal/Subject';
 
 @Component({
     selector: 'input-filter',
     template: `
         <input [(ngModel)]="query"
                [ngClass]="inputClass"
-               [formControl]="inputControl"
+               (ngModelChange)="onModelChange($event)"
                class="form-control"
                type="text"
                placeholder="{{ column.title }}"/>
@@ -23,7 +21,7 @@ export class InputFilterComponent extends DefaultFilter implements OnInit, OnCha
 
     @Input() filterValue: any;
 
-    inputControl = new FormControl();
+    private searchSubject: Subject<any>;
 
     constructor() {
         super();
@@ -44,22 +42,23 @@ export class InputFilterComponent extends DefaultFilter implements OnInit, OnCha
 
                 if (typeof value !== 'undefined') {
                     this.query = value;
-                    this.inputControl.setValue(value, {emitEvent: false});
                 }
             }
         }
     }
 
     ngOnInit() {
-        this.inputControl.valueChanges.pipe(
-            skip(1),
-            distinctUntilChanged(),
-            debounceTime(this.delay),)
-            .subscribe((value: string) => this.setFilter());
+        this.searchSubject = new Subject();
+        this.searchSubject.pipe(debounceTime(500)).subscribe(() => {
+            this.setFilter();
+        });
 
         if (this.filterValue) {
             this.query = this.filterValue;
-            this.inputControl.setValue(this.filterValue, {emitEvent: false});
         }
+    }
+
+    onModelChange() {
+        this.searchSubject.next();
     }
 }
