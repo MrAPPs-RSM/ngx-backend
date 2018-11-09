@@ -27,7 +27,7 @@ import { PendingChangesGuard } from './auth/guards/pending-changes.guard';
 import { environment } from '../environments/environment';
 import { StorageService } from './services/storage.service';
 import { DomainNotFoundComponent } from './auth/domain-not-found/domain-not-found.component';
-import { MatTooltipModule } from '@angular/material';
+
 
 const routes: Routes = [
     {
@@ -78,8 +78,7 @@ const routes: Routes = [
         HttpClientModule,
         PanelModule,
         ModalModule.forRoot(),
-        BootstrapModalModule,
-        MatTooltipModule
+        BootstrapModalModule
     ],
     providers: [
         GlobalState,

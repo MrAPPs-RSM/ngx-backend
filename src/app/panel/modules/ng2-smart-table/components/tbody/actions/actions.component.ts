@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, Output, ViewChild} from '@angular/core';
 import {Row} from '../../../lib/data-set/row';
 import {Grid} from '../../../lib/grid';
 

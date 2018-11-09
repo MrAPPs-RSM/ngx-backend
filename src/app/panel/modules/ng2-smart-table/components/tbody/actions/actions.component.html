@@ -7,9 +7,8 @@
    [class]="'ng2-smart-action ' + action.class"
    [innerHTML]="action.content"
    (click)="action.enabled && onAction($event, action)"
+   [matTooltip]="action.name"
+   matTooltipPosition="above"
+   [matTooltipDisabled]="!action.enabled"
 >
 </a>
-<!--[tooltip]="action.name"-->
-<!--[tooltipDisabled]="!action.enabled"-->
-<!--[tooltipAnimation]="false"-->
-<!--[tooltipPlacement]="'top'"-->
