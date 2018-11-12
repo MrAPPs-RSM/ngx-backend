@@ -49,7 +49,7 @@ export class InputFilterComponent extends DefaultFilter implements OnInit, OnCha
 
     ngOnInit() {
         this.searchSubject = new Subject();
-        this.searchSubject.pipe(debounceTime(500)).subscribe(() => {
+        this.searchSubject.pipe(debounceTime(this.delay)).subscribe(() => {
             this.setFilter();
         });
 
