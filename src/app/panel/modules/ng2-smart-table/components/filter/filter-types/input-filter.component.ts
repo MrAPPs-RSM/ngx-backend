@@ -11,7 +11,7 @@ import {Subject} from 'rxjs/internal/Subject';
     template: `
         <input [(ngModel)]="query"
                [ngClass]="inputClass"
-               (ngModelChange)="onModelChange($event)"
+               (ngModelChange)="onModelChange()"
                class="form-control"
                type="text"
                placeholder="{{ column.title }}"/>
