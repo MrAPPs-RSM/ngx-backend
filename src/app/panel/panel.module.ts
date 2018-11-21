@@ -60,6 +60,7 @@ import { GalleryComponent } from './components/form/types/gallery/gallery.compon
 import { Select2Component } from './components/form/types/select-2/select-2.component';
 import { CloudinaryLibraryComponent } from './components/form/types/cloudinary-library/cloudinary-library.component';
 import { HotspotComponent } from './components/form/types/hotspot/hotspot.component';
+import {environment} from "../../environments/environment";
 
 const COMPONENTS = [
     PanelComponent,
@@ -149,7 +150,7 @@ const routes: Routes = [
         NgSelectModule,
         NgUploaderModule,
         AgmCoreModule.forRoot({
-            apiKey: 'AIzaSyAP1chVIcUZSeLzRhRhXYbo20SBj7bryfM' // TODO: set gmaps api key
+            apiKey: environment.googleMapsApiKey ? environment.googleMapsApiKey : 'AIzaSyAP1chVIcUZSeLzRhRhXYbo20SBj7bryfM'
         }),
         Ng2SmartTableModule,
         PipesModule,
