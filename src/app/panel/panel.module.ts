@@ -150,7 +150,7 @@ const routes: Routes = [
         NgSelectModule,
         NgUploaderModule,
         AgmCoreModule.forRoot({
-            apiKey: environment.googleMapsApiKey ? environment.googleMapsApiKey : 'AIzaSyAP1chVIcUZSeLzRhRhXYbo20SBj7bryfM'
+            apiKey: environment.googleMapsApiKey ? environment.googleMapsApiKey : ''
         }),
         Ng2SmartTableModule,
         PipesModule,
