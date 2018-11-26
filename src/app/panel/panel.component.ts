@@ -7,7 +7,7 @@ import {LanguageService} from './services/language.service';
 
 import 'rxjs/add/operator/map';
 import {MenuService} from './services/menu.service';
-import {StorageService} from "../services/storage.service";
+import {StorageService} from '../services/storage.service';
 
 declare const $: any;
 
@@ -20,7 +20,6 @@ declare const $: any;
 export class PanelComponent implements OnInit, AfterViewInit {
 
     title = environment.name;
-    showLogo: boolean = environment.assets.logo !== false;
     logo = environment.assets.logo;
     menu: any[] = [];
     homePage = 'dashboard';
@@ -33,6 +32,10 @@ export class PanelComponent implements OnInit, AfterViewInit {
                 private _languageService: LanguageService,
                 private _pageRefresh: PageRefreshService,
                 private _menuService: MenuService) {
+    }
+
+    get showLogo() {
+        return environment.assets && environment.assets.logo;
     }
 
     ngOnInit() {
