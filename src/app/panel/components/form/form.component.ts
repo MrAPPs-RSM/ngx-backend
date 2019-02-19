@@ -105,7 +105,7 @@ export class FormComponent implements OnInit, OnDestroy {
         this.form.valueChanges.subscribe(
             data => {
                 this.dataStored = false;
-                console.log(data);
+                //console.log(data);
             }
         );
     }

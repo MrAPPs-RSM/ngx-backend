@@ -77,9 +77,9 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
             }
         }).catch((err) => console.log(err));
 
-        if (this.field.dependsOn) {
+        // For some reason, sometimes this.field.dependsOn was of type Subject, causing errors
+        if (this.field.dependsOn && typeof this.field.dependsOn !== 'object') {
             const key = Array.isArray(this.field.dependsOn) ? this.field.dependsOn[0] : this.field.dependsOn;
-
             if (this.getControl(key)) {
                 this._dependsSubscription = this.getControl(key).valueChanges.subscribe((value) => {
                     let keyNotSet = true;
