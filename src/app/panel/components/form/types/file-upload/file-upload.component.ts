@@ -91,11 +91,9 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
                         array.push(item);
                     }
                 });
-                console.log('passo in questo mannaggia');
                 this.getControl().setValue(array);
             } else {
                 if (data) {
-                    console.log('passo in quest altro mannaggia');
                     this.getControl().setValue([data]);
                 }
             }
@@ -128,7 +126,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         }
         /** invokeElementMethod removed from Renderer2 */
         // this._renderer.invokeElementMethod(this._fileUpload.nativeElement, 'click');
-        this._fileUpload.nativeElement.focus();
+        this._fileUpload.nativeElement.click();
 
         return false;
     }
