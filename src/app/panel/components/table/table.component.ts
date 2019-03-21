@@ -16,7 +16,7 @@ import {UtilsService} from '../../../services/utils.service';
 import {Language, LanguageService} from '../../services/language.service';
 import {ToastsService} from '../../../services/toasts.service';
 import {PageRefreshService} from '../../../services/page-refresh.service';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {GlobalState} from '../../../global.state';
 
 @Component({

@@ -5,7 +5,7 @@ import {FormArray, FormGroup} from '@angular/forms';
 import {FormGeneratorService} from '../../../../services/form-generator.service';
 import {SelectComponent, SelectData} from '../select/select.component';
 import {formConfig} from '../../form.config';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import {DragulaService} from 'ng2-dragula';
 
 @Component({
@@ -33,7 +33,7 @@ export class ListDetailsComponent extends BaseInputComponent implements OnInit, 
             this.deleteDetail(0);
         }
 
-        this._dragulaService.setOptions('bag', {
+        this._dragulaService.createGroup('bag', {
             moves: function (el, container, handle) {
                 return handle.className === 'drag';
             }

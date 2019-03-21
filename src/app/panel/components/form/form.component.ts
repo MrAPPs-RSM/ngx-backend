@@ -16,8 +16,7 @@ import {ApiService, ErrorResponse} from '../../../api/api.service';
 import {FormSettings} from './interfaces/form-settings';
 import {FormButton} from './interfaces/form-button';
 import {Language, LanguageService} from '../../services/language.service';
-import {Subscription} from 'rxjs/Subscription';
-import {Observable} from 'rxjs/Observable';
+import {Subscription, Observable} from 'rxjs';
 import {formConfig} from './form.config';
 import { Location } from '@angular/common';
 

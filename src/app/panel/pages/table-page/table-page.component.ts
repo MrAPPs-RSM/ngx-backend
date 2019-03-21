@@ -1,8 +1,8 @@
 import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 
-import 'rxjs/add/operator/pairwise';
-import {Subscription} from 'rxjs/Subscription';
+
+import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-table-page',

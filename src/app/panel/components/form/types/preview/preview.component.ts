@@ -3,7 +3,8 @@ import {BaseInputComponent} from '../base-input/base-input.component';
 import {ApiService, ErrorResponse} from '../../../../../api/api.service';
 import {FormFieldPreview} from '../../interfaces/form-field-preview';
 import {environment} from '../../../../../../environments/environment';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
+import { first } from 'rxjs/operators';
 
 @Component({
     selector: 'app-preview',
@@ -46,7 +47,7 @@ export class PreviewComponent extends BaseInputComponent implements OnInit, OnDe
         this.isVisible = false;
 
         if (this.isEdit) {
-            this._subscription = this.getControl().valueChanges.first().subscribe((value) => {
+            this._subscription = this.getControl().valueChanges.pipe(first()).subscribe((value) => {
                 this.offset = value;
                 this.onFileChange();
                 this._subscription.unsubscribe();

@@ -1,15 +1,17 @@
+
+import {debounceTime, distinctUntilChanged, skip} from 'rxjs/operators';
 import {Component, Input, OnChanges, OnInit, SimpleChange} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/skip';
+
+
+
 
 import {DefaultFilter} from './default-filter';
 import {ApiService, ErrorResponse} from '../../../../../../api/api.service';
 import {Language, LanguageService} from '../../../../../services/language.service';
 import {type} from 'os';
-import {Subject} from 'rxjs/Subject';
-import 'rxjs/add/operator/debounceTime';
+import {Subject} from 'rxjs';
+
 
 
 declare const $: any;
@@ -17,11 +19,12 @@ declare const $: any;
 @Component({
     selector: 'select-filter',
     template: `
-        <div [formGroup]="formGroup">
+        <div>
             <ng-select [items]="options"
                        [multiple]="column.filter.multiple"
-                       [formControl]="inputControl"
                        [(ngModel)]="query"
+                       (ngModelChange)="onModelChange($event)"
+                       (clear)="onModelChange($event)"
                        [appendTo]="'nav'"
                        [closeOnSelect]="true"
                        bindLabel="text"
@@ -38,8 +41,6 @@ export class SelectFilterComponent extends DefaultFilter implements OnInit, OnCh
     @Input() filterValue: any;
     @Input() reloadOptions;
 
-    formGroup: FormGroup;
-    inputControl = new FormControl();
     options: any[] = [];
 
     private searchEnabled: boolean;
@@ -48,9 +49,6 @@ export class SelectFilterComponent extends DefaultFilter implements OnInit, OnCh
 
     constructor(private _apiService: ApiService, private _languageService: LanguageService) {
         super();
-        this.formGroup = new FormGroup({
-            select: this.inputControl
-        });
         this.delay = 0;
     }
 
@@ -62,7 +60,6 @@ export class SelectFilterComponent extends DefaultFilter implements OnInit, OnCh
         if (changes['column'] && changes['column'].isFirstChange()) {
             const filter = this.column.getFilter();
             if (typeof filter['default'] !== 'undefined') {
-                this.inputControl.setValue(filter['default'], {emitEvent: false});
                 this.query = filter['default'];
             }
         }
@@ -87,14 +84,6 @@ export class SelectFilterComponent extends DefaultFilter implements OnInit, OnCh
             this.loadOptions();
         }
 
-        (this.inputControl.valueChanges as any)
-            .skip(1)
-            .distinctUntilChanged()
-            .debounceTime(this.delay)
-            .subscribe((value: any) => {
-                this.setFilter();
-            });
-
         this.onScroll();
 
         if (this.filterValue) {
@@ -103,11 +92,10 @@ export class SelectFilterComponent extends DefaultFilter implements OnInit, OnCh
                 value = this.filterValue['inq'];
             }
             this.query = value;
-            this.inputControl.setValue(value, {emitEvent: false});
         }
 
         if (this.searchEnabled) {
-            this.searchSubject.debounceTime(500).subscribe(value => {
+            this.searchSubject.pipe(debounceTime(this.delay)).subscribe(value => {
                 this.searchTerm = value;
                 this.loadOptions();
             });
@@ -164,5 +152,9 @@ export class SelectFilterComponent extends DefaultFilter implements OnInit, OnCh
         $('.table-responsive').scroll(function () {
             $('.table-responsive').click();
         });
+    }
+
+    onModelChange($event) {
+        this.setFilter();
     }
 }

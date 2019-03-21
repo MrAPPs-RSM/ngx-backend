@@ -82,7 +82,7 @@
         <div class="uploaded-files-container"
              *ngIf="getControl().value && getControl().value.length > 0">
             <label class="uploaded-files-label" *ngIf="!onlyView">Uploaded file(s)</label>
-            <ul [dragula]="getUniqueKey()" [dragulaModel]='getControl().value'>
+            <ul [dragula]="getUniqueKey()" [(dragulaModel)]='getControl().value'>
                 <li *ngFor="let file of getControl().value"
                     class="uploaded-file">
                     <div class="file-wrapper">

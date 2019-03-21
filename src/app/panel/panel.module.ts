@@ -5,7 +5,7 @@ import {ReactiveFormsModule, FormsModule} from '@angular/forms';
 import {ColorPickerModule} from 'ngx-color-picker';
 import {EditorModule} from '@tinymce/tinymce-angular';
 import {NgSelectModule} from '@ng-select/ng-select';
-import {NgUploaderModule} from 'ngx-uploader';
+import {NgxUploaderModule} from 'ngx-uploader';
 import {AgmCoreModule} from '@agm/core';
 import {Ng2SmartTableModule} from './modules/ng2-smart-table/ng2-smart-table.module';
 import {PipesModule} from '../pipes/pipes.module';
@@ -148,7 +148,7 @@ const routes: Routes = [
         ColorPickerModule,
         EditorModule,
         NgSelectModule,
-        NgUploaderModule,
+        NgxUploaderModule,
         AgmCoreModule.forRoot({
             apiKey: environment.googleMapsApiKey ? environment.googleMapsApiKey : ''
         }),

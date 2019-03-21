@@ -28,6 +28,7 @@ import { environment } from '../environments/environment';
 import { StorageService } from './services/storage.service';
 import { DomainNotFoundComponent } from './auth/domain-not-found/domain-not-found.component';
 
+
 const routes: Routes = [
     {
         path: 'password-reset',

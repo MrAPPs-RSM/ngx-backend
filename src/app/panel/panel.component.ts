@@ -5,7 +5,7 @@ import {ActivatedRoute, Route, Router} from '@angular/router';
 import {PageRefreshService} from '../services/page-refresh.service';
 import {LanguageService} from './services/language.service';
 
-import 'rxjs/add/operator/map';
+
 import {MenuService} from './services/menu.service';
 import {StorageService} from '../services/storage.service';
 

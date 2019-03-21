@@ -1,9 +1,9 @@
+
+import {of as observableOf, Observable} from 'rxjs';
+
+import {delay, distinctUntilChanged, debounceTime, switchMap} from 'rxjs/operators';
 import {ChangeDetectorRef, Component, EventEmitter, OnInit} from '@angular/core';
 import {BaseInputComponent} from '../base-input/base-input.component';
-import {distinctUntilChanged, debounceTime, switchMap} from 'rxjs/operators';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/delay';
-import {Observable} from 'rxjs/Observable';
 import {HttpClient} from '@angular/common/http';
 import {LanguageService} from '../../../../services/language.service';
 
@@ -83,7 +83,7 @@ export class GeoSearchComponent extends BaseInputComponent implements OnInit {
             };
             return this._http.get<any[]>(this.GEOCODING.url, {params: params});
         } else {
-            return Observable.of([]).delay(300);
+            return observableOf([]).pipe(delay(300));
         }
     }
     

@@ -14,6 +14,7 @@
 @import "~@ng-select/ng-select/themes/default.theme.css";
 @import "~nouislider/distribute/nouislider.min.css";
 @import "~ng-pick-datetime/assets/style/picker.min.css";
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
 
 body {
@@ -68,8 +69,9 @@ body {
   div.multilang {
     max-width: 155px;
     > ng-select.ng-select {
-      > div.ng-control {
+      > div.ng-select-container {
         min-height: 35px;
+        border-radius: $borderRadius;
       }
       i {
         margin-right: 5px;

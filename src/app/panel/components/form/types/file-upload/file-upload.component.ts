@@ -1,5 +1,5 @@
 import {
-    Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Renderer, ViewChild,
+    Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Renderer2, ViewChild,
     ViewEncapsulation
 } from '@angular/core';
 import {
@@ -11,9 +11,10 @@ import {ApiService} from '../../../../../api/api.service';
 import {UtilsService} from '../../../../../services/utils.service';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {ToastsService} from '../../../../../services/toasts.service';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {Language, LanguageService} from '../../../../services/language.service';
-import {DragulaService} from 'ng2-dragula/components/dragula.provider';
+import { DragulaService } from 'ng2-dragula';
+import { first } from 'rxjs/operators';
 
 declare const $: any;
 
@@ -54,7 +55,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
 
     private _subscription = Subscription.EMPTY;
 
-    constructor(private _renderer: Renderer,
+    constructor(private _renderer: Renderer2,
                 private _toastsService: ToastsService,
                 private _apiService: ApiService,
                 private _langService: LanguageService,
@@ -71,7 +72,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
 
         const field = this.field;
 
-        this._dragulaService.setOptions(this.getUniqueKey(), {
+        this._dragulaService.createGroup(this.getUniqueKey(), {
             moves: function (el, container, handle) {
                 return field.options.canDrag;
             }
@@ -82,7 +83,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         this.createAllowedContentTypes();
 
         /** Load entity image (if added from duplicate or edit) */
-        this._subscription = this.getControl().valueChanges.first().subscribe(data => {
+        this._subscription = this.getControl().valueChanges.pipe(first()).subscribe(data => {
             if (data instanceof Array) {
                 const array = [];
                 data.forEach((item) => {
@@ -90,11 +91,9 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
                         array.push(item);
                     }
                 });
-                console.log('passo in questo mannaggia');
                 this.getControl().setValue(array);
             } else {
                 if (data) {
-                    console.log('passo in quest altro mannaggia');
                     this.getControl().setValue([data]);
                 }
             }
@@ -125,7 +124,10 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         if (this.showMediaLibrary) {
             this.closeMediaLibrary();
         }
-        this._renderer.invokeElementMethod(this._fileUpload.nativeElement, 'click');
+        /** invokeElementMethod removed from Renderer2 */
+        // this._renderer.invokeElementMethod(this._fileUpload.nativeElement, 'click');
+        this._fileUpload.nativeElement.click();
+
         return false;
     }
 

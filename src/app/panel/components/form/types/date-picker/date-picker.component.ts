@@ -2,7 +2,8 @@ import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {FormFieldDate} from '../../interfaces/form-field-date';
 import {UtilsService} from '../../../../../services/utils.service';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
+import { first } from 'rxjs/operators';
 
 @Component({
     selector: 'app-date-picker',
@@ -31,7 +32,7 @@ export class DatePickerComponent extends BaseInputComponent implements OnInit, O
                 }
             });
         } else {
-            this._subscription = this.getControl().valueChanges.first().subscribe((value) => {
+            this._subscription = this.getControl().valueChanges.pipe(first()).subscribe((value) => {
                 this.setValue(value);
                 this._subscription.unsubscribe();
             });

@@ -23,7 +23,7 @@ import {Ng2SmartTableComponent} from './ng2-smart-table.component';
         TBodyModule,
         THeadModule,
         GeneralActionsModule,
-        DragulaModule
+        DragulaModule.forRoot()
     ],
     declarations: [
         Ng2SmartTableComponent,

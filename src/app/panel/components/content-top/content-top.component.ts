@@ -1,9 +1,9 @@
 import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {GlobalState} from '../../../global.state';
-import 'rxjs/add/operator/filter';
+
 import {Router} from '@angular/router';
 import {MenuService} from '../../services/menu.service';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-content-top',

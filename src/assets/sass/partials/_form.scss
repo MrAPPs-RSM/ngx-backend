@@ -182,22 +182,27 @@ owl-date-time-container.owl-dt-container.owl-dt-popup-container {
   }
 }
 
-ng-select.ng-select.bottom {
+.ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-placeholder {
+  top: 12px;
+}
+
+ng-select.ng-select {
+
   &.disabled {
-    > div.ng-control {
+    > div.ng-select-container {
       cursor: not-allowed;
       background-color: #f5f5f5;
     }
   }
   &.opened, &.focused {
-    > div.ng-control {
+    > div.ng-select-container {
       background-color: #f5f5f5;
       @include box-shadow(none);
       border-radius: $borderRadius;
       border: 1px solid $lightGrey;
     }
   }
-  > div.ng-control {
+  > div.ng-select-container {
     min-height: 45px;
     border-radius: $borderRadius;
     border: 1px solid $lightGrey;
@@ -235,7 +240,7 @@ ng-select.ng-select.bottom {
   }
 
   &[ng-reflect-multiple="true"] {
-    > div.ng-control {
+    > div.ng-select-container {
       > div.ng-value-container {
         > div.ng-value {
           background-color: #f5f5f5;

@@ -1,3 +1,5 @@
+
+import {debounceTime, distinctUntilChanged, skip} from 'rxjs/operators';
 import {
     Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChange,
     ViewEncapsulation
@@ -8,10 +10,10 @@ import {UtilsService} from '../../../../../services/utils.service';
 import {ToastsService} from '../../../../../services/toasts.service';
 import {environment} from '../../../../../../environments/environment';
 import {FormControl} from '@angular/forms';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/skip';
-import {Subscription} from 'rxjs/Subscription';
+
+
+
+import {Subscription} from 'rxjs';
 
 declare const $: any;
 
@@ -69,7 +71,7 @@ export class MediaLibraryComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private onFilterChange() {
-        this.subscriptionInputControl = this.inputControl.valueChanges.skip(1).distinctUntilChanged().debounceTime(300)
+        this.subscriptionInputControl = this.inputControl.valueChanges.pipe(skip(1),distinctUntilChanged(),debounceTime(300),)
             .subscribe((value: string) => {
                 this.params.search = value;
                 this.params.page = 1;

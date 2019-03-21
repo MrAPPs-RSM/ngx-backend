@@ -4,13 +4,17 @@ import { PageTitleService } from './panel/services/page-title.service';
 import { LanguageService } from './panel/services/language.service';
 import { MenuService } from './panel/services/menu.service';
 import { GlobalState } from './global.state';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { UtilsService } from './services/utils.service';
 import { environment } from '../environments/environment';
 import { ApiService } from './api/api.service';
-import { StorageService } from "./services/storage.service";
-import { UserService } from "./auth/services/user.service";
-import { PageRefreshService } from "./services/page-refresh.service";
+import { StorageService } from './services/storage.service';
+import { UserService } from './auth/services/user.service';
+import { PageRefreshService } from './services/page-refresh.service';
+import { filter, map } from 'rxjs/operators';
+
+
+
 
 @Component({
     selector: 'app-root',
@@ -43,16 +47,17 @@ export class AppComponent implements OnInit, OnDestroy {
             };
         }
 
-        this._routerSub = this._router.events
-            .filter(event => event instanceof NavigationEnd)
-            .map(() => this._route)
-            .map((route) => {
+        this._routerSub = this._router.events.pipe(
+            filter(event => event instanceof NavigationEnd),
+            map(() => this._route),
+            map((route) => {
                 while (route.firstChild) {
                     route = route.firstChild;
                 }
                 return route;
-            })
-            .filter((route) => route.outlet === 'primary')
+            }),
+            filter((route) => route.outlet === 'primary')
+        )
             .subscribe((activatedRoute: any) => {
 
                 if (environment.domains) {
