@@ -376,7 +376,11 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
                 value.forEach((item) => {
                     ids.push(item instanceof Object ? item.id : item);
                 });
-                this.getControl().setValue(ids, options);
+                this.getControl().setValue(
+                    this.field.multiple === true
+                        ? ids
+                        : (ids.length > 0 ? ids[0] : null)
+                        , options);
             } else {
                 if (typeof value === 'object' && !this.field.search) {
                     this.getControl().setValue(value.id, options);
