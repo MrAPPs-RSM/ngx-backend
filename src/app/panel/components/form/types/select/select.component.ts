@@ -34,6 +34,8 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
     private _dependsSubscription = Subscription.EMPTY;
     private _subFieldSubscription = Subscription.EMPTY;
 
+    private _valueChangesSubscription = Subscription.EMPTY;
+
     constructor(private _apiService: ApiService,
                 private _cd: ChangeDetectorRef,
                 private _languageService: LanguageService,
@@ -42,14 +44,20 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
     }
 
     ngOnInit() {
+
         if (this.field.search && this.field.search.endpoint) {
             this.typeListener();
-            const value = this.getControl().value;
-            if (value) {
-                this.options = [value];
-                this.selected = value;
-            }
+
+            this._valueChangesSubscription = this.getControl().valueChanges.subscribe(() => {
+                const value = this.getControl().value;
+                if (value) {
+                    this.options = [value];
+                    this.selected = value;
+                }
+                this._valueChangesSubscription.unsubscribe();
+            });
         }
+
 
         this.selected = this.field.multiple === true ? [] : null;
 
