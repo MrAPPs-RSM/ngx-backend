@@ -11,6 +11,12 @@
             [field]="field">
     </app-gallery>
 
+    <app-image
+            *ngSwitchCase="formConfig.types.IMAGE"
+            [field]="field"
+            [form]="form">
+    </app-image>
+
     <app-input-text
             *ngSwitchCase="formConfig.types.TEXT"
             [isSubField]="isSubField"

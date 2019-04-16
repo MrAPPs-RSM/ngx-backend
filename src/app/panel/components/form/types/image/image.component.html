@@ -1,0 +1,11 @@
+<div [class]="field.class ? field.class : 'col-sm-12'" [ngClass]="{'hidden': field.hidden}">
+    <div class="form-group">
+        <label>
+            {{field.label}}
+        </label>
+        <div>
+            <img [src]="url" (error)="onImageError($event)">
+        </div>
+        <span *ngIf="field.description" class="help-block">{{field.description}}</span>
+    </div>
+</div>

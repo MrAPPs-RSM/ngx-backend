@@ -20,11 +20,12 @@ export let formConfig = {
         PREVIEW: 'preview',
         GEOSEARCH: 'geosearch',
         CLOUDINARY: 'cloudinary',
-        HOTSPOT: 'hotspot'
+        HOTSPOT: 'hotspot',
+        IMAGE: 'image'
     },
     noInputTypes: {
         SEPARATOR: 'separator',
-        GALLERY: 'gallery',
+        GALLERY: 'gallery'
     },
     validators: {
         REQUIRED: 'required',
