@@ -57,6 +57,7 @@ import {MediaLibraryComponent} from './components/form/types/media-library/media
 import {TimetablePickerComponent} from './components/form/types/timetable-picker/timetable-picker.component';
 import {GeoSearchComponent} from './components/form/types/geo-search/geo-search.component';
 import { GalleryComponent } from './components/form/types/gallery/gallery.component';
+import { ImageComponent } from './components/form/types/image/image.component';
 import { Select2Component } from './components/form/types/select-2/select-2.component';
 import { CloudinaryLibraryComponent } from './components/form/types/cloudinary-library/cloudinary-library.component';
 import { HotspotComponent } from './components/form/types/hotspot/hotspot.component';
@@ -97,7 +98,8 @@ const COMPONENTS = [
     GalleryComponent,
     Select2Component,
     CloudinaryLibraryComponent,
-    HotspotComponent
+    HotspotComponent,
+    ImageComponent
 ];
 
 const PROVIDERS = [
