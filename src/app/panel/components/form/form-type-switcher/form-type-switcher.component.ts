@@ -36,7 +36,7 @@ export class FormTypeSwitcherComponent implements OnInit {
                 if (key.indexOf('.') > -1) {
                     control = this.form.get(key.split('.')[1]);
                 } else {
-                    control = this.form.parent.get(key);
+                    control = 'parent' in this.form && this.form.parent ? this.form.parent.get(key) : this.form.get(key);
                 }
                 if (control.value === this.field.visibleOn[key]) {
                     response = response && true;
