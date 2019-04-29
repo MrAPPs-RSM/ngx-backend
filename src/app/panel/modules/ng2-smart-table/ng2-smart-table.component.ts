@@ -1,15 +1,15 @@
-import {Component, Input, Output, SimpleChange, EventEmitter, OnChanges, OnInit, OnDestroy} from '@angular/core';
+import { Component, Input, Output, SimpleChange, EventEmitter, OnChanges, OnInit, OnDestroy } from '@angular/core';
 
-import {Grid} from './lib/grid';
-import {DataSource} from './lib/data-source/data-source';
-import {Row} from './lib/data-set/row';
-import {deepExtend} from './lib/helpers';
-import {LocalDataSource} from './lib/data-source/local/local.data-source';
-import {TablePagination} from './lib/data-filters/table-pagination';
-import {TableSort} from './lib/data-filters/table-sort';
-import {TableFilter} from './lib/data-filters/table-filter';
-import {TableActiveFilters} from './lib/data-filters/table-active-filters';
-import {DragulaService} from 'ng2-dragula';
+import { Grid } from './lib/grid';
+import { DataSource } from './lib/data-source/data-source';
+import { Row } from './lib/data-set/row';
+import { deepExtend } from './lib/helpers';
+import { LocalDataSource } from './lib/data-source/local/local.data-source';
+import { TablePagination } from './lib/data-filters/table-pagination';
+import { TableSort } from './lib/data-filters/table-sort';
+import { TableFilter } from './lib/data-filters/table-filter';
+import { TableActiveFilters } from './lib/data-filters/table-active-filters';
+import { DragulaService } from 'ng2-dragula';
 
 @Component({
     selector: 'ng2-smart-table',
@@ -58,6 +58,8 @@ export class Ng2SmartTableComponent implements OnChanges, OnInit, OnDestroy {
         }
     };
 
+    public dragulaList: any[] = [];
+
     isAllSelected: boolean = false;
 
     constructor(private _dragulaService: DragulaService) {
@@ -65,12 +67,12 @@ export class Ng2SmartTableComponent implements OnChanges, OnInit, OnDestroy {
 
     ngOnInit() {
         if (this.isDragEnabled) {
-            this._dragulaService.createGroup('bag', {
-                moves: function (el, container, handle) {
+            this._dragulaService.createGroup('row', {
+                moves: (el, container, handle) => {
                     return handle.className === 'drag';
                 }
             });
-            this._dragulaService.drop('bag').subscribe((value) => {
+            this._dragulaService.drop('row').subscribe(({ el, source }) => {
                 this.onDrop();
             });
         }
@@ -87,6 +89,10 @@ export class Ng2SmartTableComponent implements OnChanges, OnInit, OnDestroy {
             }
         } else {
             this.initGrid();
+        }
+
+        if (changes['source']) {
+            this.dragulaList = changes['source'].currentValue;
         }
 
         this.tableId = this.grid.getSetting('attr.id');
@@ -183,16 +189,8 @@ export class Ng2SmartTableComponent implements OnChanges, OnInit, OnDestroy {
     /** ---------------- DRAG & DROP ------------------ */
 
     private onDrop() {
-        const data = [];
-        const rows: any[] = this.grid.getRows();
-        setTimeout(() => {
-            rows.forEach((item) => {
-                data.push(item.data);
-            });
-
-            this.rowDrop.emit({
-                data: data
-            });
-        }, 0);
+        this.rowDrop.emit({
+            data: this.dragulaList
+        });
     }
 }

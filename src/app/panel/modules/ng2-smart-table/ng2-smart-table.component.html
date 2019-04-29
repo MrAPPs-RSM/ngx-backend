@@ -20,8 +20,8 @@
                (action)="action.emit($event)"
                (multipleSelectRow)="multipleSelectRow($event)"
                [isDragEnabled]="true"
-               [dragula]="'bag'"
-               [dragulaModel]="grid.getRows()">
+               [dragula]="'row'"
+               [(dragulaModel)]="dragulaList">
         </tbody>
 
         <tbody *ngIf="!isDragEnabled"

@@ -1,23 +1,23 @@
-import {Component, Input, OnInit, ViewEncapsulation, OnDestroy} from '@angular/core';
-import {TableSettings} from './interfaces/table-settings';
-import {ApiService, ErrorResponse} from '../../../api/api.service';
-import {ModalService} from '../../services/modal.service';
-import {TableFilter} from '../../modules/ng2-smart-table/lib/data-filters/table-filter';
-import {TableSort} from '../../modules/ng2-smart-table/lib/data-filters/table-sort';
-import {TablePagination} from '../../modules/ng2-smart-table/lib/data-filters/table-pagination';
-import {TableSelection} from '../../modules/ng2-smart-table/lib/data-filters/table-selection';
-import {TableActiveFilters} from '../../modules/ng2-smart-table/lib/data-filters/table-active-filters';
-import {TableDrop} from '../../modules/ng2-smart-table/lib/data-filters/table-drop';
-import {Association, TableAction} from './interfaces/table-action';
-import {ActivatedRoute, Router} from '@angular/router';
+import { Component, Input, OnInit, ViewEncapsulation, OnDestroy } from '@angular/core';
+import { TableSettings } from './interfaces/table-settings';
+import { ApiService, ErrorResponse } from '../../../api/api.service';
+import { ModalService } from '../../services/modal.service';
+import { TableFilter } from '../../modules/ng2-smart-table/lib/data-filters/table-filter';
+import { TableSort } from '../../modules/ng2-smart-table/lib/data-filters/table-sort';
+import { TablePagination } from '../../modules/ng2-smart-table/lib/data-filters/table-pagination';
+import { TableSelection } from '../../modules/ng2-smart-table/lib/data-filters/table-selection';
+import { TableActiveFilters } from '../../modules/ng2-smart-table/lib/data-filters/table-active-filters';
+import { TableDrop } from '../../modules/ng2-smart-table/lib/data-filters/table-drop';
+import { Association, TableAction } from './interfaces/table-action';
+import { ActivatedRoute, Router } from '@angular/router';
 import * as _ from 'lodash';
 import * as FileSaver from 'file-saver';
-import {UtilsService} from '../../../services/utils.service';
-import {Language, LanguageService} from '../../services/language.service';
-import {ToastsService} from '../../../services/toasts.service';
-import {PageRefreshService} from '../../../services/page-refresh.service';
-import {Subscription} from 'rxjs';
-import {GlobalState} from '../../../global.state';
+import { UtilsService } from '../../../services/utils.service';
+import { Language, LanguageService } from '../../services/language.service';
+import { ToastsService } from '../../../services/toasts.service';
+import { PageRefreshService } from '../../../services/page-refresh.service';
+import { Subscription } from 'rxjs';
+import { GlobalState } from '../../../global.state';
 
 @Component({
     selector: 'app-table',
@@ -58,13 +58,13 @@ export class TableComponent implements OnInit, OnDestroy {
     private _subscription = Subscription.EMPTY;
 
     constructor(public _languageService: LanguageService,
-                private _pageRefresh: PageRefreshService,
-                private _apiService: ApiService,
-                private _state: GlobalState,
-                private _router: Router,
-                private _route: ActivatedRoute,
-                private _toast: ToastsService,
-                private _modal: ModalService) {
+        private _pageRefresh: PageRefreshService,
+        private _apiService: ApiService,
+        private _state: GlobalState,
+        private _router: Router,
+        private _route: ActivatedRoute,
+        private _toast: ToastsService,
+        private _modal: ModalService) {
     }
 
     ngOnInit() {
@@ -141,11 +141,11 @@ export class TableComponent implements OnInit, OnDestroy {
             let filter: any = column.filter;
             switch (column.type) {
                 case 'boolean': {
-                    filter = {type: 'checkbox'};
+                    filter = { type: 'checkbox' };
                 }
                     break;
                 case 'date': {
-                    filter = {type: 'date'};
+                    filter = { type: 'date' };
                 }
                     break;
             }
@@ -416,11 +416,11 @@ export class TableComponent implements OnInit, OnDestroy {
                         params[association.formKey] = UtilsService.objectByString(this.filter, queryKey);
                     });
 
-                    extraParams = {queryParams: {formParams: JSON.stringify(params)}, relativeTo: this._route.parent};
+                    extraParams = { queryParams: { formParams: JSON.stringify(params) }, relativeTo: this._route.parent };
 
                     this._router.navigate(['../panel/' + path], extraParams);
                 } else {
-                    this._router.navigate(['../panel/' + path], {relativeTo: this._route.parent});
+                    this._router.navigate(['../panel/' + path], { relativeTo: this._route.parent });
                 }
             } else {
 
@@ -458,7 +458,7 @@ export class TableComponent implements OnInit, OnDestroy {
                             updatedFilter = updatedFilter.replace(':id', 'idField' in action.config ? data[action.config['idField']] : data.id);
                         }
 
-                        extraParams = {queryParams: {listParams: updatedFilter}};
+                        extraParams = { queryParams: { listParams: updatedFilter } };
                     } else if (action.config.params.loadData) {
                         extraParams = {
                             queryParams: {
@@ -480,7 +480,7 @@ export class TableComponent implements OnInit, OnDestroy {
                         });
 
                         const formValues = action.config.params['formValues'];
-                        extraParams = {queryParams: {formParams: JSON.stringify(formValues)}};
+                        extraParams = { queryParams: { formParams: JSON.stringify(formValues) } };
 
                         delete action.config.params.associateFields;
                     }
@@ -492,7 +492,7 @@ export class TableComponent implements OnInit, OnDestroy {
                     if (extraParams.hasOwnProperty('queryParams')) {
                         extraParams['queryParams']['currentLang'] = this.currentLang.isoCode;
                     } else {
-                        extraParams = {queryParams: {currentLang: this.currentLang.isoCode}};
+                        extraParams = { queryParams: { currentLang: this.currentLang.isoCode } };
                     }
                 }
 
@@ -582,7 +582,7 @@ export class TableComponent implements OnInit, OnDestroy {
                                                 reject(response);
                                             });
                                     } catch (e) {
-                                        reject({error: {message: 'endpointData is not a valid JSON'}});
+                                        reject({ error: { message: 'endpointData is not a valid JSON' } });
                                     }
                                 })
                                 .catch(() => {
@@ -629,7 +629,7 @@ export class TableComponent implements OnInit, OnDestroy {
                                 }
 
                             }).catch(() => {
-                        });
+                            });
                     } else {
                         if (action.config.refreshAfter !== false) {
                             this.isLoading = true;
@@ -713,8 +713,8 @@ export class TableComponent implements OnInit, OnDestroy {
                             const fileName = name + '_' + now.toISOString().substring(0, 19) + '.' + action.config.file.extension;
                             const fileType = UtilsService.getFileType(action.config.file.extension);
 
-                            const blob = new Blob([response], {type: fileType});
-                            const file = new File([blob], fileName, {type: fileType});
+                            const blob = new Blob([response], { type: fileType });
+                            const file = new File([blob], fileName, { type: fileType });
                             (FileSaver as any).saveAs(file);
 
                             resolve();
@@ -779,7 +779,7 @@ export class TableComponent implements OnInit, OnDestroy {
         console.log('refresh table');
         const params = this.composeParams(false, true, true);
         this._state.replaceLastPath = true;
-        this._router.navigate([], {queryParams: {listParams: params['filter']}});
+        this._router.navigate([], { queryParams: { listParams: params['filter'] } });
     }
 
     onFilter(filter: TableFilter) {

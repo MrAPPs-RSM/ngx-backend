@@ -33,6 +33,7 @@ export class Grid {
                 dragEnabled = true;
             }
         }
+
         this.dataSet = new DataSet([], this.getSetting('columns'), dragEnabled);
 
         if (this.source) {
