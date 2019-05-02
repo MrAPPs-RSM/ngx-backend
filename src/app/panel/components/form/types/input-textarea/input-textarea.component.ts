@@ -68,7 +68,7 @@ export class InputTextareaComponent extends BaseInputComponent implements OnInit
         const maxLength = this.getMaxLength(key);
         if(!maxLength) return '';
 
-        const length = (this.getControl().value || '').length;
+        const length = (this.getControl(key).value || '').length;
         return length+'/'+maxLength;
     }
 
