@@ -40,6 +40,14 @@ export class BaseInputComponent implements OnInit {
         }
     }
 
+    public getMaxLength(key?: string): number {
+        if (key) {
+            return this.field[key].validators && this.field[key].validators.maxLength ? parseInt(this.field[key].validators.maxLength) : null;
+        } else {
+            return this.field.validators && this.field.validators.maxLength ? parseInt(this.field.validators.maxLength) : null;
+        }
+    }
+
     public getControl(key?: string): AbstractControl {
         if (key) {
             return this.form.get(key);
