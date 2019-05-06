@@ -20,9 +20,14 @@
                 id="{{field.key}}"
                 [attr.disabled]="field.disabled || onlyView ? '' : null"
                 class="form-control"
-                placeholder="{{field.placeholder}}">
+                placeholder="{{field.placeholder}}"
+                [attr.maxlength]="getMaxLength()">
             {{field.value}}
         </textarea>
+        <small
+                *ngIf="!field.options || !field.options.editor">
+            {{getCountCharacters()}}
+        </small>
 
         <span *ngIf="field.description" class="help-block">{{field.description}}</span>
     </div>

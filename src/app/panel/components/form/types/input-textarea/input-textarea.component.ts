@@ -63,6 +63,15 @@ export class InputTextareaComponent extends BaseInputComponent implements OnInit
         }
     }
 
+    getCountCharacters(key?: string): string {
+
+        const maxLength = this.getMaxLength(key);
+        if(!maxLength) return '';
+
+        const length = (this.getControl(key).value || '').length;
+        return length+'/'+maxLength;
+    }
+
     onFocus() {
         this.focus = true;
     }
