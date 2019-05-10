@@ -56,130 +56,145 @@ import {DateRangePickerComponent} from './components/form/types/date-range-picke
 import {MediaLibraryComponent} from './components/form/types/media-library/media-library.component';
 import {TimetablePickerComponent} from './components/form/types/timetable-picker/timetable-picker.component';
 import {GeoSearchComponent} from './components/form/types/geo-search/geo-search.component';
-import { GalleryComponent } from './components/form/types/gallery/gallery.component';
-import { ImageComponent } from './components/form/types/image/image.component';
-import { Select2Component } from './components/form/types/select-2/select-2.component';
-import { CloudinaryLibraryComponent } from './components/form/types/cloudinary-library/cloudinary-library.component';
-import { HotspotComponent } from './components/form/types/hotspot/hotspot.component';
-import {environment} from "../../environments/environment";
+import {GalleryComponent} from './components/form/types/gallery/gallery.component';
+import {ImageComponent} from './components/form/types/image/image.component';
+import {Select2Component} from './components/form/types/select-2/select-2.component';
+import {CloudinaryLibraryComponent} from './components/form/types/cloudinary-library/cloudinary-library.component';
+import {HotspotComponent} from './components/form/types/hotspot/hotspot.component';
+import {environment} from '../../environments/environment';
+import {TicketsPageComponent} from './pages/tickets-page/tickets-page.component';
+import {DataPaginatorComponent} from './components/data-paginator/data-paginator.component';
+import {ScrollingModule} from '@angular/cdk/scrolling';
+import {TicketDetailPageComponent} from './pages/ticket-detail-page/ticket-detail-page.component';
+import {FileUploaderComponent} from './components/file-uploader/file-uploader.component';
+import {MatFormFieldModule, MatInputModule} from '@angular/material';
 
 const COMPONENTS = [
-    PanelComponent,
-    FormComponent,
-    TableComponent,
-    DashboardPageComponent,
-    BaseInputComponent,
-    InputTextComponent,
-    InputPasswordComponent,
-    FormPageComponent,
-    TablePageComponent,
-    InputUrlComponent,
-    InputNumberComponent,
-    SeparatorComponent,
-    FormTypeSwitcherComponent,
-    InputColorComponent,
-    InputTextareaComponent,
-    SelectComponent,
-    InputEmailComponent,
-    CheckboxComponent,
-    FileUploadComponent,
-    ListDetailsComponent,
-    MapComponent,
-    ContentTopComponent,
-    ProfilePageComponent,
-    NotfoundPageComponent,
-    PlainComponent,
-    PreviewComponent,
-    DatePickerComponent,
-    DateRangePickerComponent,
-    MediaLibraryComponent,
-    TimetablePickerComponent,
-    GeoSearchComponent,
-    GalleryComponent,
-    Select2Component,
-    CloudinaryLibraryComponent,
-    HotspotComponent,
-    ImageComponent
+  PanelComponent,
+  FormComponent,
+  TableComponent,
+  DashboardPageComponent,
+  BaseInputComponent,
+  InputTextComponent,
+  InputPasswordComponent,
+  TicketsPageComponent,
+  TicketDetailPageComponent,
+  FormPageComponent,
+  TablePageComponent,
+  InputUrlComponent,
+  InputNumberComponent,
+  SeparatorComponent,
+  FormTypeSwitcherComponent,
+  InputColorComponent,
+  InputTextareaComponent,
+  SelectComponent,
+  InputEmailComponent,
+  CheckboxComponent,
+  FileUploadComponent,
+  ListDetailsComponent,
+  MapComponent,
+  ContentTopComponent,
+  DataPaginatorComponent,
+  FileUploaderComponent,
+  ProfilePageComponent,
+  NotfoundPageComponent,
+  PlainComponent,
+  PreviewComponent,
+  DatePickerComponent,
+  DateRangePickerComponent,
+  MediaLibraryComponent,
+  TimetablePickerComponent,
+  GeoSearchComponent,
+  GalleryComponent,
+  Select2Component,
+  CloudinaryLibraryComponent,
+  HotspotComponent,
+  ImageComponent
 ];
 
 const PROVIDERS = [
-    AuthGuard,
-    SetupService,
-    MenuService,
-    PanelResolver,
-    PageTitleService,
-    ModalService,
-    LanguageService,
-    TranslatePipe
+  AuthGuard,
+  SetupService,
+  MenuService,
+  PanelResolver,
+  PageTitleService,
+  ModalService,
+  LanguageService,
+  TranslatePipe
 ];
 
 
 const routes: Routes = [
-    {
-        path: 'panel',
+  {
+    path: 'panel',
+    canActivate: [
+      AuthGuard
+    ],
+    resolve: {
+      params: PanelResolver
+    },
+    children: [
+      {
+        path: '**',
         canActivate: [
-            AuthGuard
+          AuthGuard
         ],
         resolve: {
-            params: PanelResolver
+          params: PanelResolver
         },
-        children: [
-            {
-                path: '**',
-                canActivate: [
-                    AuthGuard
-                ],
-                resolve: {
-                    params: PanelResolver
-                },
-                component: PanelComponent,
-                pathMatch: 'full'
-            }
-        ],
         component: PanelComponent,
-        pathMatch: 'prefix'
-    }
+        pathMatch: 'full'
+      }
+    ],
+    component: PanelComponent,
+    pathMatch: 'prefix'
+  }
 ];
 
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule.forChild(routes),
-        ReactiveFormsModule,
-        FormsModule,
-        ColorPickerModule,
-        EditorModule,
-        NgSelectModule,
-        NgxUploaderModule,
-        AgmCoreModule.forRoot({
-            apiKey: environment.googleMapsApiKey ? environment.googleMapsApiKey : ''
-        }),
-        Ng2SmartTableModule,
-        PipesModule,
-        NouisliderModule,
-        OwlDateTimeModule,
-        OwlNativeDateTimeModule,
-        CKEditorModule,
-        TextMaskModule
-    ],
-    exports: [
-        FormComponent,
-        InputTextComponent,
-        InputPasswordComponent
-    ],
-    declarations: [
-        ...COMPONENTS
-    ],
-    providers: [
-        ...PROVIDERS
-    ],
-    entryComponents: [
-        FormPageComponent,
-        TablePageComponent,
-        DashboardPageComponent,
-        ProfilePageComponent,
-        NotfoundPageComponent
-    ]
+  imports: [
+    CommonModule,
+    RouterModule.forChild(routes),
+    ReactiveFormsModule,
+    FormsModule,
+    ColorPickerModule,
+    ScrollingModule,
+    EditorModule,
+    NgSelectModule,
+    MatInputModule,
+    MatFormFieldModule,
+    NgxUploaderModule,
+    AgmCoreModule.forRoot({
+      apiKey: environment.googleMapsApiKey ? environment.googleMapsApiKey : ''
+    }),
+    Ng2SmartTableModule,
+    PipesModule,
+    NouisliderModule,
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule,
+    CKEditorModule,
+    TextMaskModule
+  ],
+  exports: [
+    FormComponent,
+    InputTextComponent,
+    InputPasswordComponent
+  ],
+  declarations: [
+    ...COMPONENTS
+  ],
+  providers: [
+    ...PROVIDERS
+  ],
+  entryComponents: [
+    FormPageComponent,
+    TablePageComponent,
+    DashboardPageComponent,
+    TicketsPageComponent,
+    TicketDetailPageComponent,
+    ProfilePageComponent,
+    NotfoundPageComponent
+  ]
 })
 export class PanelModule {
 

@@ -1,0 +1,21 @@
+<div *ngIf="infinite | async as data" class="items">
+    <div *ngIf="data.length > 0" class="item">
+
+
+
+        <cdk-virtual-scroll-viewport itemSize="100" class="table-body" (scrolledIndexChange)="nextBatch($event)">
+            <table>
+              <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
+              <tr *cdkVirtualFor="let item of data; trackBy: trackItem" class="table-row"
+                   [ngClass]="{'hoverable': hoverEffect}"
+                   (click)="handleClick($event, item)">
+                <ng-container *ngTemplateOutlet="itemTemplate, context: { $implicit: item }"></ng-container>
+              </tr>
+            </table>
+        </cdk-virtual-scroll-viewport>
+    </div>
+
+    <div *ngIf="!data || data.length <= 0" class="no-data-template">
+        <ng-container *ngTemplateOutlet="noDataTemplate"></ng-container>
+    </div>
+</div>

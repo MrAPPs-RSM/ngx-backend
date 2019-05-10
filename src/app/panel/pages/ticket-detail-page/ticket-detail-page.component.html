@@ -1,0 +1,60 @@
+<div *ngIf="ticket">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="thread">
+          <h3>{{ticket.title}} ({{ticket.status}})</h3>
+          <p>del {{ticket.insertedAt}}</p>
+          <br/>
+          <div class="content">
+            <div class="messages" #msgWrapper (scroll)="onMsgListScroll($event)">
+              <ul #msgList>
+                <li *ngFor="let item of ticket.messages.slice().reverse()" class="clearfix"
+                    [ngClass]="{'left': !item.sent, 'right': item.sent}">
+                  <div class="body">
+                    <div class="content">
+                      <span class="username">{{item.user.username}}</span>
+                      <span *ngIf="item.message" class="message">{{item.message}}</span>
+                      <img *ngIf="item.pictureUrl" [src]="item.pictureUrl">
+                    </div>
+                    <span class="date-time">{{item.insertedAt}}</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="overlay" [ngClass]="{'visible': showFileUpload}"></div>
+
+            <div class="user-input">
+              <app-file-uploader (response)="onFileUpload($event)" (cancel)="onFileCancel($event)"
+                                 [removeFiles]="removeFiles"
+                                 [ngClass]="{'visible': showFileUpload}"></app-file-uploader>
+
+              <div class="input-text">
+                <mat-form-field class="full-width">
+                            <textarea
+                              placeholder="Messaggio"
+                              matInput mat-autosize="true"
+                              [cdkAutosizeMaxRows]="5"
+                              [disabled]="disableTextArea"
+                              [(ngModel)]="newMessage"
+                              (keydown)="onKeyDownTextArea($event)">
+                        </textarea>
+                </mat-form-field>
+                <div class="buttons">
+                  <span class="file-counter" *ngIf="file.uploaded">1</span>
+                  <button (click)="toggleFileUpload()" class="btn btn-link attachment" matRipple
+                          [disabled]="ticket?.isClosed()">
+                    <i class="material-icons">attachment</i>
+                  </button>
+                  <button (click)="sendMessage()" [disabled]="disableSend" class="btn btn-primary send">
+                    <i class="material-icons">send</i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

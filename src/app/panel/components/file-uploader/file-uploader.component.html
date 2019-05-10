@@ -1,0 +1,37 @@
+<div class="upload-wrapper">
+  <div class="upload-box"
+       [ngClass]="{'dragOver': dragOver, 'hidden': isLoading || files.length > 0}">
+    <div class="upload-box-content">
+      <div class="drop-container" ngFileDrop [options]="options"
+           (uploadOutput)="onUploadOutput($event)" [uploadInput]="uploadInput">
+        <p>
+          Drag files here or
+          <label class="upload-button">
+            <input type="file" ngFileSelect [options]="options"
+                   (uploadOutput)="onUploadOutput($event)" [uploadInput]="uploadInput"
+                   multiple> browse
+          </label>
+          to upload.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="loading" *ngIf="isLoading">
+    <!--<mat-spinner [diameter]="50"></mat-spinner>-->
+  </div>
+  <div class="uploaded-files" *ngIf="!isLoading">
+    <div class="upload-item" *ngFor="let f of files; let i = index;">
+      <div class="upload-item-content">
+        <div class="filename">
+          <div class="filename-left">
+            <img [src]="f.response.url">
+            <span>{{ f.name }}</span>
+          </div>
+          <div class="filename-right">
+            <i class="material-icons" (click)="cancelUpload(f.id)">close</i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

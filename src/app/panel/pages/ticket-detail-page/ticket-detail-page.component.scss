@@ -1,0 +1,268 @@
+app-ticket-detail-page {
+  .thread {
+    background-color: #ffffff;
+    border-radius: 0;
+    padding: 20px 30px;
+    margin: 20px 0 20px;
+    border: 1px solid #dddddd;
+
+    > .content {
+      background: #F5F5F5;
+      overflow: hidden;
+      position: relative;
+      border-radius: 10px;
+
+      $chatHeight: 550px;
+
+      .messages {
+        height: $chatHeight;
+        overflow: scroll;
+        position: relative;
+        padding: 10px 5px;
+
+        > ul {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+
+          > li {
+            margin: 0;
+            border-radius: 10px;
+            padding: 5px 10px 0 10px;
+            width: 100%;
+
+            .body {
+              > .content {
+                width: 100%;
+                max-width: 300px;
+                display: inline-block;
+                border-radius: 10px;
+                padding: 8px 10px;
+                word-wrap: break-word;
+                position: relative;
+
+                > span {
+                  display: block;
+
+                  &.username {
+                    margin-top: -4px;
+                    margin-bottom: 3px;
+                    font-weight: 600;
+                    font-size: 12px;
+                  }
+
+                  &.message {
+                    font-size: 15px;
+                  }
+                }
+
+                > img {
+                  width: 120px;
+                  border-radius: 10px;
+                }
+              }
+
+              > span.date-time {
+                display: block;
+                font-size: 10px;
+                margin-top: 3px;
+                color: #999;
+              }
+            }
+
+            &.left {
+              > .body {
+                > .content {
+                  border-bottom-left-radius: 0;
+                  background: #ffffff;
+
+                  &::after {
+                    content: "";
+                    position: absolute;
+                    left: 0;
+                    bottom: 0;
+                    width: 0;
+                    height: 0;
+                    border: 6px solid transparent;
+                    border-right-color: #ffffff;
+                    border-bottom: 0;
+                    border-left: 0;
+                    margin-left: -6px;
+                  }
+                }
+              }
+            }
+
+            &.right {
+              > .body {
+                float: right;
+
+                > .content {
+                  background-color: #FF6600;
+                  color: #fff;
+                  border-bottom-right-radius: 0;
+
+                  &::after {
+                    content: "";
+                    position: absolute;
+                    right: 0;
+                    bottom: 0;
+                    width: 0;
+                    height: 0;
+                    border: 6px solid transparent;
+                    border-left-color: #FF6600;
+                    border-bottom: 0;
+                    border-right: 0;
+                    margin-right: -6px;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      > div.overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: $chatHeight;
+        background-color: #000000;
+        opacity: 0.4;
+        visibility: visible;
+        -webkit-transition: all 0.3s;
+        -moz-transition: all 0.3s;
+        -ms-transition: all 0.3s;
+        -o-transition: all 0.3s;
+        transition: all 0.3s;
+
+        &:not(.visible) {
+          opacity: 0;
+          visibility: hidden;
+        }
+      }
+
+      .user-input {
+        margin-top: -150px;
+
+        app-file-uploader {
+          display: block;
+          width: 100%;
+
+          -webkit-transition: all 0.3s;
+          -moz-transition: all 0.3s;
+          -ms-transition: all 0.3s;
+          -o-transition: all 0.3s;
+          transition: all 0.3s;
+
+          -webkit-transform: none;
+          -moz-transform: none;
+          -ms-transform: none;
+          -o-transform: none;
+          transform: none;
+
+          &:not(.visible) {
+            -webkit-transform: translateY(100%);
+            -moz-transform: translateY(100%);
+            -ms-transform: translateY(100%);
+            -o-transform: translateY(100%);
+            transform: translateY(100%);
+          }
+
+          .upload-wrapper {
+            height: 150px;
+            position: relative;
+            background: #F5F5F5;
+            margin: 0;
+
+            .loading {
+              position: absolute !important;
+              height: auto !important;
+            }
+
+            .upload-box {
+              height: 150px;
+              border: none;
+              border-radius: 0;
+            }
+
+            > .uploaded-files .upload-item .upload-item-content .filename {
+              height: 150px;
+              padding: 0 15px;
+            }
+          }
+        }
+
+        .input-text {
+          background-color: #ffffff;
+          margin: 0;
+          padding: 10px 15px 0;
+          position: relative;
+
+          mat-form-field.mat-form-field {
+            width: calc(100% - 50px);
+
+            textarea {
+              padding-right: 40px;
+            }
+          }
+
+          .buttons {
+            right: 15px;
+            position: absolute;
+            bottom: 1.25em;
+
+            button {
+              width: 35px;
+              padding: 0 !important;
+              text-align: center !important;
+              min-width: 0;
+              height: 35px;
+              border-radius: 50%;
+              position: relative;
+
+              &.attachment {
+                > i {
+                  margin-top: 5px;
+                  -webkit-transform: rotate(45deg);
+                  -moz-transform: rotate(45deg);
+                  -ms-transform: rotate(45deg);
+                  -o-transform: rotate(45deg);
+                  transform: rotate(45deg);
+                }
+              }
+
+              &.send {
+                > i {
+                  margin-top: 6px;
+                  margin-left: 4px;
+                }
+              }
+
+              > i {
+                font-size: 18px;
+              }
+            }
+
+            > span.file-counter {
+              position: absolute;
+              right: 45px;
+              top: 0;
+              width: 13px;
+              height: 13px;
+              line-height: 13px;
+              border-radius: 50%;
+              text-align: center;
+              font-size: 8px;
+              font-weight: 400;
+              pointer-events: none;
+              color: #fff;
+              background-color: #FF6600;
+            }
+          }
+        }
+      }
+    }
+  }
+}
