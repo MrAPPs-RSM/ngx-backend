@@ -62,11 +62,9 @@ import {Select2Component} from './components/form/types/select-2/select-2.compon
 import {CloudinaryLibraryComponent} from './components/form/types/cloudinary-library/cloudinary-library.component';
 import {HotspotComponent} from './components/form/types/hotspot/hotspot.component';
 import {environment} from '../../environments/environment';
-import {TicketsPageComponent} from './pages/tickets-page/tickets-page.component';
-import {DataPaginatorComponent} from './components/data-paginator/data-paginator.component';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import {TicketDetailPageComponent} from './pages/ticket-detail-page/ticket-detail-page.component';
-import {FileUploaderComponent} from './components/file-uploader/file-uploader.component';
+import {FileUploaderComponent} from './pages/ticket-detail-page/components/file-uploader/file-uploader.component';
 import {MatFormFieldModule, MatInputModule} from '@angular/material';
 
 const COMPONENTS = [
@@ -77,7 +75,6 @@ const COMPONENTS = [
   BaseInputComponent,
   InputTextComponent,
   InputPasswordComponent,
-  TicketsPageComponent,
   TicketDetailPageComponent,
   FormPageComponent,
   TablePageComponent,
@@ -94,7 +91,6 @@ const COMPONENTS = [
   ListDetailsComponent,
   MapComponent,
   ContentTopComponent,
-  DataPaginatorComponent,
   FileUploaderComponent,
   ProfilePageComponent,
   NotfoundPageComponent,
@@ -190,7 +186,6 @@ const routes: Routes = [
     FormPageComponent,
     TablePageComponent,
     DashboardPageComponent,
-    TicketsPageComponent,
     TicketDetailPageComponent,
     ProfilePageComponent,
     NotfoundPageComponent

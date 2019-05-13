@@ -1,25 +1,23 @@
-import {from as observableFrom, Observable} from 'rxjs';
-import {Injectable} from '@angular/core';
-import {ApiService} from '../../api/api.service';
-import {Router} from '@angular/router';
-import {environment} from '../../../environments/environment';
-import {DashboardPageComponent} from '../pages/dashboard-page/dashboard-page.component';
-import {TablePageComponent} from '../pages/table-page/table-page.component';
-import {FormPageComponent} from '../pages/form-page/form-page.component';
-import {ProfilePageComponent} from '../pages/profile-page/profile-page.component';
-import {LanguageService} from './language.service';
-import {MenuService} from './menu.service';
-import {NotfoundPageComponent} from '../pages/notfound-page/notfound-page.component';
+import { from as observableFrom, Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { ApiService } from '../../api/api.service';
+import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
+import { DashboardPageComponent } from '../pages/dashboard-page/dashboard-page.component';
+import { TablePageComponent } from '../pages/table-page/table-page.component';
+import { FormPageComponent } from '../pages/form-page/form-page.component';
+import { ProfilePageComponent } from '../pages/profile-page/profile-page.component';
+import { LanguageService } from './language.service';
+import { MenuService } from './menu.service';
+import { NotfoundPageComponent } from '../pages/notfound-page/notfound-page.component';
 
-import {PendingChangesGuard} from '../../auth/guards/pending-changes.guard';
-import {TicketsPageComponent} from '../pages/tickets-page/tickets-page.component';
-import {TicketDetailPageComponent} from '../pages/ticket-detail-page/ticket-detail-page.component';
+import { PendingChangesGuard } from '../../auth/guards/pending-changes.guard';
+import { TicketDetailPageComponent } from '../pages/ticket-detail-page/ticket-detail-page.component';
 
 
 const TYPES = {
   profile: ProfilePageComponent,
   dashboard: DashboardPageComponent,
-  tickets: TicketsPageComponent,
   ticketDetail: TicketDetailPageComponent,
   table: TablePageComponent,
   form: FormPageComponent,
@@ -31,9 +29,9 @@ export class SetupService {
   public _lastRouteLoading: Date;
 
   constructor(private _router: Router,
-              private _menuService: MenuService,
-              private _apiService: ApiService,
-              private _languageService: LanguageService) {
+    private _menuService: MenuService,
+    private _apiService: ApiService,
+    private _languageService: LanguageService) {
   }
 
   public setup(): Observable<any> {
@@ -92,7 +90,7 @@ export class SetupService {
 
     const routerConfig = this._router.config;
 
-    const routes = [{path: '404', component: NotfoundPageComponent}];
+    const routes = [{ path: '404', component: NotfoundPageComponent }];
 
     for (const item of this.remapRoutesData(data)) {
       if (item.type in TYPES) {

@@ -1,9 +1,10 @@
-import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
-import {Ticket} from '../../../models/ticket';
-import {TicketService} from '../../../auth/services/ticket.service';
-import {ActivatedRoute} from '@angular/router';
-import {TicketMessage} from '../../../models/ticket-message';
-import {UserService} from '../../../auth/services/user.service';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Ticket } from './models/ticket';
+import { TicketService } from './services/ticket.service';
+import { ActivatedRoute } from '@angular/router';
+import { TicketMessage } from './models/ticket-message';
+import { UserService } from '../../../auth/services/user.service';
+import { TicketCategory } from './models/ticket-category';
 
 @Component({
   selector: 'app-ticket-detail-page',
@@ -31,6 +32,30 @@ export class TicketDetailPageComponent implements OnInit {
   @ViewChild('msgWrapper') msgWrapper: ElementRef;
   @ViewChild('msgList') msgList: ElementRef;
 
+  /* to edit ticket fields */
+  public editableTicketFields: {
+    title: string;
+    status: string;
+    category: string;
+  } = {
+      title: null,
+      status: null,
+      category: null
+    };
+
+  public ticketStatuses = [
+    {
+      id: 'open',
+      text: 'Aperto'
+    },
+    {
+      id: 'closed',
+      text: 'Chiuso'
+    }
+  ];
+
+  public ticketCategories: TicketCategory[];
+
   constructor(
     public ticketService: TicketService,
     private route: ActivatedRoute,
@@ -39,17 +64,24 @@ export class TicketDetailPageComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.ticketCategories = this.ticketService.getCategories();
     this.file.reset();
     const data = this.route.snapshot.params;
     if (Object.entries(data).length > 0 && 'id' in data) {
       this.id = 'id' in data ? <number>data['id'] : null;
       this.loadTicket().then((res) => {
         this.ticket = new Ticket(
-          {...res.ticket, ...{messages: res.messages}},
+          { ...res.ticket, ...{ messages: res.messages } },
           this.userService.getUser().username
         );
         this.changeDetector.detectChanges(); // to update viewChilds
         this.doScroll();
+
+
+        /* load editable fields of the ticket */
+        this.editableTicketFields.title = this.ticket.title;
+        this.editableTicketFields.status = this.ticket.status;
+        this.editableTicketFields.category = this.ticket.category;
       });
     }
   }
@@ -146,6 +178,10 @@ export class TicketDetailPageComponent implements OnInit {
     }).catch((err) => {
       console.log(err);
     });
+  }
+
+  public onEditableFieldsSubmit($event: any): void {
+    this.ticketService.updateTicket(this.ticket.id, this.editableTicketFields);
   }
 
   private smoothScrollTo(element: any, to: number, duration: number) {

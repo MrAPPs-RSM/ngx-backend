@@ -1,3 +1,5 @@
+@import '../../../../assets/sass/partials/imports';
+
 app-ticket-detail-page {
   .thread {
     background-color: #ffffff;
@@ -6,15 +8,42 @@ app-ticket-detail-page {
     margin: 20px 0 20px;
     border: 1px solid #dddddd;
 
+    > .editable-fields {
+      border-bottom: 1px solid #dddddd;
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+      .title {
+        margin-bottom: 15px;
+        > input {
+          &.form-control {
+            border: none;
+            font-size: 22px;
+            font-weight: bold;
+            padding: 0;
+          }
+        }
+      }
+
+      .row {
+        margin-top: 20px;
+      }
+
+      .submit {
+        text-align: right;
+      }
+    }
+
     > .content {
+      margin-top: 20px;
       background: #F5F5F5;
       overflow: hidden;
       position: relative;
-      border-radius: 10px;
+      border-radius: $borderRadius;;
 
       $chatHeight: 550px;
 
       .messages {
+        border: 1px solid #dddddd;
         height: $chatHeight;
         overflow: scroll;
         position: relative;
@@ -98,7 +127,7 @@ app-ticket-detail-page {
                 float: right;
 
                 > .content {
-                  background-color: #FF6600;
+                  background-color: $primary;
                   color: #fff;
                   border-bottom-right-radius: 0;
 
@@ -110,7 +139,7 @@ app-ticket-detail-page {
                     width: 0;
                     height: 0;
                     border: 6px solid transparent;
-                    border-left-color: #FF6600;
+                    border-left-color: $primary;
                     border-bottom: 0;
                     border-right: 0;
                     margin-right: -6px;
@@ -195,6 +224,8 @@ app-ticket-detail-page {
         }
 
         .input-text {
+          border: 1px solid #dddddd;
+          border-top: none;
           background-color: #ffffff;
           margin: 0;
           padding: 10px 15px 0;
@@ -219,7 +250,7 @@ app-ticket-detail-page {
               text-align: center !important;
               min-width: 0;
               height: 35px;
-              border-radius: 50%;
+              border-radius: 50% !important;
               position: relative;
 
               &.attachment {
@@ -258,7 +289,7 @@ app-ticket-detail-page {
               font-weight: 400;
               pointer-events: none;
               color: #fff;
-              background-color: #FF6600;
+              background-color: $primary;
             }
           }
         }

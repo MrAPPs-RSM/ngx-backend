@@ -3,14 +3,43 @@
     <div class="row">
       <div class="col-sm-12">
         <div class="thread">
-          <h3>{{ticket.title}} ({{ticket.status}})</h3>
-          <p>del {{ticket.insertedAt}}</p>
-          <br/>
+
+          <div class="editable-fields">
+            <div class="form-group title">
+              <input class="form-control" [(ngModel)]="editableTicketFields.title" />
+            </div>
+
+            <p class="date"><strong>Date opened:</strong> {{ticket.insertedAt}}</p>
+            <p class="date"><strong>Last update:</strong> {{ticket.updatedAt}}</p>
+
+            <div class="row">
+              <div class="col-xs-12 col-sm-6">
+                  <div class="form-group status">
+                      <label>Status</label>
+                      <ng-select [items]="ticketStatuses" bindValue="id" bindLabel="text" [(ngModel)]="editableTicketFields.status">
+                      </ng-select>
+                    </div>
+              </div>
+
+              <div class="col-xs-12 col-sm-6">
+                  <div class="form-group category">
+                      <label>Category</label>
+                      <ng-select [items]="ticketCategories" bindValue="name" bindLabel="name" [(ngModel)]="editableTicketFields.category">
+                      </ng-select>
+                    </div>
+              </div>
+            </div>
+
+            <div class="submit">
+              <button class="btn btn-primary" (click)="onEditableFieldsSubmit($event)">Save</button>
+            </div>
+          </div>
+
           <div class="content">
             <div class="messages" #msgWrapper (scroll)="onMsgListScroll($event)">
               <ul #msgList>
                 <li *ngFor="let item of ticket.messages.slice().reverse()" class="clearfix"
-                    [ngClass]="{'left': !item.sent, 'right': item.sent}">
+                  [ngClass]="{'left': !item.sent, 'right': item.sent}">
                   <div class="body">
                     <div class="content">
                       <span class="username">{{item.user.username}}</span>
@@ -26,24 +55,18 @@
 
             <div class="user-input">
               <app-file-uploader (response)="onFileUpload($event)" (cancel)="onFileCancel($event)"
-                                 [removeFiles]="removeFiles"
-                                 [ngClass]="{'visible': showFileUpload}"></app-file-uploader>
+                [removeFiles]="removeFiles" [ngClass]="{'visible': showFileUpload}"></app-file-uploader>
 
               <div class="input-text">
                 <mat-form-field class="full-width">
-                            <textarea
-                              placeholder="Messaggio"
-                              matInput mat-autosize="true"
-                              [cdkAutosizeMaxRows]="5"
-                              [disabled]="disableTextArea"
-                              [(ngModel)]="newMessage"
-                              (keydown)="onKeyDownTextArea($event)">
+                  <textarea placeholder="Messaggio" matInput mat-autosize="true" [cdkAutosizeMaxRows]="5"
+                    [disabled]="disableTextArea" [(ngModel)]="newMessage" (keydown)="onKeyDownTextArea($event)">
                         </textarea>
                 </mat-form-field>
                 <div class="buttons">
                   <span class="file-counter" *ngIf="file.uploaded">1</span>
                   <button (click)="toggleFileUpload()" class="btn btn-link attachment" matRipple
-                          [disabled]="ticket?.isClosed()">
+                    [disabled]="ticket?.isClosed()">
                     <i class="material-icons">attachment</i>
                   </button>
                   <button (click)="sendMessage()" [disabled]="disableSend" class="btn btn-primary send">

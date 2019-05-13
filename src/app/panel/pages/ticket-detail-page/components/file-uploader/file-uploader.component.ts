@@ -1,7 +1,7 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewEncapsulation} from '@angular/core';
-import {UploaderOptions, UploadFile, UploadInput, UploadOutput} from 'ngx-uploader';
-import {environment} from '../../../../environments/environment';
-import {UserService} from '../../../auth/services/user.service';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { UploaderOptions, UploadFile, UploadInput, UploadOutput } from 'ngx-uploader';
+import { environment } from '../../../../../../environments/environment';
+import { UserService } from '../../../../../auth/services/user.service';
 
 @Component({
   selector: 'app-file-uploader',
@@ -26,7 +26,7 @@ export class FileUploaderComponent implements OnInit, OnChanges {
   @Output() cancel: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(private userService: UserService) {
-    this.options = {concurrency: 1, maxUploads: 1};
+    this.options = { concurrency: 1, maxUploads: 1 };
     this.files = [];
     this.uploadInput = new EventEmitter<UploadInput>();
     FileUploaderComponent.url = environment.api.baseUrl + 'uploads?access_token=' + this.userService.getToken();
@@ -94,15 +94,15 @@ export class FileUploaderComponent implements OnInit, OnChanges {
   }
 
   public cancelUpload(id: string): void {
-    this.uploadInput.emit({type: 'cancel', id: id});
+    this.uploadInput.emit({ type: 'cancel', id: id });
     this.cancel.emit(id);
   }
 
   private removeFile(id: string): void {
-    this.uploadInput.emit({type: 'remove', id: id});
+    this.uploadInput.emit({ type: 'remove', id: id });
   }
 
   private removeAllFiles(): void {
-    this.uploadInput.emit({type: 'removeAll'});
+    this.uploadInput.emit({ type: 'removeAll' });
   }
 }

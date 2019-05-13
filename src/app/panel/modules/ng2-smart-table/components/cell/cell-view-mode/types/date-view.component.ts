@@ -14,6 +14,7 @@ export class DateViewComponent implements OnInit {
 
     ngOnInit() {
         if (this.cell.getValue()) {
+            console.log(this.cell.getValue());
             this.renderValue = UtilsService.timeConverter(this.cell.getValue(), this.cell.getColumn().dateFormat);
         }
     }

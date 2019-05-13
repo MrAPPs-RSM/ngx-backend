@@ -1,9 +1,9 @@
-import {Injectable} from '@angular/core';
-import {Ticket} from '../../models/ticket';
-import {TicketMessage} from '../../models/ticket-message';
-import {TicketCategory} from '../../models/interfaces';
-import {UserService} from './user.service';
-import {ApiService} from '../../api/api.service';
+import { Injectable } from '@angular/core';
+import { Ticket } from '../models/ticket';
+import { TicketMessage } from '../models/ticket-message';
+import { UserService } from '../../../../auth/services/user.service';
+import { ApiService } from '../../../../api/api.service';
+import { TicketCategory } from '../models/ticket-category';
 
 @Injectable({
   providedIn: 'root'
@@ -45,16 +45,9 @@ export class TicketService {
     }
   ];
 
-  constructor(private apiService: ApiService,
-              private userService: UserService) {
-  }
-
-  public getMyTickets(limit: number = 10, page: number = 1): Promise<any> {
-    return new Promise((resolve, reject) => {
-      this.apiService.get('tickets?page_size=' + limit + '&page=' + page, false).then((res) => {
-        resolve(res);
-      }).catch(reject);
-    });
+  constructor(
+    private apiService: ApiService,
+    private userService: UserService) {
   }
 
   public getCategories(): Array<TicketCategory> {
@@ -70,10 +63,20 @@ export class TicketService {
     });
   }
 
+  public updateTicket(id: number, payload: {title: string, category: string, status: string}): Promise<Ticket | any> {
+    return new Promise((resolve, reject) => {
+      this.apiService.patch('tickets/' + id, payload)
+        .then((res) => {
+          resolve(new TicketMessage(res, this.userService.getUser().username));
+        })
+        .catch(reject);
+    });
+  }
+
   public sendMessage(ticketId: number, message: string, pictureId: number): Promise<TicketMessage | any> {
     return new Promise((resolve, reject) => {
 
-      this.apiService.patch('tickets/' + ticketId, {message: message, picture_id: pictureId})
+      this.apiService.patch('tickets/' + ticketId, { message: message, picture_id: pictureId })
         .then((res) => {
           resolve(new TicketMessage(res, this.userService.getUser().username));
         })

@@ -1,3 +1,4 @@
+@import '../../../../../../assets/sass/partials/imports';
 
 app-file-uploader {
   .upload-wrapper {
@@ -18,7 +19,7 @@ app-file-uploader {
       transition: all 0.3s;
 
       &.dragOver {
-        border-color: #FF6600;
+        border-color: $primary;
         background: #eeeeee;
       }
 
@@ -30,6 +31,9 @@ app-file-uploader {
         }
 
         .drop-container {
+          border: 1px solid #dddddd;
+          border-top: none;
+          border-bottom: none;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -45,7 +49,7 @@ app-file-uploader {
             cursor: pointer;
             font-weight: 400;
             padding: 0 2px;
-            color: #FF6600;
+            color: $primary;
           }
           input {
             display: none;
