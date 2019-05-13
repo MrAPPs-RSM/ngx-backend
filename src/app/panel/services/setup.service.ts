@@ -1,4 +1,3 @@
-
 import {from as observableFrom, Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {ApiService} from '../../api/api.service';
@@ -13,108 +12,111 @@ import {MenuService} from './menu.service';
 import {NotfoundPageComponent} from '../pages/notfound-page/notfound-page.component';
 
 import {PendingChangesGuard} from '../../auth/guards/pending-changes.guard';
+import {TicketsPageComponent} from '../pages/tickets-page/tickets-page.component';
+import {TicketDetailPageComponent} from '../pages/ticket-detail-page/ticket-detail-page.component';
 
 
 const TYPES = {
-    profile: ProfilePageComponent,
-    dashboard: DashboardPageComponent,
-    table: TablePageComponent,
-    form: FormPageComponent,
+  profile: ProfilePageComponent,
+  dashboard: DashboardPageComponent,
+  tickets: TicketsPageComponent,
+  ticketDetail: TicketDetailPageComponent,
+  table: TablePageComponent,
+  form: FormPageComponent,
 };
 
 @Injectable()
 export class SetupService {
 
-    public _lastRouteLoading: Date;
+  public _lastRouteLoading: Date;
 
-    constructor(private _router: Router,
-                private _menuService: MenuService,
-                private _apiService: ApiService,
-                private _languageService: LanguageService) {
-    }
+  constructor(private _router: Router,
+              private _menuService: MenuService,
+              private _apiService: ApiService,
+              private _languageService: LanguageService) {
+  }
 
-    public setup(): Observable<any> {
-        console.log('CALLING SETUP');
-        const promise = new Promise<any>((resolve, reject) => {
+  public setup(): Observable<any> {
+    console.log('CALLING SETUP');
+    const promise = new Promise<any>((resolve, reject) => {
 
-            if (this._lastRouteLoading == null || Date.now() - this._lastRouteLoading.getMilliseconds() < 10000) {
-                this._apiService.get(environment.api.setupEndpoint)
-                    .then((data) => {
+      if (this._lastRouteLoading == null || Date.now() - this._lastRouteLoading.getMilliseconds() < 10000) {
+        this._apiService.get(environment.api.setupEndpoint)
+          .then((data) => {
+            console.log('SETUP OK');
+            this._lastRouteLoading = new Date();
 
-                        console.log('SETUP OK');
-                        this._lastRouteLoading = new Date();
-
-                        if ('contentLanguages' in data) {
-                            this._languageService.setContentLanguages(data['contentLanguages']);
-                        }
-
-                        console.log('Before calling loadRoutes');
-                        this.loadRoutes(data);
-                        console.log('Before calling prepareMenu');
-                        this._menuService.prepareMenu(data);
-                        console.log('Before calling resolve()');
-                        resolve();
-                    })
-                    .catch((error) => {
-                        console.log('SETUP KO');
-                        this._lastRouteLoading = null;
-                        reject();
-                    });
-            } else {
-                // console.log("SALTO CARICAMENTO ROTTE...");
-                resolve();
+            if ('contentLanguages' in data) {
+              this._languageService.setContentLanguages(data['contentLanguages']);
             }
-        });
 
-        return observableFrom(promise);
-    }
+            console.log('Before calling loadRoutes');
+            this.loadRoutes(data);
+            console.log('Before calling prepareMenu');
+            this._menuService.prepareMenu(data);
+            console.log('Before calling resolve()');
+            resolve();
+          })
+          .catch((error) => {
+            console.log('SETUP KO');
+            this._lastRouteLoading = null;
+            reject();
+          });
+      } else {
+        // console.log("SALTO CARICAMENTO ROTTE...");
+        resolve();
+      }
+    });
 
-    private remapRoutesData(data: any): Array<any> {
-        let routes = [];
+    return observableFrom(promise);
+  }
 
-        if ('pages' in data) {
-            routes = routes.concat(this.remapRoutesData(data.pages));
+  private remapRoutesData(data: any): Array<any> {
+    let routes = [];
+
+    if ('pages' in data) {
+      routes = routes.concat(this.remapRoutesData(data.pages));
+    } else {
+      for (const item of data) {
+        if ('children' in item) {
+          routes = routes.concat(this.remapRoutesData(item.children));
         } else {
-            for (const item of data) {
-                if ('children' in item) {
-                    routes = routes.concat(this.remapRoutesData(item.children));
-                } else {
-                    routes.push(item);
-                }
-            }
+          routes.push(item);
         }
-        return routes;
+      }
+    }
+    return routes;
+  }
+
+  private loadRoutes(data: any): void {
+
+    const routerConfig = this._router.config;
+
+    const routes = [{path: '404', component: NotfoundPageComponent}];
+
+    for (const item of this.remapRoutesData(data)) {
+      if (item.type in TYPES) {
+        const route = {
+          path: item.path,
+          component: TYPES[item.type],
+          data: item.params
+        };
+
+        if (item.type === 'form') {
+          route['canDeactivate'] = [PendingChangesGuard];
+        }
+
+        routes.push(route);
+      }
     }
 
-    private loadRoutes(data: any): void {
-
-        const routerConfig = this._router.config;
-
-        const routes = [{path: '404', component: NotfoundPageComponent}];
-
-        for (const item of this.remapRoutesData(data)) {
-            if (item.type in TYPES) {
-                const route = {
-                    path: item.path,
-                    component: TYPES[item.type],
-                    data: item.params
-                };
-
-                if (item.type === 'form') {
-                    route['canDeactivate'] = [PendingChangesGuard];
-                }
-
-                routes.push(route);
-            }
-        }
-
-        if (environment.domains) {
-            routerConfig[0].children[0].children = routes;
-        } else {
-            routerConfig[0].children = routes;
-        }
-
-        this._router.resetConfig(routerConfig);
+    if (environment.domains) {
+      routerConfig[0].children[0].children = routes;
+    } else {
+      routerConfig[0].children = routes;
     }
+
+    this._router.resetConfig(routerConfig);
+  }
 
 }
