@@ -66,130 +66,133 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
 import {TicketDetailPageComponent} from './pages/ticket-detail-page/ticket-detail-page.component';
 import {FileUploaderComponent} from './pages/ticket-detail-page/components/file-uploader/file-uploader.component';
 import {MatFormFieldModule, MatInputModule} from '@angular/material';
+import {DashboardAuctionsPageComponent} from './pages/dashboard-auctions-page/dashboard-auctions-page.component';
 
 const COMPONENTS = [
-  PanelComponent,
-  FormComponent,
-  TableComponent,
-  DashboardPageComponent,
-  BaseInputComponent,
-  InputTextComponent,
-  InputPasswordComponent,
-  TicketDetailPageComponent,
-  FormPageComponent,
-  TablePageComponent,
-  InputUrlComponent,
-  InputNumberComponent,
-  SeparatorComponent,
-  FormTypeSwitcherComponent,
-  InputColorComponent,
-  InputTextareaComponent,
-  SelectComponent,
-  InputEmailComponent,
-  CheckboxComponent,
-  FileUploadComponent,
-  ListDetailsComponent,
-  MapComponent,
-  ContentTopComponent,
-  FileUploaderComponent,
-  ProfilePageComponent,
-  NotfoundPageComponent,
-  PlainComponent,
-  PreviewComponent,
-  DatePickerComponent,
-  DateRangePickerComponent,
-  MediaLibraryComponent,
-  TimetablePickerComponent,
-  GeoSearchComponent,
-  GalleryComponent,
-  Select2Component,
-  CloudinaryLibraryComponent,
-  HotspotComponent,
-  ImageComponent
+    PanelComponent,
+    FormComponent,
+    TableComponent,
+    DashboardPageComponent,
+    BaseInputComponent,
+    InputTextComponent,
+    InputPasswordComponent,
+    TicketDetailPageComponent,
+    FormPageComponent,
+    TablePageComponent,
+    InputUrlComponent,
+    InputNumberComponent,
+    SeparatorComponent,
+    FormTypeSwitcherComponent,
+    InputColorComponent,
+    InputTextareaComponent,
+    SelectComponent,
+    InputEmailComponent,
+    CheckboxComponent,
+    FileUploadComponent,
+    ListDetailsComponent,
+    MapComponent,
+    ContentTopComponent,
+    FileUploaderComponent,
+    ProfilePageComponent,
+    NotfoundPageComponent,
+    PlainComponent,
+    PreviewComponent,
+    DatePickerComponent,
+    DateRangePickerComponent,
+    MediaLibraryComponent,
+    TimetablePickerComponent,
+    GeoSearchComponent,
+    GalleryComponent,
+    Select2Component,
+    CloudinaryLibraryComponent,
+    HotspotComponent,
+    ImageComponent,
+    DashboardAuctionsPageComponent
 ];
 
 const PROVIDERS = [
-  AuthGuard,
-  SetupService,
-  MenuService,
-  PanelResolver,
-  PageTitleService,
-  ModalService,
-  LanguageService,
-  TranslatePipe
+    AuthGuard,
+    SetupService,
+    MenuService,
+    PanelResolver,
+    PageTitleService,
+    ModalService,
+    LanguageService,
+    TranslatePipe
 ];
 
 
 const routes: Routes = [
-  {
-    path: 'panel',
-    canActivate: [
-      AuthGuard
-    ],
-    resolve: {
-      params: PanelResolver
-    },
-    children: [
-      {
-        path: '**',
+    {
+        path: 'panel',
         canActivate: [
-          AuthGuard
+            AuthGuard
         ],
         resolve: {
-          params: PanelResolver
+            params: PanelResolver
         },
+        children: [
+            {
+                path: '**',
+                canActivate: [
+                    AuthGuard
+                ],
+                resolve: {
+                    params: PanelResolver
+                },
+                component: PanelComponent,
+                pathMatch: 'full'
+            }
+        ],
         component: PanelComponent,
-        pathMatch: 'full'
-      }
-    ],
-    component: PanelComponent,
-    pathMatch: 'prefix'
-  }
+        pathMatch: 'prefix'
+    }
 ];
 
 @NgModule({
-  imports: [
-    CommonModule,
-    RouterModule.forChild(routes),
-    ReactiveFormsModule,
-    FormsModule,
-    ColorPickerModule,
-    ScrollingModule,
-    EditorModule,
-    NgSelectModule,
-    MatInputModule,
-    MatFormFieldModule,
-    NgxUploaderModule,
-    AgmCoreModule.forRoot({
-      apiKey: environment.googleMapsApiKey ? environment.googleMapsApiKey : ''
-    }),
-    Ng2SmartTableModule,
-    PipesModule,
-    NouisliderModule,
-    OwlDateTimeModule,
-    OwlNativeDateTimeModule,
-    CKEditorModule,
-    TextMaskModule
-  ],
-  exports: [
-    FormComponent,
-    InputTextComponent,
-    InputPasswordComponent
-  ],
-  declarations: [
-    ...COMPONENTS
-  ],
-  providers: [
-    ...PROVIDERS
-  ],
-  entryComponents: [
-    FormPageComponent,
-    TablePageComponent,
-    DashboardPageComponent,
-    TicketDetailPageComponent,
-    ProfilePageComponent,
-    NotfoundPageComponent
-  ]
+    imports: [
+        CommonModule,
+        RouterModule.forChild(routes),
+        ReactiveFormsModule,
+        FormsModule,
+        ColorPickerModule,
+        ScrollingModule,
+        EditorModule,
+        NgSelectModule,
+        MatInputModule,
+        MatFormFieldModule,
+        NgxUploaderModule,
+        AgmCoreModule.forRoot({
+            apiKey: environment.googleMapsApiKey ? environment.googleMapsApiKey : ''
+        }),
+        Ng2SmartTableModule,
+        PipesModule,
+        NouisliderModule,
+        OwlDateTimeModule,
+        OwlNativeDateTimeModule,
+        CKEditorModule,
+        TextMaskModule
+    ],
+    exports: [
+        FormComponent,
+        InputTextComponent,
+        InputPasswordComponent
+    ],
+    declarations: [
+        ...COMPONENTS
+    ],
+    providers: [
+        ...PROVIDERS
+    ],
+    entryComponents: [
+        FormPageComponent,
+        TablePageComponent,
+        DashboardPageComponent,
+        TicketDetailPageComponent,
+        DashboardAuctionsPageComponent,
+        ProfilePageComponent,
+        NotfoundPageComponent
+    ]
 })
 export class PanelModule {
 
