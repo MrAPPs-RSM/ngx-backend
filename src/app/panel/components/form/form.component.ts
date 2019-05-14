@@ -8,16 +8,16 @@ import {
     ChangeDetectorRef,
     OnDestroy
 } from '@angular/core';
-import {AbstractControl, FormArray, FormControl, FormGroup} from '@angular/forms';
-import {ActivatedRoute, Router} from '@angular/router';
-import {FormGeneratorService} from '../../services/form-generator.service';
-import {ModalService} from '../../services/modal.service';
-import {ApiService, ErrorResponse} from '../../../api/api.service';
-import {FormSettings} from './interfaces/form-settings';
-import {FormButton} from './interfaces/form-button';
-import {Language, LanguageService} from '../../services/language.service';
-import {Subscription, Observable} from 'rxjs';
-import {formConfig} from './form.config';
+import { AbstractControl, FormArray, FormControl, FormGroup } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormGeneratorService } from '../../services/form-generator.service';
+import { ModalService } from '../../services/modal.service';
+import { ApiService, ErrorResponse } from '../../../api/api.service';
+import { FormSettings } from './interfaces/form-settings';
+import { FormButton } from './interfaces/form-button';
+import { Language, LanguageService } from '../../services/language.service';
+import { Subscription, Observable } from 'rxjs';
+import { formConfig } from './form.config';
 import { Location } from '@angular/common';
 
 @Component({
@@ -53,13 +53,13 @@ export class FormComponent implements OnInit, OnDestroy {
     }
 
     constructor(private _formGenerator: FormGeneratorService,
-                public _languageService: LanguageService,
-                private _modal: ModalService,
-                private _router: Router,
-                private _apiService: ApiService,
-                private _location: Location,
-                private _route: ActivatedRoute,
-                private _ref: ChangeDetectorRef) {
+        public _languageService: LanguageService,
+        private _modal: ModalService,
+        private _router: Router,
+        private _apiService: ApiService,
+        private _location: Location,
+        private _route: ActivatedRoute,
+        private _ref: ChangeDetectorRef) {
         this.enableAutoSubmit = false;
     }
 
@@ -105,7 +105,7 @@ export class FormComponent implements OnInit, OnDestroy {
         this.form.valueChanges.subscribe(
             data => {
                 this.dataStored = false;
-                //console.log(data);
+                // console.log(data);
             }
         );
     }
@@ -334,7 +334,7 @@ export class FormComponent implements OnInit, OnDestroy {
 
         this._languageService.getContentLanguages().forEach((lang: Language) => {
             if (this.settings.fields[lang.isoCode]) {
-                this.settings.fields[lang.isoCode].forEach((field) => {
+                this.settings.fields[lang.isoCode].forEach((field) => {
                     if (field.type === 'file') {
                         components.push(field.key);
                     }
@@ -351,7 +351,7 @@ export class FormComponent implements OnInit, OnDestroy {
                         if (rawValue[key]) {
                             const array = [];
                             rawValue[key].forEach((item) => {
-                                if (item.id) {
+                                if (item.id) {
                                     array.push(item.id);
                                 }
                             });
@@ -370,7 +370,7 @@ export class FormComponent implements OnInit, OnDestroy {
                                 if (rawValue[lang.isoCode][key]) {
                                     const array = [];
                                     rawValue[lang.isoCode][key].forEach((item) => {
-                                        if (item.id) {
+                                        if (item.id) {
                                             array.push(item.id);
                                         }
                                     });
@@ -458,7 +458,7 @@ export class FormComponent implements OnInit, OnDestroy {
             if (path.charAt(0) !== '/') {
                 path = 'panel/' + path;
             }
-            let queryParams;
+            let queryParams: any;
             if (button.config.isTablePath) {
                 let buttonParams = button.config.params;
                 if (button.config.params.indexOf(':id') > -1) {
@@ -476,9 +476,380 @@ export class FormComponent implements OnInit, OnDestroy {
                     listParams: buttonParams
                 };
             }
-            this._router.navigate(['../' + path], {queryParams: queryParams, relativeTo: this._route.parent});
+            this._router.navigate(['../' + path], { queryParams: queryParams, relativeTo: this._route.parent });
+        } else if (button.config.endpoint) {
+            const endpoint = button.config.endpoint;
+
+            /*TODO: check this
+            if (endpoint.indexOf(':id') !== -1) {
+                endpoint = endpoint.replace(':id', 'idField' in button.config ? data[action.config['idField']] : data.id);
+            }*/
+
+            if (button.config.method) {
+                this.handleActionApi(button, endpoint, button.config.body)
+                    .then(() => {
+                        if (button.config.refreshAfter !== false) {
+                            // TODO: reload page ?
+
+                            // old code
+                            // this.getData();
+                        }
+                    })
+                    .catch((response: ErrorResponse | any) => {
+                        this.isLoading = false;
+                        // TODO: show error
+                        // this._toast.error(response.error);
+                    });
+            }
+        } else {
+            console.log('this button does nothing');
         }
-        // TODO: implement same logic like action parsing in table.component.ts
     }
 
+    private handleActionApi(button: FormButton, endpoint: string, payload?: any): Promise<any> {
+        return new Promise((resolve, reject) => {
+            switch (button.config.method) {
+                case 'post': {
+                    if (button.config.confirm) {
+                        this._modal.confirm()
+                            .then(() => {
+                                if (button.config.refreshAfter !== false) {
+                                    this.isLoading = true;
+                                }
+                                this._apiService.post(endpoint, {})
+                                    .then((response) => {
+                                        this.handleResponseApi(button, response)
+                                            .then(() => resolve())
+                                            .catch((error) => reject(error));
+                                    })
+                                    .catch((response: ErrorResponse) => {
+                                        reject(response);
+                                    });
+                            })
+                            .catch(() => {
+                            });
+                    } else {
+                        if (button.config.refreshAfter !== false) {
+                            this.isLoading = true;
+                        }
+                        this._apiService.post(endpoint, {})
+                            .then((response) => {
+                                this.handleResponseApi(button, response)
+                                    .then(() => resolve())
+                                    .catch((error) => reject(error));
+                            })
+                            .catch((response: ErrorResponse) => {
+                                reject(response);
+                            });
+                    }
+                }
+                    break;
+                case 'put': { // TODO (only if necessary)
+                    resolve();
+                }
+                    break;
+                case 'patch': {
+                    if (typeof payload !== 'undefined' && payload) {
+                        if (button.config.confirm) {
+                            this._modal.confirm()
+                                .then(() => {
+                                    if (button.config.refreshAfter !== false) {
+                                        this.isLoading = true;
+                                    }
+                                    try {
+                                        const body = JSON.parse(payload);
+                                        this._apiService.patch(endpoint, body)
+                                            .then((response) => {
+                                                this.handleResponseApi(button, response)
+                                                    .then(() => resolve())
+                                                    .catch((error) => reject(error));
+                                            })
+                                            .catch((response: ErrorResponse) => {
+                                                reject(response);
+                                            });
+                                    } catch (e) {
+                                        reject({ error: { message: 'payload is not a valid JSON' } });
+                                    }
+                                })
+                                .catch(() => {
+                                });
+                        } else {
+                            if (button.config.refreshAfter !== false) {
+                                this.isLoading = true;
+                            }
+                            this._apiService.patch(endpoint, JSON.parse(payload))
+                                .then((response) => {
+                                    this.handleResponseApi(button, response)
+                                        .then(() => resolve())
+                                        .catch((error) => reject(error));
+                                })
+                                .catch((response: ErrorResponse) => {
+                                    reject(response);
+                                });
+                        }
+                    } else {
+                        resolve();
+                    }
+                }
+                    break;
+                case 'get': {
+                    if (button.config.confirm) {
+                        this._modal.confirm()
+                            .then(() => {
+                                if (button.config.refreshAfter !== false) {
+                                    this.isLoading = true;
+                                }
+                                /*TODO: check if needed
+                                if (button.config.responseType === 'file_download' && button.config.forceDownload) {
+                                    (window as any).open(this._apiService.composeUrl(endpoint, true, button.config.addFilters ? this.composeCountParams() : null));
+                                    resolve();
+                                } else { */
+                                this._apiService.get(endpoint, null)
+                                    .then((response) => {
+                                        this.handleResponseApi(button, response)
+                                            .then(() => resolve())
+                                            .catch((error) => reject(error));
+                                    })
+                                    .catch((response: ErrorResponse) => {
+                                        reject(response);
+                                    });
+                                // }
+
+                            }).catch(() => {
+                            });
+                    } else {
+                        if (button.config.refreshAfter !== false) {
+                            this.isLoading = true;
+                        }
+                        /*TODO: check if needed
+                              if (button.config.responseType === 'file_download' && button.config.forceDownload) {
+                                  (window as any).open(this._apiService.composeUrl(endpoint, true, button.config.addFilters ? this.composeCountParams() : null));
+                                  resolve();
+                              } else { */
+                        // Adding countParams to filter without pagination and sort
+                        this._apiService.get(endpoint, null)
+                            .then((response) => {
+                                this.handleResponseApi(button, response)
+                                    .then(() => resolve())
+                                    .catch((error) => reject(error));
+                            })
+                            .catch((response: ErrorResponse) => {
+                                reject(response);
+                            });
+                        // }
+                    }
+                }
+                    break;
+                case 'delete': {
+                    if (button.config.confirm) {
+
+                        // TODO:
+                        /*const title = action.config.modal && action.config.modal.delete && action.config.modal.delete.title ?
+                            action.config.modal.delete.title : null;
+                        const body = action.config.modal && action.config.modal.delete && action.config.modal.delete.body ?
+                            action.config.modal.delete.body : null;*/
+
+                        const title = null;
+                        const body = null;
+
+                        this._modal.confirm(title, body)
+                            .then(() => {
+                                if (button.config.refreshAfter !== false) {
+                                    this.isLoading = true;
+                                }
+                                console.log(this.isLoading);
+                                this._apiService.delete(endpoint)
+                                    .then((response) => {
+                                        this.handleResponseApi(button, response)
+                                            .then(() => resolve())
+                                            .catch((error) => {
+                                                this.isLoading = false;
+                                                reject(error);
+                                            });
+                                    })
+                                    .catch((response: ErrorResponse) => {
+                                        this.isLoading = false;
+                                        reject(response);
+                                    });
+                            })
+                            .catch(() => {
+                            });
+                    } else {
+                        if (button.config.refreshAfter !== false) {
+                            this.isLoading = true;
+                        }
+                        this._apiService.delete(endpoint)
+                            .then((response) => {
+                                this.handleResponseApi(button, response)
+                                    .then(() => resolve())
+                                    .catch((error) => reject(error));
+                            })
+                            .catch((response: ErrorResponse) => {
+                                reject(response);
+                            });
+                    }
+                }
+                    break;
+            }
+        });
+    }
+
+    private handleResponseApi(button: FormButton, response: any): Promise<any> {
+        return new Promise((resolve, reject) => {
+            if (button.config.responseType) {
+                switch (button.config.responseType) {
+                    /*case 'file_download': {
+                        if (button.config.file) {
+                            const now = new Date();
+
+                            const name = (action.config.file.name) ? action.config.file.name : 'table';
+
+                            const fileName = name + '_' + now.toISOString().substring(0, 19) + '.' + action.config.file.extension;
+                            const fileType = UtilsService.getFileType(action.config.file.extension);
+
+                            const blob = new Blob([response], { type: fileType });
+                            const file = new File([blob], fileName, { type: fileType });
+                            (FileSaver as any).saveAs(file);
+
+                            resolve();
+                        } else {
+                            reject('File configuration not defined');
+                        }
+
+                    }
+                        break;*/
+                    default: {
+                        // TODO: alert success
+                        // this._toast.success();
+                        resolve();
+                    }
+                        break;
+                }
+            } else {
+                // TODO: alert success
+                // this._toast.success();
+                resolve();
+            }
+        });
+    }
+
+    /*private parseAction(action: TableAction, data?: any): void {
+
+        let extraParams = {};
+
+        let path = action.config.path;
+
+        if (path) {
+            if (!data) {
+
+                if (action.config.params && action.config.params.associateFields && action.config.params.associateFields.length > 0) {
+                    const params = {};
+
+                    action.config.params.associateFields.forEach((association: Association) => {
+                        const queryKey = association.queryKey.indexOf('where') >= 0 || association.queryKey.indexOf('.') >= 0 ? association.queryKey : 'where.' + association.queryKey;
+                        params[association.formKey] = UtilsService.objectByString(this.filter, queryKey);
+                    });
+
+                    extraParams = { queryParams: { formParams: JSON.stringify(params) }, relativeTo: this._route.parent };
+
+                    this._router.navigate(['../panel/' + path], extraParams);
+                } else {
+                    this._router.navigate(['../panel/' + path], { relativeTo: this._route.parent });
+                }
+            } else {
+
+                if (action.config.tableField && path.indexOf(':tableField') !== -1) {
+                    const tableValue = UtilsService.objectByString(data, action.config.tableField);
+                    if (tableValue) {
+                        path = path.replace(':tableField', tableValue);
+                    }
+                }
+
+                if (path.indexOf(':id') !== -1) {
+                    let idValue = data.id;
+                    if ('idField' in action.config) {
+                        idValue = UtilsService.objectByString(data, action.config.idField);
+                    }
+                    path = path.replace(':id', idValue ? idValue : data.id);
+                }
+
+                if (action.config.titleField && path.indexOf(':title') !== -1) {
+                    const titleValue = UtilsService.objectByString(data, action.config.titleField);
+                    path = path.replace(':title', titleValue !== null && titleValue !== '' ? titleValue : '---');
+                }
+
+                if (action.config.params) {
+
+                    if (action.config.params.filter) {
+
+                        let updatedFilter = action.config.params.filter;
+
+                        if (UtilsService.isObject(updatedFilter)) {
+                            updatedFilter = JSON.stringify(updatedFilter);
+                        }
+
+                        if (updatedFilter.indexOf(':id') !== -1) {
+                            updatedFilter = updatedFilter.replace(':id', 'idField' in action.config ? data[action.config['idField']] : data.id);
+                        }
+
+                        extraParams = { queryParams: { listParams: updatedFilter } };
+                    } else if (action.config.params.loadData) {
+                        extraParams = {
+                            queryParams: {
+                                loadData: JSON.stringify({
+                                    id: data.id,
+                                    endpoint: action.config.params.endpoint
+                                })
+                            }
+                        };
+                    } else if (action.config.params.associateFields && action.config.params.associateFields.length > 0) {
+                        action.config.params['formValues'] = {};
+
+                        action.config.params.associateFields.forEach((association: Association) => {
+                            let key = association.tableKey;
+                            if (association.formKey) {
+                                key = association.formKey;
+                            }
+                            action.config.params['formValues'][key] = data[association.tableKey];
+                        });
+
+                        const formValues = action.config.params['formValues'];
+                        extraParams = { queryParams: { formParams: JSON.stringify(formValues) } };
+
+                        delete action.config.params.associateFields;
+                    }
+                }
+                //If is table auto-update (sub categories for example), refresh same component
+                 
+                if (this.isMultiLangEnabled) {
+                    if (extraParams.hasOwnProperty('queryParams')) {
+                        extraParams['queryParams']['currentLang'] = this.currentLang.isoCode;
+                    } else {
+                        extraParams = { queryParams: { currentLang: this.currentLang.isoCode } };
+                    }
+                }
+
+                extraParams['relativeTo'] = this._route.parent;
+                this._router.navigate(['../panel/' + path], extraParams);
+            }
+        } else if (action.config.endpoint) {
+            let endpoint = action.config.endpoint;
+            if (endpoint.indexOf(':id') !== -1) {
+                endpoint = endpoint.replace(':id', 'idField' in action.config ? data[action.config['idField']] : data.id);
+            }
+
+            if (action.config.method) {
+                this.handleActionApi(action, endpoint, action.config.endpointData, data)
+                    .then(() => {
+                        if (action.config.refreshAfter !== false) {
+                            this.getData();
+                        }
+                    })
+                    .catch((response: ErrorResponse | any) => {
+                        this.isLoading = false;
+                        this._toast.error(response.error);
+                    });
+            }
+        }
+    }*/
 }
