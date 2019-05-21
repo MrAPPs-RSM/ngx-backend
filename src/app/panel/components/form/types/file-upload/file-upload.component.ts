@@ -1,5 +1,5 @@
 import {
-    Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Renderer2, ViewChild,
+    Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Renderer2, SimpleChanges, ViewChild,
     ViewEncapsulation
 } from '@angular/core';
 import {
@@ -13,10 +13,8 @@ import {BaseInputComponent} from '../base-input/base-input.component';
 import {ToastsService} from '../../../../../services/toasts.service';
 import {Subscription} from 'rxjs';
 import {Language, LanguageService} from '../../../../services/language.service';
-import { DragulaService } from 'ng2-dragula';
-import { first } from 'rxjs/operators';
-
-declare const $: any;
+import {DragulaService} from 'ng2-dragula';
+import {first} from 'rxjs/operators';
 
 @Component({
     selector: 'app-file-upload',
@@ -24,7 +22,7 @@ declare const $: any;
     styleUrls: ['./file-upload.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class FileUploadComponent extends BaseInputComponent implements OnInit, OnDestroy {
+export class FileUploadComponent extends BaseInputComponent implements OnInit, OnChanges, OnDestroy {
 
     @Input() field: FormFieldFile;
     @Input() putFilesOnLanguages: boolean;
@@ -49,6 +47,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
 
     showMediaLibrary: boolean = false;
 
+    public contentLanguages: any[];
     copyToLang: boolean = false; // putFilesOnLanguage checkbox
 
     @ViewChild('fileUpload') _fileUpload: ElementRef;
@@ -58,7 +57,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     constructor(private _renderer: Renderer2,
                 private _toastsService: ToastsService,
                 private _apiService: ApiService,
-                private _langService: LanguageService,
+                public _langService: LanguageService,
                 private _dragulaService: DragulaService) {
         super();
     }
@@ -98,6 +97,14 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
                 }
             }
         });
+
+        // this.setCorrectlyLanguages();
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if ('currentLang' in changes) {
+            this.setCorrectlyLanguages();
+        }
     }
 
     ngOnDestroy() {
@@ -120,7 +127,14 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         }
     }
 
-    bringFileSelector(): boolean {
+    /** Sometimes, Google Cloud takes a few seconds to make the image accessible */
+    public retryUrl($event: any, url: string): void {
+        setTimeout(() => {
+            $event.target.src = url;
+        }, 2000);
+    }
+
+    public bringFileSelector(): boolean {
         if (this.showMediaLibrary) {
             this.closeMediaLibrary();
         }
@@ -131,19 +145,12 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         return false;
     }
 
-    /** Sometimes, Google Cloud takes a few seconds to make the image accessible */
-    private retryUrl($event: any, url: string): void {
-        setTimeout(() => {
-            $event.target.src = url;
-        }, 2000);
-    }
-
-    canUpload(): boolean {
+    public canUpload(): boolean {
         return (!this.getControl().value || (this.getControl().value && this.getControl().value.length === 0)) ||
             ((this.maxFiles > 0 && this.getControl().value && this.getControl().value.length < this.maxFiles) || this.maxFiles === 0);
     }
 
-    onUploadOutput(output: UploadOutput): void {
+    public onUploadOutput(output: UploadOutput): void {
         switch (output.type) {
             case 'allAddedToQueue': {
                 if (this.files.length > 0) {
@@ -252,23 +259,32 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         if (remove) {
             files = UtilsService.removeObjectFromArray(file, files);
         } else {
-            files.push(file);
+            if (this.maxFiles === 1) {
+                files = [file];
+            } else {
+                files.push(file);
+            }
         }
 
         if (this.copyToLang && !remove) {
-            this._langService.getContentLanguages().forEach((lang: Language) => {
-                Object.keys(this.form.parent.controls).forEach((key) => {
-                    if (lang.isoCode === key) {
-                        const currentValue = this.form.parent.controls[key].controls[this.field.key].value || [];
-                        currentValue.push(file);
-                        let unique = UtilsService.uniqueArray(currentValue, 'id');
+            this.contentLanguages.forEach((lang) => {
+                if (lang.checked) {
+                    Object.keys(this.form.parent.controls).forEach((key) => {
+                        if (lang.isoCode === key) {
+                            let currentValue = this.form.parent.controls[key].controls[this.field.key].value || [];
+                            if (this.maxFiles === 1) {
+                                currentValue = [file];
+                            } else {
+                                currentValue.push(file);
+                            }
+                            const unique = UtilsService.uniqueArray(currentValue, 'id');
 
-                        console.log(unique);
-                        this.form.parent.controls[key].controls[this.field.key].setValue(
-                            unique.length > 0 ? unique : null,
-                            {emitEvent: false});
-                    }
-                });
+                            this.form.parent.controls[key].controls[this.field.key].setValue(
+                                unique.length > 0 ? unique : null,
+                                {emitEvent: false});
+                        }
+                    });
+                }
             });
         } else {
             this.getControl().setValue(files.length > 0 ? files : null, {emitEvent: false});
@@ -279,16 +295,17 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         this.updateFormValue(file, true);
     }
 
-    /** Media library  */
-    openMediaLibrary(): void {
+
+    /** -------------------- Media library -------------------- */
+    public openMediaLibrary(): void {
         this.showMediaLibrary = true;
     }
 
-    closeMediaLibrary(): void {
+    public closeMediaLibrary(): void {
         this.showMediaLibrary = false;
     }
 
-    onConfirmMediaLibrarySelection(selection: Media[] | any): void {
+    public onConfirmMediaLibrarySelection(selection: Media[] | any): void {
         if (selection) {
             (selection as Media[]).forEach((media: Media) => {
                 this.updateFormValue({
@@ -302,7 +319,19 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         this.closeMediaLibrary();
     }
 
-    onCopyToLangChange($event: any): void {
-        console.log($event);
+
+    /** -------------------- Copy to languages -------------------- */
+    private setCorrectlyLanguages(): void {
+        this.contentLanguages = this._langService.getContentLanguages();
+        this.contentLanguages.forEach((lang) => {
+            lang.checked = !(lang.id !== this.currentLang.id);
+        });
+    }
+    public onSelectAllLanguagesChange($event: any): void {
+        this.contentLanguages.forEach((lang) => {
+            if (lang.id !== this.currentLang.id) {
+                lang.checked = $event.target.checked;
+            }
+        });
     }
 }

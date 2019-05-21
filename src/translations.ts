@@ -13,7 +13,8 @@ export const translations = {
                 close: 'Chiudi'
             },
             inputs: {
-                put_on_languages: 'Copia su tutte le lingue',
+                put_on_languages: 'Copia su altre lingue',
+                select_languages: 'Seleziona lingue su cui copiare',
                 invalid_date_range: 'Range di date non valido',
                 drag_drop: 'Drag & Drop oppure',
                 upload_files: 'Carica file(s)',
@@ -87,7 +88,8 @@ export const translations = {
                 close: 'Close'
             },
             inputs: {
-                put_on_languages: 'Copy to every language',
+                put_on_languages: 'Copy to other languages',
+                select_languages: 'Select languages where to copy',
                 invalid_date_range: 'Invalid date range',
                 drag_drop: 'Drag & Drop or',
                 upload_files: 'Upload file(s)',

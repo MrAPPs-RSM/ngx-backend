@@ -106,7 +106,7 @@ export class Ng2SmartTableComponent implements OnChanges, OnInit, OnDestroy {
 
     ngOnDestroy() {
         if (this.isDragEnabled && this._dragulaService) {
-            this._dragulaService.destroy('bag');
+            this._dragulaService.destroy('row');
         }
     }
 

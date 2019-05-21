@@ -12,18 +12,37 @@
                 </span>)
         </label>
 
-        <div *ngIf="putFilesOnLanguages && canUpload() && !isLoading">
-            <label class="checkbox">
-                <input type="checkbox"
-                       class="styled"
-                       [checked]="copyToLang"
-                       [(ngModel)]="copyToLang"
-                       (ngModelChange)="onCopyToLangChange($event)"
-                       [ngModelOptions]="{standalone: true}"
-                >
-                <span>{{'forms.inputs.put_on_languages' | translate}}</span>
-            </label>
-            <br />
+        <div *ngIf="putFilesOnLanguages && canUpload() && !isLoading" class="copy-to-languages">
+            <div>
+                <label class="checkbox">
+                    <input type="checkbox"
+                           class="styled"
+                           [checked]="copyToLang"
+                           [(ngModel)]="copyToLang"
+                           [ngModelOptions]="{standalone: true}">
+                    <span>{{'forms.inputs.put_on_languages' | translate}}</span>
+                </label>
+            </div>
+
+            <div *ngIf="copyToLang" class="languages">
+                <span>{{'forms.inputs.select_languages' | translate}}</span>
+                <label class="checkbox">
+                    <input type="checkbox"
+                           class="styled"
+                           (change)="onSelectAllLanguagesChange($event)">
+                    <span>{{'forms.inputs.select_all' | translate}}</span>
+                </label>
+                <div *ngFor="let lang of contentLanguages" class="lang">
+                    <label class="checkbox" *ngIf="lang.id !== currentLang.id">
+                        <input type="checkbox"
+                               class="styled"
+                               [(ngModel)]="lang.checked"
+                               [ngModelOptions]="{standalone: true}">
+                        <span><i [class]="'flag-icon flag-icon-' + _langService.getIsoCodeForFlag(lang)"></i> {{lang.isoCode}}</span>
+                    </label>
+                </div>
+            </div>
+            <br/>
         </div>
 
         <div class="progress" [ngClass]="{'visible': isLoading}">
