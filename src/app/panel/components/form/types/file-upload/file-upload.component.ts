@@ -267,25 +267,27 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         }
 
         if (this.copyToLang && !remove) {
-            this.contentLanguages.forEach((lang) => {
-                if (lang.checked) {
-                    Object.keys(this.form.parent.controls).forEach((key) => {
-                        if (lang.isoCode === key) {
-                            let currentValue = this.form.parent.controls[key].controls[this.field.key].value || [];
-                            if (this.maxFiles === 1) {
-                                currentValue = [file];
-                            } else {
-                                currentValue.push(file);
-                            }
-                            const unique = UtilsService.uniqueArray(currentValue, 'id');
+            if (this.currentLang && this.putFilesOnLanguages) {
+                this.contentLanguages.forEach((lang) => {
+                    if (lang.checked) {
+                        Object.keys(this.form.parent.controls).forEach((key) => {
+                            if (lang.isoCode === key) {
+                                let currentValue = this.form.parent.controls[key].controls[this.field.key].value || [];
+                                if (this.maxFiles === 1) {
+                                    currentValue = [file];
+                                } else {
+                                    currentValue.push(file);
+                                }
+                                const unique = UtilsService.uniqueArray(currentValue, 'id');
 
-                            this.form.parent.controls[key].controls[this.field.key].setValue(
-                                unique.length > 0 ? unique : null,
-                                {emitEvent: false});
-                        }
-                    });
-                }
-            });
+                                this.form.parent.controls[key].controls[this.field.key].setValue(
+                                    unique.length > 0 ? unique : null,
+                                    {emitEvent: false});
+                            }
+                        });
+                    }
+                });
+            }
         } else {
             this.getControl().setValue(files.length > 0 ? files : null, {emitEvent: false});
         }
@@ -322,16 +324,21 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
 
     /** -------------------- Copy to languages -------------------- */
     private setCorrectlyLanguages(): void {
-        this.contentLanguages = this._langService.getContentLanguages();
-        this.contentLanguages.forEach((lang) => {
-            lang.checked = !(lang.id !== this.currentLang.id);
-        });
+        if (this.currentLang && this.putFilesOnLanguages) {
+            this.contentLanguages = this._langService.getContentLanguages();
+            this.contentLanguages.forEach((lang) => {
+                lang.checked = !(lang.id !== this.currentLang.id);
+            });
+        }
     }
+
     public onSelectAllLanguagesChange($event: any): void {
-        this.contentLanguages.forEach((lang) => {
-            if (lang.id !== this.currentLang.id) {
-                lang.checked = $event.target.checked;
-            }
-        });
+        if (this.currentLang && this.putFilesOnLanguages) {
+            this.contentLanguages.forEach((lang) => {
+                if (lang.id !== this.currentLang.id) {
+                    lang.checked = $event.target.checked;
+                }
+            });
+        }
     }
 }
