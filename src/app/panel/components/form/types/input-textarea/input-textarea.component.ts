@@ -60,16 +60,21 @@ export class InputTextareaComponent extends BaseInputComponent implements OnInit
                 language: this._language.getCurrentLang().isoCode,
                 toolbar: this.options
             };
+
+            if (this.field.options.allowContent) {
+                this.config['allowedContent'] = true;
+                this.config['extraAllowedContent'] = '*(*);*{*}';
+            }
         }
     }
 
     getCountCharacters(key?: string): string {
 
         const maxLength = this.getMaxLength(key);
-        if(!maxLength) return '';
+        if (!maxLength) return '';
 
         const length = (this.getControl(key).value || '').length;
-        return length+'/'+maxLength;
+        return length + '/' + maxLength;
     }
 
     onFocus() {
