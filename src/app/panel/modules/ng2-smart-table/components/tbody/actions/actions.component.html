@@ -5,6 +5,7 @@
     'hidden': !action.visible
     }"
    [class]="'ng2-smart-action ' + action.class"
+   [style.background-color]="action.bgColor ? action.bgColor : null"
    [innerHTML]="action.content"
    (click)="action.enabled && onAction($event, action)"
    [matTooltip]="action.name"
