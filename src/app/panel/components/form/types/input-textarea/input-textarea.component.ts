@@ -15,11 +15,10 @@ export class InputTextareaComponent extends BaseInputComponent implements OnInit
 
     constructor(private _language: LanguageService) {
         super();
-        this.focus = false;
     }
 
     isValid() {
-        if (this.getControl().touched && this.focus) {
+        if (this.getControl().touched) {
             return this.getControl().valid;
         } else {
             return true;
