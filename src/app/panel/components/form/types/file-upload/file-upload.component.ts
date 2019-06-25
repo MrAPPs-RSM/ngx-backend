@@ -15,6 +15,7 @@ import {Subscription} from 'rxjs';
 import {Language, LanguageService} from '../../../../services/language.service';
 import {DragulaService} from 'ng2-dragula';
 import {first} from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-file-upload',
@@ -55,6 +56,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     private _subscription = Subscription.EMPTY;
 
     constructor(private _renderer: Renderer2,
+                private _route: ActivatedRoute,
                 private _toastsService: ToastsService,
                 private _apiService: ApiService,
                 public _langService: LanguageService,
@@ -99,6 +101,15 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         });
 
         // this.setCorrectlyLanguages();
+
+        if (this.field.options.api && this.field.options.api.upload.indexOf(':id') > -1) {
+            if (this._route.snapshot && this._route.snapshot.params) {
+                const id = this._route.snapshot.params['id'];
+                if (id) {
+                    this.field.options.api.upload = this.field.options.api.upload.replace(':id', id);
+                }
+            }
+        }
     }
 
     ngOnChanges(changes: SimpleChanges) {
