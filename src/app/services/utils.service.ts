@@ -118,7 +118,7 @@ export class UtilsService {
 
     public static timeConverter(timestamp: number, format?: string) {
         if (!format) {
-            format = 'DD/MM/YYYY, HH:mm';
+            format = 'DD/MM/YYYY, HH:mm:ss';
         }
 
         return moment(timestamp).format(format);

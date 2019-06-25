@@ -21,6 +21,7 @@ export class DatePickerComponent extends BaseInputComponent implements OnInit, O
     max: Date;
 
     ngOnInit() {
+        this.field.enableSeconds = true;
         this.checkDisabled();
         this.initMaxMin();
 
@@ -50,7 +51,8 @@ export class DatePickerComponent extends BaseInputComponent implements OnInit, O
     setValue(value: any, options?: {emitEvent: boolean}) {
         if (value) {
             const date = new Date(value);
-            date.setSeconds(0);
+
+            console.log(date);
             this.getControl().setValue(date, options);
         } else {
             this.clearValue(options);

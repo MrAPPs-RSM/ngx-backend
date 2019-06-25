@@ -19,6 +19,7 @@
             <owl-date-time
                     #dt
                     [firstDayOfWeek]="1"
+                    [showSecondsTimer]="!!field.enableSeconds"
                     [pickerType]="field.isDateTime ? 'both' : 'calendar'"
             ></owl-date-time>
             <span class="remove"
