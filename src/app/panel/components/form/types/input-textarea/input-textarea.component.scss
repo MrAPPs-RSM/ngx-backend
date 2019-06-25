@@ -2,20 +2,6 @@
 
 app-input-textarea {
   div.form-group {
-    > editor {
-      > div.mce-tinymce {
-        border: 1px solid $lightGrey;
-        border-radius: $borderRadius;
-        box-shadow: none;
-      }
-    }
-
-    &.has-error {
-      > editor {
-        > div.mce-tinymce {
-          border-color: $danger;
-        }
-      }
-    }
+    
   }
 }

@@ -4,6 +4,7 @@ export interface FormFieldFile extends FormField {
     options: {
         api: {
             upload: string;
+            addId: boolean;
         },
         maxFiles?: number; // only if multiple
         multiple?: boolean;

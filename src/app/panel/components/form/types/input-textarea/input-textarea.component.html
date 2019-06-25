@@ -6,29 +6,19 @@
             <span *ngIf="isRequired()">*</span>
         </label>
 
-        <ckeditor
-                *ngIf="field.options && field.options.editor"
-                formControlName="{{field.key}}"
-                (focus)="onFocus($event)"
-                [config]="config"
-                [readonly]="field.disabled || onlyView">
-        </ckeditor>
+        <div *ngIf="field.options && field.options.editor" [froalaEditor] formControlName="{{field.key}}"></div>
 
-        <textarea
-                *ngIf="!field.options || !field.options.editor"
-                formControlName="{{field.key}}"
-                id="{{field.key}}"
-                [attr.disabled]="field.disabled || onlyView ? '' : null"
-                class="form-control"
-                placeholder="{{field.placeholder}}"
-                [attr.maxlength]="getMaxLength()">
+        <textarea *ngIf="!field.options || !field.options.editor" formControlName="{{field.key}}" id="{{field.key}}"
+            [attr.disabled]="field.disabled || onlyView ? '' : null" class="form-control"
+            placeholder="{{field.placeholder}}" [attr.maxlength]="getMaxLength()">
             {{field.value}}
         </textarea>
-        <small
-                *ngIf="!field.options || !field.options.editor">
+        <small *ngIf="!field.options || !field.options.editor">
             {{getCountCharacters()}}
         </small>
 
         <span *ngIf="field.description" class="help-block">{{field.description}}</span>
     </div>
+
+    <div id="editor"></div>
 </div>

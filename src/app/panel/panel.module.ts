@@ -1,71 +1,78 @@
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {RouterModule, Routes} from '@angular/router';
-import {ReactiveFormsModule, FormsModule} from '@angular/forms';
-import {ColorPickerModule} from 'ngx-color-picker';
-import {EditorModule} from '@tinymce/tinymce-angular';
-import {NgSelectModule} from '@ng-select/ng-select';
-import {NgxUploaderModule} from 'ngx-uploader';
-import {AgmCoreModule} from '@agm/core';
-import {Ng2SmartTableModule} from './modules/ng2-smart-table/ng2-smart-table.module';
-import {PipesModule} from '../pipes/pipes.module';
-import {NouisliderModule} from 'ng2-nouislider';
-import {OwlDateTimeModule, OwlNativeDateTimeModule} from 'ng-pick-datetime';
-import {CKEditorModule} from 'ng2-ckeditor';
-import {TextMaskModule} from 'angular2-text-mask';
+import 'froala-editor/js/plugins/align.min.js';
+import 'froala-editor/js/plugins/code_view.min.js';
+import 'froala-editor/js/plugins/colors.min.js';
+import 'froala-editor/js/plugins/emoticons.min.js';
+import 'froala-editor/js/plugins/font_family.min.js';
+import 'froala-editor/js/plugins/font_size.min.js';
+import 'froala-editor/js/plugins/link.min.js';
 
-import {PanelComponent} from './panel.component';
-import {FormPageComponent} from './pages/form-page/form-page.component';
-import {TablePageComponent} from './pages/table-page/table-page.component';
-import {ProfilePageComponent} from './pages/profile-page/profile-page.component';
-import {NotfoundPageComponent} from './pages/notfound-page/notfound-page.component';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule, Routes } from '@angular/router';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { ColorPickerModule } from 'ngx-color-picker';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgxUploaderModule } from 'ngx-uploader';
+import { AgmCoreModule } from '@agm/core';
+import { Ng2SmartTableModule } from './modules/ng2-smart-table/ng2-smart-table.module';
+import { PipesModule } from '../pipes/pipes.module';
+import { NouisliderModule } from 'ng2-nouislider';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
+import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
+import { TextMaskModule } from 'angular2-text-mask';
 
-import {AuthGuard} from '../auth/guards/auth.guard';
-import {SetupService} from './services/setup.service';
-import {PanelResolver} from './resolvers/panel.resolver';
-import {ModalService} from './services/modal.service';
-import {LanguageService} from './services/language.service';
-import {MenuService} from './services/menu.service';
-import {TranslatePipe} from '../pipes/translate/translate.pipe';
+import { PanelComponent } from './panel.component';
+import { FormPageComponent } from './pages/form-page/form-page.component';
+import { TablePageComponent } from './pages/table-page/table-page.component';
+import { ProfilePageComponent } from './pages/profile-page/profile-page.component';
+import { NotfoundPageComponent } from './pages/notfound-page/notfound-page.component';
+
+import { AuthGuard } from '../auth/guards/auth.guard';
+import { SetupService } from './services/setup.service';
+import { PanelResolver } from './resolvers/panel.resolver';
+import { ModalService } from './services/modal.service';
+import { LanguageService } from './services/language.service';
+import { MenuService } from './services/menu.service';
+import { TranslatePipe } from '../pipes/translate/translate.pipe';
 
 
-import {TableComponent} from './components/table/table.component';
-import {DashboardPageComponent} from './pages/dashboard-page/dashboard-page.component';
-import {PageTitleService} from './services/page-title.service';
-import {FormComponent} from './components/form/form.component';
-import {BaseInputComponent} from './components/form/types/base-input/base-input.component';
-import {InputPasswordComponent} from './components/form/types/input-password/input-password.component';
-import {InputTextComponent} from './components/form/types/input-text/input-text.component';
-import {InputUrlComponent} from './components/form/types/input-url/input-url.component';
-import {InputNumberComponent} from './components/form/types/input-number/input-number.component';
-import {SeparatorComponent} from './components/form/types/separator/separator.component';
-import {InputColorComponent} from './components/form/types/input-color/input-color.component';
-import {InputTextareaComponent} from './components/form/types/input-textarea/input-textarea.component';
-import {SelectComponent} from './components/form/types/select/select.component';
-import {InputEmailComponent} from './components/form/types/input-email/input-email.component';
-import {CheckboxComponent} from './components/form/types/checkbox/checkbox.component';
-import {FileUploadComponent} from './components/form/types/file-upload/file-upload.component';
-import {MapComponent} from './components/form/types/map/map.component';
-import {ContentTopComponent} from './components/content-top/content-top.component';
-import {FormTypeSwitcherComponent} from './components/form/form-type-switcher/form-type-switcher.component';
-import {ListDetailsComponent} from './components/form/types/list-details/list-details.component';
-import {PlainComponent} from './components/form/types/plain/plain.component';
-import {PreviewComponent} from './components/form/types/preview/preview.component';
-import {DatePickerComponent} from './components/form/types/date-picker/date-picker.component';
-import {DateRangePickerComponent} from './components/form/types/date-range-picker/date-range-picker.component';
-import {MediaLibraryComponent} from './components/form/types/media-library/media-library.component';
-import {TimetablePickerComponent} from './components/form/types/timetable-picker/timetable-picker.component';
-import {GeoSearchComponent} from './components/form/types/geo-search/geo-search.component';
-import {GalleryComponent} from './components/form/types/gallery/gallery.component';
-import {ImageComponent} from './components/form/types/image/image.component';
-import {Select2Component} from './components/form/types/select-2/select-2.component';
-import {CloudinaryLibraryComponent} from './components/form/types/cloudinary-library/cloudinary-library.component';
-import {HotspotComponent} from './components/form/types/hotspot/hotspot.component';
-import {environment} from '../../environments/environment';
-import {ScrollingModule} from '@angular/cdk/scrolling';
-import {TicketDetailPageComponent} from './pages/ticket-detail-page/ticket-detail-page.component';
-import {FileUploaderComponent} from './pages/ticket-detail-page/components/file-uploader/file-uploader.component';
-import {MatFormFieldModule, MatInputModule} from '@angular/material';
+import { TableComponent } from './components/table/table.component';
+import { DashboardPageComponent } from './pages/dashboard-page/dashboard-page.component';
+import { PageTitleService } from './services/page-title.service';
+import { FormComponent } from './components/form/form.component';
+import { BaseInputComponent } from './components/form/types/base-input/base-input.component';
+import { InputPasswordComponent } from './components/form/types/input-password/input-password.component';
+import { InputTextComponent } from './components/form/types/input-text/input-text.component';
+import { InputUrlComponent } from './components/form/types/input-url/input-url.component';
+import { InputNumberComponent } from './components/form/types/input-number/input-number.component';
+import { SeparatorComponent } from './components/form/types/separator/separator.component';
+import { InputColorComponent } from './components/form/types/input-color/input-color.component';
+import { InputTextareaComponent } from './components/form/types/input-textarea/input-textarea.component';
+import { SelectComponent } from './components/form/types/select/select.component';
+import { InputEmailComponent } from './components/form/types/input-email/input-email.component';
+import { CheckboxComponent } from './components/form/types/checkbox/checkbox.component';
+import { FileUploadComponent } from './components/form/types/file-upload/file-upload.component';
+import { MapComponent } from './components/form/types/map/map.component';
+import { ContentTopComponent } from './components/content-top/content-top.component';
+import { FormTypeSwitcherComponent } from './components/form/form-type-switcher/form-type-switcher.component';
+import { ListDetailsComponent } from './components/form/types/list-details/list-details.component';
+import { PlainComponent } from './components/form/types/plain/plain.component';
+import { PreviewComponent } from './components/form/types/preview/preview.component';
+import { DatePickerComponent } from './components/form/types/date-picker/date-picker.component';
+import { DateRangePickerComponent } from './components/form/types/date-range-picker/date-range-picker.component';
+import { MediaLibraryComponent } from './components/form/types/media-library/media-library.component';
+import { TimetablePickerComponent } from './components/form/types/timetable-picker/timetable-picker.component';
+import { GeoSearchComponent } from './components/form/types/geo-search/geo-search.component';
+import { GalleryComponent } from './components/form/types/gallery/gallery.component';
+import { ImageComponent } from './components/form/types/image/image.component';
+import { Select2Component } from './components/form/types/select-2/select-2.component';
+import { CloudinaryLibraryComponent } from './components/form/types/cloudinary-library/cloudinary-library.component';
+import { HotspotComponent } from './components/form/types/hotspot/hotspot.component';
+import { environment } from '../../environments/environment';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { TicketDetailPageComponent } from './pages/ticket-detail-page/ticket-detail-page.component';
+import { FileUploaderComponent } from './pages/ticket-detail-page/components/file-uploader/file-uploader.component';
+import { MatFormFieldModule, MatInputModule } from '@angular/material';
 
 const COMPONENTS = [
   PanelComponent,
@@ -155,7 +162,6 @@ const routes: Routes = [
     FormsModule,
     ColorPickerModule,
     ScrollingModule,
-    EditorModule,
     NgSelectModule,
     MatInputModule,
     MatFormFieldModule,
@@ -168,7 +174,8 @@ const routes: Routes = [
     NouisliderModule,
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
-    CKEditorModule,
+    FroalaEditorModule.forRoot(),
+    FroalaViewModule.forRoot(),
     TextMaskModule
   ],
   exports: [
