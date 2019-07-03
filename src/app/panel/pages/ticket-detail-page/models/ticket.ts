@@ -3,12 +3,14 @@ import * as moment from 'moment';
 
 export class Ticket {
   id: number;
-  category: string;
+  categoryId: number;
   title: string;
   status: string;
   insertedAt: string;
   updatedAt: string;
   messages: TicketMessage[];
+  user: {id: number, username: string};
+  orderId: number;
   lastMessage: { sender: string, message: string };
 
   constructor(jsonData: any,
@@ -16,11 +18,13 @@ export class Ticket {
     this.id = 0;
     this.insertedAt = null;
     this.updatedAt = null;
-    this.category = null;
+    this.categoryId = null;
     this.title = null;
     this.status = null;
     this.messages = [];
     this.lastMessage = null;
+    this.orderId = null;
+    this.user = {id: null, username: null};
 
     this.updateModel(jsonData, currentUser);
   }
@@ -35,8 +39,8 @@ export class Ticket {
     if ('updated_at' in jsonData) {
       this.updatedAt = jsonData['updated_at'] !== null ? moment(jsonData['updated_at']).format('DD/MM/YYYY, HH:mm') : null;
     }
-    if ('category' in jsonData) {
-      this.category = jsonData['category'];
+    if ('category_id' in jsonData) {
+      this.categoryId = jsonData['category_id'];
     }
     if ('title' in jsonData) {
       this.title = jsonData['title'];
@@ -51,6 +55,18 @@ export class Ticket {
     }
     if ('last_message' in jsonData) {
       this.lastMessage = {sender: jsonData['last_message'].user.username, message: jsonData['last_message'].message};
+    }
+
+    if ('order_id' in jsonData) {
+      this.orderId = jsonData['order_id'];
+    }
+
+    if ('user' in jsonData) {
+      this.user = jsonData['user'];
+    }
+
+    if ('user_id' in jsonData) {
+      this.user.id = jsonData['user_id'];
     }
   }
 

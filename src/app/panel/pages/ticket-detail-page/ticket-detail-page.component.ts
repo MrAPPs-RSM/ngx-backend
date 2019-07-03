@@ -1,10 +1,13 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild, ViewEncapsulation, EventEmitter } from '@angular/core';
 import { Ticket } from './models/ticket';
 import { TicketService } from './services/ticket.service';
 import { ActivatedRoute } from '@angular/router';
 import { TicketMessage } from './models/ticket-message';
 import { UserService } from '../../../auth/services/user.service';
 import { TicketCategory } from './models/ticket-category';
+import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators';
+import { ApiService } from '../../../api/api.service';
+import { ToastsService } from '../../../services/toasts.service';
 
 @Component({
   selector: 'app-ticket-detail-page',
@@ -32,17 +35,6 @@ export class TicketDetailPageComponent implements OnInit {
   @ViewChild('msgWrapper') msgWrapper: ElementRef;
   @ViewChild('msgList') msgList: ElementRef;
 
-  /* to edit ticket fields */
-  public editableTicketFields: {
-    title: string;
-    status: string;
-    category: string;
-  } = {
-      title: null,
-      status: null,
-      category: null
-    };
-
   public ticketStatuses = [
     {
       id: 'open',
@@ -56,36 +48,105 @@ export class TicketDetailPageComponent implements OnInit {
 
   public ticketCategories: TicketCategory[];
 
+  public orders: any[];
+  public typeAheadOrders: EventEmitter<string> = new EventEmitter<string>();
+
+  public users: any[];
+  public typeAheadUsers: EventEmitter<string> = new EventEmitter<string>();
+
+  public isCreate = false;
+
   constructor(
+    private _apiService: ApiService,
     public ticketService: TicketService,
+    private toastService: ToastsService,
     private route: ActivatedRoute,
     private userService: UserService,
     private changeDetector: ChangeDetectorRef) {
   }
 
   ngOnInit() {
-    this.ticketCategories = this.ticketService.getCategories();
+    this.loadCategories();
     this.file.reset();
     const data = this.route.snapshot.params;
     if (Object.entries(data).length > 0 && 'id' in data) {
       this.id = 'id' in data ? <number>data['id'] : null;
-      this.loadTicket().then((res) => {
-        this.ticket = new Ticket(
-          { ...res.ticket, ...{ messages: res.messages } },
+      if (!isNaN(this.id)) {
+        this.loadTicket().then((res) => {
+          this.ticket = new Ticket(
+            { ...res.ticket, ...{ messages: res.messages } },
+            this.userService.getUser().username
+          );
+          this.changeDetector.detectChanges(); // to update viewChilds
+          this.doScroll();
+
+          if (this.ticket.orderId) {
+            this.loadOrdersSelect(this.ticket.orderId).then((orders) => {
+              this.orders = orders;
+            }).catch(() => {});
+          }
+
+          if (this.ticket.user) {
+            this.loadUsersSelect(this.ticket.user.username).then((users) => {
+              this.users = users;
+            }).catch(() => {});
+          }
+        });
+      } else {
+        this.isCreate = true;
+        this.ticket = new Ticket({},
           this.userService.getUser().username
         );
-        this.changeDetector.detectChanges(); // to update viewChilds
-        this.doScroll();
-
-
-        /* load editable fields of the ticket */
-        this.editableTicketFields.title = this.ticket.title;
-        this.editableTicketFields.status = this.ticket.status;
-        this.editableTicketFields.category = this.ticket.category;
-      });
+        this.typeListenerUsers();
+      }
     }
+
+    this.typeListenerOrders();
   }
 
+  /* When type in select */
+  private typeListenerOrders(): void {
+    this.typeAheadOrders.pipe(
+      distinctUntilChanged(),
+      debounceTime(300),
+      switchMap(tag => this.loadOrdersSelect(tag))
+    ).subscribe(data => {
+      // this._cd.markForCheck();
+      this.orders = data;
+    }, (err) => {
+      console.log(err);
+      this.orders = [];
+    });
+  }
+
+  private loadOrdersSelect(search): Promise<any> {
+    return this._apiService.get('tickets/select/orders', { search: search });
+  }
+
+  /* When type in select */
+  private typeListenerUsers(): void {
+    this.typeAheadUsers.pipe(
+      distinctUntilChanged(),
+      debounceTime(300),
+      switchMap(tag => this.loadUsersSelect(tag))
+    ).subscribe(data => {
+      // this._cd.markForCheck();
+      this.users = data;
+    }, (err) => {
+      console.log(err);
+      this.users = [];
+    });
+  }
+
+  private loadUsersSelect(search): Promise<any> {
+    return this._apiService.get('users/search', { search: search });
+  }
+
+  private loadCategories(): void {
+    this.ticketService.getCategories().then((res) => {
+      this.ticketCategories = res;
+    }).catch((err) => console.log(err));
+  }
   get disableSend(): boolean {
     if (!this.file.uploaded) {
       return !this.newMessage || this.newMessage === '';
@@ -181,7 +242,26 @@ export class TicketDetailPageComponent implements OnInit {
   }
 
   public onEditableFieldsSubmit($event: any): void {
-    this.ticketService.updateTicket(this.ticket.id, this.editableTicketFields);
+    const payload = {
+      title: this.ticket.title,
+      category_id: this.ticket.categoryId,
+      status: this.ticket.status,
+      order_id: this.ticket.orderId,
+      user_id: this.ticket.user.id
+    };
+
+    console.log(payload);
+
+    if (this.isCreate) {
+      this.ticketService.createTicket(payload).then((res) => {
+        this.ticket.updateModel(res, this.userService.getUser().username);
+        this.toastService.success();
+      }).catch((err) => this.toastService.error());
+    } else {
+      this.ticketService.updateTicket(this.ticket.id, payload).then(() => {
+        this.toastService.success();
+      }).catch((err) => this.toastService.error());
+    }
   }
 
   private smoothScrollTo(element: any, to: number, duration: number) {

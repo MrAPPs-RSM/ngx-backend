@@ -6,27 +6,68 @@
 
           <div class="editable-fields">
             <div class="form-group title">
-              <input class="form-control" [(ngModel)]="editableTicketFields.title" />
+              <input class="form-control" 
+              placeholder="Ticket title"
+              [(ngModel)]="ticket.title" />
             </div>
 
-            <p class="date"><strong>Date opened:</strong> {{ticket.insertedAt}}</p>
-            <p class="date"><strong>Last update:</strong> {{ticket.updatedAt}}</p>
-
+            <ng-container *ngIf="ticket.insertedAt && ticket.updatedAt">
+              <p class="date"><strong>Date opened:</strong> {{ticket.insertedAt}}</p>
+              <p class="date"><strong>Last update:</strong> {{ticket.updatedAt}}</p>
+            </ng-container>
+           
             <div class="row">
               <div class="col-xs-12 col-sm-6">
-                  <div class="form-group status">
-                      <label>Status</label>
-                      <ng-select [items]="ticketStatuses" bindValue="id" bindLabel="text" [(ngModel)]="editableTicketFields.status">
-                      </ng-select>
-                    </div>
+                <div class="form-group status">
+                  <label>Status</label>
+                  <ng-select [items]="ticketStatuses" bindValue="id" bindLabel="text"
+                    [(ngModel)]="ticket.status">
+                  </ng-select>
+                </div>
               </div>
 
               <div class="col-xs-12 col-sm-6">
-                  <div class="form-group category">
-                      <label>Category</label>
-                      <ng-select [items]="ticketCategories" bindValue="name" bindLabel="name" [(ngModel)]="editableTicketFields.category">
-                      </ng-select>
-                    </div>
+                <div class="form-group category">
+                  <label>Category</label>
+                  <ng-select [items]="ticketCategories" bindValue="id" bindLabel="title"
+                    [(ngModel)]="ticket.categoryId">
+                  </ng-select>
+                </div>
+              </div>
+
+              <div class="col-xs-12 col-sm-6">
+                <div class="form-group status">
+                  <label>Order ID</label>
+                  <ng-select 
+                    [items]="orders"
+                    [typeahead]="typeAheadOrders" 
+                    [addTag]="false" 
+                    [multiple]="false"
+                    bindValue="id"
+                    bindLabel="text" 
+                    placeholder="Select order ID" 
+                    [(ngModel)]="ticket.orderId"
+                    >
+                  </ng-select>
+                </div>
+              </div>
+
+              <div class="col-xs-12 col-sm-6">
+                <div class="form-group status">
+                  <label>User</label>
+                  <ng-select 
+                    [items]="users"
+                    [typeahead]="typeAheadUsers" 
+                    [addTag]="false" 
+                    [multiple]="false"
+                    bindValue="id"
+                    bindLabel="text" 
+                    placeholder="Select user" 
+                    [disabled]="!isCreate"
+                    [(ngModel)]="ticket.user.id"
+                    >
+                  </ng-select>
+                </div>
               </div>
             </div>
 
