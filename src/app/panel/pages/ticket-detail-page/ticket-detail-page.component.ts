@@ -256,8 +256,10 @@ export class TicketDetailPageComponent implements OnInit {
     if (this.isCreate) {
       this.ticketService.createTicket(payload).then((res) => {
         // this.ticket.updateModel(res, this.userService.getUser().username);
-        this.router.navigate(['pages/tickets/' + res.id]).finally(() => {
-          this.toastService.success();
+        this.router.navigate(['panel/tickets']).finally(() => {
+          this.router.navigate(['panel/tickets/' + res.id]).finally(() => {
+            this.toastService.success();
+          });
         });
       }).catch((err) => this.toastService.error());
     } else {
