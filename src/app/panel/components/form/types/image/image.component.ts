@@ -20,7 +20,9 @@ export class ImageComponent extends BaseInputComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.url = this.form.get(this.field.key).value;
+        this.form.get(this.field.key).valueChanges.subscribe((val) => {
+            this.url = val;
+        });
     }
 
     onImageError($event: any): void {
