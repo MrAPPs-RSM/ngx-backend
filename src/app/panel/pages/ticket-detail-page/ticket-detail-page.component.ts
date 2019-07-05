@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild, ViewEncapsulation, EventEmitter } from '@angular/core';
 import { Ticket } from './models/ticket';
 import { TicketService } from './services/ticket.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TicketMessage } from './models/ticket-message';
 import { UserService } from '../../../auth/services/user.service';
 import { TicketCategory } from './models/ticket-category';
@@ -60,6 +60,7 @@ export class TicketDetailPageComponent implements OnInit {
     private _apiService: ApiService,
     public ticketService: TicketService,
     private toastService: ToastsService,
+    private router: Router,
     private route: ActivatedRoute,
     private userService: UserService,
     private changeDetector: ChangeDetectorRef) {
@@ -254,8 +255,10 @@ export class TicketDetailPageComponent implements OnInit {
 
     if (this.isCreate) {
       this.ticketService.createTicket(payload).then((res) => {
-        this.ticket.updateModel(res, this.userService.getUser().username);
-        this.toastService.success();
+        // this.ticket.updateModel(res, this.userService.getUser().username);
+        this.router.navigate(['pages/tickets/' + res.id]).finally(() => {
+          this.toastService.success();
+        });
       }).catch((err) => this.toastService.error());
     } else {
       this.ticketService.updateTicket(this.ticket.id, payload).then(() => {

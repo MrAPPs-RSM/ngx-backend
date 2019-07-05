@@ -76,7 +76,7 @@
             </div>
           </div>
 
-          <div class="content">
+          <div class="content" *ngIf="!isCreate">
             <div class="messages" #msgWrapper (scroll)="onMsgListScroll($event)">
               <ul #msgList>
                 <li *ngFor="let item of ticket.messages.slice().reverse()" class="clearfix"
