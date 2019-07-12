@@ -23,9 +23,7 @@
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/assets/sass/ngx-backend.scss",
-              "src/lib/fancybox/css/jquery.fancybox.min.css",
-              "node_modules/froala-editor/css/froala_editor.pkgd.min.css",
-              "node_modules/froala-editor/css/froala_style.min.css"
+              "src/lib/fancybox/css/jquery.fancybox.min.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",

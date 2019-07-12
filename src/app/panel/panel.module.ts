@@ -1,11 +1,3 @@
-import 'froala-editor/js/plugins/align.min.js';
-import 'froala-editor/js/plugins/code_view.min.js';
-import 'froala-editor/js/plugins/colors.min.js';
-import 'froala-editor/js/plugins/emoticons.min.js';
-import 'froala-editor/js/plugins/font_family.min.js';
-import 'froala-editor/js/plugins/font_size.min.js';
-import 'froala-editor/js/plugins/link.min.js';
-
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
@@ -18,7 +10,7 @@ import { Ng2SmartTableModule } from './modules/ng2-smart-table/ng2-smart-table.m
 import { PipesModule } from '../pipes/pipes.module';
 import { NouisliderModule } from 'ng2-nouislider';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
-import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
+import { CKEditorModule } from 'ng2-ckeditor';
 import { TextMaskModule } from 'angular2-text-mask';
 
 import { PanelComponent } from './panel.component';
@@ -174,9 +166,8 @@ const routes: Routes = [
     NouisliderModule,
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
-    FroalaEditorModule.forRoot(),
-    FroalaViewModule.forRoot(),
-    TextMaskModule
+    TextMaskModule,
+    CKEditorModule
   ],
   exports: [
     FormComponent,

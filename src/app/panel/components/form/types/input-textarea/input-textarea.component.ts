@@ -12,6 +12,15 @@ import { LanguageService } from '../../../../services/language.service';
 export class InputTextareaComponent extends BaseInputComponent implements OnInit {
 
     @Input() field: FormFieldTextarea;
+    private focus: boolean;
+
+    private options: any[] = [
+        ['Format', 'Font', 'FontSize', 'Bold', 'Italic', 'Underline', 'StrikeThrough', '-', 'Undo', 'Redo', '-', 'Cut', 'Copy', 'Paste', '-', 'Outdent', 'Indent'],
+        ['NumberedList', 'BulletedList', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+        '/',
+        ['Table', '-', 'Link', 'Smiley', 'TextColor', 'BGColor', 'Source']
+    ];
+    config: any = {};
 
     constructor(private _language: LanguageService) {
         super();
@@ -27,6 +36,32 @@ export class InputTextareaComponent extends BaseInputComponent implements OnInit
 
     ngOnInit() {
         if (this.field.options && this.field.options.editor) {
+            if (this.field.options.disable && this.field.options.disable.length > 0) {
+                this.field.options.disable.forEach((option) => {
+                    let index = this.options[0].indexOf(option);
+                    if (index > -1) {
+                        this.options[0].splice(index, 1);
+                    }
+                    index = this.options[1].indexOf(option);
+                    if (index > -1) {
+                        this.options[1].splice(index, 1);
+                    }
+                    index = this.options[3].indexOf(option);
+                    if (index > -1) {
+                        this.options[3].splice(index, 1);
+                    }
+                });
+            }
+
+            this.config = {
+                language: this._language.getCurrentLang().isoCode,
+                toolbar: this.options
+            };
+
+            if (this.field.options.allowContent) {
+                this.config['allowedContent'] = true;
+                this.config['extraAllowedContent'] = '*(*);*{*}';
+            }
         }
     }
 
@@ -39,5 +74,9 @@ export class InputTextareaComponent extends BaseInputComponent implements OnInit
 
         const length = (this.getControl(key).value || '').length;
         return length + '/' + maxLength;
+    }
+
+    onFocus() {
+        this.focus = true;
     }
 }
