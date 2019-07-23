@@ -15,6 +15,7 @@ import {Cell} from '../../../lib/data-set/cell';
             <email-view-component *ngSwitchCase="'email'" [cell]="cell"></email-view-component>
             <boolean-view-component *ngSwitchCase="'boolean'" [cell]="cell"></boolean-view-component>
             <custom-view-component *ngSwitchCase="'custom'" [cell]="cell"></custom-view-component>
+            <message-view-component *ngSwitchCase="'message'" [cell]="cell"></message-view-component>
             <div *ngSwitchCase="'html'" [innerHTML]="cell.getValue()"></div>
             <div *ngSwitchDefault>{{ cell.getValue() }}</div>
         </div>
