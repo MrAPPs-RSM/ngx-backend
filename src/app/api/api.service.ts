@@ -12,11 +12,12 @@ export class ApiService {
 
     private headers = new HttpHeaders({'Content-Type': 'application/json'});
     private readonly headerParametersKey: string = 'ngxBackend-Parameters';
-    private readonly domainKey = environment.auth.credentials.domain ? environment.auth.credentials.domain : 'domain';
+    private readonly domainKey = environment.auth.credentials &&
+    environment.auth.credentials.domain
+      ? environment.auth.credentials.domain : 'domain';
 
     public isRedirecting = false;
-
-    public unauthorized: boolean = false;
+    public unauthorized = false;
 
     constructor(private _http: HttpClient,
                 private _userService: UserService,
