@@ -1,5 +1,6 @@
 <tr *ngFor="let row of grid.getRows()"
     class="ng2-smart-row"
+    [style.background]="getRowBgColor(row)"
     [ngClass]="{selected: row.isSelected}">
 
     <td *ngIf="isDragEnabled" class="ng2-smart-actions ng2-smart-action-drag">

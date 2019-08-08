@@ -1,7 +1,7 @@
-import {Cell} from './cell';
-import {Column} from './column';
-import {DataSet} from './data-set';
-import {UtilsService} from '../../../../../services/utils.service';
+import { Cell } from './cell';
+import { Column } from './column';
+import { DataSet } from './data-set';
+import { UtilsService } from '../../../../../services/utils.service';
 
 export class Row {
 
@@ -10,7 +10,10 @@ export class Row {
     cells: Array<Cell> = [];
 
 
-    constructor(public index: number, protected data: any, protected _dataSet: DataSet) {
+    constructor(
+        public index: number,
+        protected data: any,
+        protected _dataSet: DataSet) {
         this.process();
     }
 
