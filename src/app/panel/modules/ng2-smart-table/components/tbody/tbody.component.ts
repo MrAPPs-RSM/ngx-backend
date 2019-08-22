@@ -54,24 +54,25 @@ export class Ng2SmartTableTbodyComponent implements OnChanges {
     }
 
     getRowBgColor(row: Row): string {
+
         let bgColor = '';
         if (this.rowBgColorSettings && isArray(this.rowBgColorSettings)) {
             this.rowBgColorSettings.forEach((setting) => {
+                if (setting.conditions && isArray(setting.conditions)) {
+                    let i = 0;
+                    while (i < setting.conditions.length) {
+                        const fieldVal = row.getData()[setting.conditions[i].field];
+                        if (fieldVal !== setting.conditions[i].value) {
+                            break;
+                        } else {
+                            i++;
+                        }
+                    }
 
-                let i = 0;
-                while (i < setting.conditions.length) {
-                    const fieldVal = row.getData()[setting.conditions[i].field];
-                    if (fieldVal !== setting.conditions[i].value) {
-                        break;
-                    } else {
-                        i++;
+                    if (i === (setting.conditions.length)) {
+                        bgColor = setting.color;
                     }
                 }
-
-                if (i === (setting.conditions.length)) {
-                    bgColor = setting.color;
-                }
-
             });
         }
 
