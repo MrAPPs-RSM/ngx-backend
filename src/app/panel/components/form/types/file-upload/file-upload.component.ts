@@ -54,6 +54,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     @ViewChild('fileUpload') _fileUpload: ElementRef;
 
     private _subscription = Subscription.EMPTY;
+    private _routeSubscription = Subscription.EMPTY;
 
     constructor(private _renderer: Renderer2,
                 private _route: ActivatedRoute,
@@ -103,12 +104,14 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         // this.setCorrectlyLanguages();
 
         if (this.field.options.api && this.field.options.api.upload.indexOf(':id') > -1) {
-            if (this._route.snapshot && this._route.snapshot.params) {
-                const id = this._route.snapshot.params['id'];
+            this._routeSubscription = this._route.params.subscribe((params: any) => {
+                const id = params['id'];
                 if (id) {
                     this.field.options.api.upload = this.field.options.api.upload.replace(':id', id);
                 }
-            }
+            });
+        } else if (this._routeSubscription !== null) {
+            this._routeSubscription.unsubscribe();
         }
     }
 
@@ -123,6 +126,10 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
 
         if (this._subscription !== null) {
             this._subscription.unsubscribe();
+        }
+
+        if (this._routeSubscription !== null) {
+            this._routeSubscription.unsubscribe();
         }
 
         this.removeAllFiles();

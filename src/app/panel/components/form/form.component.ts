@@ -88,7 +88,7 @@ export class FormComponent implements OnInit, OnDestroy {
                 const newValues = {};
 
                 for (const key of Object.keys(values)) {
-                    newValues[key] = isNaN(values[key]) ? values[key] : parseInt(values[key]);
+                    newValues[key] = isNaN(values[key]) ? values[key] : parseInt(values[key], 10);
                 }
 
                 this._ref.detectChanges();
