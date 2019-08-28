@@ -1,28 +1,29 @@
-import {Injectable} from '@angular/core';
-import {environment} from '../../environments/environment';
-import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from '@angular/common/http';
-import {UserService, TOKEN_KEY, LOGIN_ENDPOINT} from '../auth/services/user.service';
-import {ActivatedRoute, ActivatedRouteSnapshot, Router} from '@angular/router';
-import {StorageService} from '../services/storage.service';
+import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
+import { UserService, TOKEN_KEY, LOGIN_ENDPOINT } from '../auth/services/user.service';
+import { Router } from '@angular/router';
+import { StorageService } from '../services/storage.service';
+import * as localSetupFile from '../panel/services/local-setup-file';
 
 const API_URL = environment.api.baseUrl;
 
 @Injectable()
 export class ApiService {
 
-    private headers = new HttpHeaders({'Content-Type': 'application/json'});
+    private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     private readonly headerParametersKey: string = 'ngxBackend-Parameters';
     private readonly domainKey = environment.auth.credentials &&
-    environment.auth.credentials.domain
-      ? environment.auth.credentials.domain : 'domain';
+        environment.auth.credentials.domain
+        ? environment.auth.credentials.domain : 'domain';
 
     public isRedirecting = false;
     public unauthorized = false;
 
     constructor(private _http: HttpClient,
-                private _userService: UserService,
-                private _storageService: StorageService,
-                private _router: Router) {
+        private _userService: UserService,
+        private _storageService: StorageService,
+        private _router: Router) {
     }
 
     /**
@@ -403,10 +404,20 @@ export class ApiService {
 
         return this.post(LOGIN_ENDPOINT, data, null, true);
     }
+
+    public setup(): Promise<any> {
+        if (!!environment.api['localSetupFile']) {
+            return new Promise(resolve => {
+                resolve(localSetupFile.setup);
+            });
+        } else {
+            return this.get(environment.api.setupEndpoint);
+        }
+    }
 }
 
 interface RequestOptions {
-    headers?: HttpHeaders | { [header: string]: string | string [] };
+    headers?: HttpHeaders | { [header: string]: string | string[] };
     params?: HttpParams | { [param: string]: string | string[]; };
 }
 

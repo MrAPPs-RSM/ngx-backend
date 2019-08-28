@@ -39,9 +39,8 @@ export class SetupService {
     const promise = new Promise<any>((resolve, reject) => {
 
       if (this._lastRouteLoading == null || Date.now() - this._lastRouteLoading.getMilliseconds() < 10000) {
-        this._apiService.get(environment.api.setupEndpoint)
+        this._apiService.setup()
           .then((data) => {
-
             console.log('SETUP OK');
             this._lastRouteLoading = new Date();
 
