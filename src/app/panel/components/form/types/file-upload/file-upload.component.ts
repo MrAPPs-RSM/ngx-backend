@@ -6,15 +6,15 @@ import {
     FormFieldFile, Media,
     UploadedFile
 } from '../../interfaces/form-field-file';
-import {UploaderOptions, UploadFile, UploadInput, UploadOutput} from 'ngx-uploader';
-import {ApiService} from '../../../../../api/api.service';
-import {UtilsService} from '../../../../../services/utils.service';
-import {BaseInputComponent} from '../base-input/base-input.component';
-import {ToastsService} from '../../../../../services/toasts.service';
-import {Subscription} from 'rxjs';
-import {Language, LanguageService} from '../../../../services/language.service';
-import {DragulaService} from 'ng2-dragula';
-import {first} from 'rxjs/operators';
+import { UploaderOptions, UploadFile, UploadInput, UploadOutput } from 'ngx-uploader';
+import { ApiService } from '../../../../../api/api.service';
+import { UtilsService } from '../../../../../services/utils.service';
+import { BaseInputComponent } from '../base-input/base-input.component';
+import { ToastsService } from '../../../../../services/toasts.service';
+import { Subscription } from 'rxjs';
+import { Language, LanguageService } from '../../../../services/language.service';
+import { DragulaService } from 'ng2-dragula';
+import { first } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -57,11 +57,11 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     private _routeSubscription = Subscription.EMPTY;
 
     constructor(private _renderer: Renderer2,
-                private _route: ActivatedRoute,
-                private _toastsService: ToastsService,
-                private _apiService: ApiService,
-                public _langService: LanguageService,
-                private _dragulaService: DragulaService) {
+        private _route: ActivatedRoute,
+        private _toastsService: ToastsService,
+        private _apiService: ApiService,
+        public _langService: LanguageService,
+        private _dragulaService: DragulaService) {
         super();
     }
 
@@ -103,13 +103,17 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
 
         // this.setCorrectlyLanguages();
 
-        if (this.field.options.api && this.field.options.api.upload.indexOf(':id') > -1) {
-            this._routeSubscription = this._route.params.subscribe((params: any) => {
-                const id = params['id'];
-                if (id) {
-                    this.field.options.api.upload = this.field.options.api.upload.replace(':id', id);
-                }
-            });
+        if (this.field.options.api) {
+            this.field.options.api.uploadEndpoint = this.field.options.api.upload;
+
+            if (this.field.options.api.upload.indexOf(':id') > -1) {
+                this._routeSubscription = this._route.params.subscribe((params: any) => {
+                    const id = params['id'];
+                    if (id) {
+                        this.field.options.api.uploadEndpoint = this.field.options.api.upload.replace(':id', id);
+                    }
+                });
+            }
         } else if (this._routeSubscription !== null) {
             this._routeSubscription.unsubscribe();
         }
@@ -234,7 +238,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         console.log('START UPLOAD');
         const event: UploadInput = {
             type: 'uploadAll',
-            url: this._apiService.composeUrl(this.field.options.api.upload, true),
+            url: this._apiService.composeUrl(this.field.options.api.uploadEndpoint, true),
             method: 'POST'
         };
 
@@ -242,7 +246,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     }
 
     private removeFile(id: string): void {
-        this.uploadInput.emit({type: 'remove', id: id});
+        this.uploadInput.emit({ type: 'remove', id: id });
     }
 
     private removeAllFiles(): void {
@@ -300,14 +304,14 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
 
                                 this.form.parent.controls[key].controls[this.field.key].setValue(
                                     unique.length > 0 ? unique : null,
-                                    {emitEvent: false});
+                                    { emitEvent: false });
                             }
                         });
                     }
                 });
             }
         } else {
-            this.getControl().setValue(files.length > 0 ? files : null, {emitEvent: false});
+            this.getControl().setValue(files.length > 0 ? files : null, { emitEvent: false });
         }
     }
 
