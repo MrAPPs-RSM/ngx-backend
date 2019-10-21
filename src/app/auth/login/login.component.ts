@@ -47,6 +47,10 @@ export class LoginComponent implements OnInit {
             .then((response) => {
                 this.isLoading = false;
 
+              if (!('user' in response)) {
+                response.user = {};
+              }
+
                 response.user['password'] = data.password;
                 response.user.remember = !!data['remember'];
 
