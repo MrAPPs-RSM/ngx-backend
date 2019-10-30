@@ -1,27 +1,28 @@
 <div [formGroup]="form" [class]="field.class ? field.class : 'col-sm-12'" [ngClass]="{'hidden': field.hidden}">
-    <div class="form-group" [ngClass]="{'has-error': !isValid()}">
+  <div class="form-group" [ngClass]="{'has-error': !isValid()}">
 
-        <label for="{{field.key}}">
-            {{field.label}}
-            <span *ngIf="isRequired()">*</span>
-        </label>
+    <label for="{{field.key}}">
+      {{field.label}}
+      <span *ngIf="isRequired()">*</span>
+    </label>
 
-        <ckeditor *ngIf="field.options && field.options.editor" formControlName="{{field.key}}"
-            (focus)="onFocus($event)" [config]="config" [readonly]="field.disabled || onlyView">
-        </ckeditor>
+    <ckeditor *ngIf="field.options && field.options.editor" formControlName="{{field.key}}"
+              (focus)="onFocus($event)" [config]="config" [readonly]="field.disabled || onlyView">
+    </ckeditor>
 
-        <textarea *ngIf="!field.options || !field.options.editor" formControlName="{{field.key}}" id="{{field.key}}"
-            [attr.disabled]="field.disabled || onlyView ? '' : null" class="form-control"
-            placeholder="{{field.placeholder}}" [attr.maxlength]="getMaxLength()">
+    <textarea *ngIf="!field.options || !field.options.editor" formControlName="{{field.key}}" id="{{field.key}}"
+              [attr.disabled]="field.disabled || onlyView ? '' : null" class="form-control"
+              [attr.readonly]="field.options.readOnly?true:null"
+              placeholder="{{field.placeholder}}" [attr.maxlength]="getMaxLength()">
             {{field.value}}
         </textarea>
-        
-        <small *ngIf="!field.options || !field.options.editor">
-            {{getCountCharacters()}}
-        </small>
 
-        <span *ngIf="field.description" class="help-block">{{field.description}}</span>
-    </div>
+    <small *ngIf="!field.options || !field.options.editor">
+      {{getCountCharacters()}}
+    </small>
 
-    <div id="editor"></div>
+    <span *ngIf="field.description" class="help-block">{{field.description}}</span>
+  </div>
+
+  <div id="editor"></div>
 </div>

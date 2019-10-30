@@ -32,6 +32,12 @@ input {
       resize: none;
       height: 150px;
       padding: 12px;
+      &[readonly] {
+        background-color: transparent !important;
+        border: none;
+        padding: 0;
+        cursor: default;
+      }
     }
   }
 
