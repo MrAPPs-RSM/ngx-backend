@@ -58,7 +58,6 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
             });
         }
 
-
         this.selected = this.field.multiple === true ? [] : null;
 
         this.addQueryParams();
@@ -233,7 +232,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
                         })
                         .catch((response: ErrorResponse) => {
                             // TODO: decide what to do if select options can't be loaded (back to prev page?, alert?, message?)
-                            console.log(response.error);
+                            console.log(response);
                         });
                 } else {
                     resolve();
@@ -354,9 +353,9 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
     }
 
     private filterOptionsIfNeeded(options: SelectData[]): SelectData[] {
-        if (this.unique) {
-            options = this.unique(this, options);
-        }
+        // if (this.unique) {
+        //     options = this.unique(this, options);
+        // }
 
         return options;
     }

@@ -326,6 +326,7 @@ export class FormComponent implements OnInit, OnDestroy {
 
     private fixFiles(value: any): any {
         const components = [];
+
         this.settings.fields.base.forEach((field) => {
             if (field.type === 'file') {
                 components.push(field.key);
@@ -394,6 +395,11 @@ export class FormComponent implements OnInit, OnDestroy {
         const value = this.fixFiles(this.form.getRawValue());
 
         console.log(value);
+        for (let v in value) {
+            if (value[v] === null && !value[v]) {
+                value[v] = '';
+            }
+        }
 
         if (value['geosearch']) { // TODO: valutare se fare meglio
             delete value['geosearch'];

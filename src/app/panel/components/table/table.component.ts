@@ -18,6 +18,7 @@ import { ToastsService } from '../../../services/toasts.service';
 import { PageRefreshService } from '../../../services/page-refresh.service';
 import { Subscription } from 'rxjs';
 import { GlobalState } from '../../../global.state';
+import { copyStyles } from '@angular/animations/browser/src/util';
 
 @Component({
     selector: 'app-table',
@@ -78,20 +79,21 @@ export class TableComponent implements OnInit, OnDestroy {
 
             /** Read fixed filter from settings if set */
             if (this.settings.api.filter) {
-                this.filter = JSON.parse(this.settings.api.filter);
+                this.filter = this.settings.api.filter;
             }
 
             if (params && params['listParams']) {
                 const queryParamsFilter = JSON.parse(this._route.snapshot.queryParams['listParams']);
 
-                this.filter = UtilsService.mergeDeep(this.filter, queryParamsFilter);
+                this.filter.where = UtilsService.mergeDeep(this.filter, queryParamsFilter);
 
                 this.activeFilters.pagination.perPage = 'limit' in queryParamsFilter ? queryParamsFilter['limit'] : this.preparePerPage();
                 this.activeFilters.pagination.page = 'skip' in queryParamsFilter ?
                     queryParamsFilter['skip'] / this.activeFilters.pagination.perPage + 1 : 1;
             }
 
-            this.activeFilters.filter = this.filter.where;
+            this.activeFilters.filter = this.filter;
+            // UtilsService.parseParams(this.settings.columns, queryParamsFilter);
 
             if ('order' in this.filter && this.filter['order'] !== null) {
                 const sortArray = this.filter.order.split(',');
@@ -106,6 +108,7 @@ export class TableComponent implements OnInit, OnDestroy {
             }
 
             this.activeFilters.sort = this.filter.order;
+            console.log(this.activeFilters)
 
             this.prepareColumns();
             this.getData();
@@ -214,7 +217,7 @@ export class TableComponent implements OnInit, OnDestroy {
     private getData(doCount?: boolean): void {
         this.isLoading = true;
 
-        if (doCount === false) {
+        if (!doCount) {
             this._apiService.get(this.settings.api.endpoint, this.composeParams())
                 .then((data) => {
                     // console.log(data);
@@ -400,7 +403,8 @@ export class TableComponent implements OnInit, OnDestroy {
     }
 
     private parseAction(action: TableAction, data?: any): void {
-
+        // action = config.params.filter have filters
+        // data = row data
         let extraParams = {};
 
         let path = action.config.path;
@@ -448,7 +452,10 @@ export class TableComponent implements OnInit, OnDestroy {
 
                     if (action.config.params.filter) {
 
-                        let updatedFilter = action.config.params.filter;
+                        let updatedFilter: any = action.config.params.filter;
+
+                        // Parse all parameters with key
+                        updatedFilter = UtilsService.parseParams(updatedFilter, data);
 
                         if (UtilsService.isObject(updatedFilter)) {
                             updatedFilter = JSON.stringify(updatedFilter);

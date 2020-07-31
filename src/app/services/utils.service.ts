@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 
@@ -12,7 +12,7 @@ export class UtilsService {
         const unique = {};
         const distinct = [];
         for (const i in array) {
-            if (typeof(unique[array[i][key]]) === 'undefined') {
+            if (typeof (unique[array[i][key]]) === 'undefined') {
                 distinct.push(array[i]);
             }
             unique[array[i][key]] = 0;
@@ -58,12 +58,12 @@ export class UtilsService {
             Object.keys(source).forEach(key => {
                 if (this.isObject(source[key])) {
                     if (!(key in target)) {
-                        Object.assign(output, {[key]: source[key]});
+                        Object.assign(output, { [key]: source[key] });
                     } else {
                         output[key] = this.mergeDeep(target[key], source[key]);
                     }
                 } else {
-                    Object.assign(output, {[key]: source[key]});
+                    Object.assign(output, { [key]: source[key] });
                 }
             });
         }
@@ -190,5 +190,32 @@ export class UtilsService {
         } catch (e) {
             return false;
         }
+    }
+
+    public static parseParams(filters: any, data: any): any {
+        // Parse other params
+        for (let u in filters) {
+            if (u === 'and' || u === 'or') {
+                for (let c in filters[u]) {
+                    if (Object.values(filters[u][c])[0][0] === ':' && Object.values(filters[u][c])[0] !== ':id') {
+                        let key: string = (Object.values(filters[u][c])[0] as string).replace(':', '');
+                        let filterKey: string = Object.keys(filters[u][c])[0];
+
+                        filters[u][c][filterKey] = data[key];
+                    }
+                }
+            } else {
+                // Check if start with :
+                // If yes =>
+                // Substitute with value
+                if (filters[u][0] === ':' && filters[u] !== ':id') {
+                    let key: string = filters[u].replace(':', '');
+
+                    filters[u] = data[key];
+                }
+            }
+        }
+
+        return filters;
     }
 }
