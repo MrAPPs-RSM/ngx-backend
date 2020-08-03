@@ -85,7 +85,7 @@ export class TableComponent implements OnInit, OnDestroy {
             if (params && params['listParams']) {
                 const queryParamsFilter = JSON.parse(this._route.snapshot.queryParams['listParams']);
 
-                this.filter.where = UtilsService.mergeDeep(this.filter, queryParamsFilter);
+                this.filter = UtilsService.mergeDeep(this.filter, queryParamsFilter);
 
                 this.activeFilters.pagination.perPage = 'limit' in queryParamsFilter ? queryParamsFilter['limit'] : this.preparePerPage();
                 this.activeFilters.pagination.page = 'skip' in queryParamsFilter ?
@@ -93,7 +93,6 @@ export class TableComponent implements OnInit, OnDestroy {
             }
 
             this.activeFilters.filter = this.filter;
-            // UtilsService.parseParams(this.settings.columns, queryParamsFilter);
 
             if ('order' in this.filter && this.filter['order'] !== null) {
                 const sortArray = this.filter.order.split(',');
@@ -511,6 +510,9 @@ export class TableComponent implements OnInit, OnDestroy {
             if (endpoint.indexOf(':id') !== -1) {
                 endpoint = endpoint.replace(':id', 'idField' in action.config ? data[action.config['idField']] : data.id);
             }
+
+            // Parse others endpoint parameters
+            endpoint = UtilsService.parseEndpoint(endpoint, data);
 
             if (action.config.method) {
                 this.handleActionApi(action, endpoint, action.config.endpointData, data)

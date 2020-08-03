@@ -394,7 +394,7 @@ export class FormComponent implements OnInit, OnDestroy {
          *  Useful to support drag&drop on list detail */
         const value = this.fixFiles(this.form.getRawValue());
 
-        console.log(value);
+        // console.log(value);
         for (let v in value) {
             if (value[v] === null && !value[v]) {
                 value[v] = '';
@@ -438,7 +438,11 @@ export class FormComponent implements OnInit, OnDestroy {
                     this.response.emit(response);
 
                     if (this.settings.submit && this.settings.submit.refreshAfter) {
-                        this.loadData(response);
+                        if (this.settings.submit.redirectAfter) {
+                            this.loadData(response);
+                        } else {
+                            this._location.back();
+                        }
                     }
                 })
                 .catch((response: ErrorResponse) => {

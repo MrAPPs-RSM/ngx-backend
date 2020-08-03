@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as _ from 'lodash';
 import * as moment from 'moment';
+import * as url from 'url';
 
 @Injectable()
 export class UtilsService {
@@ -194,28 +195,46 @@ export class UtilsService {
 
     public static parseParams(filters: any, data: any): any {
         // Parse other params
-        for (let u in filters) {
+        for (let u in filters.where) {
             if (u === 'and' || u === 'or') {
-                for (let c in filters[u]) {
-                    if (Object.values(filters[u][c])[0][0] === ':' && Object.values(filters[u][c])[0] !== ':id') {
+                for (let c in filters.where[u]) {
+                    if (Object.values(filters.where[u][c])[0][0] === ':' && Object.values(filters.where[u][c])[0] !== ':id') {
                         let key: string = (Object.values(filters[u][c])[0] as string).replace(':', '');
-                        let filterKey: string = Object.keys(filters[u][c])[0];
+                        let filterKey: string = Object.keys(filters.where[u][c])[0];
 
-                        filters[u][c][filterKey] = data[key];
+                        filters.where[u][c][filterKey] = data[key];
                     }
                 }
             } else {
                 // Check if start with :
                 // If yes =>
                 // Substitute with value
-                if (filters[u][0] === ':' && filters[u] !== ':id') {
-                    let key: string = filters[u].replace(':', '');
+                if (filters.where[u][0] === ':' && filters.where[u] !== ':id') {
+                    let key: string = filters.where[u].replace(':', '');
 
-                    filters[u] = data[key];
+                    filters.where[u] = data[key];
                 }
             }
         }
 
         return filters;
+    }
+
+    public static parseEndpoint(endpoint: string, data: any): string {
+        // Add / to last character
+        // this is because we can have /endpoint/:param1/:param2
+        // So rebuild /endpoint/:param1/:param2/ for last param easy parsing
+        let end = endpoint;
+        end += '/';
+
+        for (let i = 0; i < end.length; i++) {
+            // Check if we are on parameter
+            if (end[i] === ':') {
+                // Replace with value
+                endpoint = endpoint.replace(end.substring(i, end.indexOf('/', i)), data[end.substring(i, end.indexOf('/', i)).replace(':', '')]);
+            }
+        }
+
+        return endpoint;
     }
 }
