@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core';
-import {DateTimeAdapter} from 'ng-pick-datetime';
-import {environment} from '../../../environments/environment';
-import {translations} from '../../../translations';
+import { Injectable } from '@angular/core';
+import { DateTimeAdapter } from 'ng-pick-datetime';
+import { environment } from '../../../environments/environment';
+import { translations } from '../../../translations';
 
 @Injectable()
 export class LanguageService {
@@ -45,7 +45,7 @@ export class LanguageService {
             localStorage.setItem('lang', JSON.stringify(lang));
 
             this.setDatePickerLocale();
-           }
+        }
     }
 
     public setDatePickerLocale(): void {
@@ -99,16 +99,13 @@ export class LanguageService {
     }
 
     translate(value: any, isoCode?: string) {
-        if (this.isMultiLang()) {
-            const array = value.split('.');
-            let res = translations[isoCode ? isoCode : environment['currentLang']];
-            array.forEach((item) => {
-                res = res[item];
-            });
-            return res;
-        }
+        const array = value.split('.');
+        let res = translations[isoCode ? isoCode : (environment['currentLang'] ? environment['currentLang'] : 'it')];
+        array.forEach((item) => {
+            res = res[item];
+        });
 
-        return value;
+        return res;
     }
 
     public setCurrentContentTableLang(language: Language | string): void {

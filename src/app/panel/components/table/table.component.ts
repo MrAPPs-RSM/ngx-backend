@@ -107,7 +107,6 @@ export class TableComponent implements OnInit, OnDestroy {
             }
 
             this.activeFilters.sort = this.filter.order;
-            console.log(this.activeFilters)
 
             this.prepareColumns();
             this.getData();
@@ -501,6 +500,8 @@ export class TableComponent implements OnInit, OnDestroy {
                         extraParams = { queryParams: { currentLang: this.currentLang.isoCode } };
                     }
                 }
+
+                path = UtilsService.parseEndpoint(path, data);
 
                 extraParams['relativeTo'] = this._route.parent;
                 this._router.navigate(['../panel/' + path], extraParams);

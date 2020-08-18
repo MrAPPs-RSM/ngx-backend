@@ -367,7 +367,6 @@ export class FormComponent implements OnInit, OnDestroy {
                     if (rawValue[lang.isoCode]) {
                         Object.keys(rawValue[lang.isoCode]).forEach((key) => {
                             if (key === fileKey) {
-                                console.log(rawValue[lang.isoCode][key]);
                                 if (rawValue[lang.isoCode][key]) {
                                     const array = [];
                                     rawValue[lang.isoCode][key].forEach((item) => {
