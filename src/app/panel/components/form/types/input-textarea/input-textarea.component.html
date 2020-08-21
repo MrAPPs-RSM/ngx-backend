@@ -12,7 +12,7 @@
 
     <textarea *ngIf="!field.options || !field.options.editor" formControlName="{{field.key}}" id="{{field.key}}"
               [attr.disabled]="field.disabled || onlyView ? '' : null" class="form-control"
-              [attr.readonly]="field.options.readOnly?true:null"
+              [attr.readonly]="field.readOnly?true:null"
               placeholder="{{field.placeholder}}" [attr.maxlength]="getMaxLength()">
             {{field.value}}
         </textarea>
