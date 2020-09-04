@@ -48,7 +48,7 @@
     "ngx-modialog": "^5.0",
     "ngx-toastr": "^9.1.1",
     "ngx-uploader": "^7.0.0",
-    "node-sass": "^4.10.0",
+    "node-sass": "^4.13.1",
     "nouislider": "^12.1.0",
     "rxjs": "^6.5.2",
     "ssri": "^6.0.1",
