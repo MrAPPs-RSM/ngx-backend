@@ -21,7 +21,9 @@ export type FieldType = {
 export type Button = {
     class: string;
     content: string;
-    path: string;
+    config: {
+        path: string;
+    }
 }
 
 export type LoginForm = {
@@ -31,7 +33,7 @@ export type LoginForm = {
     submit: {
         label: string;
     };
-    buttons: Array<Button>;
+    buttons?: Array<Button>;
     isLoginForm: boolean;
 }
 
@@ -47,6 +49,7 @@ export type EnvAuth = {
     };
     passwordReset?: {
         endpoint: string;
+        form: Object;
     };
     credentials: {
         domain?: string;
@@ -55,7 +58,7 @@ export type EnvAuth = {
     };
     tokenKey: 'access_token';
     login: AuthLogin;
-    paswordResetEndpoint?: string;
+    passwordResetEndpoint?: string;
 }
 
 export interface Environment {
