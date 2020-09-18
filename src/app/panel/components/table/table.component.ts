@@ -438,7 +438,7 @@ export class TableComponent implements OnInit, OnDestroy {
                     if ('idField' in action.config) {
                         idValue = UtilsService.objectByString(data, action.config.idField);
                     }
-                    path = path.replace(':id', idValue ? idValue : data.id);
+                    path = path.replace(':id', encodeURIComponent(idValue ? idValue : data.id));
                 }
 
                 if (action.config.titleField && path.indexOf(':title') !== -1) {
@@ -460,7 +460,7 @@ export class TableComponent implements OnInit, OnDestroy {
                         }
 
                         if (updatedFilter.indexOf(':id') !== -1) {
-                            updatedFilter = updatedFilter.replace(':id', 'idField' in action.config ? data[action.config['idField']] : data.id);
+                            updatedFilter = updatedFilter.replace(':id', encodeURIComponent('idField' in action.config ? data[action.config['idField']] : data.id));
                         }
 
                         extraParams = { queryParams: { listParams: updatedFilter } };
@@ -500,7 +500,7 @@ export class TableComponent implements OnInit, OnDestroy {
                         extraParams = { queryParams: { currentLang: this.currentLang.isoCode } };
                     }
                 }
-
+                
                 path = UtilsService.parseEndpoint(path, data);
 
                 extraParams['relativeTo'] = this._route.parent;
@@ -509,7 +509,7 @@ export class TableComponent implements OnInit, OnDestroy {
         } else if (action.config.endpoint) {
             let endpoint = action.config.endpoint;
             if (endpoint.indexOf(':id') !== -1) {
-                endpoint = endpoint.replace(':id', 'idField' in action.config ? data[action.config['idField']] : data.id);
+                endpoint = endpoint.replace(':id', encodeURIComponent('idField' in action.config ? data[action.config['idField']] : data.id));
             }
 
             // Parse others endpoint parameters

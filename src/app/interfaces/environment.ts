@@ -46,10 +46,27 @@ export type AuthLogin = {
 export type EnvAuth = {
     passwordChange?: {
         endpoint: string;
+        form: {
+            class: string,
+            title: string,
+            fields: FieldType,
+            submit: {
+                label: string
+            },
+            buttons?: Array<Button>
+        },
     };
     passwordReset?: {
         endpoint: string;
-        form: Object;
+        form: {
+            class: string,
+            title: string,
+            fields: FieldType,
+            submit: {
+                label: string
+            },
+            buttons?: Array<Button>
+        },
     };
     credentials: {
         domain?: string;

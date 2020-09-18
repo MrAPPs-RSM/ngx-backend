@@ -231,7 +231,7 @@ export class UtilsService {
             // Check if we are on parameter
             if (end[i] === ':') {
                 // Replace with value
-                endpoint = endpoint.replace(end.substring(i, end.indexOf('/', i)), data[end.substring(i, end.indexOf('/', i)).replace(':', '')]);
+                endpoint = endpoint.replace(end.substring(i, end.indexOf('/', i)), encodeURIComponent(data[end.substring(i, end.indexOf('/', i)).replace(':', '')]));
             }
         }
 
