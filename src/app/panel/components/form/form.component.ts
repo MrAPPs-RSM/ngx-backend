@@ -439,9 +439,9 @@ export class FormComponent implements OnInit, OnDestroy {
                             this.loadData(response);
                         } else if (this.settings.submit.redirectAfter) {
                             this._router.navigateByUrl('/panel/' + this.settings.submit.redirectAfter);
-                        } else {
-                            this._location.back();
                         }
+                    } else {
+                        this._location.back();
                     }
                 })
                 .catch((response: ErrorResponse) => {

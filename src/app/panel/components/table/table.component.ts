@@ -18,7 +18,6 @@ import { ToastsService } from '../../../services/toasts.service';
 import { PageRefreshService } from '../../../services/page-refresh.service';
 import { Subscription } from 'rxjs';
 import { GlobalState } from '../../../global.state';
-import { copyStyles } from '@angular/animations/browser/src/util';
 
 @Component({
     selector: 'app-table',
@@ -215,7 +214,7 @@ export class TableComponent implements OnInit, OnDestroy {
     private getData(doCount?: boolean): void {
         this.isLoading = true;
 
-        if (!doCount) {
+        if (doCount === false) {
             this._apiService.get(this.settings.api.endpoint, this.composeParams())
                 .then((data) => {
                     // console.log(data);
