@@ -78,7 +78,7 @@ export class TableComponent implements OnInit, OnDestroy {
 
             /** Read fixed filter from settings if set */
             if (this.settings.api.filter) {
-                this.filter = JSON.parse(this.settings.api.filter);
+                this.filter = this.settings.api.filter;
             }
 
             if (params && params['listParams']) {
@@ -91,7 +91,7 @@ export class TableComponent implements OnInit, OnDestroy {
                     queryParamsFilter['skip'] / this.activeFilters.pagination.perPage + 1 : 1;
             }
 
-            this.activeFilters.filter = this.filter.where;
+            this.activeFilters.filter = this.filter;
 
             if ('order' in this.filter && this.filter['order'] !== null) {
                 const sortArray = this.filter.order.split(',');
@@ -400,7 +400,8 @@ export class TableComponent implements OnInit, OnDestroy {
     }
 
     private parseAction(action: TableAction, data?: any): void {
-
+        // action = config.params.filter have filters
+        // data = row data
         let extraParams = {};
 
         let path = action.config.path;
@@ -436,7 +437,7 @@ export class TableComponent implements OnInit, OnDestroy {
                     if ('idField' in action.config) {
                         idValue = UtilsService.objectByString(data, action.config.idField);
                     }
-                    path = path.replace(':id', idValue ? idValue : data.id);
+                    path = path.replace(':id', encodeURIComponent(idValue ? idValue : data.id));
                 }
 
                 if (action.config.titleField && path.indexOf(':title') !== -1) {
@@ -448,14 +449,17 @@ export class TableComponent implements OnInit, OnDestroy {
 
                     if (action.config.params.filter) {
 
-                        let updatedFilter = action.config.params.filter;
+                        let updatedFilter: any = action.config.params.filter;
+
+                        // Parse all parameters with key
+                        updatedFilter = UtilsService.parseParams(updatedFilter, data);
 
                         if (UtilsService.isObject(updatedFilter)) {
                             updatedFilter = JSON.stringify(updatedFilter);
                         }
 
                         if (updatedFilter.indexOf(':id') !== -1) {
-                            updatedFilter = updatedFilter.replace(':id', 'idField' in action.config ? data[action.config['idField']] : data.id);
+                            updatedFilter = updatedFilter.replace(':id', encodeURIComponent('idField' in action.config ? data[action.config['idField']] : data.id));
                         }
 
                         extraParams = { queryParams: { listParams: updatedFilter } };
@@ -495,6 +499,8 @@ export class TableComponent implements OnInit, OnDestroy {
                         extraParams = { queryParams: { currentLang: this.currentLang.isoCode } };
                     }
                 }
+                
+                path = UtilsService.parseEndpoint(path, data);
 
                 extraParams['relativeTo'] = this._route.parent;
                 this._router.navigate(['../panel/' + path], extraParams);
@@ -502,8 +508,11 @@ export class TableComponent implements OnInit, OnDestroy {
         } else if (action.config.endpoint) {
             let endpoint = action.config.endpoint;
             if (endpoint.indexOf(':id') !== -1) {
-                endpoint = endpoint.replace(':id', 'idField' in action.config ? data[action.config['idField']] : data.id);
+                endpoint = endpoint.replace(':id', encodeURIComponent('idField' in action.config ? data[action.config['idField']] : data.id));
             }
+
+            // Parse others endpoint parameters
+            endpoint = UtilsService.parseEndpoint(endpoint, data);
 
             if (action.config.method) {
                 this.handleActionApi(action, endpoint, action.config.endpointData, data)

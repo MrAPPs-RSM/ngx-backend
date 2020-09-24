@@ -1,6 +1,7 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import * as _ from 'lodash';
 import * as moment from 'moment';
+import * as url from 'url';
 
 @Injectable()
 export class UtilsService {
@@ -12,7 +13,7 @@ export class UtilsService {
         const unique = {};
         const distinct = [];
         for (const i in array) {
-            if (typeof(unique[array[i][key]]) === 'undefined') {
+            if (typeof (unique[array[i][key]]) === 'undefined') {
                 distinct.push(array[i]);
             }
             unique[array[i][key]] = 0;
@@ -58,12 +59,12 @@ export class UtilsService {
             Object.keys(source).forEach(key => {
                 if (this.isObject(source[key])) {
                     if (!(key in target)) {
-                        Object.assign(output, {[key]: source[key]});
+                        Object.assign(output, { [key]: source[key] });
                     } else {
                         output[key] = this.mergeDeep(target[key], source[key]);
                     }
                 } else {
-                    Object.assign(output, {[key]: source[key]});
+                    Object.assign(output, { [key]: source[key] });
                 }
             });
         }
@@ -190,5 +191,50 @@ export class UtilsService {
         } catch (e) {
             return false;
         }
+    }
+
+    public static parseParams(filters: any, data: any): any {
+        // Parse other params
+        for (let u in filters.where) {
+            if (u === 'and' || u === 'or') {
+                for (let c in filters.where[u]) {
+                    if (Object.values(filters.where[u][c])[0][0] === ':' && Object.values(filters.where[u][c])[0] !== ':id') {
+                        let key: string = (Object.values(filters[u][c])[0] as string).replace(':', '');
+                        let filterKey: string = Object.keys(filters.where[u][c])[0];
+
+                        filters.where[u][c][filterKey] = data[key];
+                    }
+                }
+            } else {
+                // Check if start with :
+                // If yes =>
+                // Substitute with value
+                if (filters.where[u][0] === ':' && filters.where[u] !== ':id') {
+                    let key: string = filters.where[u].replace(':', '');
+
+                    filters.where[u] = data[key];
+                }
+            }
+        }
+
+        return filters;
+    }
+
+    public static parseEndpoint(endpoint: string, data: any): string {
+        // Add / to last character
+        // this is because we can have /endpoint/:param1/:param2
+        // So rebuild /endpoint/:param1/:param2/ for last param easy parsing
+        let end = endpoint;
+        end += '/';
+
+        for (let i = 0; i < end.length; i++) {
+            // Check if we are on parameter
+            if (end[i] === ':') {
+                // Replace with value
+                endpoint = endpoint.replace(end.substring(i, end.indexOf('/', i)), encodeURIComponent(data[end.substring(i, end.indexOf('/', i)).replace(':', '')]));
+            }
+        }
+
+        return endpoint;
     }
 }

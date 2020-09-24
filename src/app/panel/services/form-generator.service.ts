@@ -166,7 +166,6 @@ export class FormGeneratorService {
     }
 
     public generate(fields: any): FormGroup | any {
-
         if (fields instanceof Array && fields.length > 0) {
             return new FormGroup(this.generateFormFields(fields));
         } else if (fields instanceof Object) {

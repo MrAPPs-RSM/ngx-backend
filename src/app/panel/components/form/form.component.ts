@@ -8,16 +8,16 @@ import {
     ChangeDetectorRef,
     OnDestroy
 } from '@angular/core';
-import {AbstractControl, FormArray, FormControl, FormGroup} from '@angular/forms';
-import {ActivatedRoute, Router} from '@angular/router';
-import {FormGeneratorService} from '../../services/form-generator.service';
-import {ModalService} from '../../services/modal.service';
-import {ApiService, ErrorResponse} from '../../../api/api.service';
-import {FormSettings} from './interfaces/form-settings';
-import {FormButton} from './interfaces/form-button';
-import {Language, LanguageService} from '../../services/language.service';
-import {Subscription, Observable} from 'rxjs';
-import {formConfig} from './form.config';
+import { AbstractControl, FormArray, FormControl, FormGroup } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormGeneratorService } from '../../services/form-generator.service';
+import { ModalService } from '../../services/modal.service';
+import { ApiService, ErrorResponse } from '../../../api/api.service';
+import { FormSettings } from './interfaces/form-settings';
+import { FormButton } from './interfaces/form-button';
+import { Language, LanguageService } from '../../services/language.service';
+import { Subscription, Observable } from 'rxjs';
+import { formConfig } from './form.config';
 import { Location } from '@angular/common';
 
 @Component({
@@ -53,13 +53,13 @@ export class FormComponent implements OnInit, OnDestroy {
     }
 
     constructor(private _formGenerator: FormGeneratorService,
-                public _languageService: LanguageService,
-                private _modal: ModalService,
-                private _router: Router,
-                private _apiService: ApiService,
-                private _location: Location,
-                private _route: ActivatedRoute,
-                private _ref: ChangeDetectorRef) {
+        public _languageService: LanguageService,
+        private _modal: ModalService,
+        private _router: Router,
+        private _apiService: ApiService,
+        private _location: Location,
+        private _route: ActivatedRoute,
+        private _ref: ChangeDetectorRef) {
         this.enableAutoSubmit = false;
     }
 
@@ -76,7 +76,6 @@ export class FormComponent implements OnInit, OnDestroy {
         this._subscription = this._route.queryParams.subscribe((params: any) => {
             const currentLangFromTable = params.currentLang ? params.currentLang : null;
             this.form = this.setupForms(currentLangFromTable);
-
             if (this.settings.isEdit) {
                 this.loadData();
             }
@@ -230,70 +229,69 @@ export class FormComponent implements OnInit, OnDestroy {
         } else if (entity) {
             id = entity ? entity.id : null;
         }
-        if (id !== null) {
-            this.isLoading = true;
+        this.isLoading = true;
 
-            let params = {};
-            if (this.settings.api.filter) {
-                params = {
-                    filter: this.settings.api.filter
-                };
-            }
-
-            const endpoint = _endpoint ? _endpoint : this.settings.api.endpoint;
-
-            this._apiService.get(
-                endpoint + '/' + id, params)
-                .then((response) => {
-                    this.isLoading = false;
-
-                    const listDetailKeys = [];
-                    const listDetailsFields = {};
-
-                    const hotSpotKeys = [];
-                    let hotSpotFields = [];
-
-                    Object.keys(response).forEach((key) => {
-                        this.settings.fields.base.forEach((field) => {
-                            if (field.key === key && field.type === formConfig.types.LIST_DETAILS) {
-                                listDetailKeys.push(key);
-                                listDetailsFields[key] = field.fields;
-                            }
-
-                            if (field.key === key && field.type === formConfig.types.HOTSPOT) {
-                                hotSpotKeys.push(key);
-                                hotSpotFields = field.fields;
-                            }
-                        });
-                    });
-
-                    if (listDetailKeys.length > 0) {
-                        listDetailKeys.forEach((key) => {
-                            for (let i = 0; i < response[key].length; i++) {
-                                (this.form.controls[key] as FormArray).push(
-                                    new FormGroup(this._formGenerator.generateFormFields(listDetailsFields[key]))
-                                );
-                            }
-                        });
-                    }
-
-                    if (hotSpotKeys.length > 0) {
-                        hotSpotKeys.forEach((key) => {
-                            for (let i = 0; i < response[key]['hotSpots'].length; i++) {
-                                ((this.form.controls[key] as any).controls['hotSpots'] as FormArray).push(
-                                    new FormGroup(this._formGenerator.generateFormFields(hotSpotFields))
-                                );
-                            }
-                        });
-                    }
-
-                    this.form.patchValue(response);
-                })
-                .catch((response: ErrorResponse) => {
-                    this.isLoading = false;
-                    this.response.emit((response));
-                });
+        let params = {};
+        if (this.settings.api.filter) {
+            params = {
+                filter: this.settings.api.filter
+            };
         }
+
+        const endpoint = _endpoint ? _endpoint : this.settings.api.endpoint;
+
+        this._apiService.get(
+            endpoint + (id !== null ? '/' +id : ''), params)
+            .then((response) => {
+                this.isLoading = false;
+
+                const listDetailKeys = [];
+                const listDetailsFields = {};
+
+                const hotSpotKeys = [];
+                let hotSpotFields = [];
+
+                Object.keys(response).forEach((key) => {
+                    this.settings.fields.base.forEach((field) => {
+                        if (field.key === key && field.type === formConfig.types.LIST_DETAILS) {
+                            listDetailKeys.push(key);
+                            listDetailsFields[key] = field.fields;
+                        }
+
+                        if (field.key === key && field.type === formConfig.types.HOTSPOT) {
+                            hotSpotKeys.push(key);
+                            hotSpotFields = field.fields;
+                        }
+                    });
+                });
+
+                if (listDetailKeys.length > 0) {
+                    listDetailKeys.forEach((key) => {
+                        for (let i = 0; i < response[key].length; i++) {
+                            (this.form.controls[key] as FormArray).push(
+                                new FormGroup(this._formGenerator.generateFormFields(listDetailsFields[key]))
+                            );
+                        }
+                    });
+                }
+
+                if (hotSpotKeys.length > 0) {
+                    hotSpotKeys.forEach((key) => {
+                        for (let i = 0; i < response[key]['hotSpots'].length; i++) {
+                            ((this.form.controls[key] as any).controls['hotSpots'] as FormArray).push(
+                                new FormGroup(this._formGenerator.generateFormFields(hotSpotFields))
+                            );
+                        }
+                    });
+                }
+
+                this.form.patchValue(response);
+            })
+            .catch((response: ErrorResponse) => {
+                this.isLoading = false;
+                this.response.emit((response));
+            });
+
     }
 
     onCancel(): void {
@@ -326,6 +324,7 @@ export class FormComponent implements OnInit, OnDestroy {
 
     private fixFiles(value: any): any {
         const components = [];
+
         this.settings.fields.base.forEach((field) => {
             if (field.type === 'file') {
                 components.push(field.key);
@@ -334,7 +333,7 @@ export class FormComponent implements OnInit, OnDestroy {
 
         this._languageService.getContentLanguages().forEach((lang: Language) => {
             if (this.settings.fields[lang.isoCode]) {
-                this.settings.fields[lang.isoCode].forEach((field) => {
+                this.settings.fields[lang.isoCode].forEach((field) => {
                     if (field.type === 'file') {
                         components.push(field.key);
                     }
@@ -351,7 +350,7 @@ export class FormComponent implements OnInit, OnDestroy {
                         if (rawValue[key]) {
                             const array = [];
                             rawValue[key].forEach((item) => {
-                                if (item.id) {
+                                if (item.id) {
                                     array.push(item.id);
                                 }
                             });
@@ -366,11 +365,10 @@ export class FormComponent implements OnInit, OnDestroy {
                     if (rawValue[lang.isoCode]) {
                         Object.keys(rawValue[lang.isoCode]).forEach((key) => {
                             if (key === fileKey) {
-                                console.log(rawValue[lang.isoCode][key]);
                                 if (rawValue[lang.isoCode][key]) {
                                     const array = [];
                                     rawValue[lang.isoCode][key].forEach((item) => {
-                                        if (item.id) {
+                                        if (item.id) {
                                             array.push(item.id);
                                         }
                                     });
@@ -393,7 +391,12 @@ export class FormComponent implements OnInit, OnDestroy {
          *  Useful to support drag&drop on list detail */
         const value = this.fixFiles(this.form.getRawValue());
 
-        console.log(value);
+        // console.log(value);
+        for (let v in value) {
+            if (value[v] === null && !value[v]) {
+                value[v] = '';
+            }
+        }
 
         if (value['geosearch']) { // TODO: valutare se fare meglio
             delete value['geosearch'];
@@ -431,8 +434,14 @@ export class FormComponent implements OnInit, OnDestroy {
                     this.dataStored = true;
                     this.response.emit(response);
 
-                    if (this.settings.submit && this.settings.submit.refreshAfter) {
-                        this.loadData(response);
+                    if (this.settings.submit && (this.settings.submit.refreshAfter || this.settings.submit.redirectAfter)) {
+                        if (this.settings.submit.refreshAfter) {
+                            this.loadData(response);
+                        } else if (this.settings.submit.redirectAfter) {
+                            this._router.navigateByUrl('/panel/' + this.settings.submit.redirectAfter);
+                        }
+                    } else {
+                        this._location.back();
                     }
                 })
                 .catch((response: ErrorResponse) => {
@@ -476,7 +485,7 @@ export class FormComponent implements OnInit, OnDestroy {
                     listParams: buttonParams
                 };
             }
-            this._router.navigate(['../' + path], {queryParams: queryParams, relativeTo: this._route.parent});
+            this._router.navigate(['../' + path], { queryParams: queryParams, relativeTo: this._route.parent });
         }
         // TODO: implement same logic like action parsing in table.component.ts
     }

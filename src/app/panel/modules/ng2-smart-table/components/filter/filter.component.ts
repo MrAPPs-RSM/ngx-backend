@@ -59,7 +59,9 @@ export class FilterComponent implements OnInit, OnChanges {
     }
 
     setQueryValue() {
-        this.query = this.column.filter.multiple ? [] : '';
+        if (this.column.filter) {
+            this.query = this.column.filter.multiple ? [] : '';
+        }
     }
 
     ngOnChanges(changes: SimpleChanges) {
