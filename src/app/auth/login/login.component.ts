@@ -1,11 +1,11 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {environment} from '../../../environments/environment';
-import {ActivatedRoute, Router} from '@angular/router';
-import {UserService} from '../services/user.service';
-import {ToastsService} from '../../services/toasts.service';
-import {SetupService} from '../../panel/services/setup.service';
-import {StorageService} from '../../services/storage.service';
-import {ApiService, ErrorResponse} from '../../api/api.service';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { environment } from '../../../environments/environment';
+import { ActivatedRoute, Router } from '@angular/router';
+import { UserService } from '../services/user.service';
+import { ToastsService } from '../../services/toasts.service';
+import { SetupService } from '../../panel/services/setup.service';
+import { StorageService } from '../../services/storage.service';
+import { ApiService, ErrorResponse } from '../../api/api.service';
 
 @Component({
     selector: 'app-login',
@@ -19,12 +19,12 @@ export class LoginComponent implements OnInit {
     public isLoading = false;
 
     constructor(private _toastsService: ToastsService,
-                private _route: ActivatedRoute,
-                private _storageService: StorageService,
-                private _setupService: SetupService,
-                private _apiService: ApiService,
-                private _userService: UserService,
-                private _router: Router) {
+        private _route: ActivatedRoute,
+        private _storageService: StorageService,
+        private _setupService: SetupService,
+        private _apiService: ApiService,
+        private _userService: UserService,
+        private _router: Router) {
     }
 
     ngOnInit() {
@@ -47,9 +47,9 @@ export class LoginComponent implements OnInit {
             .then((response) => {
                 this.isLoading = false;
 
-              if (!('user' in response)) {
-                response.user = {};
-              }
+                if (!('user' in response)) {
+                    response.user = {};
+                }
 
                 response.user['password'] = data.password;
                 response.user.remember = !!data['remember'];
@@ -57,7 +57,12 @@ export class LoginComponent implements OnInit {
                 this._userService.storeUser(response.user);
                 this._userService.storeToken(response.id);
 
-                this._router.navigate(['../panel'], {relativeTo: this._route});
+                if (environment.auth.refreshToken && response.refresh_token && typeof response.refresh_token === 'string') {
+                    // Set refresh token
+                    this._userService.storeRefreshToken(response.refresh_token);
+                }
+
+                this._router.navigate(['../panel'], { relativeTo: this._route });
             })
             .catch((response: ErrorResponse) => {
                 this.isLoading = false;

@@ -3,6 +3,7 @@ import {environment} from '../../../environments/environment';
 
 export const LOGIN_ENDPOINT = environment.auth.login.endpoint;
 export const TOKEN_KEY = environment.auth.tokenKey;
+export const REFRESH_TOKEN_KEY = 'refresh_token';
 export const USER_KEY = 'user';
 
 @Injectable()
@@ -34,6 +35,18 @@ export class UserService {
 
     public getToken(): string {
         return localStorage.getItem(TOKEN_KEY);
+    }
+
+    public storeRefreshToken(refreshToken: string): void {
+        localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+    }
+
+    public removeRefreshToken(): void {
+        localStorage.removeItem(REFRESH_TOKEN_KEY);
+    }
+
+    public getRefreshToken(): string {
+        return localStorage.getItem(REFRESH_TOKEN_KEY);
     }
 
     public cleanupData(): void {

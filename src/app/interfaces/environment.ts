@@ -74,6 +74,9 @@ export type EnvAuth = {
         password: string;
     };
     tokenKey: 'access_token';
+    refreshToken?: {
+        endpoint: string;
+    };
     login: AuthLogin;
     passwordResetEndpoint?: string;
 }
