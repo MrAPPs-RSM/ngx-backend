@@ -4,6 +4,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular
 import { UserService, TOKEN_KEY, LOGIN_ENDPOINT } from '../auth/services/user.service';
 import { Router } from '@angular/router';
 import { StorageService } from '../services/storage.service';
+import { RefreshToken } from '../interfaces';
 import * as localSetupFile from '../panel/services/local-setup-file';
 
 const API_URL = environment.api.baseUrl;
@@ -288,7 +289,6 @@ export class ApiService {
                         if (this._userService.getUser().remember) {
                             this.login(null)
                                 .then((response) => {
-                                    // console.log("TOKEN CHANGED");
                                     this._userService.storeToken(response.id);
                                     resolve();
                                 })
@@ -296,6 +296,24 @@ export class ApiService {
                                     this.redirectToLogin();
                                     reject(err);
                                 });
+                        } else if (environment.auth.refreshToken) {
+                            // Call refresh token
+                            this.refreshToken()
+                                .then(response => {
+                                    if (!response.success) {
+                                        this.redirectToLogin();
+                                        reject(response.message);
+                                    }
+
+                                    // Store
+                                    this._userService.storeToken(response.token);
+                                    this._userService.storeRefreshToken(response.refreshToken);
+                                    resolve();
+                                })
+                                .catch(err => {
+                                    this.redirectToLogin();
+                                    reject(err);
+                                })
                         } else {
                             this.redirectToLogin();
                             reject(errorResponse);
@@ -385,6 +403,43 @@ export class ApiService {
         }
     }
 
+    public async refreshToken(): Promise<RefreshToken> {
+        // Check if there is refresh token stored
+        // on local storage
+        const refreshToken: string = this._userService.getRefreshToken();
+        if (refreshToken.length === 0) {
+            // Go to login, invalid refresh token
+            return {
+                success: false,
+                message: 'Invalid stored refresh token',
+                token: null,
+                refreshToken: null
+            }
+        }
+
+        // Call refresh token API
+        const data = await this.post(environment.auth.refreshToken.endpoint, {
+            refresh_token: refreshToken
+        }, null, false);
+
+        // Check if correct data
+        if (!data.refresh_token || !data.id) {
+            return {
+                success: false,
+                message: 'Invalid token',
+                token: null,
+                refreshToken: null
+            }
+        }
+
+        return {
+            success: true,
+            message: null,
+            token: data.id,
+            refreshToken: data.refresh_token
+        }
+    }
+
 
     public login(data: any): Promise<any> {
         if (data == null) {
@@ -401,7 +456,7 @@ export class ApiService {
                 }
             }
         }
-        
+
         return this.post(LOGIN_ENDPOINT, data, null, true);
     }
 
