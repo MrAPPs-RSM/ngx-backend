@@ -18,6 +18,7 @@ import { ToastsService } from '../../../services/toasts.service';
 import { PageRefreshService } from '../../../services/page-refresh.service';
 import { Subscription } from 'rxjs';
 import { GlobalState } from '../../../global.state';
+import { isArray } from 'lodash';
 
 @Component({
     selector: 'app-table',
@@ -94,7 +95,7 @@ export class TableComponent implements OnInit, OnDestroy {
             this.activeFilters.filter = this.filter;
 
             if ('order' in this.filter && this.filter['order'] !== null) {
-                const sortArray = this.filter.order.split(',');
+                const sortArray = isArray(this.filter.order) ? this.filter.order : this.filter.order.split(',');
                 this.filter.order = [];
                 for (let i = 0; i < sortArray.length; i++) {
                     const splittedSort = sortArray[i].trim().split(' ');
@@ -231,7 +232,6 @@ export class TableComponent implements OnInit, OnDestroy {
                     this.count = res.count;
                     this._apiService.get(this.settings.api.endpoint, this.composeParams())
                         .then((data) => {
-                            // console.log(data);
                             this.isLoading = false;
                             this.data = data;
                         })
@@ -499,7 +499,7 @@ export class TableComponent implements OnInit, OnDestroy {
                         extraParams = { queryParams: { currentLang: this.currentLang.isoCode } };
                     }
                 }
-                
+
                 path = UtilsService.parseEndpoint(path, data);
 
                 extraParams['relativeTo'] = this._route.parent;

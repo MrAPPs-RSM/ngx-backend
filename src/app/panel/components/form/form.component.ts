@@ -421,6 +421,8 @@ export class FormComponent implements OnInit, OnDestroy {
 
                     if (response != null && this.settings.submit && this.settings.submit.refreshAfter === true) {
                         this.loadData(response);
+                    } else {
+                        this._location.back();
                     }
                 })
                 .catch((response: ErrorResponse) => {
