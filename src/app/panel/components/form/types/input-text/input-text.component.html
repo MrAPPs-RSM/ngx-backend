@@ -1,6 +1,6 @@
 <div [formGroup]="form" [class]="field.class ? field.class : 'col-sm-12'" [ngClass]="{'hidden': field.hidden}">
     <div class="form-group" [ngClass]="{'has-error': !isValid()}">
-        <label for="{{field.key}}">
+        <label for="{{field.key + index}}">
             {{field.label}}
             <span *ngIf="isRequired()">*</span>
         </label>
@@ -9,7 +9,7 @@
                 [attr.disabled]="field.disabled || onlyView ? '' : null"
                 formControlName="{{field.key}}"
                 class="form-control"
-                id="{{field.key}}"
+                id="{{field.key + index}}"
                 placeholder="{{field.placeholder}}"
                 value="{{field.value}}"
         />
