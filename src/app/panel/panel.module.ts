@@ -64,6 +64,7 @@ import { TicketDetailPageComponent } from './pages/ticket-detail-page/ticket-det
 import { FileUploaderComponent } from './pages/ticket-detail-page/components/file-uploader/file-uploader.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import {MatSliderModule} from '@angular/material/slider';
 
 const COMPONENTS = [
   PanelComponent,
@@ -156,6 +157,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
     ColorPickerModule,
     ScrollingModule,
     NgSelectModule,
+    MatSliderModule,
     MatInputModule,
     MatFormFieldModule,
     NgxUploaderModule,

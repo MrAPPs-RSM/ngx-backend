@@ -14,114 +14,111 @@ import { first } from 'rxjs/operators';
 })
 export class PreviewComponent extends BaseInputComponent implements OnInit, OnDestroy {
 
-    /** Fixed slider configuration */
-    readonly sliderConfig: any = {
-        connect: [true, false],
-        behaviour: 'tap',
-        tooltips: false,
-        step: 1
-    };
+  @Input() field: FormFieldPreview;
 
-    @Input() field: FormFieldPreview;
+  constructor(private _apiService: ApiService) {
+    super();
+  }
 
-    constructor(private _apiService: ApiService) {
-        super();
-    }
+  isVisible: boolean;
 
-    isVisible: boolean;
+  min: number;
+  max: number;
+  offset = 1;
 
-    min: number;
-    max: number;
-    offset: number = 1;
+  url: string;
+  private fileId: number;
 
-    url: string;
-    private fileId: number;
+  private _subscription: Subscription = Subscription.EMPTY;
+  private _fileSubscription: Subscription = Subscription.EMPTY;
 
-    private _subscription: Subscription = Subscription.EMPTY;
-    private _fileSubscription: Subscription = Subscription.EMPTY;
+  ngOnInit() {
+    this.reset();
+    this.updateFormValue();
 
-    ngOnInit() {
-        this.reset();
-        this.updateFormValue();
+    this.isVisible = false;
 
-        this.isVisible = false;
-
-        if (this.isEdit) {
-            this._subscription = this.getControl().valueChanges.pipe(first()).subscribe((value) => {
-                this.offset = value;
-                this.onFileChange();
-                this._subscription.unsubscribe();
-            });
-        }
-
+    if (this.isEdit) {
+      this._subscription = this.getControl().valueChanges.pipe(first()).subscribe((value) => {
+        this.offset = value;
         this.onFileChange();
+        this._subscription.unsubscribe();
+      });
     }
 
-    ngOnDestroy() {
-        if (this._subscription) {
-            this._subscription.unsubscribe();
+    this.onFileChange();
+  }
+
+  ngOnDestroy() {
+    if (this._subscription) {
+      this._subscription.unsubscribe();
+    }
+    if (this._fileSubscription) {
+      this._fileSubscription.unsubscribe();
+    }
+  }
+
+  onChange() {
+    if (this.offset > 0) {
+      this.getData();
+    }
+  }
+
+  updateOffset(event: any) {
+    this.offset = event.offset;
+    this.onChange();
+  }
+
+  onImageError() {
+    this.url = environment.assets.imageError;
+  }
+
+  private onFileChange() {
+    this._fileSubscription = this.getControl(this.field.fileKey).valueChanges.subscribe((value) => {
+      /** If file is uploaded */
+      if (value) {
+        if (value instanceof Array) {
+          this.isVisible = value && value.length > 0;
+          if (this.isVisible) {
+            this.fileId = value[0].id;
+          }
+        } else {
+          this.isVisible = !!value;
+          this.fileId = value['id'];
         }
-        if (this._fileSubscription) {
-            this._fileSubscription.unsubscribe();
-        }
-    }
+        this.getData();
+      } else {
+        this.offset = 1;
+        this.isVisible = false;
+      }
+    });
+  }
 
-    onChange() {
-        if (this.offset > 0) {
-            this.getData();
-        }
-    }
-
-    onImageError() {
-        this.url = environment.assets.imageError;
-    }
-
-    private onFileChange() {
-        this._fileSubscription = this.getControl(this.field.fileKey).valueChanges.subscribe((value) => {
-            /** If file is uploaded */
-            if (value) {
-                if (value instanceof Array) {
-                    this.isVisible = value && value.length > 0;
-                    if (this.isVisible) {
-                        this.fileId = value[0].id;
-                    }
-                } else {
-                    this.isVisible = !!value;
-                    this.fileId = value['id'];
-                }
-                this.getData();
-            } else {
-                this.offset = 1;
-                this.isVisible = false;
-            }
+  private getData() {
+    if (this.fileId) {
+      this._apiService.get(this.field.endpoint + '/' + this.fileId, {offset: this.offset})
+        .then((response: PreviewResponse) => {
+          this.url = response.url;
+          this.min = response.min;
+          this.max = response.max;
+          this.offset = response.offset;
+          this.updateFormValue();
+        })
+        .catch((response: ErrorResponse) => {
+          this.reset();
         });
     }
+  }
 
-    private getData() {
-        if (this.fileId) {
-            this._apiService.get(this.field.endpoint + '/' + this.fileId, {offset: this.offset})
-                .then((response: PreviewResponse) => {
-                    this.url = response.url;
-                    this.min = response.min;
-                    this.max = response.max;
-                    this.offset = response.offset;
-                    this.updateFormValue();
-                })
-                .catch((response: ErrorResponse) => {
-                    this.reset();
-                });
-        }
-    }
+  private updateFormValue() {
+    this.getControl().setValue(this.offset);
+  }
 
-    private updateFormValue() {
-        this.getControl().setValue(this.offset);
-    }
-
-    private reset() {
-        this.min = 0;
-        this.max = 0;
-        this.offset = 1;
-    }
+  private reset() {
+    this.min = 0;
+    this.max = 0;
+    this.offset = 1;
+  }
 }
 
 interface PreviewResponse {
