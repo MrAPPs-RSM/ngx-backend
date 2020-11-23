@@ -18,6 +18,7 @@ import { ToastsService } from '../../../services/toasts.service';
 import { PageRefreshService } from '../../../services/page-refresh.service';
 import { Subscription } from 'rxjs';
 import { GlobalState } from '../../../global.state';
+import { isArray } from 'lodash';
 
 @Component({
     selector: 'app-table',
@@ -94,7 +95,7 @@ export class TableComponent implements OnInit, OnDestroy {
             this.activeFilters.filter = this.filter;
 
             if ('order' in this.filter && this.filter['order'] !== null) {
-                const sortArray = this.filter.order.split(',');
+                const sortArray = isArray(this.filter.order) ? this.filter.order : this.filter.order.split(',');
                 this.filter.order = [];
                 for (let i = 0; i < sortArray.length; i++) {
                     const splittedSort = sortArray[i].trim().split(' ');
@@ -231,7 +232,6 @@ export class TableComponent implements OnInit, OnDestroy {
                     this.count = res.count;
                     this._apiService.get(this.settings.api.endpoint, this.composeParams())
                         .then((data) => {
-                            // console.log(data);
                             this.isLoading = false;
                             this.data = data;
                         })
@@ -413,7 +413,9 @@ export class TableComponent implements OnInit, OnDestroy {
                     const params = {};
 
                     action.config.params.associateFields.forEach((association: Association) => {
-                        const queryKey = association.queryKey.indexOf('where') >= 0 || association.queryKey.indexOf('.') >= 0 ? association.queryKey : 'where.' + association.queryKey;
+                        const queryKey = association.queryKey.indexOf('where') >= 0 || association.queryKey.indexOf('.') >= 0
+                          ? association.queryKey
+                          : 'where.' + association.queryKey;
                         params[association.formKey] = UtilsService.objectByString(this.filter, queryKey);
                     });
 
@@ -459,7 +461,12 @@ export class TableComponent implements OnInit, OnDestroy {
                         }
 
                         if (updatedFilter.indexOf(':id') !== -1) {
-                            updatedFilter = updatedFilter.replace(':id', encodeURIComponent('idField' in action.config ? data[action.config['idField']] : data.id));
+                            updatedFilter = updatedFilter.replace(
+                              ':id',
+                              encodeURIComponent(
+                                'idField' in action.config ? data[action.config['idField']] : data.id
+                              )
+                            );
                         }
 
                         extraParams = { queryParams: { listParams: updatedFilter } };
@@ -499,7 +506,7 @@ export class TableComponent implements OnInit, OnDestroy {
                         extraParams = { queryParams: { currentLang: this.currentLang.isoCode } };
                     }
                 }
-                
+
                 path = UtilsService.parseEndpoint(path, data);
 
                 extraParams['relativeTo'] = this._route.parent;
@@ -508,7 +515,12 @@ export class TableComponent implements OnInit, OnDestroy {
         } else if (action.config.endpoint) {
             let endpoint = action.config.endpoint;
             if (endpoint.indexOf(':id') !== -1) {
-                endpoint = endpoint.replace(':id', encodeURIComponent('idField' in action.config ? data[action.config['idField']] : data.id));
+                endpoint = endpoint.replace(
+                  ':id',
+                  encodeURIComponent(
+                    'idField' in action.config ? data[action.config['idField']] : data.id
+                  )
+                );
             }
 
             // Parse others endpoint parameters
@@ -542,7 +554,7 @@ export class TableComponent implements OnInit, OnDestroy {
                                 this._apiService.post(endpoint, {})
                                     .then((response) => {
                                         this.handleResponseApi(action, response)
-                                            .then(() => resolve())
+                                            .then(() => resolve(true))
                                             .catch((error) => reject(error));
                                     })
                                     .catch((response: ErrorResponse) => {
@@ -558,7 +570,7 @@ export class TableComponent implements OnInit, OnDestroy {
                         this._apiService.post(endpoint, {})
                             .then((response) => {
                                 this.handleResponseApi(action, response)
-                                    .then(() => resolve())
+                                    .then(() => resolve(true))
                                     .catch((error) => reject(error));
                             })
                             .catch((response: ErrorResponse) => {
@@ -568,7 +580,7 @@ export class TableComponent implements OnInit, OnDestroy {
                 }
                     break;
                 case 'put': { // TODO (only if necessary)
-                    resolve();
+                    resolve(true);
                 }
                     break;
                 case 'patch': {
@@ -584,7 +596,7 @@ export class TableComponent implements OnInit, OnDestroy {
                                         this._apiService.patch(endpoint, body)
                                             .then((response) => {
                                                 this.handleResponseApi(action, response)
-                                                    .then(() => resolve())
+                                                    .then(() => resolve(true))
                                                     .catch((error) => reject(error));
                                             })
                                             .catch((response: ErrorResponse) => {
@@ -603,7 +615,7 @@ export class TableComponent implements OnInit, OnDestroy {
                             this._apiService.patch(endpoint, JSON.parse(endpointData))
                                 .then((response) => {
                                     this.handleResponseApi(action, response)
-                                        .then(() => resolve())
+                                        .then(() => resolve(true))
                                         .catch((error) => reject(error));
                                 })
                                 .catch((response: ErrorResponse) => {
@@ -611,7 +623,7 @@ export class TableComponent implements OnInit, OnDestroy {
                                 });
                         }
                     } else {
-                        resolve();
+                        resolve(true);
                     }
                 }
                     break;
@@ -623,13 +635,19 @@ export class TableComponent implements OnInit, OnDestroy {
                                     this.isLoading = true;
                                 }
                                 if (action.config.responseType === 'file_download' && action.config.forceDownload) {
-                                    (window as any).open(this._apiService.composeUrl(endpoint, true, action.config.addFilters ? this.composeCountParams() : null));
-                                    resolve();
+                                    (window as any).open(
+                                      this._apiService.composeUrl(
+                                        endpoint,
+                                        true,
+                                        action.config.addFilters ? this.composeCountParams() : null
+                                      )
+                                    );
+                                    resolve(true);
                                 } else {
                                     this._apiService.get(endpoint, action.config.addFilters ? this.composeCountParams() : null)
                                         .then((response) => {
                                             this.handleResponseApi(action, response)
-                                                .then(() => resolve())
+                                                .then(() => resolve(true))
                                                 .catch((error) => reject(error));
                                         })
                                         .catch((response: ErrorResponse) => {
@@ -644,14 +662,20 @@ export class TableComponent implements OnInit, OnDestroy {
                             this.isLoading = true;
                         }
                         if (action.config.responseType === 'file_download' && action.config.forceDownload) {
-                            (window as any).open(this._apiService.composeUrl(endpoint, true, action.config.addFilters ? this.composeCountParams() : null));
-                            resolve();
+                            (window as any).open(
+                              this._apiService.composeUrl(
+                                endpoint,
+                                true,
+                                action.config.addFilters ? this.composeCountParams() : null
+                              )
+                            );
+                            resolve(true);
                         } else {
                             // Adding countParams to filter without pagination and sort
                             this._apiService.get(endpoint, action.config.addFilters ? this.composeCountParams() : null)
                                 .then((response) => {
                                     this.handleResponseApi(action, response)
-                                        .then(() => resolve())
+                                        .then(() => resolve(true))
                                         .catch((error) => reject(error));
                                 })
                                 .catch((response: ErrorResponse) => {
@@ -676,7 +700,7 @@ export class TableComponent implements OnInit, OnDestroy {
                                 this._apiService.delete(endpoint)
                                     .then((response) => {
                                         this.handleResponseApi(action, response)
-                                            .then(() => resolve())
+                                            .then(() => resolve(true))
                                             .catch((error) => {
                                                 this.isLoading = false;
                                                 reject(error);
@@ -696,7 +720,7 @@ export class TableComponent implements OnInit, OnDestroy {
                         this._apiService.delete(endpoint)
                             .then((response) => {
                                 this.handleResponseApi(action, response)
-                                    .then(() => resolve())
+                                    .then(() => resolve(true))
                                     .catch((error) => reject(error));
                             })
                             .catch((response: ErrorResponse) => {
@@ -726,7 +750,7 @@ export class TableComponent implements OnInit, OnDestroy {
                             const file = new File([blob], fileName, { type: fileType });
                             (FileSaver as any).saveAs(file);
 
-                            resolve();
+                            resolve(true);
                         } else {
                             reject('File configuration not defined');
                         }
@@ -735,13 +759,13 @@ export class TableComponent implements OnInit, OnDestroy {
                         break;
                     default: {
                         this._toast.success();
-                        resolve();
+                        resolve(true);
                     }
                         break;
                 }
             } else {
                 this._toast.success();
-                resolve();
+                resolve(true);
             }
         });
     }

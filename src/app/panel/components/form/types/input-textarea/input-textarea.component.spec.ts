@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { InputTextareaComponent } from './input-textarea.component';
 
@@ -6,7 +6,7 @@ describe('InputTextareaComponent', () => {
   let component: InputTextareaComponent;
   let fixture: ComponentFixture<InputTextareaComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ InputTextareaComponent ]
     })

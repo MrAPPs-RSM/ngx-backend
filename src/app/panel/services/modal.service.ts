@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Modal} from 'ngx-modialog/plugins/bootstrap';
+import {Modal} from 'ngx-modialog-7/plugins/bootstrap';
 import {LanguageService} from './language.service';
 
 @Injectable()

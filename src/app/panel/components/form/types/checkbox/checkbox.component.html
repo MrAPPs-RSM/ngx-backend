@@ -1,12 +1,12 @@
 <div [formGroup]="form" [class]="field.class ? field.class : 'col-sm-12'" [ngClass]="{'hidden': field.hidden}">
     <div class="form-group" [ngClass]="{'has-error': !isValid()}">
-        <label class="checkbox" for="{{field.key}}">
+        <label class="checkbox" for="{{field.key + index}}">
             <input type="checkbox"
-                   id="{{field.key}}"
+                   id="{{field.key + index}}"
                    formControlName="{{field.key}}"
                    class="styled"
                    [attr.disabled]="field.disabled || onlyView ? '' : null"
-                   [checked]=field.checked>
+                   [checked]="field.checked">
             <span>
                 {{field.label}}
             </span>

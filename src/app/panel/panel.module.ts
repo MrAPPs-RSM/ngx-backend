@@ -8,10 +8,8 @@ import { NgxUploaderModule } from 'ngx-uploader';
 import { AgmCoreModule } from '@agm/core';
 import { Ng2SmartTableModule } from './modules/ng2-smart-table/ng2-smart-table.module';
 import { PipesModule } from '../pipes/pipes.module';
-import { NouisliderModule } from 'ng2-nouislider';
-import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
-import { CKEditorModule } from 'ng2-ckeditor';
-import { TextMaskModule } from 'angular2-text-mask';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
+import { NgxMaskModule, IConfig } from 'ngx-mask'
 
 import { PanelComponent } from './panel.component';
 import { FormPageComponent } from './pages/form-page/form-page.component';
@@ -64,7 +62,9 @@ import { environment } from '../../environments/environment';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { TicketDetailPageComponent } from './pages/ticket-detail-page/ticket-detail-page.component';
 import { FileUploaderComponent } from './pages/ticket-detail-page/components/file-uploader/file-uploader.component';
-import { MatFormFieldModule, MatInputModule } from '@angular/material';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import {MatSliderModule} from '@angular/material/slider';
 
 const COMPONENTS = [
   PanelComponent,
@@ -146,6 +146,8 @@ const routes: Routes = [
   }
 ];
 
+export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
+
 @NgModule({
   imports: [
     CommonModule,
@@ -155,6 +157,7 @@ const routes: Routes = [
     ColorPickerModule,
     ScrollingModule,
     NgSelectModule,
+    MatSliderModule,
     MatInputModule,
     MatFormFieldModule,
     NgxUploaderModule,
@@ -163,11 +166,9 @@ const routes: Routes = [
     }),
     Ng2SmartTableModule,
     PipesModule,
-    NouisliderModule,
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
-    TextMaskModule,
-    CKEditorModule
+    NgxMaskModule.forRoot(),
   ],
   exports: [
     FormComponent,

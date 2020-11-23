@@ -93,7 +93,6 @@ export class HotspotComponent extends BaseInputComponent implements OnInit {
 
     public onEdit($event: any, index: number) {
         $event.preventDefault();
-        console.log('On edit');
         this.activeHotSpot = index;
     }
 
@@ -113,7 +112,7 @@ export class HotspotComponent extends BaseInputComponent implements OnInit {
     }
 
     public onClose($event: any) {
-        if (!this.savedForms[this.activeHotSpot]) {
+        if (this.savedForms[this.activeHotSpot] === false) {
             const keys = Object.keys(this.getActiveForm().controls);
             keys.forEach((key) => {
                if (key !== 'x' && key !== 'y') {

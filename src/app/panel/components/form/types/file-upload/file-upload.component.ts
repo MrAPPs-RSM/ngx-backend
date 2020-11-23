@@ -42,14 +42,14 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
 
     uploadInput: EventEmitter<UploadInput>;
 
-    rejected: boolean = false;
-    dragOver: boolean = false;
-    isLoading: boolean = false;
+    rejected = false;
+    dragOver = false;
+    isLoading = false;
 
-    showMediaLibrary: boolean = false;
+    showMediaLibrary = false;
 
     public contentLanguages: any[];
-    copyToLang: boolean = false; // putFilesOnLanguage checkbox
+    copyToLang = false; // putFilesOnLanguage checkbox
 
     @ViewChild('fileUpload') _fileUpload: ElementRef;
 
@@ -66,6 +66,8 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     }
 
     ngOnInit() {
+      this.updateFilesValues(this.getControl().value);
+
         if (this.field.options.multiple) {
             this.maxFiles = this.field.options.maxFiles ? this.field.options.maxFiles : 0;
         } else {
@@ -86,19 +88,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
 
         /** Load entity image (if added from duplicate or edit) */
         this._subscription = this.getControl().valueChanges.pipe(first()).subscribe(data => {
-            if (data instanceof Array) {
-                const array = [];
-                data.forEach((item) => {
-                    if (item) {
-                        array.push(item);
-                    }
-                });
-                this.getControl().setValue(array);
-            } else {
-                if (data) {
-                    this.getControl().setValue([data]);
-                }
-            }
+          this.updateFilesValues(data);
         });
 
         // this.setCorrectlyLanguages();
@@ -117,6 +107,22 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         } else if (this._routeSubscription !== null) {
             this._routeSubscription.unsubscribe();
         }
+    }
+
+    updateFilesValues(data: any) {
+      if (data instanceof Array) {
+        const array = [];
+        data.forEach((item) => {
+          if (item) {
+            array.push(item);
+          }
+        });
+        this.getControl().setValue(array);
+      } else {
+        if (data) {
+          this.getControl().setValue([data]);
+        }
+      }
     }
 
     ngOnChanges(changes: SimpleChanges) {

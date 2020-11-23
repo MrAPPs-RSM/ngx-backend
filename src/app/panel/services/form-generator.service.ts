@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
-import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
-import {formConfig} from '../components/form/form.config';
-import {CustomValidators} from '../components/form/validators';
-import {UtilsService} from '../../services/utils.service';
+import { Injectable } from '@angular/core';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { formConfig } from '../components/form/form.config';
+import { CustomValidators } from '../components/form/validators';
+import { UtilsService } from '../../services/utils.service';
 
 @Injectable()
 export class FormGeneratorService {
@@ -102,7 +102,7 @@ export class FormGeneratorService {
                     }
                         break;
                     case formConfig.types.CHECKBOX: {
-                        group[field.key] = new FormControl({value: null, disabled: field.disabled}, null);
+                        group[field.key] = new FormControl({ value: null, disabled: field.disabled }, null);
                     }
                         break;
                     case formConfig.types.PASSWORD: {

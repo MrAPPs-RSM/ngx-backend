@@ -5,14 +5,13 @@
             <span *ngIf="isRequired()">*</span>
         </label>
 
-        <nouislider *ngIf="max > 0"
-                    [min]="min"
-                    [max]="max"
-                    [(ngModel)]="offset"
-                    [ngModelOptions]="{standalone: true}"
-                    [config]="sliderConfig"
-                    (change)="onChange()"
-        ></nouislider>
+      <mat-slider
+        [min]="min"
+        [max]="max"
+        step="1"
+        [value]="offset"
+      (change)="updateOffset($event)">
+      </mat-slider>
 
         <div class="preview-wrapper">
             <div class="preview">
