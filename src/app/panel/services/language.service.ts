@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DateTimeAdapter } from 'ng-pick-datetime';
+import { DateTimeAdapter } from '@danielmoncada/angular-datetime-picker';
 import { environment } from '../../../environments/environment';
 import { translations } from '../../../translations';
 

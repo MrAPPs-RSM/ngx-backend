@@ -8,8 +8,7 @@ import { NgxUploaderModule } from 'ngx-uploader';
 import { AgmCoreModule } from '@agm/core';
 import { Ng2SmartTableModule } from './modules/ng2-smart-table/ng2-smart-table.module';
 import { PipesModule } from '../pipes/pipes.module';
-import { NouisliderModule } from 'ng2-nouislider';
-import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 import { TextMaskModule } from 'angular2-text-mask';
 
 import { PanelComponent } from './panel.component';
@@ -162,7 +161,6 @@ const routes: Routes = [
     }),
     Ng2SmartTableModule,
     PipesModule,
-    NouisliderModule,
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
     TextMaskModule
