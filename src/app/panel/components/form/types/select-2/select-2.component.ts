@@ -342,7 +342,3 @@ export class Select2Component extends BaseInputComponent implements OnInit, OnDe
         }
     }
 }
-
-export interface SelectData {
-
-}

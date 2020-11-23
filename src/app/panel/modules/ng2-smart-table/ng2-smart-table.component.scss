@@ -3,7 +3,7 @@
 :host {
   font-size: 14px;
 
-  /deep/ {
+  ::ng-deep {
     * {
       box-sizing: border-box;
     }

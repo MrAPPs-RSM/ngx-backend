@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { TablePageComponent } from './table-page.component';
 
@@ -6,7 +6,7 @@ describe('TablePageComponent', () => {
   let component: TablePageComponent;
   let fixture: ComponentFixture<TablePageComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ TablePageComponent ]
     })

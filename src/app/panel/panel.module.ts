@@ -9,7 +9,7 @@ import { AgmCoreModule } from '@agm/core';
 import { Ng2SmartTableModule } from './modules/ng2-smart-table/ng2-smart-table.module';
 import { PipesModule } from '../pipes/pipes.module';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
-import { TextMaskModule } from 'angular2-text-mask';
+import { NgxMaskModule, IConfig } from 'ngx-mask'
 
 import { PanelComponent } from './panel.component';
 import { FormPageComponent } from './pages/form-page/form-page.component';
@@ -62,7 +62,8 @@ import { environment } from '../../environments/environment';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { TicketDetailPageComponent } from './pages/ticket-detail-page/ticket-detail-page.component';
 import { FileUploaderComponent } from './pages/ticket-detail-page/components/file-uploader/file-uploader.component';
-import { MatFormFieldModule, MatInputModule } from '@angular/material';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 const COMPONENTS = [
   PanelComponent,
@@ -144,6 +145,8 @@ const routes: Routes = [
   }
 ];
 
+export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
+
 @NgModule({
   imports: [
     CommonModule,
@@ -163,7 +166,7 @@ const routes: Routes = [
     PipesModule,
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
-    TextMaskModule
+    NgxMaskModule.forRoot(),
   ],
   exports: [
     FormComponent,

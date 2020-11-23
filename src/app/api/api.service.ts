@@ -290,7 +290,7 @@ export class ApiService {
                             this.login(null)
                                 .then((response) => {
                                     this._userService.storeToken(response.id);
-                                    resolve();
+                                    resolve(response);
                                 })
                                 .catch((err) => {
                                     this.redirectToLogin();
@@ -308,12 +308,12 @@ export class ApiService {
                                     // Store
                                     this._userService.storeToken(response.token);
                                     this._userService.storeRefreshToken(response.refreshToken);
-                                    resolve();
+                                    resolve(response);
                                 })
                                 .catch(err => {
                                     this.redirectToLogin();
                                     reject(err);
-                                })
+                                });
                         } else {
                             this.redirectToLogin();
                             reject(errorResponse);
@@ -325,7 +325,7 @@ export class ApiService {
                 case 302: {
                     this.isRedirecting = true;
 
-                    resolve();
+                    resolve({});
                     if ('redirectAfter' in errorResponse.error) {
                         setTimeout(() => {
                             this._router.navigateByUrl(errorResponse.error['redirectAfter']);
@@ -414,7 +414,7 @@ export class ApiService {
                 message: 'Invalid stored refresh token',
                 token: null,
                 refreshToken: null
-            }
+            };
         }
 
         // Call refresh token API
@@ -429,7 +429,7 @@ export class ApiService {
                 message: 'Invalid token',
                 token: null,
                 refreshToken: null
-            }
+            };
         }
 
         return {
@@ -437,7 +437,7 @@ export class ApiService {
             message: null,
             token: data.id,
             refreshToken: data.refresh_token
-        }
+        };
     }
 
 

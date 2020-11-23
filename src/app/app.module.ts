@@ -8,8 +8,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ToastrModule, ToastNoAnimation, ToastNoAnimationModule } from 'ngx-toastr';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './auth/login/login.component';
-import { ModalModule } from 'ngx-modialog';
-import { BootstrapModalModule } from 'ngx-modialog/plugins/bootstrap';
+import { ModalModule } from 'ngx-modialog-7';
+import { BootstrapModalModule } from 'ngx-modialog-7/plugins/bootstrap';
 
 import { GlobalState } from './global.state';
 import { ApiService } from './api/api.service';
@@ -62,7 +62,7 @@ const routes: Routes = [
         DomainNotFoundComponent
     ],
     imports: [
-        RouterModule.forRoot(routes, { useHash: false, onSameUrlNavigation: 'reload' }),
+        RouterModule.forRoot(routes, { useHash: false, onSameUrlNavigation: 'reload', relativeLinkResolution: 'legacy' }),
         ReactiveFormsModule,
         BrowserModule,
         NoopAnimationsModule,
