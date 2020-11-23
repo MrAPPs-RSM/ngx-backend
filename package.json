@@ -12,7 +12,7 @@
   },
   "private": true,
   "dependencies": {
-    "@agm/core": "1.0.0-beta.7",
+    "@agm/core": "3.0.0-beta.0",
     "@angular/animations": "^7.2.16",
     "@angular/cdk": "^7.3.7",
     "@angular/common": "^7.2.16",
@@ -55,10 +55,10 @@
     "zone.js": "^0.8.26"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.12.1",
-    "@angular/cli": "^7.3.10",
-    "@angular/compiler-cli": "^7.2.16",
-    "@angular/language-service": "^7.2.16",
+    "@angular-devkit/build-angular": "~0.1100.2",
+    "@angular/cli": "^11.0.2",
+    "@angular/compiler-cli": "^11.0.2",
+    "@angular/language-service": "^11.0.2",
     "@types/jasmine": "^2.8.17",
     "@types/jasminewd2": "^2.0.8",
     "@types/node": "^10.17.35",
@@ -73,6 +73,6 @@
     "protractor": "^5.4.4",
     "ts-node": "~7.0.1",
     "tslint": "~5.11.0",
-    "typescript": "3.2.4"
+    "typescript": "4.1.2"
   }
 }
