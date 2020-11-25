@@ -1,6 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
+import localeIt from '@angular/common/locales/it';
 import { HttpClientModule } from '@angular/common/http';
 import { Router, RouterModule, Routes } from '@angular/router';
 import { PanelModule } from './panel/panel.module';
@@ -27,7 +29,7 @@ import { PendingChangesGuard } from './auth/guards/pending-changes.guard';
 import { environment } from '../environments/environment';
 import { StorageService } from './services/storage.service';
 import { DomainNotFoundComponent } from './auth/domain-not-found/domain-not-found.component';
-
+registerLocaleData(localeIt);
 
 const routes: Routes = [
     {
@@ -81,6 +83,7 @@ const routes: Routes = [
         BootstrapModalModule
     ],
     providers: [
+        { provide: LOCALE_ID, useValue: 'it-IT'},
         GlobalState,
         ApiService,
         UserService,
