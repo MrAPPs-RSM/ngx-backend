@@ -27,6 +27,8 @@ export class HotspotComponent extends BaseInputComponent implements OnInit {
     public activeHotSpot: number = null;
     private savedForms: any = {};
 
+    public hotspotRadius = 17;
+
     @ViewChild('imageWrapper') imageWrapper: ElementRef;
     @ViewChild('image') image: ElementRef;
 
@@ -80,8 +82,11 @@ export class HotspotComponent extends BaseInputComponent implements OnInit {
         const id = $event.dataTransfer.getData('text/plain');
         const index = parseInt(id.split('_')[1], 10);
 
+        const posX = $event.layerX - this.hotspotRadius;
+        const posY = $event.layerY - this.hotspotRadius;
+
         const hotSpot = this.getFormArray().controls[index];
-        if (this.isInBounds($event.layerX, $event.layerY)) {
+        if (this.isInBounds(posX, posY)) {
             hotSpot.patchValue({x: $event.layerX, y: $event.layerY});
         }
     }
