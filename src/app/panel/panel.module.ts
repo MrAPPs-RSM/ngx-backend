@@ -65,6 +65,7 @@ import { FileUploaderComponent } from './pages/ticket-detail-page/components/fil
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import {MatSliderModule} from '@angular/material/slider';
+import { HotspotCanvasComponent } from './components/form/types/hotspot-canvas/hotspot-canvas.component';
 
 const COMPONENTS = [
   PanelComponent,
@@ -176,7 +177,8 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
     InputPasswordComponent
   ],
   declarations: [
-    ...COMPONENTS
+    ...COMPONENTS,
+    HotspotCanvasComponent
   ],
   providers: [
     ...PROVIDERS

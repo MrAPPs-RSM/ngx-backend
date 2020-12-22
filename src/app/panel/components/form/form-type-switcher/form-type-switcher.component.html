@@ -243,6 +243,15 @@
             [index]="index">
     </app-hotspot>
 
+  <app-hotspot-canvas
+    *ngSwitchCase="formConfig.types.HOTSPOT_CANVAS"
+    [field]="field"
+    [groupName]="groupName"
+    [form]="form"
+    [isEdit]="isEdit"
+    [index]="index">
+  </app-hotspot-canvas>
+
     <!--
 
                      <calendar

@@ -21,6 +21,7 @@ export let formConfig = {
         GEOSEARCH: 'geosearch',
         CLOUDINARY: 'cloudinary',
         HOTSPOT: 'hotspot',
+        HOTSPOT_CANVAS: 'hotspot-canvas',
         IMAGE: 'image'
     },
     noInputTypes: {

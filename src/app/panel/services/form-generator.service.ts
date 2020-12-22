@@ -91,7 +91,8 @@ export class FormGeneratorService {
                         );
                     }
                         break;
-                    case formConfig.types.HOTSPOT: {
+                    case formConfig.types.HOTSPOT:
+                    case formConfig.types.HOTSPOT_CANVAS: {
                         group[field.key] = new FormGroup({
                             image: new FormControl(null, null),
                             hotSpots: new FormArray(

@@ -40,7 +40,7 @@ export class FormTypeSwitcherComponent implements OnInit {
                 }
                 if (control.value === this.field.visibleOn[key]) {
                     response = response && true;
-                } else {
+                } else {
                     response = response && false;
                 }
             });

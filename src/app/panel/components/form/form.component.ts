@@ -258,7 +258,7 @@ export class FormComponent implements OnInit, OnDestroy {
                             listDetailsFields[key] = field.fields;
                         }
 
-                        if (field.key === key && field.type === formConfig.types.HOTSPOT) {
+                        if (field.key === key && (field.type === formConfig.types.HOTSPOT || field.type === formConfig.types.HOTSPOT_CANVAS)) {
                             hotSpotKeys.push(key);
                             hotSpotFields = field.fields;
                         }
