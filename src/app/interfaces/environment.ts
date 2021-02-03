@@ -1,3 +1,5 @@
+import { Language } from "../panel/services/language.service"
+
 export type EnvAPI = {
     baseUrl: string;
     setupEndpoint: string;
@@ -85,6 +87,8 @@ export interface Environment {
     production: boolean;
     name: string;
     logo: boolean;
+    currentLang: string;
+    languages?: Language[];
     assets?: {
         logo: string;
         imageError: string;

@@ -30,7 +30,7 @@ export class LanguageService {
     }
 
     public isMultiLang() {
-        return this.backendLanguages.length > 0 && environment.hasOwnProperty('currentLang');
+        return this.backendLanguages.length > 1;
     }
 
     public setCurrentLang(language: Language | string): void {
@@ -43,9 +43,9 @@ export class LanguageService {
             environment['currentLang'] = (lang as Language).isoCode;
 
             localStorage.setItem('lang', JSON.stringify(lang));
+        } 
 
-            this.setDatePickerLocale();
-        }
+        this.setDatePickerLocale();
     }
 
     public setDatePickerLocale(): void {
