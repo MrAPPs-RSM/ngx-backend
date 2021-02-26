@@ -1,7 +1,7 @@
 <form *ngIf="form"
       [formGroup]="form"
       (keyup.enter)="enableAutoSubmit && onSubmit()"
-      [ngClass]="{'loading': isLoading || isExternalLoading, 'error': (errorsList && errorsList.length > 0) || (settings.errors && settings.errors.length > 0)}">
+      [ngClass]="{'loading': isFormLoading(), 'error': hasErrors()}">
     <header>
         <h3 *ngIf="settings.title">{{ settings.title }}</h3>
         <div class="progress">
@@ -9,38 +9,18 @@
         </div>
     </header>
 
-    <div class="alert alert-danger errors" [ngClass]="{'visible': (errorsList && errorsList.length > 0) || (settings.errors && settings.errors.length > 0)}">
-        <ul *ngIf="errorsList || settings.errors">
-            <!-- Validation errors, handled locally (required fields, etc) -->
-            <li *ngFor="let error of errorsList">
-                <span>{{error.label}}</span> {{error.message}}
-            </li>
-
-            <!-- Errors from API RESPONSE, handled by external components -->
-            <li *ngFor="let error of settings.errors">
-                {{error}}
-            </li>
-        </ul>
-        <span class="close-alert" (click)="closeErrors()">×</span>
-    </div>
+    <app-error-alert
+      [errorBag]="errorBag"
+      [errorMessages]="settings.errors"
+      (close)="closeErrors()"
+    ></app-error-alert>
 
     <div class="fields-wrapper">
         <div class="row">
             <div class="col-sm-12 multilang" *ngIf="isMultiLangEnabled">
-                <ng-select [items]="_languageService.getContentLanguages()"
-                           [clearable]="false"
-                           [searchable]="false"
-                           [(ngModel)]="currentLang"
-                           [ngModelOptions]="{standalone: true}"
-                           (change)="onLanguageChange($event)"
-                           bindLabel="name">
-                    <ng-template ng-label-tmp let-item="item">
-                       <i [class]="'flag-icon flag-icon-' + _languageService.getIsoCodeForFlag(item)"></i> {{item.name}}
-                    </ng-template>
-                    <ng-template ng-option-tmp let-item="item">
-                        <i [class]="'flag-icon flag-icon-' + _languageService.getIsoCodeForFlag(item)"></i> {{item.name}}
-                    </ng-template>
-                </ng-select>
+                <app-language-selector
+                  [(selectedLang)]="currentLang"
+                ></app-language-selector>
             </div>
 
             <div *ngIf="!settings.putTranslationsFirst">
@@ -74,7 +54,7 @@
                     <div *ngIf="key!='base'">
                         <div [formGroupName]="key" [hidden]="currentLang.isoCode != key"
                              *ngFor="let field of valueOfSettingsField(key)">
-                            <app-form-type-switcher [groupName]="key" 
+                            <app-form-type-switcher [groupName]="key"
                                                     [form]="form.get(key)"
                                                     [putFilesOnLanguages]="settings.putFilesOnLanguages"
                                                     [field]="field"

@@ -2,6 +2,10 @@ import { Injectable } from '@angular/core';
 import { DateTimeAdapter } from '@danielmoncada/angular-datetime-picker';
 import { environment } from '../../../environments/environment';
 import { translations } from '../../../translations';
+import ErrorBag from '../../strategies/form/ErrorBag';
+import {FormGroup} from '@angular/forms';
+import {FormSettings} from '../components/form/interfaces/form-settings';
+import * as moment from 'moment';
 
 @Injectable()
 export class LanguageService {
@@ -43,9 +47,10 @@ export class LanguageService {
             environment['currentLang'] = (lang as Language).isoCode;
 
             localStorage.setItem('lang', JSON.stringify(lang));
-        } 
+        }
 
         this.setDatePickerLocale();
+        this.setMomentLang();
     }
 
     public setDatePickerLocale(): void {
@@ -53,11 +58,26 @@ export class LanguageService {
         this._dateTimeAdapter.setLocale(LanguageService.getLocaleCodeFromLang(environment['currentLang']));
     }
 
+    public setMomentLang(): void {
+      if (environment['currentLang']) {
+        moment.locale(environment['currentLang']);
+      }
+    }
+
     public removeLang(): void {
         localStorage.removeItem('lang');
     }
 
+    public getCurrentLangIsCode(): string {
+      const cLang = this.getCurrentLang();
+      return cLang
+        ? cLang.isoCode
+        : environment['currentLang'];
+    }
+
     public getCurrentLang(): Language {
+        return this.backendLanguages.find((e: Language) => e.isoCode === environment['currentLang']);
+        console.log('EEEEEE => ' + environment['currentLang']);
         if (this.isMultiLang()) {
             return JSON.parse(localStorage.getItem('lang'));
         }
@@ -106,6 +126,10 @@ export class LanguageService {
         });
 
         return res;
+    }
+
+    createErrorBagFor(form: FormGroup, formSettings: FormSettings): ErrorBag {
+      return new ErrorBag(form, formSettings, this);
     }
 
     public setCurrentContentTableLang(language: Language | string): void {

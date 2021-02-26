@@ -51,8 +51,6 @@ export class DatePickerComponent extends BaseInputComponent implements OnInit, O
     setValue(value: any, options?: {emitEvent: boolean}) {
         if (value) {
             const date = new Date(value);
-
-            console.log(date);
             this.getControl().setValue(date, options);
         } else {
             this.clearValue(options);

@@ -10,7 +10,7 @@ import { ProfilePageComponent } from '../pages/profile-page/profile-page.compone
 import { LanguageService } from './language.service';
 import { MenuService } from './menu.service';
 import { NotfoundPageComponent } from '../pages/notfound-page/notfound-page.component';
-
+import {CalendarPageComponent} from '../pages/calendar-page/calendar-page.component';
 import { PendingChangesGuard } from '../../auth/guards/pending-changes.guard';
 import { TicketDetailPageComponent } from '../pages/ticket-detail-page/ticket-detail-page.component';
 
@@ -21,6 +21,7 @@ const TYPES = {
   ticketDetail: TicketDetailPageComponent,
   table: TablePageComponent,
   form: FormPageComponent,
+  calendar: CalendarPageComponent
 };
 
 @Injectable()

@@ -1,0 +1,41 @@
+@import '../../../../assets/sass/partials/imports';
+
+.calendar-event {
+  padding: 5px;
+  border-width: 2px;
+  border-style: solid;
+  border-radius: 3px;
+}
+
+.calendar-container {
+  margin-top: 20px;
+  padding: 20px 30px;
+  background-color: white;
+  border: 1px solid $lightGrey;
+}
+
+.calendar-controls {
+  margin-bottom: 30px;
+}
+
+#calendar-title {
+  margin: 0;
+}
+
+.event-form-content {
+  display: flex;
+  flex-direction: column;
+
+  &.translation-first {
+    flex-direction: column-reverse !important;
+  }
+}
+
+.loading {
+  pointer-events: none;
+  opacity: .6;
+}
+
+button.deleter {
+  margin-right: 1em;
+}

@@ -34,6 +34,10 @@ export class InputTextareaComponent extends BaseInputComponent implements OnInit
         }
     }
 
+    get readonly() {
+      return !!(this.field.disabled || this.onlyView);
+    }
+
     ngOnInit() {
         if (this.field.options && this.field.options.editor) {
             if (this.field.options.disable && this.field.options.disable.length > 0) {
@@ -54,7 +58,7 @@ export class InputTextareaComponent extends BaseInputComponent implements OnInit
             }
 
             this.config = {
-                language: this._language.getCurrentLang().isoCode,
+                language: this._language.getCurrentLangIsCode(),
                 toolbar: this.options
             };
 

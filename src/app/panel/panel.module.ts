@@ -66,6 +66,19 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import {MatSliderModule} from '@angular/material/slider';
 import { HotspotCanvasComponent } from './components/form/types/hotspot-canvas/hotspot-canvas.component';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/moment';
+import { CKEditorModule } from 'ckeditor4-angular';
+import * as moment from 'moment';
+
+import {BootstrapModalModule} from 'ngx-modialog-7/plugins/bootstrap';
+import { CalendarPageComponent } from './pages/calendar-page/calendar-page.component';
+import { ErrorAlertComponent } from './components/error-alert/error-alert.component';
+import { LanguageSelectorComponent } from './components/language-selector/language-selector.component';
+
+export function momentAdapterFactory() {
+  return adapterFactory(moment);
+};
 
 const COMPONENTS = [
   PanelComponent,
@@ -170,6 +183,8 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
     NgxMaskModule.forRoot(),
+    CalendarModule.forRoot({ provide: DateAdapter, useFactory: momentAdapterFactory }),
+    CKEditorModule
   ],
   exports: [
     FormComponent,
@@ -178,7 +193,10 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
   ],
   declarations: [
     ...COMPONENTS,
-    HotspotCanvasComponent
+    HotspotCanvasComponent,
+    CalendarPageComponent,
+    ErrorAlertComponent,
+    LanguageSelectorComponent
   ],
   providers: [
     ...PROVIDERS

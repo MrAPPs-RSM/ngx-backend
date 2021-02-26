@@ -1,0 +1,15 @@
+<ng-select [items]="_languageService.getContentLanguages()"
+   [clearable]="false"
+   [searchable]="false"
+   [ngModel]="selectedLang"
+   (ngModelChange)="emitChange($event)"
+   [ngModelOptions]="{standalone: true}"
+   bindLabel="name"
+>
+  <ng-template ng-label-tmp let-item="item">
+    <i [class]="'flag-icon flag-icon-' + _languageService.getIsoCodeForFlag(item)"></i> {{item.name}}
+  </ng-template>
+  <ng-template ng-option-tmp let-item="item">
+    <i [class]="'flag-icon flag-icon-' + _languageService.getIsoCodeForFlag(item)"></i> {{item.name}}
+  </ng-template>
+</ng-select>

@@ -186,6 +186,7 @@ export class ApiService {
     public patch(endpoint: string, body: any, params?: Object, fromLogin?: boolean): Promise<any> {
         // console.log('[API SERVICE] - PATCH ' + endpoint);
         return new Promise((resolve, reject) => {
+            console.log(body);
             this._http.patch(this.composeUrl(endpoint), body, this.setOptions(params))
                 .subscribe(
                     data => {

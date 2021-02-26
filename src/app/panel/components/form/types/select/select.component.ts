@@ -44,7 +44,6 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
     }
 
     ngOnInit() {
-
         if (this.field.search && this.field.search.endpoint) {
             this.typeListener();
 
@@ -62,25 +61,20 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
 
         this.addQueryParams();
         this.loadOptions().then(() => {
-            if (this.isEdit) {
-                /** Only if subField of list-detail-component */
-                if (this.isSubField) {
-                    this.getControl().updateValueAndValidity();
-                    if (this.getControl().value !== null && typeof this.getControl().value !== 'undefined') {
-                        this.updateSelectedOptions(this.getControl().value);
-                    } else {
-                        this._subFieldSubscription = this.getControl().parent.valueChanges.subscribe((value) => {
-                            if (value && value[this.field.key]) {
-                                this.updateSelectedOptions(value[this.field.key]);
-                                this._subFieldSubscription.unsubscribe();
-                            }
-                        });
-                    }
-                } else {
-                    this.listenValueChange();
-                }
-            } else {
-                this.listenValueChange();
+            if (!this.isEdit || !this.isSubField) {
+              this.listenValueChange();
+            } else if (this.isSubField) {
+              this.getControl().updateValueAndValidity();
+              if (this.getControl().value !== null && typeof this.getControl().value !== 'undefined') {
+                this.updateSelectedOptions(this.getControl().value);
+              } else {
+                this._subFieldSubscription = this.getControl().parent.valueChanges.subscribe((value) => {
+                  if (value && value[this.field.key]) {
+                    this.updateSelectedOptions(value[this.field.key]);
+                    this._subFieldSubscription.unsubscribe();
+                  }
+                });
+              }
             }
         }).catch((err) => console.log(err));
 
@@ -148,13 +142,14 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
         /** If value already set, update select options */
         if (this.getControl().value !== null && typeof this.getControl().value !== 'undefined') {
             this.updateSelectedOptions(this.getControl().value);
-        } else { /* Else, listen to first change */
-            this._subscription = this.getControl().valueChanges.pipe(first()).subscribe((value) => {
-                this.updateSelectedOptions(value);
-                this.refreshFormValue(value, {emitEvent: false});
-                this._subscription.unsubscribe();
-            });
         }
+
+        this._subscription = this.getControl().valueChanges.subscribe(value => {
+            this.updateSelectedOptions(value);
+            if (value !== this.getControl().value) {
+                this.refreshFormValue(value, {emitEvent: false});
+            }
+        });
     }
 
     ngOnDestroy() {
@@ -196,7 +191,9 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
 
     private loadOptions(forceReload?: boolean): Promise<any> {
         return new Promise((resolve, reject) => {
-            if (this.field.search) return resolve();
+            if (this.field.search) {
+              return resolve();
+            }
             if (this.endpoint) {
                 if (this.options.length === 0 || forceReload === true) {
                     const queryParams = {
@@ -314,20 +311,22 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
     private updateSelectedOptions(value: any) {
         if (typeof value !== 'undefined' && value !== null) {
             if (this.field.multiple === true) {
-                value.forEach((itemId) => {
+              const selected = [];
+              value.forEach((itemId) => {
                     if (typeof itemId === 'object') {
                         itemId = itemId.id;
                     }
+
                     this.options.forEach((option) => {
                         if (option.id === itemId) {
-                            this.selected.push({
+                            selected.push({
                                 id: itemId,
                                 text: option.text
                             });
                         }
                     });
                 });
-                this.selected = [...this.selected];
+                this.selected = [...selected];
             } else {
                 this.options.forEach((option) => {
                     if (typeof value === 'object') {
@@ -371,15 +370,13 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
     private refreshFormValue(value: any, options?: { emitEvent: boolean }): void {
         if (value !== null) {
             if (value instanceof Array) {
-                const ids = [];
-                value.forEach((item) => {
-                    ids.push(item instanceof Object ? item.id : item);
-                });
-                this.getControl().setValue(
-                    this.field.multiple === true
-                        ? ids
-                        : (ids.length > 0 ? ids[0] : null)
-                        , options);
+                const ids = value.map(item => item instanceof Object ? item.id : item);
+
+                const newVal = true === this.field.multiple
+                  ? ids
+                  : ids.length > 0 ? ids[0] : null;
+
+                this.getControl().setValue(newVal, options);
             } else {
                 if (typeof value === 'object' && !this.field.search) {
                     this.getControl().setValue(value.id, options);

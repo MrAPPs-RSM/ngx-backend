@@ -19,6 +19,9 @@ import { Language, LanguageService } from '../../services/language.service';
 import { Subscription, Observable } from 'rxjs';
 import { formConfig } from './form.config';
 import { Location } from '@angular/common';
+import ErrorBag from '../../../strategies/form/ErrorBag';
+import ResponseProcessor from '../../../strategies/form/ResponseProcessor';
+import RequestProcessor from '../../../strategies/form/RequestProcessor';
 
 @Component({
     selector: 'app-form',
@@ -42,9 +45,9 @@ export class FormComponent implements OnInit, OnDestroy {
     public isMultiLangEnabled = false;
     objectKeys = Object.keys;
 
-    // Local validation errors
-    errors: any = {}; // Object that re-uses form group structure
-    errorsList: any = []; // Array to display errors in a human-readable way
+    errorBag: ErrorBag;
+    processor: ResponseProcessor;
+    requestProcessor: RequestProcessor;
 
     private _subscription = Subscription.EMPTY;
 
@@ -80,6 +83,9 @@ export class FormComponent implements OnInit, OnDestroy {
                 this.loadData();
             }
 
+            this.errorBag = this._languageService.createErrorBagFor(this.form, this.settings);
+            this.processor = this._formGenerator.generateResponseProcessorFor(this.form, this.settings);
+            this.requestProcessor = new RequestProcessor(this.settings, this._languageService);
             this.closeErrors();
 
             if (params.formParams) {
@@ -104,9 +110,16 @@ export class FormComponent implements OnInit, OnDestroy {
         this.form.valueChanges.subscribe(
             data => {
                 this.dataStored = false;
-                //console.log(data);
             }
         );
+    }
+
+    isFormLoading() {
+      return this.isLoading || this.isExternalLoading;
+    }
+
+    hasErrors() {
+      return (this.settings.errors && this.settings.errors.length > 0) || this.errorBag.hasErrors();
     }
 
     ngOnDestroy() {
@@ -115,72 +128,6 @@ export class FormComponent implements OnInit, OnDestroy {
 
     public canDeactivate(): Observable<boolean> | boolean {
         return this._apiService.unauthorized || ((!this.form.dirty || this.dataStored) && !this.isLoading);
-    }
-
-    private _extractErrors(form: FormGroup, parentKey?: string): void {
-        Object.keys(form.controls).forEach((key) => {
-            if (form.controls[key] instanceof FormControl) {
-                if (form.controls[key].errors) {
-                    if (parentKey) {
-                        this.errors[parentKey] = {};
-                        this.errors[parentKey][key] = form.controls[key].errors;
-                    } else {
-                        this.errors[key] = form.controls[key].errors;
-                    }
-                }
-            } else if (form.controls[key] instanceof FormGroup) {
-                this._extractErrors((form.controls[key] as FormGroup), key);
-            }
-        });
-    }
-
-    private _createErrorMessage(obj: any, fieldName: string, parentFieldName: string): void {
-        let fieldLabel = fieldName;
-        if (parentFieldName) {
-            this.settings.fields[parentFieldName].forEach((field: any) => {
-                if (field.key === fieldName && field.label) {
-                    fieldLabel = field.label;
-                }
-            });
-        } else {
-            this.settings.fields['base'].forEach((field: any) => {
-                if (field.key === fieldName && field.label) {
-                    fieldLabel = field.label;
-                }
-            });
-        }
-
-        let message = '';
-
-        // TODO: handle different errors if necessary
-
-        if (obj.required) {
-            message = this._languageService.translate('forms.errors.required');
-        }
-        if (obj.max) {
-            message = this._languageService.translate('forms.errors.max') + obj.requiredValue;
-        }
-        if (obj.min) {
-            message = this._languageService.translate('forms.errors.min') + obj.requiredValue;
-        }
-        if (obj.timetable) {
-            message = this._languageService.translate('forms.errors.timetable');
-        }
-
-        this.errorsList.push({
-            label: fieldLabel,
-            message: message
-        });
-    }
-
-    private _composeErrors(errors: any, parentKey?: string): void {
-        Object.keys(errors).forEach((key) => {
-            if (this.isMultiLangField(key)) {
-                this._composeErrors(errors[key], key);
-            } else {
-                this._createErrorMessage(errors[key], key, parentKey);
-            }
-        });
     }
 
     setupForms(currentLang?: string | null): FormGroup {
@@ -200,12 +147,12 @@ export class FormComponent implements OnInit, OnDestroy {
             }
         }
 
+
+
         return this._formGenerator.generate(this.settings.fields);
     }
 
-    isMultiLangField(isoCode: string): boolean {
-        return this._languageService.getContentLanguageByIsoCode(isoCode) !== null;
-    }
+
 
     onLanguageChange(language: Language) {
         this.currentLang = language;
@@ -244,47 +191,7 @@ export class FormComponent implements OnInit, OnDestroy {
             endpoint + (id !== null ? '/' +id : ''), params)
             .then((response) => {
                 this.isLoading = false;
-
-                const listDetailKeys = [];
-                const listDetailsFields = {};
-
-                const hotSpotKeys = [];
-                let hotSpotFields = [];
-
-                Object.keys(response).forEach((key) => {
-                    this.settings.fields.base.forEach((field) => {
-                        if (field.key === key && field.type === formConfig.types.LIST_DETAILS) {
-                            listDetailKeys.push(key);
-                            listDetailsFields[key] = field.fields;
-                        }
-
-                        if (field.key === key && (field.type === formConfig.types.HOTSPOT || field.type === formConfig.types.HOTSPOT_CANVAS)) {
-                            hotSpotKeys.push(key);
-                            hotSpotFields = field.fields;
-                        }
-                    });
-                });
-
-                if (listDetailKeys.length > 0) {
-                    listDetailKeys.forEach((key) => {
-                        for (let i = 0; i < response[key].length; i++) {
-                            (this.form.controls[key] as FormArray).push(
-                                new FormGroup(this._formGenerator.generateFormFields(listDetailsFields[key]))
-                            );
-                        }
-                    });
-                }
-
-                if (hotSpotKeys.length > 0) {
-                    hotSpotKeys.forEach((key) => {
-                        for (let i = 0; i < response[key]['hotSpots'].length; i++) {
-                            ((this.form.controls[key] as any).controls['hotSpots'] as FormArray).push(
-                                new FormGroup(this._formGenerator.generateFormFields(hotSpotFields))
-                            );
-                        }
-                    });
-                }
-
+                this.processor.syncResponse(response);
                 this.form.patchValue(response);
             })
             .catch((response: ErrorResponse) => {
@@ -301,106 +208,25 @@ export class FormComponent implements OnInit, OnDestroy {
     onSubmit(): void {
         this.closeErrors();
         if (this.isExternalForm) {
-            /** If is external form, the component will handle the request */
             this.response.emit(this.form.value);
-        } else {
-            if (this.form.valid) {
-                if (this.settings.submit && this.settings.submit.confirm) {
-                    this._modal.confirm()
-                        .then(() => {
-                            this.submit();
-                        })
-                        .catch(() => {
-                        });
-                } else {
-                    this.submit();
-                }
-            } else {
-                this._extractErrors(this.form);
-                this._composeErrors(this.errors);
-            }
-        }
-    }
-
-    private fixFiles(value: any): any {
-        const components = [];
-
-        this.settings.fields.base.forEach((field) => {
-            if (field.type === 'file') {
-                components.push(field.key);
-            }
-        });
-
-        this._languageService.getContentLanguages().forEach((lang: Language) => {
-            if (this.settings.fields[lang.isoCode]) {
-                this.settings.fields[lang.isoCode].forEach((field) => {
-                    if (field.type === 'file') {
-                        components.push(field.key);
-                    }
-                });
-            }
-        });
-
-        const rawValue = value;
-
-        if (components.length > 0) {
-            components.forEach((fileKey) => {
-                Object.keys(rawValue).forEach((key) => {
-                    if (key === fileKey) {
-                        if (rawValue[key]) {
-                            const array = [];
-                            rawValue[key].forEach((item) => {
-                                if (item.id) {
-                                    array.push(item.id);
-                                }
-                            });
-                            if (array.length > 0) {
-                                rawValue[key] = array.slice();
-                            }
-                        }
-                    }
-                });
-
-                this._languageService.getContentLanguages().forEach((lang: Language) => {
-                    if (rawValue[lang.isoCode]) {
-                        Object.keys(rawValue[lang.isoCode]).forEach((key) => {
-                            if (key === fileKey) {
-                                if (rawValue[lang.isoCode][key]) {
-                                    const array = [];
-                                    rawValue[lang.isoCode][key].forEach((item) => {
-                                        if (item.id) {
-                                            array.push(item.id);
-                                        }
-                                    });
-                                    if (array.length > 0) {
-                                        rawValue[lang.isoCode][key] = array.slice();
-                                    }
-                                }
-                            }
-                        });
-                    }
-                });
+        } else if (false === this.form.valid) {
+          this.errorBag.composeErrors();
+        } else if (this.settings.submit && this.settings.submit.confirm) {
+          this._modal.confirm()
+            .then(() => {
+              this.submit();
+            })
+            .catch(() => {
             });
+        } else {
+          this.submit();
         }
-
-        return rawValue;
     }
 
     submit(): void {
         /** Using getRawValue() because form.value is not changed when FormArray order changes
          *  Useful to support drag&drop on list detail */
-        const value = this.fixFiles(this.form.getRawValue());
-
-        // console.log(value);
-        for (let v in value) {
-            if (value[v] === null && !value[v]) {
-                value[v] = '';
-            }
-        }
-
-        if (value['geosearch']) { // TODO: valutare se fare meglio
-            delete value['geosearch'];
-        }
+        const value = this.requestProcessor.createFormRequestBody(this.form.getRawValue());
 
         this.isLoading = true;
         if (this.settings.isEdit) {
@@ -455,8 +281,7 @@ export class FormComponent implements OnInit, OnDestroy {
 
     closeErrors(): void {
         this.settings.errors = [];
-        this.errors = {};
-        this.errorsList = [];
+        this.errorBag.reset();
     }
 
     onButton(button: FormButton): void {

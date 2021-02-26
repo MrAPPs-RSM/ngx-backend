@@ -1,0 +1,184 @@
+<ng-template #customCellTemplate let-day="day" let-locale="locale">
+  <div class="cal-cell-top">
+    <span class="cal-day-number">
+      {{ day.date | calendarDate:'monthViewDayNumber':locale }}
+    </span>
+  </div>
+  <small class="calendar-event" *ngFor="let event of day.events" [ngStyle]="{borderColor: event.color.primary}">
+    {{event.title}}
+  </small>
+</ng-template>
+
+<ng-template
+  #weekViewEventTemplate
+  let-weekEvent="weekEvent"
+  let-eventClicked="eventClicked"
+>
+  <div class="cal-event text-white"
+       [ngStyle]="{borderColor: weekEvent.event.color.primary, backgroundColor: weekEvent.event.color.secondary}"
+       (mwlClick)="eventClicked.emit({ event: weekEvent.event })"
+  >
+    {{weekEvent.event.title}}
+  </div>
+</ng-template>
+
+<div class="container-fluid" [ngClass]="{'loading': isLoading}">
+
+  <div class="calendar-container">
+    <div class="row calendar-controls">
+      <div class="col-md-4">
+        <div class="btn-group" role="group">
+          <button
+            *ngFor="let view of availableViews"
+            type="button"
+            class="btn btn-primary"
+            [ngClass]="{active: view.value == viewType}"
+            (click)="setViewType(view.value)"
+          >
+            {{view.label | translate}}
+          </button>
+        </div>
+      </div>
+      <div class="col-sm-4 text-center">
+        <h2 id="calendar-title">
+          <i class="fa fa-caret-left" (click)="previousInterval()"></i>
+          {{title}} <i class="fa fa-calendar" [owlDateTimeTrigger]="dt"></i>
+          <i class="fa fa-caret-right" (click)="nextInterval()"></i>
+        </h2>
+        <input
+          [owlDateTime]="dt"
+          [(ngModel)]="centerDate"
+          class="invisible"
+        >
+        <owl-date-time
+          pickerType="calendar"
+          #dt
+        ></owl-date-time>
+      </div>
+      <div class="col-md-4">
+      </div>
+    </div>
+    <div [ngSwitch]="viewType">
+      <mwl-calendar-month-view
+        *ngSwitchCase="CalendarView.Month"
+        [viewDate]="viewDate"
+        [events]="events"
+        [cellTemplate]="customCellTemplate"
+        (dayClicked)="setDay($event.day)"
+        [activeDayIsOpen]="currentHasEvents"
+      >
+      </mwl-calendar-month-view>
+      <mwl-calendar-week-view
+        *ngSwitchCase="CalendarView.Week"
+        [viewDate]="viewDate"
+        [events]="events"
+        [eventTemplate]="weekViewEventTemplate"
+        (eventClicked)="showEditById($event.event.id)"
+      >
+      </mwl-calendar-week-view>
+      <mwl-calendar-day-view
+        *ngSwitchCase="CalendarView.Day"
+        [viewDate]="viewDate"
+        [events]="events"
+      >
+      </mwl-calendar-day-view>
+    </div>
+    <div class="text-right">
+      <button
+        type="button"
+        (click)="showCreate()"
+        class="btn btn-primary"
+      >
+        <i class="fa fa-plus"></i>
+        {{'calendar.new_event' | translate}}
+      </button>
+    </div>
+
+  </div>
+
+
+
+  <div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">{{'calendar.event' | translate}}</h4>
+        </div>
+        <div class="modal-body">
+          <app-error-alert
+            [errorBag]="errorBag"
+            [errorMessages]="formDescriptor.errors"
+            (close)="closeErrors()"
+          ></app-error-alert>
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-sm-12 multilang" *ngIf="isMultiLangEnabled">
+                <app-language-selector
+                  [(selectedLang)]="currentLang"
+                ></app-language-selector>
+              </div>
+            </div>
+          </div>
+          <form
+            [formGroup]="form"
+            (submit)="onSubmit($event)"
+          >
+            <div class="event-form-content" [ngClass]="{'translation-first': formDescriptor.putTranslationsFirst}">
+              <div *ngFor="let field of formDescriptor.fields.base">
+                <app-form-type-switcher
+                  [form]="form"
+                  [putFilesOnLanguages]="formDescriptor.putFilesOnLanguages"
+                  [currentLang]="currentLang"
+                  [field]="field"
+                  [onlyView]="formDescriptor.onlyView"
+                  [isEdit]="isEdit"
+                ></app-form-type-switcher>
+              </div>
+
+              <div *ngFor="let key of notBaseKeys()">
+                <div
+                  [formGroupName]="key"
+                  [hidden]="currentLang != key"
+                  *ngFor="let field of valueOfSettingsField(key)"
+                >
+                  <app-form-type-switcher
+                    [groupName]="key"
+                    [form]="form.get(key)"
+                    [putFilesOnLanguages]="formDescriptor.putFilesOnLanguages"
+                    [currentLang]="currentLang"
+                    [field]="field"
+                    [onlyView]="formDescriptor.onlyView"
+                    [isEdit]="isEdit"
+                  ></app-form-type-switcher>
+                </div>
+
+              </div>
+            </div>
+            <div class="text-right">
+              <button
+                type="button"
+                class="btn btn-danger deleter"
+                *ngIf="isEdit"
+                [disabled]="isFormLoading"
+                (click)="deleteEvent()"
+              >
+                {{ 'forms.labels.delete' | translate }}
+              </button>
+
+              <button
+                type="submit"
+                class="btn btn-primary"
+                [disabled]="isFormLoading"
+              >
+                {{ formDescriptor.submit?.label ? formDescriptor.submit.label : 'forms.labels.submit' | translate}}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+

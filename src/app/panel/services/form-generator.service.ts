@@ -3,6 +3,8 @@ import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { formConfig } from '../components/form/form.config';
 import { CustomValidators } from '../components/form/validators';
 import { UtilsService } from '../../services/utils.service';
+import {FormSettings} from '../components/form/interfaces/form-settings';
+import ResponseProcessor from '../../strategies/form/ResponseProcessor';
 
 @Injectable()
 export class FormGeneratorService {
@@ -48,6 +50,10 @@ export class FormGeneratorService {
             });
         }
         return output;
+    }
+
+    public generateResponseProcessorFor(form: FormGroup, formSettings: FormSettings) {
+      return new ResponseProcessor(form, formSettings, this);
     }
 
     public generateFormFields(fields: any[]): any | any {

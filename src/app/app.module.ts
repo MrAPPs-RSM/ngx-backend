@@ -29,6 +29,7 @@ import { PendingChangesGuard } from './auth/guards/pending-changes.guard';
 import { environment } from '../environments/environment';
 import { StorageService } from './services/storage.service';
 import { DomainNotFoundComponent } from './auth/domain-not-found/domain-not-found.component';
+
 registerLocaleData(localeIt);
 
 const routes: Routes = [

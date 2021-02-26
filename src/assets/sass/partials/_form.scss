@@ -84,104 +84,121 @@ div.date-picker-wrapper {
     right: 12px;
   }
 }
-owl-date-time-container.owl-dt-container.owl-dt-popup-container {
-  margin-top: 5px;
-  @include box-shadow();
-  border: none;
-  width: 220px;
-
-  owl-date-time-calendar {
+.cdk-overlay-container {
+  z-index: 1100;
+}
+owl-date-time-container.owl-dt-container {
+  z-index: 3000;
+  &.owl-dt-popup-container {
+    margin-top: 5px;
+    @include box-shadow();
     border: none;
-    height: auto;
-  }
+    width: 220px;
 
-  div.owl-dt-calendar-control {
-    font-size: 13px;
-    color: $default;
-
-    span.owl-dt-control-button-content {
-      border-radius: $borderRadius;
-
-      span.owl-dt-control-button-arrow {
-        color: $default;
-        @include _transition(none);
-      }
+    owl-date-time-calendar {
+      border: none;
+      height: auto;
     }
-  }
 
-  div.owl-dt-calendar-main {
-    table.owl-dt-calendar-table {
-      > thead.owl-dt-calendar-header {
-        > tr.owl-dt-weekdays {
-          > th.owl-dt-weekday {
-            padding-top: 5px;
-            color: $default;
-            font-size: 11px;
-          }
+    div.owl-dt-calendar-control {
+      font-size: 13px;
+      color: $default;
+
+      span.owl-dt-control-button-content {
+        border-radius: $borderRadius;
+
+        span.owl-dt-control-button-arrow {
+          color: $default;
+          @include _transition(none);
         }
       }
-      > tbody {
-        > tr {
-          > td.owl-dt-calendar-cell {
-            font-size: 14px;
-            > span.owl-dt-calendar-cell-selected {
-              background-color: $primary;
+    }
+
+    div.owl-dt-calendar-main {
+      table.owl-dt-calendar-table {
+        > thead.owl-dt-calendar-header {
+          > tr.owl-dt-weekdays {
+            > th.owl-dt-weekday {
+              padding-top: 5px;
+              color: $default;
+              font-size: 11px;
+            }
+          }
+        }
+
+        > tbody {
+          > tr {
+            > td.owl-dt-calendar-cell {
+              font-size: 14px;
+
+              > span.owl-dt-calendar-cell-selected {
+                background-color: $primary;
+              }
             }
           }
         }
       }
     }
-  }
 
-  owl-date-time-timer.owl-dt-timer {
-    border-top: 1px solid $lightGrey;
-    input.owl-dt-timer-input {
-      font-weight: $light;
+    owl-date-time-timer.owl-dt-timer {
+      border-top: 1px solid $lightGrey;
+
+      input.owl-dt-timer-input {
+        font-weight: $light;
+      }
     }
-  }
 
-  div.owl-dt-container-info {
-    color: $default;
-    font-size: 15px;
+    div.owl-dt-container-info {
+      color: $default;
+      font-size: 15px;
 
-    div.owl-dt-container-info-active {
-      color: $primary;
+      div.owl-dt-container-info-active {
+        color: $primary;
+      }
     }
-  }
 
-  div.owl-dt-container-buttons {
-    > button {
-      > span {
-        display: none;
-      }
-      position: relative;
-      @include _transition(all 0.3s);
-      &:after {
-        position: absolute;
-        display: inline-block;
-        font: normal normal normal 14px/1 FontAwesome;
-        text-rendering: auto;
-        -webkit-font-smoothing: antialiased;
-        top: 5px;
-        font-size: 12px;
-        color: #ffffff;
-      }
-      &:first-child {
-        background-color: $danger;
-        &:hover {
-          background-color: darken($danger, 20);
+    div.owl-dt-container-buttons {
+      > button {
+        > span {
+          display: none;
         }
+
+        position: relative;
+        @include _transition(all 0.3s);
+
         &:after {
-          content: '\f342';
+          position: absolute;
+          display: inline-block;
+          font: normal normal normal 14px/1 FontAwesome;
+          text-rendering: auto;
+          -webkit-font-smoothing: antialiased;
+          top: 5px;
+          font-size: 12px;
+          color: #ffffff;
         }
-      }
-      &:last-child {
-        background-color: $primary;
-        &:hover {
-          background-color: darken($primary, 20);
+
+        &:first-child {
+          background-color: $danger;
+
+          &:hover {
+            background-color: darken($danger, 20);
+          }
+
+          &:after {
+            content: '\f342';
+          }
         }
-        &:after {
-          content: '\f17b';
+
+        &:last-child {
+          background-color: $primary;
+
+          &:hover {
+            background-color: darken($primary, 20);
+          }
+
+          &:after {
+            content: '\f17b';
+          }
         }
       }
     }

@@ -10,7 +10,8 @@ export const translations = {
             labels: {
                 submit: 'Salva',
                 cancel: 'Annulla',
-                close: 'Chiudi'
+                close: 'Chiudi',
+                delete: 'Elimina'
             },
             inputs: {
                 put_on_languages: 'Copia su altre lingue',
@@ -72,6 +73,14 @@ export const translations = {
             oops: 'Oops! Ti sei perso.',
             page_title: '404 - Pagina non trovata',
             page_not_found: 'La pagina che stai cercando non è stata trovata.',
+        },
+        calendar: {
+          event: 'Evento',
+          new_event: 'Nuovo Evento',
+          day: 'Giorno',
+          week: 'Settimana',
+          month: 'Mese',
+          delete_confirmation: 'Sei sicuro di voler CANCELLARE questo evento? Questa operazione non è reversibile'
         }
     },
     en: {
@@ -85,7 +94,8 @@ export const translations = {
             labels: {
                 submit: 'Save',
                 cancel: 'Cancel',
-                close: 'Close'
+                close: 'Close',
+                delete: 'Delete'
             },
             inputs: {
                 put_on_languages: 'Copy to other languages',
@@ -146,6 +156,14 @@ export const translations = {
             oops: 'Oops! You\'re lost.',
             page_title: '404 - Page not found',
             page_not_found: 'The page you are looking for was not found.',
+        },
+        calendar: {
+          event: 'Event',
+          new_event: 'New Event',
+          day: 'Day',
+          week: 'Week',
+          month: 'Month',
+          delete_confirmation: 'Are you sure you want to DELETE this event? This operation is not reversible'
         }
     }
 };
