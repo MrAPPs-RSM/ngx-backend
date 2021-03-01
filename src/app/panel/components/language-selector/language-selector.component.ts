@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import {Language, LanguageService} from '../../services/language.service';
+import {LanguageService} from '../../services/language.service';
 
 
 @Component({
@@ -12,14 +12,10 @@ export class LanguageSelectorComponent {
   @Output() selectedLangChange = new EventEmitter<string>();
   constructor(public _languageService: LanguageService) { }
 
-  emitChange(lang: Language) {
-    if (lang.isoCode === this.selectedLang) {
+  emitChange(lang: string) {
+    if (lang === this.selectedLang) {
       return;
     }
-    this.selectedLangChange.emit(lang.isoCode);
-  }
-
-  get currentLanguage() {
-    return this._languageService.getContentLanguages().find((e: Language) => e.isoCode == this.selectedLang);
+    this.selectedLangChange.emit(lang);
   }
 }

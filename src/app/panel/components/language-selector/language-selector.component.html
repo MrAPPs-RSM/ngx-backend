@@ -1,7 +1,7 @@
 <ng-select [items]="_languageService.getContentLanguages()"
    [clearable]="false"
    [searchable]="false"
-   [ngModel]="currentLanguage"
+   [ngModel]="selectedLang"
    (ngModelChange)="emitChange($event)"
    [ngModelOptions]="{standalone: true}"
    bindLabel="name"

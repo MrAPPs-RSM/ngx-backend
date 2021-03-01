@@ -9,7 +9,7 @@ import {FormGeneratorService} from '../../services/form-generator.service';
 import {ApiService} from '../../../api/api.service';
 import {CalendarActivity} from '../../../interfaces/CalendarActivity';
 import ErrorBag from '../../../strategies/form/ErrorBag';
-import {LanguageService} from '../../services/language.service';
+import {Language, LanguageService} from '../../services/language.service';
 import ResponseProcessor from '../../../strategies/form/ResponseProcessor';
 import {ToastsService} from '../../../services/toasts.service';
 import {WeekDay} from 'calendar-utils';
@@ -89,7 +89,7 @@ export class CalendarPageComponent implements OnInit, OnDestroy {
       this.errorBag = this._languageService.createErrorBagFor(this.form, this.formDescriptor);
       this.processor = this._formGenerator.generateResponseProcessorFor(this.form, this.formDescriptor);
       this.requestProcessor = new CalendarRequestProcessor(this.formDescriptor, this._languageService);
-
+      this.currentLang = this._languageService.getCurrentLangIsCode();
       this.initData();
     });
   }
@@ -123,6 +123,14 @@ export class CalendarPageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this._subscription.unsubscribe();
+  }
+
+  get selectedLang() {
+    return this._languageService.getContentLanguages().find((e: Language) => e.isoCode == this.currentLang);
+  }
+
+  set selectedLang(lang: Language) {
+    this.currentLang = lang.isoCode;
   }
 
   /**
