@@ -427,6 +427,7 @@ export class CalendarPageComponent implements OnInit, OnDestroy {
             label: '<i class="fa fa-pencil fa-2x"></i>',
             cssClass: 'text-white',
             onClick: ({event}: { event: CalendarEvent }): void => {
+              console.log('puttana eva');
               this.showEditById(event.id as number);
             },
           },

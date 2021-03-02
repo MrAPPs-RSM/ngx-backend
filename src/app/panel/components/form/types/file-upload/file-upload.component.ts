@@ -66,7 +66,8 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     }
 
     ngOnInit() {
-      this.updateFilesValues(this.getControl().value);
+        this.updateFilesValues(this.getControl().value);
+
 
         if (this.field.options.multiple) {
             this.maxFiles = this.field.options.maxFiles ? this.field.options.maxFiles : 0;
@@ -75,12 +76,6 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         }
 
         const field = this.field;
-
-        this._dragulaService.createGroup(this.getUniqueKey(), {
-            moves: function (el, container, handle) {
-                return field.options.canDrag;
-            }
-        });
 
         this.files = []; // local uploading files array
         this.uploadInput = new EventEmitter<UploadInput>(); // input events, we use this to emit data to ngx-uploader
