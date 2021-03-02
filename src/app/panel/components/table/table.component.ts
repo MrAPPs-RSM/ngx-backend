@@ -107,7 +107,7 @@ export class TableComponent implements OnInit, OnDestroy {
             }
 
             this.activeFilters.sort = this.filter.order;
-
+            this.prepareActions();
             this.prepareColumns();
             this.getData();
         });
@@ -135,6 +135,12 @@ export class TableComponent implements OnInit, OnDestroy {
                 defaultValue
             );
         });
+    }
+
+    private prepareActions() {
+      if('actions' in this.settings && !this.settings.actions.list) {
+        this.settings.actions.list = [];
+      }
     }
 
     private prepareColumnFilter(column: any, defaultValue?: any): any {
@@ -230,15 +236,7 @@ export class TableComponent implements OnInit, OnDestroy {
             this.getCount()
                 .then((res: { count: number }) => {
                     this.count = res.count;
-                    this._apiService.get(this.settings.api.endpoint, this.composeParams())
-                        .then((data) => {
-                            this.isLoading = false;
-                            this.data = data;
-                        })
-                        .catch((response: ErrorResponse) => {
-                            this.isLoading = false;
-                            this._toast.error(response.error);
-                        });
+                    this.getData(false);
                 })
                 .catch((response: ErrorResponse) => {
                     this.isLoading = false;
