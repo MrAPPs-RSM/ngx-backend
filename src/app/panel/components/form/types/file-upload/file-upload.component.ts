@@ -14,8 +14,8 @@ import { ToastsService } from '../../../../../services/toasts.service';
 import { Subscription } from 'rxjs';
 import { Language, LanguageService } from '../../../../services/language.service';
 import { DragulaService } from 'ng2-dragula';
-import { first } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
+import { environment } from '../../../../../../environments/environment';
 
 @Component({
     selector: 'app-file-upload',
@@ -48,6 +48,8 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
 
     showMediaLibrary = false;
 
+    filesList: any[];
+
     public contentLanguages: any[];
     copyToLang = false; // putFilesOnLanguage checkbox
 
@@ -68,7 +70,6 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     ngOnInit() {
         this.updateFilesValues(this.getControl().value);
 
-
         if (this.field.options.multiple) {
             this.maxFiles = this.field.options.maxFiles ? this.field.options.maxFiles : 0;
         } else {
@@ -82,7 +83,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         this.createAllowedContentTypes();
 
         /** Load entity image (if added from duplicate or edit) */
-        this._subscription = this.getControl().valueChanges.pipe(first()).subscribe(data => {
+        this._subscription = this.getControl().valueChanges.subscribe(data => {
           this.updateFilesValues(data);
         });
 
@@ -104,20 +105,14 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         }
     }
 
+
+
     updateFilesValues(data: any) {
-      if (data instanceof Array) {
-        const array = [];
-        data.forEach((item) => {
-          if (item) {
-            array.push(item);
-          }
-        });
-        this.getControl().setValue(array);
-      } else {
-        if (data) {
-          this.getControl().setValue([data]);
-        }
-      }
+      const d: any[] = data instanceof Array
+        ? data
+        : [data];
+
+      this.filesList = d.filter(e => !! e);
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -235,15 +230,23 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     private startUpload(): void {
         this.isLoading = true;
 
-        console.log(this.isLoading);
-        console.log('START UPLOAD');
-        const event: UploadInput = {
+
+        /*
+         * since the upload directive does not pass through the angular http client at all, I launch the refersh of the token regardless,
+         * so that when uploading the uploader will find the token already renewed
+         */
+        const q: Promise<any> = environment.auth.refreshToken?.endpoint
+          ? this._apiService.refreshAndStoreToken()
+          : Promise.resolve();
+
+        q.then(() => {
+          const event: UploadInput = {
             type: 'uploadAll',
             url: this._apiService.composeUrl(this.field.options.api.uploadEndpoint, true),
             method: 'POST'
-        };
-
-        this.uploadInput.emit(event);
+          };
+          this.uploadInput.emit(event)
+        });
     }
 
     private removeFile(id: string): void {
@@ -278,7 +281,8 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         console.log('Updating form Value with file:');
         console.log(file.id);
         console.log(remove ? 'Remove' : 'Add');
-        let files = this.getControl().value || [];
+
+        let files = this.filesList || [];
         if (remove) {
             files = UtilsService.removeObjectFromArray(file, files);
         } else {
@@ -304,15 +308,15 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
                                 const unique = UtilsService.uniqueArray(currentValue, 'id');
 
                                 this.form.parent.controls[key].controls[this.field.key].setValue(
-                                    unique.length > 0 ? unique : null,
-                                    { emitEvent: false });
+                                    unique.length > 0 ? unique : null
+                                );
                             }
                         });
                     }
                 });
             }
         } else {
-            this.getControl().setValue(files.length > 0 ? files : null, { emitEvent: false });
+            this.getControl().setValue(files.length > 0 ? files : null);
         }
     }
 

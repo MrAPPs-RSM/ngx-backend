@@ -298,23 +298,9 @@ export class ApiService {
                                     reject(err);
                                 });
                         } else if (environment.auth.refreshToken) {
-                            // Call refresh token
-                            this.refreshToken()
-                                .then(response => {
-                                    if (!response.success) {
-                                        this.redirectToLogin();
-                                        reject(response.message);
-                                    }
-
-                                    // Store
-                                    this._userService.storeToken(response.token);
-                                    this._userService.storeRefreshToken(response.refreshToken);
-                                    resolve(response);
-                                })
-                                .catch(err => {
-                                    this.redirectToLogin();
-                                    reject(err);
-                                });
+                            this.refreshAndStoreToken()
+                              .then((refreshToken: RefreshToken) => resolve(refreshToken))
+                              .catch(error => reject(error));
                         } else {
                             this.redirectToLogin();
                             reject(errorResponse);
@@ -441,6 +427,26 @@ export class ApiService {
         };
     }
 
+    public refreshAndStoreToken() {
+      return new Promise((resolve, reject) => {
+        this.refreshToken()
+          .then(response => {
+            if (!response.success) {
+              this.redirectToLogin();
+              reject(response.message);
+            }
+
+            // Store
+            this._userService.storeToken(response.token);
+            this._userService.storeRefreshToken(response.refreshToken);
+            resolve(response);
+          })
+          .catch(err => {
+            this.redirectToLogin();
+            reject(err);
+          });
+      })
+    }
 
     public login(data: any): Promise<any> {
         if (data == null) {

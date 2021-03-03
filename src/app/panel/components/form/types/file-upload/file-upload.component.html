@@ -6,10 +6,9 @@
             <span *ngIf="isRequired()">*</span>
         </label>
         <label *ngIf="field.options.allowedContentTypes"
-               [ngClass]="{'error': rejected}">
-            (<span *ngFor="let type of field.options.allowedContentTypes; let last = last">
-                    {{type}}<span *ngIf="!last">, </span>
-                </span>)
+               [ngClass]="{'error': rejected}"
+        >
+              ({{field.options.allowedContentTypes.join()}})
         </label>
 
         <div *ngIf="putFilesOnLanguages && canUpload() && !isLoading" class="copy-to-languages">
@@ -68,12 +67,22 @@
         <div class="drop-container" *ngIf="!onlyView">
             <div>
                 <span *ngIf="isLoading">{{'forms.inputs.uploading_files' | translate}}</span>
-                <span *ngIf="(maxFiles > 0 && getControl().value && getControl().value.length >= maxFiles) && !isLoading">{{'forms.inputs.max_files' | translate}}: {{maxFiles}}</span>
+                <span *ngIf="maxFiles > 0 && filesList.length >= maxFiles && !isLoading">
+                  {{'forms.inputs.max_files' | translate}}: {{maxFiles}}
+                </span>
+
                 <span *ngIf="canUpload() && !isLoading">
                     <span class="choose btn btn-sm btn-default"
-                          (click)="bringFileSelector()">{{'forms.inputs.upload_files' | translate}}</span>
-                    <span class="choose btn btn-sm btn-info" *ngIf="!!field.options.mediaLibrary"
-                          (click)="openMediaLibrary()">{{'forms.inputs.select_from_library' | translate}}</span>
+                          (click)="bringFileSelector()"
+                    >
+                        {{'forms.inputs.upload_files' | translate}}
+                    </span>
+                    <span class="choose btn btn-sm btn-info"
+                          *ngIf="!!field.options.mediaLibrary"
+                          (click)="openMediaLibrary()"
+                    >
+                        {{'forms.inputs.select_from_library' | translate}}
+                    </span>
                 </span>
             </div>
         </div>
@@ -85,7 +94,8 @@
                [options]="options"
                [uploadInput]="uploadInput"
                (uploadOutput)="onUploadOutput($event)"
-               [multiple]="!!field.options.multiple">
+               [multiple]="!!field.options.multiple"
+        >
 
         <app-media-library
                 *ngIf="!!field.options.mediaLibrary"
@@ -99,10 +109,10 @@
 
 
         <div class="uploaded-files-container"
-             *ngIf="getControl().value && getControl().value.length > 0">
+             *ngIf="filesList && filesList.length > 0">
             <label class="uploaded-files-label" *ngIf="!onlyView">Uploaded file(s)</label>
-            <ul [dragula]="getUniqueKey()" [(dragulaModel)]='getControl().value'>
-                <li *ngFor="let file of getControl().value"
+            <ul>
+                <li *ngFor="let file of filesList"
                     class="uploaded-file">
                     <div class="file-wrapper">
                         <div [ngSwitch]="file.type">
@@ -124,7 +134,8 @@
                     <span class="file-name" *ngIf="!onlyView">
                         <span *ngIf="file.type == 'video/mp4'">{{file.name}}&nbsp;&nbsp;</span>
                         <span class="remove"
-                              (click)="removeUploadedFile(file)">×</span>
+                              (click)="removeUploadedFile(file)"
+                        >×</span>
                     </span>
                 </li>
             </ul>
