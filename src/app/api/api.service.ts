@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { StorageService } from '../services/storage.service';
 import { RefreshToken } from '../interfaces';
 import * as localSetupFile from '../panel/services/local-setup-file';
+import {Observable, throwError} from 'rxjs';
 
 const API_URL = environment.api.baseUrl;
 
@@ -14,9 +15,7 @@ export class ApiService {
 
     private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     private readonly headerParametersKey: string = 'ngxBackend-Parameters';
-    private readonly domainKey = environment.auth.credentials &&
-        environment.auth.credentials.domain
-        ? environment.auth.credentials.domain : 'domain';
+    private readonly domainKey = environment.auth.credentials?.domain || 'domain';
 
     public isRedirecting = false;
     public unauthorized = false;
@@ -55,6 +54,29 @@ export class ApiService {
     }
 
     /**
+     * Returns the url with the current token
+     * @param endpoint
+     */
+    public updateToken(endpoint: string): string {
+      console.log(endpoint);
+      let [url, qs] = endpoint.split('?');
+      url = url.replace(API_URL, '');
+
+      if (qs) {
+        qs = qs.split('&')
+          .reduce((acc, param) => param.indexOf(`${TOKEN_KEY}=`) === -1 ? [...acc, param] : acc, [])
+          .join('&');
+
+        url = !!qs
+          ? `${url}?${qs}`
+          : url;
+      }
+
+      const retval = this.composeUrl(url, true);
+      return retval;
+    }
+
+    /**
      * GET
      * @param endpoint
      * @param params
@@ -64,32 +86,7 @@ export class ApiService {
     public get(endpoint: string, params?: Object, fromLogin?: boolean): Promise<any> {
         return new Promise((resolve, reject) => {
             this._http.get(this.composeUrl(endpoint), this.setOptions(params))
-                .subscribe(
-                    data => {
-                        resolve(data);
-                    },
-                    error => {
-                        this.handleError(endpoint, error, fromLogin !== null ? fromLogin : false)
-                            .then(() => {
-
-                                if (error.status === 401) {
-                                    this.get(endpoint, params, true)
-                                        .then((data) => {
-                                            resolve(data);
-                                        })
-                                        .catch((response: HttpErrorResponse) => {
-                                            reject(this.manageErrorObject(response.error));
-                                        });
-                                } else {
-                                    resolve(null);
-                                }
-
-                            })
-                            .catch((response: HttpErrorResponse) => {
-                                reject(this.manageErrorObject(response.error));
-                            });
-                    }
-                );
+                .subscribe(resolve, reject);
         });
     }
 
@@ -106,33 +103,7 @@ export class ApiService {
         // console.log('[API SERVICE] - POST ' + endpoint);
         return new Promise((resolve, reject) => {
             this._http.post(this.composeUrl(endpoint), body, this.setOptions(params))
-                .subscribe(
-                    data => {
-                        resolve(data);
-                    },
-                    error => {
-
-                        this.handleError(endpoint, error, isLogin)
-                            .then(() => {
-
-                                if (error.status === 401) {
-                                    this.post(endpoint, body, params, true)
-                                        .then((data) => {
-                                            resolve(data);
-                                        })
-                                        .catch((response: HttpErrorResponse) => {
-                                            reject(this.manageErrorObject(response.error));
-                                        });
-                                } else {
-                                    resolve(null);
-                                }
-
-                            })
-                            .catch((response: HttpErrorResponse) => {
-                                reject(this.manageErrorObject(response.error));
-                            });
-                    }
-                );
+                .subscribe(resolve, reject);
         });
     }
 
@@ -148,30 +119,7 @@ export class ApiService {
         // console.log('[API SERVICE] - PUT ' + endpoint);
         return new Promise((resolve, reject) => {
             this._http.put(this.composeUrl(endpoint), body, this.setOptions(params))
-                .subscribe(
-                    data => {
-                        resolve(data);
-                    },
-                    error => {
-                        this.handleError(endpoint, error, fromLogin !== null ? fromLogin : false)
-                            .then(() => {
-                                if (error.status === 401) {
-                                    this.put(endpoint, body, params, true)
-                                        .then((data) => {
-                                            resolve(data);
-                                        })
-                                        .catch((response: HttpErrorResponse) => {
-                                            reject(this.manageErrorObject(response.error));
-                                        });
-                                } else {
-                                    resolve(null);
-                                }
-                            })
-                            .catch((response: HttpErrorResponse) => {
-                                reject(this.manageErrorObject(response.error));
-                            });
-                    }
-                );
+                .subscribe(resolve, reject);
         });
     }
 
@@ -188,30 +136,7 @@ export class ApiService {
         return new Promise((resolve, reject) => {
             console.log(body);
             this._http.patch(this.composeUrl(endpoint), body, this.setOptions(params))
-                .subscribe(
-                    data => {
-                        resolve(data);
-                    },
-                    error => {
-                        this.handleError(endpoint, error, fromLogin !== null ? fromLogin : false)
-                            .then(() => {
-                                if (error.status === 401) {
-                                    this.patch(endpoint, body, params, true)
-                                        .then((data) => {
-                                            resolve(data);
-                                        })
-                                        .catch((response: HttpErrorResponse) => {
-                                            reject(this.manageErrorObject(response.error));
-                                        });
-                                } else {
-                                    resolve(null);
-                                }
-                            })
-                            .catch((response: HttpErrorResponse) => {
-                                reject(this.manageErrorObject(response.error));
-                            });
-                    }
-                );
+                .subscribe(resolve, reject);
         });
     }
 
@@ -226,34 +151,11 @@ export class ApiService {
         // console.log('[API SERVICE] - DELETE ' + endpoint);
         return new Promise((resolve, reject) => {
             this._http.delete(this.composeUrl(endpoint), this.setOptions(params))
-                .subscribe(
-                    data => {
-                        resolve(data);
-                    },
-                    error => {
-                        this.handleError(endpoint, error, fromLogin !== null ? fromLogin : false)
-                            .then(() => {
-                                if (error.status === 401) {
-                                    this.delete(endpoint, params, true)
-                                        .then((data) => {
-                                            resolve(data);
-                                        })
-                                        .catch((response: HttpErrorResponse) => {
-                                            reject(this.manageErrorObject(response.error));
-                                        });
-                                } else {
-                                    resolve(null);
-                                }
-                            })
-                            .catch((response: HttpErrorResponse) => {
-                                reject(this.manageErrorObject(response.error));
-                            });
-                    }
-                );
+                .subscribe(resolve, reject);
         });
     }
 
-    private redirectToLogin(): void {
+    public redirectToLogin(): void {
         this.unauthorized = true;
         this._userService.removeUser();
         this._userService.removeToken();
@@ -270,63 +172,7 @@ export class ApiService {
         }
     }
 
-    /**
-     * Handle error status (if 401 logout)
-     * @param endpoint
-     * @param errorResponse
-     * @param fromLogin
-     */
-    private handleError(endpoint: string, errorResponse: HttpErrorResponse, fromLogin: boolean): Promise<any> {
-        return new Promise((resolve, reject) => {
 
-            switch (errorResponse.status) {
-                case 401: {
-                    if (fromLogin) {
-                        this.redirectToLogin();
-                        reject(errorResponse);
-                    } else {
-
-                        // Only if remember me enabled
-                        if (this._userService.getUser().remember) {
-                            this.login(null)
-                                .then((response) => {
-                                    this._userService.storeToken(response.id);
-                                    resolve(response);
-                                })
-                                .catch((err) => {
-                                    this.redirectToLogin();
-                                    reject(err);
-                                });
-                        } else if (environment.auth.refreshToken) {
-                            this.refreshAndStoreToken()
-                              .then((refreshToken: RefreshToken) => resolve(refreshToken))
-                              .catch(error => reject(error));
-                        } else {
-                            this.redirectToLogin();
-                            reject(errorResponse);
-                        }
-                    }
-                }
-                    break;
-                case 301:
-                case 302: {
-                    this.isRedirecting = true;
-
-                    resolve({});
-                    if ('redirectAfter' in errorResponse.error) {
-                        setTimeout(() => {
-                            this._router.navigateByUrl(errorResponse.error['redirectAfter']);
-                        }, 200);
-                    }
-                }
-                    break;
-                default: {
-                    reject(errorResponse);
-                }
-                    break;
-            }
-        });
-    }
 
     /**
      * Creates standard request options
@@ -377,18 +223,7 @@ export class ApiService {
         }
     }
 
-    private manageErrorObject(input: any): any {
-        if (input.error) {
-            return input;
-        } else {
-            return {
-                error: {
-                    code: input.code,
-                    message: input.message,
-                }
-            };
-        }
-    }
+
 
     public async refreshToken(): Promise<RefreshToken> {
         // Check if there is refresh token stored

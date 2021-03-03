@@ -51,8 +51,11 @@ export class LoginComponent implements OnInit {
                     response.user = {};
                 }
 
-                response.user['password'] = data.password;
-                response.user.remember = !!data['remember'];
+                response.user.remember = !!data.remember;
+                if (response.user.remember) {
+                  response.user.password = data.password;
+                }
+
 
                 this._userService.storeUser(response.user);
                 this._userService.storeToken(response.id);

@@ -258,6 +258,7 @@ export class CalendarPageComponent implements OnInit, OnDestroy {
     this.isEdit = true;
     this.editingEventId = id;
     const endpoint = this.getDetailUrl(id);
+
     this._apiService.get(endpoint, this.getViewDateBoundaries())
       .then((c: CalendarActivity) => {
         this.processor.syncResponse(c);
