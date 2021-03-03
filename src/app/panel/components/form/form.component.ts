@@ -210,7 +210,8 @@ export class FormComponent implements OnInit, OnDestroy {
         if (this.isExternalForm) {
             this.response.emit(this.form.value);
         } else if (false === this.form.valid) {
-          this.errorBag.composeErrors();
+          this.errorBag.computeErrors();
+
         } else if (this.settings.submit && this.settings.submit.confirm) {
           this._modal.confirm()
             .then(() => {
