@@ -113,6 +113,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         : [data];
 
       this.filesList = d.filter(e => !! e);
+      this.getControl().setValue(this.filesList.length > 0 ? this.filesList : null, {emitEvent: false});
     }
 
     ngOnChanges(changes: SimpleChanges) {
