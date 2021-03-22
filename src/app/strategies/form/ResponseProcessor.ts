@@ -23,8 +23,7 @@ export default class ResponseProcessor {
         case formConfig.types.LIST_DETAILS:
           listDetailsFields[field.key] = field.fields;
           break;
-        case formConfig.types.HOTSPOT:
-        case formConfig.types.HOTSPOT_CANVAS:
+        case formConfig.types.HOTSPOT || formConfig.types.HOTSPOT_CANVAS:
           hotSpotKeys.push(field.key);
           hotSpotFields = field.fields;
           break;
@@ -33,8 +32,8 @@ export default class ResponseProcessor {
 
     Object.keys(listDetailsFields)
       .forEach(key => {
+        (this._form.controls[key] as FormArray).clear();
         for (let i = 0; i < response[key].length; i++) {
-          (this._form.controls[key] as FormArray).clear();
           (this._form.controls[key] as FormArray).push(
             new FormGroup(this._formGenerator.generateFormFields(listDetailsFields[key]))
           );
@@ -42,8 +41,8 @@ export default class ResponseProcessor {
     });
 
     hotSpotKeys.forEach((key) => {
+      (this._form.controls[key] as FormGroup).removeControl('hotSpots');
       for (let i = 0; i < response[key]['hotSpots'].length; i++) {
-        (this._form.controls[key] as FormGroup).removeControl('hotSpots');
         ((this._form.controls[key] as FormGroup).controls['hotSpots'] as FormArray).push(
           new FormGroup(this._formGenerator.generateFormFields(hotSpotFields))
         );

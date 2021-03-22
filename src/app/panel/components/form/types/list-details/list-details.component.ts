@@ -44,7 +44,6 @@ export class ListDetailsComponent extends BaseInputComponent implements OnInit, 
         if (this.field.unique) {
 
              this.observer = new Subject();
-
             for (const subField of this.field.fields) {
                 if (subField.type === formConfig.types.SELECT) {
 
