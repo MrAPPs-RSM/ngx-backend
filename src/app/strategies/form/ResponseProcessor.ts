@@ -23,9 +23,17 @@ export default class ResponseProcessor {
         case formConfig.types.LIST_DETAILS:
           listDetailsFields[field.key] = field.fields;
           break;
-        case formConfig.types.HOTSPOT || formConfig.types.HOTSPOT_CANVAS:
-          hotSpotKeys.push(field.key);
-          hotSpotFields = field.fields;
+        case formConfig.types.HOTSPOT:
+          if (field.key) {
+            hotSpotKeys.push(field.key);
+            hotSpotFields = field.fields;
+          }
+          break;
+        case formConfig.types.HOTSPOT_CANVAS:
+          if (field.key) {
+            hotSpotKeys.push(field.key);
+            hotSpotFields = field.fields;
+          }
           break;
       }
     });
@@ -40,8 +48,8 @@ export default class ResponseProcessor {
         }
     });
 
+    // (this._form.controls[key] as FormGroup).removeControl('hotSpots');
     hotSpotKeys.forEach((key) => {
-      (this._form.controls[key] as FormGroup).removeControl('hotSpots');
       for (let i = 0; i < response[key]['hotSpots'].length; i++) {
         ((this._form.controls[key] as FormGroup).controls['hotSpots'] as FormArray).push(
           new FormGroup(this._formGenerator.generateFormFields(hotSpotFields))
