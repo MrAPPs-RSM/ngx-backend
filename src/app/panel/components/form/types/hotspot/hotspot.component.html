@@ -17,8 +17,7 @@
                      (dragstart)="onDragStart($event, i)"
                      (drag)="onDrag($event, i)"
                      (dragend)="onDragEnd($event, i)"
-                     [style.top]="(hotSpot.value.y - hotspotRadius) + 'px'"
-                     [style.left]="(hotSpot.value.x - hotspotRadius) + 'px'"
+                     [style]="calculateStyles(hotSpot.value)"
                 ><i class="fa fa-arrows"></i>
                     <div class="edit" (click)="onEdit($event, i)"
                          data-toggle="modal" data-target="#myModal">

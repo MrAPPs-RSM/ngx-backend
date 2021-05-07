@@ -132,4 +132,20 @@ export class HotspotComponent extends BaseInputComponent implements OnInit {
         this.getFormArray().removeAt(this.activeHotSpot);
         this.activeHotSpot = null;
     }
+
+  calculateStyles(value: any) {
+    const top = (value.y - this.hotspotRadius) + 'px';
+    const left = (value.x - this.hotspotRadius) + 'px';
+
+    const style = {
+      top,
+      left
+    };
+
+    if ('hotspotColor' in value) {
+      style['background'] = value['hotspotColor'];
+    }
+
+    return style;
+  }
 }
