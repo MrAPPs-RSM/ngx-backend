@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {environment} from '../../../environments/environment';
 
 export const LOGIN_ENDPOINT = environment.auth.login.endpoint;
-export const TOKEN_KEY = environment.auth.tokenKey;
+export const ACCESS_TOKEN_KEY = environment.auth.tokenKey;
 export const REFRESH_TOKEN_KEY = 'refresh_token';
 export const USER_KEY = 'user';
 
@@ -22,19 +22,19 @@ export class UserService {
     }
 
     public removeUser(): void {
-        localStorage.removeItem(TOKEN_KEY);
+        localStorage.removeItem(USER_KEY);
     }
 
     public storeToken(token: string): void {
-        localStorage.setItem(TOKEN_KEY, token);
+        localStorage.setItem(ACCESS_TOKEN_KEY, token);
     }
 
     public removeToken(): void {
-        localStorage.removeItem(TOKEN_KEY);
+        localStorage.removeItem(ACCESS_TOKEN_KEY);
     }
 
     public getToken(): string {
-        return localStorage.getItem(TOKEN_KEY);
+        return localStorage.getItem(ACCESS_TOKEN_KEY);
     }
 
     public storeRefreshToken(refreshToken: string): void {
@@ -51,12 +51,12 @@ export class UserService {
 
     public cleanupData(): void {
         this.removeUser();
+        this.removeRefreshToken();
         this.removeToken();
     }
 }
 
 export interface User {
-    remember?: boolean;
     realm: string;
     username: string;
     password: string;

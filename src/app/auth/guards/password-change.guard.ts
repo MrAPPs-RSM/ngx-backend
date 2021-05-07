@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router, ActivatedRoute} from '@angular/router';
 import {Observable} from 'rxjs';
-import {UserService} from '../services/user.service';
+import {ACCESS_TOKEN_KEY, UserService} from '../services/user.service';
 import {environment} from '../../../environments/environment';
 
 @Injectable()
@@ -18,7 +18,7 @@ export class PasswordChangeGuard implements CanActivate {
                 this._router.navigate([prefix + 'panel']);
                 return false;
             } else {
-                if (!('access_token' in next.queryParams)) {
+                if (!(ACCESS_TOKEN_KEY in next.queryParams)) {
                     this._router.navigate([prefix + 'login']);
                     return false;
                 } else {

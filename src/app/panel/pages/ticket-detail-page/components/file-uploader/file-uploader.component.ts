@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { UploaderOptions, UploadFile, UploadInput, UploadOutput } from 'ngx-uploader';
 import { environment } from '../../../../../../environments/environment';
-import { UserService } from '../../../../../auth/services/user.service';
+import {ACCESS_TOKEN_KEY, UserService} from '../../../../../auth/services/user.service';
 
 @Component({
   selector: 'app-file-uploader',
@@ -29,7 +29,7 @@ export class FileUploaderComponent implements OnInit, OnChanges {
     this.options = { concurrency: 1, maxUploads: 1 };
     this.files = [];
     this.uploadInput = new EventEmitter<UploadInput>();
-    FileUploaderComponent.url = environment.api.baseUrl + 'uploads?access_token=' + this.userService.getToken();
+    FileUploaderComponent.url = environment.api.baseUrl + 'uploads';
   }
 
   ngOnInit() {
@@ -78,7 +78,7 @@ export class FileUploaderComponent implements OnInit, OnChanges {
   private startUpload(): void {
     const event: UploadInput = {
       type: 'uploadAll',
-      url: FileUploaderComponent.url,
+      url: FileUploaderComponent.url + '?' + ACCESS_TOKEN_KEY + '=' + this.userService.getToken(),
       method: 'POST'
     };
 

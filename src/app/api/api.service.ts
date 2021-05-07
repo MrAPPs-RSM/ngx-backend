@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
-import { UserService, TOKEN_KEY, LOGIN_ENDPOINT } from '../auth/services/user.service';
+import { UserService, ACCESS_TOKEN_KEY, LOGIN_ENDPOINT } from '../auth/services/user.service';
 import { Router } from '@angular/router';
 import { StorageService } from '../services/storage.service';
 import { RefreshToken } from '../interfaces';
@@ -38,7 +38,7 @@ export class ApiService {
 
         let url = API_URL + endpoint;
         if (addAuth) {
-            const authorization = TOKEN_KEY + '=' + this._userService.getToken();
+            const authorization = ACCESS_TOKEN_KEY + '=' + this._userService.getToken();
             if (url.indexOf('?') !== -1) {
                 url += '&' + authorization;
             } else {
@@ -64,7 +64,7 @@ export class ApiService {
 
       if (qs) {
         qs = qs.split('&')
-          .reduce((acc, param) => param.indexOf(`${TOKEN_KEY}=`) === -1 ? [...acc, param] : acc, [])
+          .reduce((acc, param) => param.indexOf(`${ACCESS_TOKEN_KEY}=`) === -1 ? [...acc, param] : acc, [])
           .join('&');
 
         url = !!qs
@@ -216,7 +216,7 @@ export class ApiService {
                     }
                 });
             }
-            obj[TOKEN_KEY] = this._userService.getToken();
+            obj[ACCESS_TOKEN_KEY] = this._userService.getToken();
             return new HttpParams({
                 fromObject: obj
             });
@@ -284,21 +284,6 @@ export class ApiService {
     }
 
     public login(data: any): Promise<any> {
-        if (data == null) {
-            const user = this._userService.getUser();
-
-            if (user != null) {
-                data = {};
-                if (environment.auth.credentials) {
-                    data[environment.auth.credentials.username] = user.username;
-                    data[environment.auth.credentials.password] = user.password;
-                } else {
-                    data['username'] = user.username;
-                    data['password'] = user.password;
-                }
-            }
-        }
-
         return this.post(LOGIN_ENDPOINT, data, null, true);
     }
 
