@@ -175,57 +175,57 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
                 if (this.files.length > 0) {
                     this.startUpload();
                 }
+              break;
             }
-                break;
             case 'addedToQueue': {
                 if (this.canUpload()) {
                     this.files.push(output.file);
                 }
+              break;
             }
-                break;
             case 'uploading': {
                 /* update current data in files array for uploading file */
                 const index = this.files.findIndex(file => typeof output.file !== 'undefined' && file.id === output.file.id);
                 this.files[index] = output.file;
+              break;
             }
-                break;
             case 'removed': {
-                // remove file from array when removed
-                this.files = this.files.filter((file: UploadFile) => file !== output.file);
+              // remove file from array when removed
+              this.removeFile(output.file.id);
+              break;
             }
-                break;
             case 'dragOver': {
                 this.dragOver = true;
+              break;
             }
-                break;
             case 'dragOut': {
                 this.dragOver = false;
+              break;
             }
-                break;
             case 'drop': {
                 this.dragOver = false;
+              break;
             }
-                break;
+
             case 'rejected': {
                 // File type not allowed, highlight allowed extensions
                 this.isLoading = false;
                 this.rejected = true;
+
                 setTimeout(() => {
                     this.rejected = false;
                 }, 5000);
+              break;
             }
-                break;
             case 'done': {
                 this.isLoading = false;
                 this.removeFile(output.file.id);
                 this.handleResponse(output.file.response, output.file.responseStatus);
+              break;
             }
-                break;
-            default: {
-
-            }
-                break;
         }
+
+      console.log('[OUTPUT] ', JSON.stringify(output));
     }
 
     private startUpload(): void {
