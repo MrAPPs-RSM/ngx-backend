@@ -76,8 +76,6 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
             this.maxFiles = 1;
         }
 
-        const field = this.field;
-
         this.files = []; // local uploading files array
         this.uploadInput = new EventEmitter<UploadInput>(); // input events, we use this to emit data to ngx-uploader
         this.createAllowedContentTypes();
@@ -191,7 +189,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
             }
             case 'removed': {
               // remove file from array when removed
-              this.removeFile(output.file.id);
+              this.removeFile(output.file);
               break;
             }
             case 'dragOver': {
@@ -219,8 +217,8 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
             }
             case 'done': {
                 this.isLoading = false;
-                this.removeFile(output.file.id);
-                this.handleResponse(output.file.response, output.file.responseStatus);
+                this.removeFile(output.file);
+                this.handleResponse(output.file);
               break;
             }
         }
@@ -246,27 +244,38 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
             url: this._apiService.composeUrl(this.field.options.api.uploadEndpoint, true),
             method: 'POST'
           };
-          this.uploadInput.emit(event)
+          this.uploadInput.emit(event);
         });
     }
 
-    private removeFile(id: string): void {
-        this.uploadInput.emit({ type: 'remove', id: id });
+    private removeFile(file: UploadFile): void {
+
+      if (this._fileUpload.nativeElement.files.length === 1) {
+        this._fileUpload.nativeElement.files = null;
+        this.uploadInput.emit({type: 'removeAll'});
+      } else {
+        this.uploadInput.emit({type: 'remove', file});
+      }
     }
 
     private removeAllFiles(): void {
         this.files.forEach((file) => {
-            this.removeFile(file.id);
+            this.removeFile(file);
         });
         this._fileUpload.nativeElement.files = null;
     }
 
-    private handleResponse(response: any, statusCode: number): void {
+    private handleResponse(file: UploadFile): void {
+      const response = file.response;
+      const statusCode = file.responseStatus;
+
         // console.log('[HANDLE RESPONSE]');
         // console.log('my file: ', response);
         if (response) {
             if ((statusCode !== 200 && statusCode !== 201) || response.error) {
-                this._toastsService.error('error' in response ? response.error : {});
+              const index = this.files.findIndex(localFile => typeof file !== 'undefined' && localFile.id === file.id);
+              this.files.splice(index, 1);
+              this._toastsService.error('error' in response ? response.error : {});
             } else {
                 this.updateFormValue({
                     id: response.id,
