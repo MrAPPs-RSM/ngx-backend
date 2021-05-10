@@ -226,26 +226,24 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
       console.log('[OUTPUT] ', JSON.stringify(output));
     }
 
-    private startUpload(): void {
+    private async startUpload(): Promise<void> {
         this.isLoading = true;
 
+      /*
+       * since the upload directive does not pass through the angular http client at all, I launch the refresh of the token regardless,
+       * so that when uploading the uploader will find the token already renewed
+       */
 
-        /*
-         * since the upload directive does not pass through the angular http client at all, I launch the refersh of the token regardless,
-         * so that when uploading the uploader will find the token already renewed
-         */
-        const q: Promise<any> = environment.auth.refreshToken?.endpoint
-          ? this._apiService.refreshAndStoreToken()
-          : Promise.resolve();
+      if (environment.auth.refreshToken?.endpoint) {
+        await this._apiService.refreshAndStoreToken();
+      }
 
-        q.then(() => {
-          const event: UploadInput = {
-            type: 'uploadAll',
-            url: this._apiService.composeUrl(this.field.options.api.uploadEndpoint, true),
-            method: 'POST'
-          };
-          this.uploadInput.emit(event);
-        });
+      const event: UploadInput = {
+        type: 'uploadAll',
+        url: this._apiService.composeUrl(this.field.options.api.uploadEndpoint, true),
+        method: 'POST'
+      };
+      this.uploadInput.emit(event);
     }
 
     private removeFile(file: UploadFile): void {

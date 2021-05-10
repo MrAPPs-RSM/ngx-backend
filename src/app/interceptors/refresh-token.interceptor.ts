@@ -31,6 +31,7 @@ export class RefreshTokenInterceptor implements HttpInterceptor {
       .pipe(catchError((error: HttpErrorResponse) => {
         switch(error.status) {
           case 401:
+          case 403:
             return this.manageTokenRefreshing(request, next, error);
           case 301:
           case 302:
@@ -105,18 +106,14 @@ export class RefreshTokenInterceptor implements HttpInterceptor {
   }
 
   private async refreshToken(): Promise<string> {
-    if(environment.auth.refreshToken) {
+    if (environment.auth.refreshToken) {
       const token: RefreshToken = await this._api.refreshToken();
-      if(false == token.success) {
+      if (!token.success) {
         throw token;
       }
       this._userService.storeToken(token.token);
       this._userService.storeRefreshToken(token.refreshToken);
       return token.token;
-    } else if(this._userService.getUser().remember) {
-      const response = await this._api.login(null);
-      this._userService.storeToken(response.id);
-      return response.id as string;
     } else {
       throw 'Impossibile refreshare il token';
     }

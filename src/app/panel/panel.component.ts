@@ -92,8 +92,7 @@ export class PanelComponent implements OnInit, AfterViewInit {
     }
 
     logout(): void {
-        this._userService.removeToken();
-        this._userService.removeUser();
+        this._userService.cleanupData();
         this._languageService.removeLang();
         this._pageRefresh.reset();
         this._router.navigate(['../login'], {relativeTo: this._route});

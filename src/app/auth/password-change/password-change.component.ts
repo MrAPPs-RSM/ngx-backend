@@ -4,7 +4,7 @@ import {ApiService, ErrorResponse} from '../../api/api.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ToastsService} from '../../services/toasts.service';
 import {Subscription} from 'rxjs';
-import {TOKEN_KEY} from '../services/user.service';
+import {ACCESS_TOKEN_KEY} from '../services/user.service';
 
 @Component({
     selector: 'app-password-change',
@@ -27,8 +27,8 @@ export class PasswordChangeComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this._subscription = this._route.queryParams.subscribe(params => {
-            if ('access_token' in params) {
-                this._accessToken = params['access_token'];
+            if (ACCESS_TOKEN_KEY in params) {
+                this._accessToken = params[ACCESS_TOKEN_KEY];
                 this._subscription.unsubscribe();
             }
         });
@@ -42,7 +42,7 @@ export class PasswordChangeComponent implements OnInit, OnDestroy {
 
     onSubmit(data): void {
         this.isLoading = true;
-        const endpoint = this.environment.auth.passwordChange.endpoint + '?' + TOKEN_KEY + '=' + this._accessToken;
+        const endpoint = this.environment.auth.passwordChange.endpoint + '?' + ACCESS_TOKEN_KEY + '=' + this._accessToken;
         this._apiService.post(endpoint, data, null, true)
             .then((response) => {
                 this.isLoading = false;
