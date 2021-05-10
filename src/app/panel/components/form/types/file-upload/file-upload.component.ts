@@ -76,8 +76,6 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
             this.maxFiles = 1;
         }
 
-        const field = this.field;
-
         this.files = []; // local uploading files array
         this.uploadInput = new EventEmitter<UploadInput>(); // input events, we use this to emit data to ngx-uploader
         this.createAllowedContentTypes();
@@ -175,61 +173,61 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
                 if (this.files.length > 0) {
                     this.startUpload();
                 }
+              break;
             }
-                break;
             case 'addedToQueue': {
                 if (this.canUpload()) {
                     this.files.push(output.file);
                 }
+              break;
             }
-                break;
             case 'uploading': {
                 /* update current data in files array for uploading file */
                 const index = this.files.findIndex(file => typeof output.file !== 'undefined' && file.id === output.file.id);
                 this.files[index] = output.file;
+              break;
             }
-                break;
             case 'removed': {
-                // remove file from array when removed
-                this.files = this.files.filter((file: UploadFile) => file !== output.file);
+              // remove file from array when removed
+              this.removeFile(output.file);
+              break;
             }
-                break;
             case 'dragOver': {
                 this.dragOver = true;
+              break;
             }
-                break;
             case 'dragOut': {
                 this.dragOver = false;
+              break;
             }
-                break;
             case 'drop': {
                 this.dragOver = false;
+              break;
             }
-                break;
+
             case 'rejected': {
                 // File type not allowed, highlight allowed extensions
                 this.isLoading = false;
                 this.rejected = true;
+
                 setTimeout(() => {
                     this.rejected = false;
                 }, 5000);
+              break;
             }
-                break;
             case 'done': {
                 this.isLoading = false;
-                this.removeFile(output.file.id);
-                this.handleResponse(output.file.response, output.file.responseStatus);
+                this.removeFile(output.file);
+                this.handleResponse(output.file);
+              break;
             }
-                break;
-            default: {
-
-            }
-                break;
         }
+
+      console.log('[OUTPUT] ', JSON.stringify(output));
     }
 
     private async startUpload(): Promise<void> {
-      this.isLoading = true;
+        this.isLoading = true;
 
       /*
        * since the upload directive does not pass through the angular http client at all, I launch the refresh of the token regardless,
@@ -248,23 +246,34 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
       this.uploadInput.emit(event);
     }
 
-    private removeFile(id: string): void {
-        this.uploadInput.emit({ type: 'remove', id: id });
+    private removeFile(file: UploadFile): void {
+
+      if (this._fileUpload.nativeElement.files.length === 1) {
+        this._fileUpload.nativeElement.files = null;
+        this.uploadInput.emit({type: 'removeAll'});
+      } else {
+        this.uploadInput.emit({type: 'remove', file});
+      }
     }
 
     private removeAllFiles(): void {
         this.files.forEach((file) => {
-            this.removeFile(file.id);
+            this.removeFile(file);
         });
         this._fileUpload.nativeElement.files = null;
     }
 
-    private handleResponse(response: any, statusCode: number): void {
+    private handleResponse(file: UploadFile): void {
+      const response = file.response;
+      const statusCode = file.responseStatus;
+
         // console.log('[HANDLE RESPONSE]');
         // console.log('my file: ', response);
         if (response) {
             if ((statusCode !== 200 && statusCode !== 201) || response.error) {
-                this._toastsService.error('error' in response ? response.error : {});
+              const index = this.files.findIndex(localFile => typeof file !== 'undefined' && localFile.id === file.id);
+              this.files.splice(index, 1);
+              this._toastsService.error('error' in response ? response.error : {});
             } else {
                 this.updateFormValue({
                     id: response.id,
