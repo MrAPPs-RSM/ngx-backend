@@ -102,18 +102,19 @@ export class HotspotComponent extends BaseInputComponent implements OnInit {
     }
 
     public onSave($event: any) {
-        this.savedForms[this.activeHotSpot] = true;
-        if (this.field.saveEndpoint) {
-            // TODO: handle errors
-            this._apiService.post(this.field.saveEndpoint, this.getActiveForm().value)
-                .then(() => {
-
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        }
-        this.activeHotSpot = null;
+      const currentHotSpot = this.getActiveForm();
+      this.savedForms[this.activeHotSpot] = true;
+      if (this.field.saveEndpoint) {
+        // TODO: handle errors
+        this._apiService.post(this.field.saveEndpoint, currentHotSpot.value)
+          .then((data: any) => {
+            currentHotSpot.patchValue(data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+      this.activeHotSpot = null;
     }
 
     public onClose($event: any) {
