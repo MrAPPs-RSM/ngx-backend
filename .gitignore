@@ -56,3 +56,8 @@ Thumbs.db
 /src/assets/images/logo.*
 
 /gestionale
+
+# firebase
+firebase.json
+.firebaserc
+.firebase

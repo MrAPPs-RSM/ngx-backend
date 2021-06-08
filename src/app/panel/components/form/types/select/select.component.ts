@@ -1,11 +1,11 @@
-import {ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
-import {ApiService, ErrorResponse} from '../../../../../api/api.service';
-import {ActivatedRoute} from '@angular/router';
-import {FormFieldSelect} from '../../interfaces/form-field-select';
-import {BaseInputComponent} from '../base-input/base-input.component';
-import {Subject, Subscription} from 'rxjs';
-import {Language, LanguageService} from '../../../../services/language.service';
-import {first, debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { ApiService, ErrorResponse } from '../../../../../api/api.service';
+import { ActivatedRoute } from '@angular/router';
+import { FormFieldSelect } from '../../interfaces/form-field-select';
+import { BaseInputComponent } from '../base-input/base-input.component';
+import { Subject, Subscription } from 'rxjs';
+import { Language, LanguageService } from '../../../../services/language.service';
+import { first, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 
 @Component({
     selector: 'app-select',
@@ -37,9 +37,9 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
     private _valueChangesSubscription = Subscription.EMPTY;
 
     constructor(private _apiService: ApiService,
-                private _cd: ChangeDetectorRef,
-                private _languageService: LanguageService,
-                private _route: ActivatedRoute) {
+        private _cd: ChangeDetectorRef,
+        private _languageService: LanguageService,
+        private _route: ActivatedRoute) {
         super();
     }
 
@@ -62,19 +62,19 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
         this.addQueryParams();
         this.loadOptions().then(() => {
             if (!this.isEdit || !this.isSubField) {
-              this.listenValueChange();
+                this.listenValueChange();
             } else if (this.isSubField) {
-              this.getControl().updateValueAndValidity();
-              if (this.getControl().value !== null && typeof this.getControl().value !== 'undefined') {
-                this.updateSelectedOptions(this.getControl().value);
-              } else {
-                this._subFieldSubscription = this.getControl().parent.valueChanges.subscribe((value) => {
-                  if (value && value[this.field.key]) {
-                    this.updateSelectedOptions(value[this.field.key]);
-                    this._subFieldSubscription.unsubscribe();
-                  }
-                });
-              }
+                this.getControl().updateValueAndValidity();
+                if (this.getControl().value !== null && typeof this.getControl().value !== 'undefined') {
+                    this.updateSelectedOptions(this.getControl().value);
+                } else {
+                    this._subFieldSubscription = this.getControl().parent.valueChanges.subscribe((value) => {
+                        if (value && value[this.field.key]) {
+                            this.updateSelectedOptions(value[this.field.key]);
+                            this._subFieldSubscription.unsubscribe();
+                        }
+                    });
+                }
             }
         }).catch((err) => console.log(err));
 
@@ -127,7 +127,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
         this.typeAhead.pipe(
             distinctUntilChanged(),
             debounceTime(300),
-            switchMap(tag => this._apiService.get(this.field.search.endpoint, {search: tag}))
+            switchMap(tag => this._apiService.get(this.field.search.endpoint, { search: tag }))
         ).subscribe(data => {
             this._cd.markForCheck();
             this.options = data;
@@ -147,7 +147,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
         this._subscription = this.getControl().valueChanges.subscribe(value => {
             this.updateSelectedOptions(value);
             if (value !== this.getControl().value) {
-                this.refreshFormValue(value, {emitEvent: false});
+                this.refreshFormValue(value, { emitEvent: false });
             }
         });
     }
@@ -192,7 +192,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
     private loadOptions(forceReload?: boolean): Promise<any> {
         return new Promise((resolve, reject) => {
             if (this.field.search) {
-              return resolve();
+                return resolve();
             }
             if (this.endpoint) {
                 if (this.options.length === 0 || forceReload === true) {
@@ -308,11 +308,20 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
         }
     }
 
-    private updateSelectedOptions(value: any) {
+    private updateSelectedOptions(value: any | any[]) {
         if (typeof value !== 'undefined' && value !== null) {
             if (this.field.multiple === true) {
-              const selected = [];
-              value.forEach((itemId) => {
+                const selected = [];
+                let valuesToBeChecked = [];
+
+                // Adjust values
+                if (Array.isArray(value)) {
+                    valuesToBeChecked = [...value];
+                } else {
+                    valuesToBeChecked.push(value);
+                }
+
+                valuesToBeChecked.forEach((itemId) => {
                     if (typeof itemId === 'object') {
                         itemId = itemId.id;
                     }
@@ -373,8 +382,8 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
                 const ids = value.map(item => item instanceof Object ? item.id : item);
 
                 const newVal = true === this.field.multiple
-                  ? ids
-                  : ids.length > 0 ? ids[0] : null;
+                    ? ids
+                    : ids.length > 0 ? ids[0] : null;
 
                 this.getControl().setValue(newVal, options);
             } else {
