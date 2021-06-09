@@ -13,6 +13,7 @@ export class BaseInputComponent implements OnInit {
     @Input() form: FormGroup;
     @Input() field: any = {};
     @Input() isEdit = false;
+    @Input() isVisible: boolean;
     @Input() onlyView = false;
     @Input() isSubField: boolean;
 
@@ -42,9 +43,11 @@ export class BaseInputComponent implements OnInit {
 
     public getMaxLength(key?: string): number {
         if (key) {
-            return this.field[key].validators && this.field[key].validators.maxLength ? parseInt(this.field[key].validators.maxLength) : null;
+            return this.field[key].validators && this.field[key].validators.maxLength
+              ? parseInt(this.field[key].validators.maxLength, 10)
+              : null;
         } else {
-            return this.field.validators && this.field.validators.maxLength ? parseInt(this.field.validators.maxLength) : null;
+            return this.field.validators && this.field.validators.maxLength ? parseInt(this.field.validators.maxLength, 10) : null;
         }
     }
 
@@ -57,8 +60,9 @@ export class BaseInputComponent implements OnInit {
     }
 
     public isValid(key?: string): boolean {
-        if (this.getControl(key).touched) {
-            return this.getControl(key).valid;
+      const control = this.getControl(key);
+      if (control.touched ) {
+            return control.valid;
         } else {
             return true;
         }

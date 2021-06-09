@@ -188,7 +188,7 @@ export class FormComponent implements OnInit, OnDestroy {
         const endpoint = _endpoint ? _endpoint : this.settings.api.endpoint;
 
         this._apiService.get(
-            endpoint + (id !== null ? '/' +id : ''), params)
+            endpoint + (id !== null ? '/' + id : ''), params)
             .then((response) => {
                 this.isLoading = false;
                 this.processor.syncResponse(response);

@@ -368,7 +368,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
     }
 
     private refreshFormValue(value: any, options?: { emitEvent: boolean }): void {
-        if (value !== null) {
+        if (value !== null && typeof value !== 'undefined') {
             if (value instanceof Array) {
                 const ids = value.map(item => item instanceof Object ? item.id : item);
 

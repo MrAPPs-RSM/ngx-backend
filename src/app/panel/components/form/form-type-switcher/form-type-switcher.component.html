@@ -1,9 +1,8 @@
-<div [ngSwitch]="field.type"
-     [hidden]="!isVisible()">
+<div [ngSwitch]="field.type">
 
     <app-separator
             *ngSwitchCase="formConfig.noInputTypes.SEPARATOR"
-            [field]="field">
+            [field]="field" >
     </app-separator>
 
     <app-gallery
@@ -19,6 +18,8 @@
 
     <app-input-text
             *ngSwitchCase="formConfig.types.TEXT"
+            [hidden]="!isVisible()"
+            [isVisible]="isVisible()"
             [isSubField]="isSubField"
             [onlyView]="onlyView"
             [form]="form"
@@ -30,6 +31,8 @@
 
     <app-geo-search
             *ngSwitchCase="formConfig.types.GEOSEARCH"
+            [hidden]="!isVisible()"
+            [isVisible]="isVisible()"
             [isSubField]="isSubField"
             [onlyView]="onlyView"
             [form]="form"
@@ -41,6 +44,8 @@
 
     <app-plain
             *ngSwitchCase="formConfig.types.PLAIN"
+            [hidden]="!isVisible()"
+            [isVisible]="isVisible()"
             [isSubField]="isSubField"
             [onlyView]="onlyView"
             [form]="form"
@@ -53,6 +58,8 @@
 
     <app-input-password
             *ngSwitchCase="formConfig.types.PASSWORD"
+            [hidden]="!isVisible()"
+            [isVisible]="isVisible()"
             [isSubField]="isSubField"
             [onlyView]="onlyView"
             [groupName]="groupName"
@@ -64,6 +71,8 @@
 
     <app-input-url
             *ngSwitchCase="formConfig.types.URL"
+            [hidden]="!isVisible()"
+            [isVisible]="isVisible()"
             [isSubField]="isSubField"
             [onlyView]="onlyView"
             [groupName]="groupName"
@@ -75,6 +84,8 @@
 
     <app-input-number
             *ngSwitchCase="formConfig.types.NUMBER"
+            [hidden]="!isVisible()"
+            [isVisible]="isVisible()"
             [isSubField]="isSubField"
             [onlyView]="onlyView"
             [groupName]="groupName"
@@ -86,6 +97,8 @@
 
     <app-input-color
             *ngSwitchCase="formConfig.types.COLOR"
+            [hidden]="!isVisible()"
+            [isVisible]="isVisible()"
             [isSubField]="isSubField"
             [onlyView]="onlyView"
             [groupName]="groupName"
@@ -97,6 +110,8 @@
 
     <app-input-textarea
             *ngSwitchCase="formConfig.types.TEXTAREA"
+            [hidden]="!isVisible()"
+            [isVisible]="isVisible()"
             [isSubField]="isSubField"
             [onlyView]="onlyView"
             [groupName]="groupName"
@@ -108,6 +123,8 @@
 
     <app-select
             *ngSwitchCase="formConfig.types.SELECT"
+            [hidden]="!isVisible()"
+            [isVisible]="isVisible()"
             [isSubField]="isSubField"
             [onlyView]="onlyView"
             [groupName]="groupName"
@@ -120,6 +137,8 @@
 
     <app-select-2
             *ngSwitchCase="formConfig.types.SELECT_2"
+            [hidden]="!isVisible()"
+            [isVisible]="isVisible()"
             [isSubField]="isSubField"
             [onlyView]="onlyView"
             [groupName]="groupName"
@@ -132,6 +151,8 @@
 
     <app-input-email
             *ngSwitchCase="formConfig.types.EMAIL"
+            [hidden]="!isVisible()"
+            [isVisible]="isVisible()"
             [isSubField]="isSubField"
             [onlyView]="onlyView"
             [groupName]="groupName"
@@ -143,6 +164,8 @@
 
     <app-checkbox
             *ngSwitchCase="formConfig.types.CHECKBOX"
+            [hidden]="!isVisible()"
+            [isVisible]="isVisible()"
             [isSubField]="isSubField"
             [onlyView]="onlyView"
             [groupName]="groupName"
@@ -154,6 +177,8 @@
 
     <app-date-picker
             *ngSwitchCase="formConfig.types.DATE"
+            [hidden]="!isVisible()"
+            [isVisible]="isVisible()"
             [isSubField]="isSubField"
             [onlyView]="onlyView"
             [groupName]="groupName"
@@ -165,6 +190,8 @@
 
     <app-date-range-picker
             *ngSwitchCase="formConfig.types.DATE_RANGE"
+            [hidden]="!isVisible()"
+            [isVisible]="isVisible()"
             [isSubField]="isSubField"
             [onlyView]="onlyView"
             [groupName]="groupName"
@@ -176,6 +203,8 @@
 
     <app-timetable-picker
             *ngSwitchCase="formConfig.types.TIMETABLE"
+            [hidden]="!isVisible()"
+            [isVisible]="isVisible()"
             [isSubField]="isSubField"
             [onlyView]="onlyView"
             [groupName]="groupName"
@@ -188,6 +217,8 @@
 
     <app-file-upload
             *ngSwitchCase="formConfig.types.FILE"
+            [hidden]="!isVisible()"
+            [isVisible]="isVisible()"
             [groupName]="groupName"
             [onlyView]="onlyView"
             [putFilesOnLanguages]="putFilesOnLanguages"
@@ -200,6 +231,8 @@
 
     <app-cloudinary-library
             *ngSwitchCase="formConfig.types.CLOUDINARY"
+            [hidden]="!isVisible()"
+            [isVisible]="isVisible()"
             [groupName]="groupName"
             [form]="form"
             [field]="field"
@@ -209,6 +242,7 @@
 
     <app-preview
             *ngSwitchCase="formConfig.types.PREVIEW"
+            [hidden]="!isVisible()"
             [groupName]="groupName"
             [form]="form"
             [field]="field"
@@ -218,6 +252,8 @@
 
     <app-map
             *ngSwitchCase="formConfig.types.MAP"
+            [hidden]="!isVisible()"
+            [isVisible]="isVisible()"
             [groupName]="groupName"
             [onlyView]="onlyView"
             [form]="form"
@@ -227,6 +263,8 @@
     </app-map>
     <app-list-details
             *ngSwitchCase="formConfig.types.LIST_DETAILS"
+            [hidden]="!isVisible()"
+            [isVisible]="isVisible()"
             [form]="form"
             [groupName]="groupName"
             [field]="field"
@@ -236,6 +274,8 @@
 
     <app-hotspot
             *ngSwitchCase="formConfig.types.HOTSPOT"
+            [hidden]="!isVisible()"
+            [isVisible]="isVisible()"
             [field]="field"
             [groupName]="groupName"
             [form]="form"
@@ -245,6 +285,8 @@
 
   <app-hotspot-canvas
     *ngSwitchCase="formConfig.types.HOTSPOT_CANVAS"
+    [hidden]="!isVisible()"
+    [isVisible]="isVisible()"
     [field]="field"
     [groupName]="groupName"
     [form]="form"
