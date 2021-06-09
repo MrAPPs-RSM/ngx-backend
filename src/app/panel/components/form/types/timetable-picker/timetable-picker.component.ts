@@ -1,9 +1,7 @@
 import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {FormControl, FormGroup} from '@angular/forms';
-import {isNullOrUndefined} from 'util';
 import {Subscription} from 'rxjs';
-import {Time} from "@angular/common";
 import { first } from 'rxjs/operators';
 
 @Component({
@@ -13,8 +11,6 @@ import { first } from 'rxjs/operators';
     encapsulation: ViewEncapsulation.None
 })
 export class TimetablePickerComponent extends BaseInputComponent implements OnInit, OnDestroy {
-
-    timeMask = [/[0-2]/, /\d/, ':', /[0-5]/, /\d/]; // hh:mm
 
     subForm: FormGroup;
     mS: FormControl = new FormControl(); // morning start
@@ -27,11 +23,15 @@ export class TimetablePickerComponent extends BaseInputComponent implements OnIn
     private _subFieldSubscription = Subscription.EMPTY;
 
     private static isEvaluated(value: any): boolean {
-        return !isNullOrUndefined(value) && value !== '';
+        return !TimetablePickerComponent.isNullOrUndefined(value) && value !== '';
     }
 
     private static isNotEvaluated(value: any): boolean {
-        return isNullOrUndefined(value) || value === '';
+        return TimetablePickerComponent.isNullOrUndefined(value) || value === '';
+    }
+
+    private static isNullOrUndefined(value) {
+      return value === null || value === undefined;
     }
 
     ngOnInit() {
