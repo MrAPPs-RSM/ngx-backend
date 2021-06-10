@@ -8,25 +8,33 @@
             <div class="row wrapper">
                 <div class="col-xs-3 col-sm-3">
                     <label>Morning start</label>
-                    <input [mask]="timeMask"
+                    <input mask="Hh:m0"
+                           [showMaskTyped]="true"
+                           [clearIfNotMatch]="true"
                            [formControl]="mS"
                            class="form-control">
                 </div>
                 <div class="col-xs-3 col-sm-3">
                     <label>Morning end</label>
-                    <input [mask]="timeMask"
+                    <input mask="Hh:m0"
+                           [showMaskTyped]="true"
+                           [clearIfNotMatch]="true"
                            [formControl]="mE"
                            class="form-control">
                 </div>
                 <div class="col-xs-3 col-sm-3">
                     <label>Afternoon start</label>
-                    <input [mask]="timeMask"
+                    <input mask="Hh:m0"
+                           [showMaskTyped]="true"
+                           [clearIfNotMatch]="true"
                            [formControl]="aS"
                            class="form-control">
                 </div>
                 <div class="col-xs-3 col-sm-3">
                     <label>Afternoon end</label>
-                    <input [mask]="timeMask"
+                    <input mask="Hh:m0"
+                           [showMaskTyped]="true"
+                           [clearIfNotMatch]="true"
                            [formControl]="aE"
                            class="form-control">
                 </div>
