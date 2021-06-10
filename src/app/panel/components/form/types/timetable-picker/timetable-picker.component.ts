@@ -122,11 +122,23 @@ export class TimetablePickerComponent extends BaseInputComponent implements OnIn
 
     private changeListener(): void {
         this._subFormSubscription = this.subForm.valueChanges.subscribe((value) => {
+          if (this.isValid()) {
             this.updateControlValue(value);
+          }
         });
     }
 
     private updateControlValue(value: any): void {
+      Object.keys(value).forEach((key) => {
+        if (value[key]) {
+          if (value[key].length !== 4) {
+            value[key] = null;
+          } else {
+            value[key] = value[key].substring(0, 2) + ':' + value[key].substring(2, 4);
+          }
+        }
+
+      });
         this.getControl().patchValue(value);
     }
 }
