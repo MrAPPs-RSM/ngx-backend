@@ -129,13 +129,14 @@ export class TimetablePickerComponent extends BaseInputComponent implements OnIn
     }
 
     private updateControlValue(value: any): void {
+      console.log(value);
       Object.keys(value).forEach((key) => {
-        if (value[key]) {
-          if (value[key].length !== 4) {
-            value[key] = null;
-          } else {
+        if (value[key] && (value[key].length === 4 || value[key].length === 5)) {
+          if (value[key].length === 4) {
             value[key] = value[key].substring(0, 2) + ':' + value[key].substring(2, 4);
           }
+        } else {
+          value[key] = null;
         }
 
       });
