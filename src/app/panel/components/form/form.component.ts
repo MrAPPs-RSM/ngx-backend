@@ -180,9 +180,12 @@ export class FormComponent implements OnInit, OnDestroy {
 
         let params = {};
         if (this.settings.api.filter) {
-            params = {
-                filter: this.settings.api.filter
-            };
+            for (let key of Object.keys(this.settings.api.filter)) {
+                params = {
+                    ...params,
+                    [key]: this.settings.api.filter[key]
+                }
+            }
         }
 
         const endpoint = _endpoint ? _endpoint : this.settings.api.endpoint;
