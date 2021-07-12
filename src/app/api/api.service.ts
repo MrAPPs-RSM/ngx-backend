@@ -36,7 +36,7 @@ export class ApiService {
     public composeUrl(endpoint: string, addAuth?: boolean, extraParams?: Object): string {
         this.isRedirecting = false;
 
-        let url = API_URL + endpoint;
+        let url = endpoint.startsWith('http') ? endpoint : API_URL + endpoint;
         if (addAuth) {
             const authorization = ACCESS_TOKEN_KEY + '=' + this._userService.getToken();
             if (url.indexOf('?') !== -1) {

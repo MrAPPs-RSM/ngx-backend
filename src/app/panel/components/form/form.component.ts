@@ -17,7 +17,6 @@ import { FormSettings } from './interfaces/form-settings';
 import { FormButton } from './interfaces/form-button';
 import { Language, LanguageService } from '../../services/language.service';
 import { Subscription, Observable } from 'rxjs';
-import { formConfig } from './form.config';
 import { Location } from '@angular/common';
 import ErrorBag from '../../../strategies/form/ErrorBag';
 import ResponseProcessor from '../../../strategies/form/ResponseProcessor';
@@ -180,18 +179,18 @@ export class FormComponent implements OnInit, OnDestroy {
 
         let params = {};
         if (this.settings.api.filter) {
-            for (let key of Object.keys(this.settings.api.filter)) {
+            for (const key of Object.keys(this.settings.api.filter)) {
                 params = {
                     ...params,
                     [key]: this.settings.api.filter[key]
-                }
+                };
             }
         }
 
         const endpoint = _endpoint ? _endpoint : this.settings.api.endpoint;
 
         this._apiService.get(
-            endpoint + (id !== null ? '/' +id : ''), params)
+            endpoint + (id !== null ? '/' + id : ''), params)
             .then((response) => {
                 this.isLoading = false;
                 this.processor.syncResponse(response);
@@ -227,10 +226,60 @@ export class FormComponent implements OnInit, OnDestroy {
         }
     }
 
+    postEditResponse(response: any): void {
+      this.isLoading = false;
+      this.dataStored = true;
+      this.response.emit(response);
+
+      if (response != null && this.settings.submit && this.settings.submit.refreshAfter === true) {
+        this.loadData(response);
+      } else {
+        this._location.back();
+      }
+    }
+
+    postCreateResponse(response: any): void {
+      this.isLoading = false;
+      this.dataStored = true;
+      this.response.emit(response);
+
+      if (this.settings.submit && (this.settings.submit.refreshAfter || this.settings.submit.redirectAfter)) {
+        if (this.settings.submit.refreshAfter) {
+          this.loadData(response);
+        } else if (this.settings.submit.redirectAfter) {
+          this._router.navigateByUrl('/panel/' + this.settings.submit.redirectAfter);
+        }
+      } else {
+        this._location.back();
+      }
+    }
+
+    checkProgressStatus(response: any, fromEdit: boolean): void {
+      if ('progress_status' in response && response['progress_status'] === 'failed') {
+        this.isLoading = false;
+      } else if ('progress_url' in response) {
+        setTimeout(() => {
+          this._apiService.get(response['progress_url'])
+            .then((progressResponse) => this.checkProgressStatus(progressResponse, fromEdit));
+        }, 5000);
+      } else {
+        if (fromEdit) {
+          this.postEditResponse(response);
+        } else {
+          this.postCreateResponse(response);
+        }
+      }
+    }
+
     submit(): void {
         /** Using getRawValue() because form.value is not changed when FormArray order changes
          *  Useful to support drag&drop on list detail */
         const value = this.requestProcessor.createFormRequestBody(this.form.getRawValue());
+
+        const manageError = (response: ErrorResponse) => {
+          this.isLoading = false;
+          this.response.emit(response);
+        };
 
         this.isLoading = true;
         if (this.settings.isEdit) {
@@ -245,41 +294,23 @@ export class FormComponent implements OnInit, OnDestroy {
 
             this._apiService.patch(endpoint, value)
                 .then((response) => {
-                    this.isLoading = false;
-                    this.dataStored = true;
-                    this.response.emit(response);
-
-                    if (response != null && this.settings.submit && this.settings.submit.refreshAfter === true) {
-                        this.loadData(response);
-                    } else {
-                        this._location.back();
-                    }
+                  if ('progress_url' in response) {
+                    this.checkProgressStatus(response, true);
+                  } else {
+                    this.postEditResponse(response);
+                  }
                 })
-                .catch((response: ErrorResponse) => {
-                    this.isLoading = false;
-                    this.response.emit(response);
-                });
+                .catch(manageError);
         } else {
             this._apiService.put(this.settings.api.endpoint, value)
                 .then((response) => {
-                    this.isLoading = false;
-                    this.dataStored = true;
-                    this.response.emit(response);
-
-                    if (this.settings.submit && (this.settings.submit.refreshAfter || this.settings.submit.redirectAfter)) {
-                        if (this.settings.submit.refreshAfter) {
-                            this.loadData(response);
-                        } else if (this.settings.submit.redirectAfter) {
-                            this._router.navigateByUrl('/panel/' + this.settings.submit.redirectAfter);
-                        }
-                    } else {
-                        this._location.back();
-                    }
+                  if ('progress_url' in response) {
+                    this.checkProgressStatus(response, false);
+                  } else {
+                    this.postCreateResponse(response);
+                  }
                 })
-                .catch((response: ErrorResponse) => {
-                    this.isLoading = false;
-                    this.response.emit(response);
-                });
+                .catch(manageError);
         }
     }
 
