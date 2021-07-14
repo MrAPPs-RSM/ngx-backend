@@ -5,11 +5,11 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxUploaderModule } from 'ngx-uploader';
-import { AgmCoreModule } from '@agm/core';
+import { GoogleMapsModule } from '@angular/google-maps';
 import { Ng2SmartTableModule } from './modules/ng2-smart-table/ng2-smart-table.module';
 import { PipesModule } from '../pipes/pipes.module';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
-import { NgxMaskModule, IConfig } from 'ngx-mask'
+import { NgxMaskModule, IConfig } from 'ngx-mask';
 
 import { PanelComponent } from './panel.component';
 import { FormPageComponent } from './pages/form-page/form-page.component';
@@ -71,14 +71,13 @@ import { adapterFactory } from 'angular-calendar/date-adapters/moment';
 import { CKEditorModule } from 'ckeditor4-angular';
 import * as moment from 'moment';
 
-import {BootstrapModalModule} from 'ngx-modialog-7/plugins/bootstrap';
 import { CalendarPageComponent } from './pages/calendar-page/calendar-page.component';
 import { ErrorAlertComponent } from './components/error-alert/error-alert.component';
 import { LanguageSelectorComponent } from './components/language-selector/language-selector.component';
 
 export function momentAdapterFactory() {
   return adapterFactory(moment);
-};
+}
 
 const COMPONENTS = [
   PanelComponent,
@@ -175,9 +174,11 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
     MatInputModule,
     MatFormFieldModule,
     NgxUploaderModule,
+    /*
     AgmCoreModule.forRoot({
       apiKey: environment.googleMapsApiKey ? environment.googleMapsApiKey : ''
     }),
+     */
     Ng2SmartTableModule,
     PipesModule,
     OwlDateTimeModule,

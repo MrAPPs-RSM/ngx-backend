@@ -10,8 +10,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ToastrModule, ToastNoAnimation, ToastNoAnimationModule } from 'ngx-toastr';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './auth/login/login.component';
-import { ModalModule } from 'ngx-modialog-7';
-import { BootstrapModalModule } from 'ngx-modialog-7/plugins/bootstrap';
 
 import { GlobalState } from './global.state';
 import { ApiService } from './api/api.service';
@@ -81,8 +79,6 @@ const routes: Routes = [
         }),
         HttpClientModule,
         PanelModule,
-        ModalModule.forRoot(),
-        BootstrapModalModule
     ],
     providers: [
         { provide: LOCALE_ID, useValue: 'it-IT'},

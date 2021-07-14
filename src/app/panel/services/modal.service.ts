@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
-import {Modal} from 'ngx-modialog-7/plugins/bootstrap';
 import {LanguageService} from './language.service';
+import {NgbModal, NgbAlertModule} from '@ng-bootstrap/ng-bootstrap';
 
 @Injectable()
 export class ModalService {
 
-    constructor(private _modal: Modal, private _lang: LanguageService) {
+    constructor(private _modal: NgbModal, private _lang: LanguageService) {
     }
 
     public confirm(title?: string, body?: string, confirm?: string, dismiss?: string): Promise<any> {

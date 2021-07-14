@@ -138,7 +138,7 @@ export class TableComponent implements OnInit, OnDestroy {
     }
 
     private prepareActions() {
-      if('actions' in this.settings && !this.settings.actions.list) {
+      if ('actions' in this.settings && !this.settings.actions.list) {
         this.settings.actions.list = [];
       }
     }
