@@ -1,4 +1,4 @@
-export type RefreshToken = {
+export interface RefreshToken {
     success: boolean;
     message?: string;
     token?: string;

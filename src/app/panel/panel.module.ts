@@ -74,6 +74,7 @@ import * as moment from 'moment';
 import { CalendarPageComponent } from './pages/calendar-page/calendar-page.component';
 import { ErrorAlertComponent } from './components/error-alert/error-alert.component';
 import { LanguageSelectorComponent } from './components/language-selector/language-selector.component';
+import { ModalComponent } from './components/modal/modal.component';
 
 export function momentAdapterFactory() {
   return adapterFactory(moment);
@@ -197,7 +198,8 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
     HotspotCanvasComponent,
     CalendarPageComponent,
     ErrorAlertComponent,
-    LanguageSelectorComponent
+    LanguageSelectorComponent,
+    ModalComponent
   ],
   providers: [
     ...PROVIDERS

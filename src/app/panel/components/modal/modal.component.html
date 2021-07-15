@@ -1,0 +1,15 @@
+<ng-template let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">{{data.title}}</h4>
+    <button *ngIf="data.closeButton" type="button" class="close" aria-label="{{data.closeButton}}" (click)="d('dismiss')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="{{ data.bodyClass ?? 'modal-body' }}" *ngIf="data.body">
+    {{ data.body }}
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="{{ data.okButtonClass ?? 'btn btn-lg btn-primary' }}" (click)="c('ok')" *ngIf="data.okButton">{{data.okButton}}</button>
+    <button type="button" class="{{ data.cancelButtonClass ?? 'btn btn-lg btn-link' }}" (click)="d('cancel')" *ngIf="data.cancelButton">{{data.cancelButton}}</button>
+  </div>
+</ng-template>

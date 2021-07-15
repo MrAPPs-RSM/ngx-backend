@@ -1,45 +1,58 @@
 import {Injectable} from '@angular/core';
 import {LanguageService} from './language.service';
-import {NgbModal, NgbAlertModule} from '@ng-bootstrap/ng-bootstrap';
+import {Subject} from 'rxjs';
+import {ModalData} from '../../interfaces/modal-data';
 
 @Injectable()
 export class ModalService {
 
-    constructor(private _modal: NgbModal, private _lang: LanguageService) {
+    dataChange: Subject<ModalData> = new Subject<ModalData>();
+
+    constructor(private _lang: LanguageService) {
     }
 
-    public confirm(title?: string, body?: string, confirm?: string, dismiss?: string): Promise<any> {
-        return new Promise((resolve, reject) => {
-            const dialog = this._modal.confirm()
-                .size('sm')
-                .showClose(false)
-                .title(title ? title : this._lang.translate('modals.confirm.title'))
-                .body(body ? body : this._lang.translate('modals.confirm.body'))
-                .okBtn(confirm ? confirm : this._lang.translate('modals.confirm.ok'))
-                .okBtnClass('btn btn-sm btn-primary')
-                .cancelBtn(dismiss ? dismiss : this._lang.translate('modals.confirm.cancel'))
-                .cancelBtnClass('btn btn-sm btn-link')
-                .open();
+    public confirm(title?: string, body?: string, confirm?: string, dismiss?: string): void {
 
-            dialog.result
-                .then(() => resolve()) // Confirm
-                .catch(() => reject()); // Dismiss
-        });
+      // TODO: move this code when modal is needed
+      /*
+      import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+      import {ModalComponent} from '../components/modal/modal.component';
+
+      this._modal.open(ModalComponent, {
+      size: 'sm',
+    })
+    .then(() => {})
+    .catch(() => {});
+      */
+
+      this.dataChange.next({
+        title: title ?? this._lang.translate('modals.confirm.title'),
+        body: body ?? this._lang.translate('modals.confirm.body'),
+        okButton: confirm ?? this._lang.translate('modals.confirm.ok'),
+        okButtonClass: 'btn btn-sm btn-primary',
+        cancelButton: dismiss ?? this._lang.translate('modals.confirm.cancel'),
+        cancelButtonClass: 'btn btn-sm btn-link'
+      });
     }
 
-    public alert(title?: string, body?: string, bodyClass?: string): Promise<any> {
-        return new Promise((resolve, reject) => {
-            const dialog = this._modal.alert()
-                .size('lg')
-                .showClose(true)
-                .title(title ? title : this._lang.translate('modals.alert.title'))
-                .body(body ? body : '')
-                .bodyClass(bodyClass)
-                .open();
+    public alert(title?: string, body?: string, bodyClass?: string): void {
 
-            dialog.result
-                .then(() => resolve())
-                .catch(() => resolve());
-        });
+      // TODO: move this code when modal is needed
+      /*
+      import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+      import {ModalComponent} from '../components/modal/modal.component';
+
+      this._modal.open(ModalComponent, {
+      size: 'lg',
+    })
+    .then(() => {})
+    .catch(() => {});
+      */
+
+      this.dataChange.next({
+        title: title ?? this._lang.translate('modals.alert.title'),
+        body: body ?? '',
+        bodyClass
+      });
     }
 }
