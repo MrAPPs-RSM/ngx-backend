@@ -12,19 +12,6 @@ export class ModalService {
     }
 
     public confirm(title?: string, body?: string, confirm?: string, dismiss?: string): void {
-
-      // TODO: move this code when modal is needed
-      /*
-      import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-      import {ModalComponent} from '../components/modal/modal.component';
-
-      this._modal.open(ModalComponent, {
-      size: 'sm',
-    })
-    .then(() => {})
-    .catch(() => {});
-      */
-
       this.dataChange.next({
         title: title ?? this._lang.translate('modals.confirm.title'),
         body: body ?? this._lang.translate('modals.confirm.body'),
@@ -36,19 +23,6 @@ export class ModalService {
     }
 
     public alert(title?: string, body?: string, bodyClass?: string): void {
-
-      // TODO: move this code when modal is needed
-      /*
-      import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-      import {ModalComponent} from '../components/modal/modal.component';
-
-      this._modal.open(ModalComponent, {
-      size: 'lg',
-    })
-    .then(() => {})
-    .catch(() => {});
-      */
-
       this.dataChange.next({
         title: title ?? this._lang.translate('modals.alert.title'),
         body: body ?? '',

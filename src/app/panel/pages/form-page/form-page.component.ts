@@ -13,6 +13,9 @@ import {ApiService, ErrorResponse} from '../../../api/api.service';
 import {FormComponent} from '../../components/form/form.component';
 import { environment } from '../../../../environments/environment';
 
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {ModalComponent} from '../../components/modal/modal.component';
+
 @Component({
     selector: 'app-form-page',
     templateUrl: './form-page.component.html',
@@ -35,7 +38,9 @@ export class FormPageComponent implements OnInit, OnDestroy, ComponentCanDeactiv
                 private _apiService: ApiService,
                 private _toastsService: ToastsService,
                 private _modalService: ModalService,
-                private _menuService: MenuService) {
+                private _modal: NgbModal,
+                private _menuService: MenuService
+                ) {
     }
 
     ngOnInit() {
@@ -80,14 +85,19 @@ export class FormPageComponent implements OnInit, OnDestroy, ComponentCanDeactiv
         // console.log(response);
         switch (form.responseType) {
             case 'terminal': {
-                /** In this case, response is almost always custom,
-                 * so don't need to check if error o success, just display it in a terminal like div
-                 */
-                this._modalService.alert(
-                    'Response',
-                    '<pre>' + JSON.stringify(response, null, 2) + '</pre>',
-                    'terminal'
-                );
+              /** In this case, response is almost always custom,
+               * so don't need to check if error o success, just display it in a terminal like div
+               */
+
+              this._modalService.alert(
+                'Response',
+                '<pre>' + JSON.stringify(response, null, 2) + '</pre>',
+                'terminal'
+              );
+              this._modal.open(ModalComponent, {
+                size: 'lg',
+              });
+
             }
                 break;
             case 'toast': {
