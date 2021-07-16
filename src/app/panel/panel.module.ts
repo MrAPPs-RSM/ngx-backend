@@ -58,7 +58,6 @@ import { ImageComponent } from './components/form/types/image/image.component';
 import { Select2Component } from './components/form/types/select-2/select-2.component';
 import { CloudinaryLibraryComponent } from './components/form/types/cloudinary-library/cloudinary-library.component';
 import { HotspotComponent } from './components/form/types/hotspot/hotspot.component';
-import { environment } from '../../environments/environment';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { TicketDetailPageComponent } from './pages/ticket-detail-page/ticket-detail-page.component';
 import { FileUploaderComponent } from './pages/ticket-detail-page/components/file-uploader/file-uploader.component';
@@ -175,11 +174,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
     MatInputModule,
     MatFormFieldModule,
     NgxUploaderModule,
-    /*
-    AgmCoreModule.forRoot({
-      apiKey: environment.googleMapsApiKey ? environment.googleMapsApiKey : ''
-    }),
-     */
+    GoogleMapsModule,
     Ng2SmartTableModule,
     PipesModule,
     OwlDateTimeModule,

@@ -2,6 +2,7 @@ import {Component, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/c
 import {FormFieldMap} from '../../interfaces/form-field-map';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {Subscription} from 'rxjs';
+import {MapsService} from '../../../../../services/maps.service';
 
 @Component({
     selector: 'app-map',
@@ -10,6 +11,10 @@ import {Subscription} from 'rxjs';
     encapsulation: ViewEncapsulation.None
 })
 export class MapComponent extends BaseInputComponent implements OnInit, OnDestroy {
+
+    constructor(public _mapsService: MapsService) {
+      super();
+    }
 
     @Input() field: FormFieldMap;
 
@@ -22,6 +27,24 @@ export class MapComponent extends BaseInputComponent implements OnInit, OnDestro
         lat: Subscription.EMPTY,
         lng: Subscription.EMPTY,
     };
+
+    public options: google.maps.MapOptions = {
+      zoom: 12,
+      center: this.markerPosition(),
+      scrollwheel: false,
+      disableDefaultUI: true,
+    };
+
+    public markerOptions: google.maps.MarkerOptions = {
+      draggable: true
+    };
+
+    public markerPosition(): google.maps.LatLngLiteral {
+      return {
+        lat: this.getControl(this.field.lat.key).value,
+        lng: this.getControl(this.field.lng.key).value
+      };
+    }
 
     ngOnInit() {
         this.defaults = this.field.defaults ? this.field.defaults : {
@@ -46,8 +69,11 @@ export class MapComponent extends BaseInputComponent implements OnInit, OnDestro
         }
     }
 
-    onMarkerChanged(event: {coords: {lat: number, lng: number}}): void {
-        this.updateFormValue(event.coords.lat, event.coords.lng);
+  onMarkerChanged(event: google.maps.MapMouseEvent): void {
+        this.updateFormValue(
+          event.latLng.lat(),
+          event.latLng.lng()
+        );
     }
 
     private setDefaults(): void {

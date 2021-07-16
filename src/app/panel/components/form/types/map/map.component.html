@@ -38,19 +38,17 @@
             <span *ngIf="field.description" class="help-block">{{field.description}}</span>
         </div>
 
-        <agm-map
-                [zoom]="12"
-                [latitude]="getControl(field.lat.key).value"
-                [longitude]="getControl(field.lng.key).value"
-                [scrollwheel]="false"
-                (mapClick)="onMarkerChanged($event)">
-            <agm-marker
-                    [latitude]="getControl(field.lat.key).value"
-                    [longitude]="getControl(field.lng.key).value"
-                    [markerDraggable]="true"
-                    (dragEnd)="onMarkerChanged($event)">
-            </agm-marker>
-        </agm-map>
+      <div *ngIf="_mapsService.apiLoaded | async">
+        <google-map
+          [height]="350"
+          [options]="options"
+          (mapClick)="onMarkerChanged($event)">
+            <map-marker [position]="markerPosition()"
+                        [options]="markerOptions"
+                        (mapDrag)="onMarkerChanged($event)">
+            </map-marker>
+        </google-map>
+      </div>
     </div>
 </div>
 
