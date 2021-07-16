@@ -28,6 +28,7 @@ import { environment } from '../environments/environment';
 import { StorageService } from './services/storage.service';
 import { DomainNotFoundComponent } from './auth/domain-not-found/domain-not-found.component';
 import {httpInterceptorProviders} from './interceptors';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 registerLocaleData(localeIt);
 
@@ -79,6 +80,7 @@ const routes: Routes = [
         }),
         HttpClientModule,
         PanelModule,
+        NgbModule,
     ],
     providers: [
         { provide: LOCALE_ID, useValue: 'it-IT'},

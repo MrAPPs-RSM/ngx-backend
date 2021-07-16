@@ -13,9 +13,6 @@ import {ApiService, ErrorResponse} from '../../../api/api.service';
 import {FormComponent} from '../../components/form/form.component';
 import { environment } from '../../../../environments/environment';
 
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {ModalComponent} from '../../components/modal/modal.component';
-
 @Component({
     selector: 'app-form-page',
     templateUrl: './form-page.component.html',
@@ -38,7 +35,6 @@ export class FormPageComponent implements OnInit, OnDestroy, ComponentCanDeactiv
                 private _apiService: ApiService,
                 private _toastsService: ToastsService,
                 private _modalService: ModalService,
-                private _modal: NgbModal,
                 private _menuService: MenuService
                 ) {
     }
@@ -94,9 +90,6 @@ export class FormPageComponent implements OnInit, OnDestroy, ComponentCanDeactiv
                 '<pre>' + JSON.stringify(response, null, 2) + '</pre>',
                 'terminal'
               );
-              this._modal.open(ModalComponent, {
-                size: 'lg',
-              });
 
             }
                 break;

@@ -1,14 +1,14 @@
 <ng-template let-c="close" let-d="dismiss">
   <div class="modal-header">
-    <h4 class="modal-title">{{data.title}}</h4>
-    <button *ngIf="data.closeButton" type="button" class="close" aria-label="{{data.closeButton}}" (click)="d('dismiss')">
+    <h4 class="modal-title">{{title}}</h4>
+    <button *ngIf="closeButton" type="button" class="close" aria-label="{{closeButton}}" (click)="d('dismiss')">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
-  <div [ngClass]="data.bodyClass || 'modal-body'" *ngIf="data.body" [innerHTML]="data.body">
+  <div [ngClass]="bodyClass || 'modal-body'" *ngIf="body" [innerHTML]="body">
   </div>
   <div class="modal-footer">
-    <button type="button" [ngClass]="data.okButtonClass || 'btn btn-lg btn-primary'" (click)="c('ok')" *ngIf="data.okButton">{{data.okButton}}</button>
-    <button type="button" [ngClass]="data.cancelButtonClass || 'btn btn-lg btn-link'" (click)="d('cancel')" *ngIf="data.cancelButton">{{data.cancelButton}}</button>
+    <button type="button" [ngClass]="okButtonClass || 'btn btn-lg btn-primary'" (click)="c('ok')" *ngIf="okButton">{{okButton}}</button>
+    <button type="button" [ngClass]="cancelButtonClass || 'btn btn-lg btn-link'" (click)="d('cancel')" *ngIf="cancelButton">{{cancelButton}}</button>
   </div>
 </ng-template>

@@ -17,13 +17,10 @@ import { FormSettings } from './interfaces/form-settings';
 import { FormButton } from './interfaces/form-button';
 import { Language, LanguageService } from '../../services/language.service';
 import { Subscription, Observable } from 'rxjs';
-import { formConfig } from './form.config';
 import { Location } from '@angular/common';
 import ErrorBag from '../../../strategies/form/ErrorBag';
 import ResponseProcessor from '../../../strategies/form/ResponseProcessor';
 import RequestProcessor from '../../../strategies/form/RequestProcessor';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {ModalComponent} from '../modal/modal.component';
 
 @Component({
     selector: 'app-form',
@@ -60,7 +57,6 @@ export class FormComponent implements OnInit, OnDestroy {
   constructor(private _formGenerator: FormGeneratorService,
               public _languageService: LanguageService,
               private _modalService: ModalService,
-              private _modal: NgbModal,
               private _router: Router,
               private _apiService: ApiService,
               private _location: Location,
@@ -218,17 +214,11 @@ export class FormComponent implements OnInit, OnDestroy {
 
     } else if (this.settings.submit && this.settings.submit.confirm) {
 
-      this._modalService.confirm();
-      const modalRef = this._modal.open(ModalComponent, {
-        size: 'sm',
-      });
-
-      modalRef.result
+      this._modalService.confirm()
         .then(() => {
           this.submit();
         })
-        .catch(() => {
-        });
+        .catch(() => {});
 
     } else {
       this.submit();

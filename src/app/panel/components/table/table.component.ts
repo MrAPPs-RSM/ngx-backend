@@ -19,8 +19,6 @@ import { PageRefreshService } from '../../../services/page-refresh.service';
 import { Subscription } from 'rxjs';
 import { GlobalState } from '../../../global.state';
 import { isArray } from 'lodash';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {ModalComponent} from '../modal/modal.component';
 
 @Component({
     selector: 'app-table',
@@ -67,8 +65,7 @@ export class TableComponent implements OnInit, OnDestroy {
         private _router: Router,
         private _route: ActivatedRoute,
         private _toast: ToastsService,
-        private _modalService: ModalService,
-        private _modal: NgbModal) {
+        private _modalService: ModalService) {
     }
 
     ngOnInit() {
@@ -565,12 +562,7 @@ export class TableComponent implements OnInit, OnDestroy {
 
             if (action.config.confirm) {
 
-              this._modalService.confirm();
-              const modalRef = this._modal.open(ModalComponent, {
-                size: 'sm',
-              });
-
-              modalRef.result
+              this._modalService.confirm()
                 .then(executeProcedure)
                 .catch(() => {
                 });
@@ -608,12 +600,7 @@ export class TableComponent implements OnInit, OnDestroy {
 
               if (action.config.confirm) {
 
-                this._modalService.confirm();
-                const modalRef = this._modal.open(ModalComponent, {
-                  size: 'sm',
-                });
-
-                modalRef.result
+                this._modalService.confirm()
                   .then(executeProcedure)
                   .catch(() => {});
               } else {
@@ -655,12 +642,7 @@ export class TableComponent implements OnInit, OnDestroy {
             };
 
             if (action.config.confirm) {
-              this._modalService.confirm();
-              const modalRef = this._modal.open(ModalComponent, {
-                size: 'sm',
-              });
-
-              modalRef.result
+              this._modalService.confirm()
                 .then(executeProcedure)
                 .catch(() => {});
             } else {
@@ -694,12 +676,7 @@ export class TableComponent implements OnInit, OnDestroy {
                 action.config.modal.delete.title : null;
               const body = action.config.modal && action.config.modal.delete && action.config.modal.delete.body ?
                 action.config.modal.delete.body : null;
-              this._modalService.confirm(title, body);
-              const modalRef = this._modal.open(ModalComponent, {
-                size: 'sm',
-              });
-
-              modalRef.result
+              this._modalService.confirm(title, body)
                 .then(executeProcedure)
                 .catch(() => {});
             } else {
