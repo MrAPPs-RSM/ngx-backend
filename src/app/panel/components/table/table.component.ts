@@ -542,34 +542,32 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
 
     private handleActionApi(action: TableAction, endpoint: string, endpointData?: any, data?: any): Promise<any> {
       return new Promise((resolve, reject) => {
+
+        const manageError = (error: any) => {
+          this.isLoading = false;
+          reject(error);
+        };
             switch (action.config.method) {
                 case 'post': {
+
+                  const executeOperation = () => {
+                    this._apiService.post(endpoint, {})
+                      .then((response) => {
+                        this.handleResponseApi(action, response)
+                          .then(() => resolve(true))
+                          .catch(manageError);
+                      })
+                      .catch(manageError);
+                  };
+
                     if (action.config.confirm) {
                         this._modal.confirm()
-                            .then(() => {
-                                this._apiService.post(endpoint, {})
-                                    .then((response) => {
-                                        this.handleResponseApi(action, response)
-                                            .then(() => resolve(true))
-                                            .catch((error) => reject(error));
-                                    })
-                                    .catch((response: ErrorResponse) => {
-                                        reject(response);
-                                    });
-                            })
+                            .then(executeOperation)
                             .catch(() => {
                               this.isLoading = false;
                             });
                     } else {
-                        this._apiService.post(endpoint, {})
-                            .then((response) => {
-                                this.handleResponseApi(action, response)
-                                    .then(() => resolve(true))
-                                    .catch((error) => reject(error));
-                            })
-                            .catch((response: ErrorResponse) => {
-                                reject(response);
-                            });
+                        executeOperation();
                     }
                 }
                     break;
@@ -579,40 +577,30 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
                     break;
                 case 'patch': {
                     if (typeof endpointData !== 'undefined' && endpointData) {
+
+                      const executeOperation = () => {
+                        try {
+                          const body = JSON.parse(endpointData);
+                          this._apiService.patch(endpoint, body)
+                            .then((response) => {
+                              this.handleResponseApi(action, response)
+                                .then(() => resolve(true))
+                                .catch(manageError);
+                            })
+                            .catch(manageError);
+                        } catch (e) {
+                          reject({ error: { message: 'endpointData is not a valid JSON' } });
+                        }
+                    };
+
                         if (action.config.confirm) {
                             this._modal.confirm()
-                                .then(() => {
-                                    if (action.config.refreshAfter !== false) {
-                                        this.isLoading = true;
-                                    }
-                                    try {
-                                        const body = JSON.parse(endpointData);
-                                        this._apiService.patch(endpoint, body)
-                                            .then((response) => {
-                                                this.handleResponseApi(action, response)
-                                                    .then(() => resolve(true))
-                                                    .catch((error) => reject(error));
-                                            })
-                                            .catch((response: ErrorResponse) => {
-                                                reject(response);
-                                            });
-                                    } catch (e) {
-                                        reject({ error: { message: 'endpointData is not a valid JSON' } });
-                                    }
-                                })
+                                .then(executeOperation)
                                 .catch(() => {
                                   this.isLoading = false;
                                 });
                         } else {
-                            this._apiService.patch(endpoint, JSON.parse(endpointData))
-                                .then((response) => {
-                                    this.handleResponseApi(action, response)
-                                        .then(() => resolve(true))
-                                        .catch((error) => reject(error));
-                                })
-                                .catch((response: ErrorResponse) => {
-                                    reject(response);
-                                });
+                          executeOperation();
                         }
                     } else {
                         resolve(true);
@@ -620,101 +608,63 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
                 }
                     break;
                 case 'get': {
+
+                  const executeOperation = () => {
+                    if (action.config.responseType === 'file_download' && action.config.forceDownload) {
+                      (window as any).open(
+                        this._apiService.composeUrl(
+                          endpoint,
+                          true,
+                          action.config.addFilters ? this.composeCountParams() : null
+                        )
+                      );
+                      resolve(true);
+                    } else {
+                      this._apiService.get(endpoint, action.config.addFilters ? this.composeCountParams() : null)
+                        .then((response) => {
+                          this.handleResponseApi(action, response)
+                            .then(() => resolve(true))
+                            .catch(manageError);
+                        })
+                        .catch(manageError);
+                    }
+                  };
+
                     if (action.config.confirm) {
                         this._modal.confirm()
-                            .then(() => {
-                                if (action.config.responseType === 'file_download' && action.config.forceDownload) {
-                                    (window as any).open(
-                                      this._apiService.composeUrl(
-                                        endpoint,
-                                        true,
-                                        action.config.addFilters ? this.composeCountParams() : null
-                                      )
-                                    );
-                                    resolve(true);
-                                } else {
-                                    this._apiService.get(endpoint, action.config.addFilters ? this.composeCountParams() : null)
-                                        .then((response) => {
-                                            this.handleResponseApi(action, response)
-                                                .then(() => resolve(true))
-                                                .catch((error) => reject(error));
-                                        })
-                                        .catch((response: ErrorResponse) => {
-                                            reject(response);
-                                        });
-                                }
-
-                            }).catch(() => {
-                            });
+                            .then(executeOperation)
+                            .catch(() => {
+                              this.isLoading = false;
+                        });
                     } else {
-                        if (action.config.refreshAfter !== false) {
-                            this.isLoading = true;
-                        }
-                        if (action.config.responseType === 'file_download' && action.config.forceDownload) {
-                            (window as any).open(
-                              this._apiService.composeUrl(
-                                endpoint,
-                                true,
-                                action.config.addFilters ? this.composeCountParams() : null
-                              )
-                            );
-                            resolve(true);
-                        } else {
-                            // Adding countParams to filter without pagination and sort
-                            this._apiService.get(endpoint, action.config.addFilters ? this.composeCountParams() : null)
-                                .then((response) => {
-                                    this.handleResponseApi(action, response)
-                                        .then(() => resolve(true))
-                                        .catch((error) => reject(error));
-                                })
-                                .catch((response: ErrorResponse) => {
-                                    reject(response);
-                                });
-                        }
+                      executeOperation();
                     }
                 }
                     break;
                 case 'delete': {
+
+                  const executeOperation = () => {
+                    this._apiService.delete(endpoint)
+                      .then((response) => {
+                        this.handleResponseApi(action, response)
+                          .then(() => resolve(true))
+                          .catch(manageError);
+                      })
+                      .catch(manageError);
+                  };
+
                     if (action.config.confirm) {
                         const title = action.config.modal && action.config.modal.delete && action.config.modal.delete.title ?
                             action.config.modal.delete.title : null;
                         const body = action.config.modal && action.config.modal.delete && action.config.modal.delete.body ?
                             action.config.modal.delete.body : null;
                         this._modal.confirm(title, body)
-                            .then(() => {
-                                if (action.config.refreshAfter !== false) {
-                                    this.isLoading = true;
-                                }
-                                console.log(this.isLoading);
-                                this._apiService.delete(endpoint)
-                                    .then((response) => {
-                                        this.handleResponseApi(action, response)
-                                            .then(() => resolve(true))
-                                            .catch((error) => {
-                                                this.isLoading = false;
-                                                reject(error);
-                                            });
-                                    })
-                                    .catch((response: ErrorResponse) => {
-                                        this.isLoading = false;
-                                        reject(response);
-                                    });
-                            })
+                            .then(executeOperation)
                             .catch(() => {
+                              this.isLoading = false;
                             });
                     } else {
-                        if (action.config.refreshAfter !== false) {
-                            this.isLoading = true;
-                        }
-                        this._apiService.delete(endpoint)
-                            .then((response) => {
-                                this.handleResponseApi(action, response)
-                                    .then(() => resolve(true))
-                                    .catch((error) => reject(error));
-                            })
-                            .catch((response: ErrorResponse) => {
-                                reject(response);
-                            });
+                      executeOperation();
                     }
                 }
                     break;
