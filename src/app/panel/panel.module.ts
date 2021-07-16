@@ -75,6 +75,7 @@ import {BootstrapModalModule} from 'ngx-modialog-7/plugins/bootstrap';
 import { CalendarPageComponent } from './pages/calendar-page/calendar-page.component';
 import { ErrorAlertComponent } from './components/error-alert/error-alert.component';
 import { LanguageSelectorComponent } from './components/language-selector/language-selector.component';
+import { BaseLongPollingComponent } from './components/base-long-polling/base-long-polling.component';
 
 export function momentAdapterFactory() {
   return adapterFactory(moment);
@@ -196,7 +197,8 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
     HotspotCanvasComponent,
     CalendarPageComponent,
     ErrorAlertComponent,
-    LanguageSelectorComponent
+    LanguageSelectorComponent,
+    BaseLongPollingComponent
   ],
   providers: [
     ...PROVIDERS

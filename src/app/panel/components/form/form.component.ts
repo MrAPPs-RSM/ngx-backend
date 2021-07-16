@@ -21,6 +21,7 @@ import { Location } from '@angular/common';
 import ErrorBag from '../../../strategies/form/ErrorBag';
 import ResponseProcessor from '../../../strategies/form/ResponseProcessor';
 import RequestProcessor from '../../../strategies/form/RequestProcessor';
+import {BaseLongPollingComponent} from '../base-long-polling/base-long-polling.component';
 
 @Component({
     selector: 'app-form',
@@ -28,7 +29,7 @@ import RequestProcessor from '../../../strategies/form/RequestProcessor';
     styleUrls: ['./form.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class FormComponent implements OnInit, OnDestroy {
+export class FormComponent extends BaseLongPollingComponent implements OnInit, OnDestroy {
 
     @Input() settings: FormSettings;
     @Input() isExternalForm: boolean;
@@ -39,7 +40,6 @@ export class FormComponent implements OnInit, OnDestroy {
     dataStored: boolean;
 
     public form: FormGroup;
-    public isLoading = false;
     public currentLang: any = null;
     public isMultiLangEnabled = false;
     objectKeys = Object.keys;
@@ -58,11 +58,12 @@ export class FormComponent implements OnInit, OnDestroy {
         public _languageService: LanguageService,
         private _modal: ModalService,
         private _router: Router,
-        private _apiService: ApiService,
+                _apiService: ApiService,
         private _location: Location,
         private _route: ActivatedRoute,
         private _ref: ChangeDetectorRef) {
-        this.enableAutoSubmit = false;
+      super(_apiService);
+      this.enableAutoSubmit = false;
     }
 
 
@@ -254,23 +255,6 @@ export class FormComponent implements OnInit, OnDestroy {
       }
     }
 
-    checkProgressStatus(response: any, fromEdit: boolean): void {
-      if ('progress_status' in response && response['progress_status'] === 'failed') {
-        this.isLoading = false;
-      } else if ('progress_url' in response) {
-        setTimeout(() => {
-          this._apiService.get(response['progress_url'])
-            .then((progressResponse) => this.checkProgressStatus(progressResponse, fromEdit));
-        }, 5000);
-      } else {
-        if (fromEdit) {
-          this.postEditResponse(response);
-        } else {
-          this.postCreateResponse(response);
-        }
-      }
-    }
-
     submit(): void {
         /** Using getRawValue() because form.value is not changed when FormArray order changes
          *  Useful to support drag&drop on list detail */
@@ -293,22 +277,20 @@ export class FormComponent implements OnInit, OnDestroy {
             }
 
             this._apiService.patch(endpoint, value)
-                .then((response) => {
+                .then(async (response) => {
                   if ('progress_url' in response) {
-                    this.checkProgressStatus(response, true);
-                  } else {
-                    this.postEditResponse(response);
+                    response = await this.checkProgressStatus(response);
                   }
+                  this.postEditResponse(response);
                 })
                 .catch(manageError);
         } else {
             this._apiService.put(this.settings.api.endpoint, value)
-                .then((response) => {
+                .then(async (response) => {
                   if ('progress_url' in response) {
-                    this.checkProgressStatus(response, false);
-                  } else {
-                    this.postCreateResponse(response);
+                    response = await this.checkProgressStatus(response);
                   }
+                  this.postCreateResponse(response);
                 })
                 .catch(manageError);
         }

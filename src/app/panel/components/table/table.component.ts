@@ -19,6 +19,7 @@ import { PageRefreshService } from '../../../services/page-refresh.service';
 import { Subscription } from 'rxjs';
 import { GlobalState } from '../../../global.state';
 import { isArray } from 'lodash';
+import {BaseLongPollingComponent} from '../base-long-polling/base-long-polling.component';
 
 @Component({
     selector: 'app-table',
@@ -26,7 +27,7 @@ import { isArray } from 'lodash';
     styleUrls: ['./table.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class TableComponent implements OnInit, OnDestroy {
+export class TableComponent extends BaseLongPollingComponent implements OnInit, OnDestroy {
 
     @Input() settings: TableSettings;
 
@@ -39,8 +40,6 @@ export class TableComponent implements OnInit, OnDestroy {
             sortField: 'weight'
         }
     };
-
-    isLoading = false;
 
     public data: any[];
     public activeFilters: TableActiveFilters = { // Need for table, not for API
@@ -60,12 +59,13 @@ export class TableComponent implements OnInit, OnDestroy {
 
     constructor(public _languageService: LanguageService,
         private _pageRefresh: PageRefreshService,
-        private _apiService: ApiService,
+         _apiService: ApiService,
         private _state: GlobalState,
         private _router: Router,
         private _route: ActivatedRoute,
         private _toast: ToastsService,
         private _modal: ModalService) {
+      super(_apiService);
     }
 
     ngOnInit() {
@@ -138,7 +138,7 @@ export class TableComponent implements OnInit, OnDestroy {
     }
 
     private prepareActions() {
-      if('actions' in this.settings && !this.settings.actions.list) {
+      if ('actions' in this.settings && !this.settings.actions.list) {
         this.settings.actions.list = [];
       }
     }
@@ -525,7 +525,8 @@ export class TableComponent implements OnInit, OnDestroy {
             endpoint = UtilsService.parseEndpoint(endpoint, data);
 
             if (action.config.method) {
-                this.handleActionApi(action, endpoint, action.config.endpointData, data)
+              this.isLoading = true;
+              this.handleActionApi(action, endpoint, action.config.endpointData, data)
                     .then(() => {
                         if (action.config.refreshAfter !== false) {
                             this.getData();
@@ -540,15 +541,12 @@ export class TableComponent implements OnInit, OnDestroy {
     }
 
     private handleActionApi(action: TableAction, endpoint: string, endpointData?: any, data?: any): Promise<any> {
-        return new Promise((resolve, reject) => {
+      return new Promise((resolve, reject) => {
             switch (action.config.method) {
                 case 'post': {
                     if (action.config.confirm) {
                         this._modal.confirm()
                             .then(() => {
-                                if (action.config.refreshAfter !== false) {
-                                    this.isLoading = true;
-                                }
                                 this._apiService.post(endpoint, {})
                                     .then((response) => {
                                         this.handleResponseApi(action, response)
@@ -560,11 +558,9 @@ export class TableComponent implements OnInit, OnDestroy {
                                     });
                             })
                             .catch(() => {
+                              this.isLoading = false;
                             });
                     } else {
-                        if (action.config.refreshAfter !== false) {
-                            this.isLoading = true;
-                        }
                         this._apiService.post(endpoint, {})
                             .then((response) => {
                                 this.handleResponseApi(action, response)
@@ -605,11 +601,9 @@ export class TableComponent implements OnInit, OnDestroy {
                                     }
                                 })
                                 .catch(() => {
+                                  this.isLoading = false;
                                 });
                         } else {
-                            if (action.config.refreshAfter !== false) {
-                                this.isLoading = true;
-                            }
                             this._apiService.patch(endpoint, JSON.parse(endpointData))
                                 .then((response) => {
                                     this.handleResponseApi(action, response)
@@ -629,9 +623,6 @@ export class TableComponent implements OnInit, OnDestroy {
                     if (action.config.confirm) {
                         this._modal.confirm()
                             .then(() => {
-                                if (action.config.refreshAfter !== false) {
-                                    this.isLoading = true;
-                                }
                                 if (action.config.responseType === 'file_download' && action.config.forceDownload) {
                                     (window as any).open(
                                       this._apiService.composeUrl(
@@ -731,41 +722,39 @@ export class TableComponent implements OnInit, OnDestroy {
         });
     }
 
-    private handleResponseApi(action: TableAction, response: any): Promise<any> {
-        return new Promise((resolve, reject) => {
-            if (action.config.responseType) {
-                switch (action.config.responseType) {
-                    case 'file_download': {
-                        if (action.config.file) {
-                            const now = new Date();
+    private async handleResponseApi(action: TableAction, response: any): Promise<any> {
+      if ('progress_url' in response) {
+          response = await this.checkProgressStatus(response);
+      }
 
-                            const name = (action.config.file.name) ? action.config.file.name : 'table';
+        if (action.config.responseType) {
+          switch (action.config.responseType) {
+            case 'file_download': {
+              if (action.config.file) {
+                const now = new Date();
 
-                            const fileName = name + '_' + now.toISOString().substring(0, 19) + '.' + action.config.file.extension;
-                            const fileType = UtilsService.getFileType(action.config.file.extension);
+                const name = (action.config.file.name) ? action.config.file.name : 'table';
 
-                            const blob = new Blob([response], { type: fileType });
-                            const file = new File([blob], fileName, { type: fileType });
-                            (FileSaver as any).saveAs(file);
+                const fileName = name + '_' + now.toISOString().substring(0, 19) + '.' + action.config.file.extension;
+                const fileType = UtilsService.getFileType(action.config.file.extension);
 
-                            resolve(true);
-                        } else {
-                            reject('File configuration not defined');
-                        }
-
-                    }
-                        break;
-                    default: {
-                        this._toast.success();
-                        resolve(true);
-                    }
-                        break;
-                }
-            } else {
-                this._toast.success();
-                resolve(true);
+                const blob = new Blob([response], {type: fileType});
+                const file = new File([blob], fileName, {type: fileType});
+                FileSaver.saveAs(file);
+                return true;
+              } else {
+                throw Error('File configuration not defined');
+              }
             }
-        });
+            default: {
+              this._toast.success();
+              return true;
+            }
+          }
+        } else {
+          this._toast.success();
+          return true;
+        }
     }
 
     onAction($event: { action: TableAction, data?: any }) {
