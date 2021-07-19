@@ -551,6 +551,7 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
                 case 'post': {
 
                   const executeOperation = () => {
+                    this.isLoading = true;
                     this._apiService.post(endpoint, {})
                       .then((response) => {
                         this.handleResponseApi(action, response)
@@ -561,6 +562,7 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
                   };
 
                     if (action.config.confirm) {
+                      this.isLoading = false;
                         this._modal.confirm()
                             .then(executeOperation)
                             .catch(() => {
@@ -580,6 +582,7 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
 
                       const executeOperation = () => {
                         try {
+                          this.isLoading = true;
                           const body = JSON.parse(endpointData);
                           this._apiService.patch(endpoint, body)
                             .then((response) => {
@@ -594,6 +597,7 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
                     };
 
                         if (action.config.confirm) {
+                          this.isLoading = false;
                             this._modal.confirm()
                                 .then(executeOperation)
                                 .catch(() => {
@@ -610,6 +614,7 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
                 case 'get': {
 
                   const executeOperation = () => {
+                    this.isLoading = true;
                     if (action.config.responseType === 'file_download' && action.config.forceDownload) {
                       (window as any).open(
                         this._apiService.composeUrl(
@@ -631,6 +636,7 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
                   };
 
                     if (action.config.confirm) {
+                      this.isLoading = false;
                         this._modal.confirm()
                             .then(executeOperation)
                             .catch(() => {
@@ -644,6 +650,7 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
                 case 'delete': {
 
                   const executeOperation = () => {
+                    this.isLoading = true;
                     this._apiService.delete(endpoint)
                       .then((response) => {
                         this.handleResponseApi(action, response)
@@ -654,6 +661,7 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
                   };
 
                     if (action.config.confirm) {
+                      this.isLoading = false;
                         const title = action.config.modal && action.config.modal.delete && action.config.modal.delete.title ?
                             action.config.modal.delete.title : null;
                         const body = action.config.modal && action.config.modal.delete && action.config.modal.delete.body ?
