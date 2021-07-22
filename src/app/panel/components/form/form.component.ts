@@ -22,6 +22,7 @@ import ErrorBag from '../../../strategies/form/ErrorBag';
 import ResponseProcessor from '../../../strategies/form/ResponseProcessor';
 import RequestProcessor from '../../../strategies/form/RequestProcessor';
 import {BaseLongPollingComponent} from '../base-long-polling/base-long-polling.component';
+import {CopyLangHelperService} from './copy-lang-chooser/copy-lang-helper.service';
 
 @Component({
     selector: 'app-form',
@@ -56,6 +57,7 @@ export class FormComponent extends BaseLongPollingComponent implements OnInit, O
 
     constructor(private _formGenerator: FormGeneratorService,
         public _languageService: LanguageService,
+        private _copyLangHelper: CopyLangHelperService,
         private _modal: ModalService,
         private _router: Router,
                 _apiService: ApiService,
@@ -147,15 +149,24 @@ export class FormComponent extends BaseLongPollingComponent implements OnInit, O
             }
         }
 
-
-
         return this._formGenerator.generate(this.settings.fields);
     }
 
+    private copyToOtherLanguages(fromIso: string): void {
+      if (this._copyLangHelper.copyToLang) {
+        const dataToCopy = this.form.getRawValue()[fromIso];
 
+        console.log('current languages to copy: ' + this._copyLangHelper.contentLanguages.length);
+        this._copyLangHelper.contentLanguages.forEach(languageChoose => {
+          if (languageChoose.checked) {
+            this.form.patchValue({[languageChoose.isoCode]: dataToCopy}, {emitEvent: false});
+          }
+        });
+      }
+    }
 
-    onLanguageChange(language: Language) {
-        this.currentLang = language;
+    onLanguageChange(event: any) {
+        this.copyToOtherLanguages(this.currentLang.isoCode);
     }
 
 
@@ -209,22 +220,24 @@ export class FormComponent extends BaseLongPollingComponent implements OnInit, O
     }
 
     onSubmit(): void {
-        this.closeErrors();
-        if (this.isExternalForm) {
-            this.response.emit(this.form.value);
-        } else if (false === this.form.valid) {
-          this.errorBag.computeErrors();
+      this.copyToOtherLanguages(this.currentLang.isoCode);
 
-        } else if (this.settings.submit && this.settings.submit.confirm) {
-          this._modal.confirm()
-            .then(() => {
-              this.submit();
-            })
-            .catch(() => {
-            });
-        } else {
-          this.submit();
-        }
+      this.closeErrors();
+      if (this.isExternalForm) {
+        this.response.emit(this.form.value);
+      } else if (false === this.form.valid) {
+        this.errorBag.computeErrors();
+
+      } else if (this.settings.submit && this.settings.submit.confirm) {
+        this._modal.confirm()
+          .then(() => {
+            this.submit();
+          })
+          .catch(() => {
+          });
+      } else {
+        this.submit();
+      }
     }
 
     postEditResponse(response: any): void {

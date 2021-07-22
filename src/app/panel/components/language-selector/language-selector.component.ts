@@ -10,7 +10,7 @@ import {LanguageService} from '../../services/language.service';
 export class LanguageSelectorComponent {
   @Input() selectedLang: string;
   @Output() selectedLangChange = new EventEmitter<string>();
-  constructor(public _languageService: LanguageService) { }
+  constructor(public languageService: LanguageService) { }
 
   emitChange(lang: string) {
     this.selectedLangChange.emit(lang);

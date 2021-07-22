@@ -19,6 +19,7 @@ export class CopyLangHelperService {
 
   public setCurrentLang(currentLang: Language): void {
     this.currentLang = currentLang;
+    this.copyToLang = false;
     this.contentLanguages = this._langService.getContentLanguages();
     this.contentLanguages.forEach((lang) => {
       lang.checked = !(lang.id !== currentLang.id);

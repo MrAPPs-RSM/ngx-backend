@@ -160,7 +160,6 @@ export class FormGeneratorService {
                                 field.value || null,
                               {
                                 validators: validators.length > 0 ? Validators.compose(validators) : null,
-                                updateOn: 'blur'
                               }
                             );
                         }
