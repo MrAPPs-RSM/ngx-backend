@@ -29,7 +29,7 @@ export class CheckboxFilterComponent extends DefaultFilter implements OnInit, On
 
     @Input() filterValue: any;
 
-    filterActive: boolean = false;
+    filterActive = false;
     inputControl = new FormControl();
     delay = 0;
 

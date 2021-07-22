@@ -158,7 +158,10 @@ export class FormGeneratorService {
                         if (!UtilsService.containsValue(formConfig.noInputTypes, field.type)) {
                             group[field.key] = new FormControl(
                                 field.value || null,
-                                validators.length > 0 ? Validators.compose(validators) : null
+                              {
+                                validators: validators.length > 0 ? Validators.compose(validators) : null,
+                                updateOn: 'blur'
+                              }
                             );
                         }
                     }

@@ -13,38 +13,6 @@ app-file-upload {
         }
       }
 
-      > div.copy-to-languages {
-        > div {
-          &:first-child {
-            display: block;
-            margin-bottom: 10px;
-          }
-
-          &.languages {
-            > span {
-              display: block;
-              font-weight: $light;
-              color: #999999;
-              font-size: 13px;
-            }
-            > label {
-              display: inline-block;
-              margin-right: 25px;
-            }
-            > div.lang {
-              margin-right: 15px;
-              display: inline-block;
-              > label {
-                > span {
-                  text-transform: uppercase;
-                }
-              }
-            }
-          }
-        }
-      }
-
-
       > div.drop-container {
         @include clearfix();
         background-color: #f5f5f5;

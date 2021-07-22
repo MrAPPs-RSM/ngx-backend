@@ -76,6 +76,7 @@ import { CalendarPageComponent } from './pages/calendar-page/calendar-page.compo
 import { ErrorAlertComponent } from './components/error-alert/error-alert.component';
 import { LanguageSelectorComponent } from './components/language-selector/language-selector.component';
 import { BaseLongPollingComponent } from './components/base-long-polling/base-long-polling.component';
+import { CopyLangChooserComponent } from './components/form/copy-lang-chooser/copy-lang-chooser.component';
 
 export function momentAdapterFactory() {
   return adapterFactory(moment);
@@ -198,7 +199,8 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
     CalendarPageComponent,
     ErrorAlertComponent,
     LanguageSelectorComponent,
-    BaseLongPollingComponent
+    BaseLongPollingComponent,
+    CopyLangChooserComponent
   ],
   providers: [
     ...PROVIDERS

@@ -23,6 +23,13 @@
                 ></app-language-selector>
             </div>
 
+          <div class="col-sm-12" *ngIf="isMultiLangEnabled">
+            <app-copy-lang-chooser
+              [currentLang]="currentLang"
+              *ngIf="settings.copyOnLanguages">
+            </app-copy-lang-chooser>
+          </div>
+
             <div *ngIf="!settings.putTranslationsFirst">
                 <div *ngFor="let field of settings.fields.base">
                     <app-form-type-switcher [form]="form"

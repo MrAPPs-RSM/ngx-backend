@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {AbstractControl, FormGroup} from '@angular/forms';
 
 @Component({
@@ -6,7 +6,7 @@ import {AbstractControl, FormGroup} from '@angular/forms';
     templateUrl: './base-input.component.html',
     styleUrls: ['./base-input.component.scss']
 })
-export class BaseInputComponent implements OnInit {
+export class BaseInputComponent {
 
     @Input() index: number;
     @Input() groupName: string;
@@ -15,12 +15,7 @@ export class BaseInputComponent implements OnInit {
     @Input() isEdit = false;
     @Input() onlyView = false;
     @Input() isSubField: boolean;
-
-    constructor() {
-    }
-
-    ngOnInit() {
-    }
+    @Input() copyOnLanguages?: boolean;
 
     public getUniqueKey(): string {
         return this.groupName + '-' + this.field.key;
@@ -42,9 +37,13 @@ export class BaseInputComponent implements OnInit {
 
     public getMaxLength(key?: string): number {
         if (key) {
-            return this.field[key].validators && this.field[key].validators.maxLength ? parseInt(this.field[key].validators.maxLength) : null;
+            return this.field[key].validators && this.field[key].validators.maxLength
+              ? parseInt(this.field[key].validators.maxLength, 10)
+              : null;
         } else {
-            return this.field.validators && this.field.validators.maxLength ? parseInt(this.field.validators.maxLength) : null;
+            return this.field.validators && this.field.validators.maxLength
+              ? parseInt(this.field.validators.maxLength, 10)
+              : null;
         }
     }
 

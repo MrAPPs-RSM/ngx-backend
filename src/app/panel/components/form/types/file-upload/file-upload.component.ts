@@ -1,5 +1,5 @@
 import {
-    Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Renderer2, SimpleChanges, ViewChild,
+    Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Renderer2, ViewChild,
     ViewEncapsulation
 } from '@angular/core';
 import {
@@ -16,6 +16,7 @@ import { Language, LanguageService } from '../../../../services/language.service
 import { DragulaService } from 'ng2-dragula';
 import { ActivatedRoute } from '@angular/router';
 import { environment } from '../../../../../../environments/environment';
+import {CopyLangHelperService} from '../../copy-lang-chooser/copy-lang-helper.service';
 
 @Component({
     selector: 'app-file-upload',
@@ -23,10 +24,11 @@ import { environment } from '../../../../../../environments/environment';
     styleUrls: ['./file-upload.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class FileUploadComponent extends BaseInputComponent implements OnInit, OnChanges, OnDestroy {
+export class FileUploadComponent extends BaseInputComponent implements OnInit, OnDestroy {
 
     @Input() field: FormFieldFile;
-    @Input() putFilesOnLanguages: boolean;
+    @Input() putFilesOnLanguages?: boolean;
+    @Input() copyOnLanguages?: boolean;
     @Input() currentLang: Language;
 
     options: UploaderOptions = {
@@ -50,7 +52,6 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
 
     filesList: any[];
 
-    public contentLanguages: any[];
     copyToLang = false; // putFilesOnLanguage checkbox
 
     @ViewChild('fileUpload') _fileUpload: ElementRef;
@@ -61,6 +62,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     constructor(private _renderer: Renderer2,
         private _route: ActivatedRoute,
         private _toastsService: ToastsService,
+        private _copyLangHelper: CopyLangHelperService,
         private _apiService: ApiService,
         public _langService: LanguageService,
         private _dragulaService: DragulaService) {
@@ -84,8 +86,6 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         this._subscription = this.getControl().valueChanges.subscribe(data => {
           this.updateFilesValues(data);
         });
-
-        // this.setCorrectlyLanguages();
 
         if (this.field.options.api) {
             this.field.options.api.uploadEndpoint = this.field.options.api.upload;
@@ -114,11 +114,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
       this.getControl().setValue(this.filesList.length > 0 ? this.filesList : null, {emitEvent: false});
     }
 
-    ngOnChanges(changes: SimpleChanges) {
-        if ('currentLang' in changes) {
-            this.setCorrectlyLanguages();
-        }
-    }
+
 
     ngOnDestroy() {
         this._dragulaService.destroy(this.getUniqueKey());
@@ -303,7 +299,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
 
         if (this.copyToLang && !remove) {
             if (this.currentLang && this.putFilesOnLanguages) {
-                this.contentLanguages.forEach((lang) => {
+                this._copyLangHelper.contentLanguages.forEach((lang) => {
                     if (lang.checked) {
                         Object.keys(this.form.parent.controls).forEach((key) => {
                             if (lang.isoCode === key) {
@@ -328,7 +324,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         }
     }
 
-    private removeUploadedFile(file: UploadedFile): void {
+    public removeUploadedFile(file: UploadedFile): void {
         this.updateFormValue(file, true);
     }
 
@@ -356,24 +352,4 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         this.closeMediaLibrary();
     }
 
-
-    /** -------------------- Copy to languages -------------------- */
-    private setCorrectlyLanguages(): void {
-        if (this.currentLang && this.putFilesOnLanguages) {
-            this.contentLanguages = this._langService.getContentLanguages();
-            this.contentLanguages.forEach((lang) => {
-                lang.checked = !(lang.id !== this.currentLang.id);
-            });
-        }
-    }
-
-    public onSelectAllLanguagesChange($event: any): void {
-        if (this.currentLang && this.putFilesOnLanguages) {
-            this.contentLanguages.forEach((lang) => {
-                if (lang.id !== this.currentLang.id) {
-                    lang.checked = $event.target.checked;
-                }
-            });
-        }
-    }
 }

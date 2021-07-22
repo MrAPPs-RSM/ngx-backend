@@ -13,9 +13,6 @@ export class LanguageSelectorComponent {
   constructor(public _languageService: LanguageService) { }
 
   emitChange(lang: string) {
-    if (lang === this.selectedLang) {
-      return;
-    }
     this.selectedLangChange.emit(lang);
   }
 }

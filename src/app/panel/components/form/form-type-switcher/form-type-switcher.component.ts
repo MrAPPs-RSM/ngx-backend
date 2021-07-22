@@ -14,6 +14,7 @@ export class FormTypeSwitcherComponent implements OnInit {
     @Input() form: FormGroup;
     @Input() groupName: string;
     @Input() putFilesOnLanguages?: boolean;
+    @Input() copyOnLanguages?: boolean;
     @Input() field: any;
     @Input() isEdit: boolean;
     @Input() onlyView: boolean;

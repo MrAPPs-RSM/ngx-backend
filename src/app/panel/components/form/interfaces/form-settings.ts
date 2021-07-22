@@ -8,6 +8,7 @@ export interface FormSettings {
     };
     putTranslationsFirst: boolean;
     putFilesOnLanguages?: boolean;
+    copyOnLanguages?: boolean;
     fields: any;
     isEdit?: boolean;
     onlyView?: boolean; // does GET but does not allow submit
