@@ -153,7 +153,6 @@ export class FormComponent extends BaseLongPollingComponent implements OnInit, O
     }
 
     private copyToOtherLanguages(fromIso: string): void {
-      if (this._copyLangHelper.copyToLang) {
         const dataToCopy = this.form.getRawValue()[fromIso];
 
         console.log('current languages to copy: ' + this._copyLangHelper.contentLanguages.length);
@@ -162,11 +161,12 @@ export class FormComponent extends BaseLongPollingComponent implements OnInit, O
             this.form.patchValue({[languageChoose.isoCode]: dataToCopy}, {emitEvent: false});
           }
         });
-      }
     }
 
     onLanguageChange(event: any) {
+      if (this.currentLang && this._copyLangHelper.copyToLang) {
         this.copyToOtherLanguages(this.currentLang.isoCode);
+      }
     }
 
 
@@ -220,7 +220,9 @@ export class FormComponent extends BaseLongPollingComponent implements OnInit, O
     }
 
     onSubmit(): void {
-      this.copyToOtherLanguages(this.currentLang.isoCode);
+      if (this.currentLang && this._copyLangHelper.copyToLang) {
+        this.copyToOtherLanguages(this.currentLang.isoCode);
+      }
 
       this.closeErrors();
       if (this.isExternalForm) {
