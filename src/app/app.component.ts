@@ -139,8 +139,14 @@ export class AppComponent implements OnInit, OnDestroy {
                     }
                 }
             }
+
+            this.setBreadcrumbToLocalStorage();
         });
 
+    }
+
+    setBreadcrumbToLocalStorage() {
+        localStorage.setItem('breadcrumb', JSON.stringify(this._menuService.breadcrumbs));
     }
 
     ngOnDestroy() {
