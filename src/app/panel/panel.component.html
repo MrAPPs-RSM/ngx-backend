@@ -28,7 +28,9 @@
             <ul>
                 <li *ngFor="let item of menu, let i = index">
                     <span (click)="redirect(item.path)">
-                        <a *ngIf="!item.children" [routerLink]="item.path" routerLinkActive="active">
+                        <a *ngIf="!item.children" [routerLink]="item.path" routerLinkActive="active"
+                            [routerLinkActiveOptions]="{exact:
+                            true}">
                             <i *ngIf="item.icon" class="{{item.icon}}"></i>
                             {{item.title}}
                         </a>
@@ -44,7 +46,8 @@
                     <ul *ngIf="item.children">
                         <li *ngFor="let child of item.children">
                             <span (click)="redirect(child.path,i)">
-                                <a [routerLink]="child.path" routerLinkActive="active">
+                                <a [routerLink]="child.path" routerLinkActive="active" [routerLinkActiveOptions]="{exact:
+                                    true}">
                                     <i *ngIf="child.icon" class="{{child.icon}}"></i>
                                     {{child.sideTitle ? child.sideTitle : child.title}}
                                 </a>
