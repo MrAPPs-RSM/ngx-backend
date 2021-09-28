@@ -49,10 +49,15 @@ export class UserService {
         return localStorage.getItem(REFRESH_TOKEN_KEY);
     }
 
+    public removeBreadcrumbFromLocalStorage() {
+        localStorage.removeItem('breadcrumb');
+    }
+
     public cleanupData(): void {
         this.removeUser();
         this.removeRefreshToken();
         this.removeToken();
+        this.removeBreadcrumbFromLocalStorage();
     }
 }
 

@@ -139,8 +139,14 @@ export class AppComponent implements OnInit, OnDestroy {
                     }
                 }
             }
+
+            this.setBreadcrumbToLocalStorage();
         });
 
+    }
+
+    setBreadcrumbToLocalStorage() {
+        localStorage.setItem('breadcrumb', JSON.stringify(this._menuService.breadcrumbs));
     }
 
     ngOnDestroy() {
@@ -201,11 +207,12 @@ export class AppComponent implements OnInit, OnDestroy {
 
 
     private isResetNeeded(activeLink: any): boolean {
+
         return activeLink.breadcrumbLevel === 1
             && !(this.breadcrumbAlreadyIn(activeLink))
             && UtilsService.isEmptyObject(JSON.parse(activeLink.params))
-            && this.hasSameParentPath(activeLink)
-            || !this.hasSameParentPath(activeLink)
-            || (activeLink.breadcrumbLevel === 1 && this._menuService.breadcrumbs[0].breadcrumbLevel !== 1);
+            && !this.hasSameParentPath(activeLink)
+            // || !this.hasSameParentPath(activeLink)
+            // || (activeLink.breadcrumbLevel === 1 && this._menuService.breadcrumbs[0].breadcrumbLevel !== 1);
     }
 }

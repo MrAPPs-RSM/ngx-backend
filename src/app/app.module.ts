@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule, LOCALE_ID } from '@angular/core';
+import { NgModule, LOCALE_ID, APP_INITIALIZER } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import localeIt from '@angular/common/locales/it';
 import { HttpClientModule } from '@angular/common/http';
@@ -86,6 +86,12 @@ const routes: Routes = [
     ],
     providers: [
         { provide: LOCALE_ID, useValue: 'it-IT'},
+        {
+            provide: APP_INITIALIZER,
+            useFactory: (PageRefreshService: PageRefreshService) => () => PageRefreshService.setBreadcrumb(),
+            deps: [PageRefreshService],
+            multi: true
+        },
         GlobalState,
         ApiService,
         UserService,
@@ -105,6 +111,7 @@ const routes: Routes = [
         DomainNotFoundComponent
     ]
 })
+  
 export class AppModule {
 
     constructor(private _router: Router) {
