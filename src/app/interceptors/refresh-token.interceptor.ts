@@ -14,6 +14,7 @@ import {environment} from '../../environments/environment';
 const API_URL     = environment.api.baseUrl;
 import {RefreshToken} from '../interfaces';
 import {Router} from '@angular/router';
+import * as _ from 'lodash';
 declare const $: any;
 @Injectable()
 export class RefreshTokenInterceptor implements HttpInterceptor {
@@ -56,7 +57,8 @@ export class RefreshTokenInterceptor implements HttpInterceptor {
    * @private
    */
   private manageTokenRefreshing(request: HttpRequest<unknown>, next: HttpHandler, error: HttpErrorResponse): Observable<HttpEvent<unknown>> {
-    if (this.isWhitelisted(request)) {
+
+    if (this.isWhitelisted(request) || this.checkTokenInLocalStorage()) {
       $('.modal').modal('hide');
       this._api.redirectToLogin();
       return throwError(this.manageErrorObject(error.error));
@@ -149,5 +151,9 @@ export class RefreshTokenInterceptor implements HttpInterceptor {
     const path = request.url.replace(API_URL, '');
 
     return whitelist.includes(path);
+  }
+
+  checkTokenInLocalStorage() {
+    return _.isNil(localStorage.getItem('refresh_token'))
   }
 }
