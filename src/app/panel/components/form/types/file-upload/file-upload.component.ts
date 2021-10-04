@@ -245,7 +245,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     private removeFile(file: UploadFile): void {
 
       if (this._fileUpload.nativeElement.files.length === 1) {
-        this._fileUpload.nativeElement.files = null;
+        this._fileUpload.nativeElement.value = "";
         this.uploadInput.emit({type: 'removeAll'});
       } else {
         this.uploadInput.emit({type: 'remove', file});
@@ -256,7 +256,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         this.files.forEach((file) => {
             this.removeFile(file);
         });
-        this._fileUpload.nativeElement.files = null;
+        this._fileUpload.nativeElement.value = "";
     }
 
     private handleResponse(file: UploadFile): void {

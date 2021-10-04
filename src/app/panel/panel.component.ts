@@ -1,13 +1,14 @@
 import {AfterViewInit, Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {User, UserService} from '../auth/services/user.service';
 import {environment} from '../../environments/environment';
-import {ActivatedRoute, Route, Router} from '@angular/router';
+import {ActivatedRoute, NavigationEnd, Route, Router} from '@angular/router';
 import {PageRefreshService} from '../services/page-refresh.service';
 import {LanguageService} from './services/language.service';
 
 
 import {MenuService} from './services/menu.service';
 import {StorageService} from '../services/storage.service';
+import { filter, map, take } from 'rxjs/operators';
 
 declare const $: any;
 
@@ -24,6 +25,8 @@ export class PanelComponent implements OnInit, AfterViewInit {
     menu: any[] = [];
     homePage = 'dashboard';
     user: User;
+    menuParentSelected;
+
 
     constructor(private _router: Router,
                 private _userService: UserService,
@@ -32,6 +35,8 @@ export class PanelComponent implements OnInit, AfterViewInit {
                 private _languageService: LanguageService,
                 private _pageRefresh: PageRefreshService,
                 private _menuService: MenuService) {
+                    
+                  
     }
 
     get showLogo() {
@@ -48,6 +53,16 @@ export class PanelComponent implements OnInit, AfterViewInit {
         this._languageService.setDatePickerLocale();
 
         this.menu = this._menuService.getMenu();
+
+        this._router.events.pipe(filter(event => event instanceof NavigationEnd), take(1))
+        .subscribe(event => 
+         {     
+             this.menuParentSelected= this.menu.findIndex(function(o) {
+              return o.children.some(function(e) {
+                return e.path == event['url'].split("/panel/").pop();
+              })
+            })
+         });
 
         /** Search for home page */
         let routerConfig = this._router.config;
@@ -85,6 +100,16 @@ export class PanelComponent implements OnInit, AfterViewInit {
         this.user = this._userService.getUser();
     }
 
+    setSectionSelected(i) {
+
+        if (i === this.menuParentSelected) {
+            return {
+                "background-color": 'rgba(255,255,255,0.2)'
+            }
+        }
+    }
+    
+
     ngAfterViewInit() {
         if ($(window).width() <= 768) {
             this.toggleSidebar(null, true);
@@ -102,11 +127,16 @@ export class PanelComponent implements OnInit, AfterViewInit {
         }
     }
 
-    redirect(route: string): void {
+    redirect(route: string, i?: number): void {
         this._router.navigate(['../panel/' + route], {relativeTo: this._route});
-
+        
         if ($(window).width() <= 768) {
             this.toggleSidebar();
+        }
+
+        this.menuParentSelected = null;
+        if (i || i === 0) {
+            this.menuParentSelected = i;
         }
     }
 
