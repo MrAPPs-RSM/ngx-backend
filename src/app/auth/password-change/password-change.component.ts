@@ -26,6 +26,7 @@ export class PasswordChangeComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        console.log('Here')
         this._subscription = this._route.queryParams.subscribe(params => {
             if (ACCESS_TOKEN_KEY in params) {
                 this._accessToken = params[ACCESS_TOKEN_KEY];
