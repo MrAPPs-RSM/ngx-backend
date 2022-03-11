@@ -13,6 +13,7 @@
                    [(ngModel)]="selected"
                    (change)="onChange($event)"
                    [ngModelOptions]="{standalone: true}"
+                   [virtualScroll]="true"
         >
         </ng-select>
         <span *ngIf="field.description" class="help-block sub-little-text">{{field.description}}</span>
