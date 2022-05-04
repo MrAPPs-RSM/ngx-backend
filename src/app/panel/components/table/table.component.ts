@@ -98,10 +98,23 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
                 const sortArray = isArray(this.filter.order) ? this.filter.order : this.filter.order.split(',');
                 this.filter.order = [];
                 for (let i = 0; i < sortArray.length; i++) {
-                    const splittedSort = sortArray[i].trim().split(' ');
+
+                    let field = '';
+                    let direction = '';
+                    if (typeof sortArray[i] === 'string') {
+                        const splitted = sortArray[i].trim().split(' ');
+                        field = splitted[0];
+                        direction = splitted[1];
+                    } else if ('field' in sortArray[i] && 'direction' in sortArray[i]) {
+                        field = sortArray[i]['field'];
+                        direction = sortArray[i]['direction'];
+                    } else {
+                        continue;
+                    }
+
                     this.filter.order.push({
-                        field: splittedSort[0],
-                        direction: splittedSort[1]
+                        field,
+                        direction
                     });
                 }
             }
