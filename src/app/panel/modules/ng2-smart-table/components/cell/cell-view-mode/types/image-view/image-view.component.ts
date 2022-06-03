@@ -11,7 +11,6 @@ import {UtilsService} from '../../../../../../../../services/utils.service';
                (click)="onClick($event)"
             ></a>
             <img [src]="renderValue" (error)="retryUrl($event)">
-            <i class="fa fa-download"></i>
         </div>
     `,
     styleUrls: ['./image-view.component.scss'],

@@ -24,12 +24,16 @@
               "node_modules/angular-calendar/css/angular-calendar.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/assets/sass/ngx-backend.scss",
-              "src/lib/fancybox/css/jquery.fancybox.min.css"
+              "src/lib/fancybox/css/jquery.fancybox.min.css",
+              "node_modules/@fortawesome/fontawesome-free/css/solid.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/bootstrap/dist/js/bootstrap.min.js",
-              "src/lib/fancybox/js/jquery.fancybox.min.js"
+              "src/lib/fancybox/js/jquery.fancybox.min.js",
+              "node_modules/@fortawesome/fontawesome-free/js/brands.min.js",
+              "node_modules/@fortawesome/fontawesome-free/js/solid.min.js",
+              "node_modules/@fortawesome/fontawesome-free/js/fontawesome.min.js"
             ]
           },
           "configurations": {

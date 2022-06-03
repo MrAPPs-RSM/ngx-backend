@@ -169,7 +169,7 @@ owl-date-time-container.owl-dt-container {
         &:after {
           position: absolute;
           display: inline-block;
-          font: normal normal normal 14px/1 FontAwesome;
+          font: normal normal normal 14px/1 'Font Awesome 6 Free';
           text-rendering: auto;
           -webkit-font-smoothing: antialiased;
           top: 5px;
@@ -309,7 +309,7 @@ label.checkbox {
     &:checked {
       & + span {
         &:before {
-          font: normal normal normal 17px/1 FontAwesome;
+          font: normal normal normal 17px/1 'Font Awesome 6 Free';
           text-decoration: inherit;
           text-rendering: optimizeLegibility;
           text-transform: none;
@@ -319,7 +319,7 @@ label.checkbox {
           border-color: $primary;
           background-color: $primary;
           color: #ffffff;
-          content: "\f17b";
+          content: "\f00c";
           font-size: 16px;
         }
       }

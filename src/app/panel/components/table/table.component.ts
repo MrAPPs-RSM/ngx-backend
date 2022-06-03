@@ -10,7 +10,6 @@ import { TableActiveFilters } from '../../modules/ng2-smart-table/lib/data-filte
 import { TableDrop } from '../../modules/ng2-smart-table/lib/data-filters/table-drop';
 import { Association, TableAction } from './interfaces/table-action';
 import { ActivatedRoute, Router } from '@angular/router';
-import * as _ from 'lodash';
 import * as FileSaver from 'file-saver';
 import { UtilsService } from '../../../services/utils.service';
 import { Language, LanguageService } from '../../services/language.service';
