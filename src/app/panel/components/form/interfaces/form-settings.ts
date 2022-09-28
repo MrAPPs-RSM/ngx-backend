@@ -4,7 +4,8 @@ export interface FormSettings {
     api: {
         endpoint: string,
         filter?: string;
-        listEndpoint?: string
+        listEndpoint?: string;
+        ajaxFormEndpoint?: string;
     };
     putTranslationsFirst: boolean;
     putFilesOnLanguages?: boolean;

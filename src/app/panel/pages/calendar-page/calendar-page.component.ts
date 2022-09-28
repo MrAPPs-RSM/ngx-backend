@@ -57,6 +57,7 @@ export class CalendarPageComponent implements OnInit, OnDestroy {
 
   private _subscription = Subscription.EMPTY;
   private listEndpoit: string;
+  private ajaxFormEndpoint: string;
   private ev: CalendarActivity[] = [];
   viewType: CalendarView = CalendarView.Month;
   private editingEventId: number|undefined = undefined;
@@ -85,6 +86,7 @@ export class CalendarPageComponent implements OnInit, OnDestroy {
       this.formDescriptor = this._route.snapshot.data.forms[0];
       this.calendarId = +this._route.snapshot.params.id;
       this.listEndpoit = `${this.formDescriptor.api.listEndpoint}/${this.calendarId}`;
+      this.ajaxFormEndpoint = `${this.formDescriptor.api.ajaxFormEndpoint}/${this.calendarId}`;
       this.form = this._formGenerator.generate(this.formDescriptor.fields);
       this.errorBag = this._languageService.createErrorBagFor(this.form, this.formDescriptor);
       this.processor = this._formGenerator.generateResponseProcessorFor(this.form, this.formDescriptor);
@@ -301,12 +303,16 @@ export class CalendarPageComponent implements OnInit, OnDestroy {
   /**
    * Shows the creation form
    */
-  showCreate() {
+  async showCreate() {
     this.closeErrors();
     this.editingEventId = undefined;
     this.isEdit = false;
     this.form.reset();
     this.openFormModal();
+  }
+
+  async loadAjaxForm() {
+    
   }
 
   /**
