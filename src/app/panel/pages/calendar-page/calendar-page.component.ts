@@ -13,7 +13,6 @@ import {Language, LanguageService} from '../../services/language.service';
 import ResponseProcessor from '../../../strategies/form/ResponseProcessor';
 import {ToastsService} from '../../../services/toasts.service';
 import {WeekDay} from 'calendar-utils';
-import RequestProcessor from '../../../strategies/form/RequestProcessor';
 import CalendarRequestProcessor from '../../../strategies/form/CalendarRequestProcessor';
 
 declare const $: any;
@@ -57,7 +56,7 @@ export class CalendarPageComponent implements OnInit, OnDestroy {
 
   private _subscription = Subscription.EMPTY;
   private listEndpoit: string;
-  private ajaxFormEndpoint: string;
+  private ajaxFormEndpoint: string | null;
   private ev: CalendarActivity[] = [];
   viewType: CalendarView = CalendarView.Month;
   private editingEventId: number|undefined = undefined;
@@ -86,14 +85,30 @@ export class CalendarPageComponent implements OnInit, OnDestroy {
       this.formDescriptor = this._route.snapshot.data.forms[0];
       this.calendarId = +this._route.snapshot.params.id;
       this.listEndpoit = `${this.formDescriptor.api.listEndpoint}/${this.calendarId}`;
-      this.ajaxFormEndpoint = `${this.formDescriptor.api.ajaxFormEndpoint}/${this.calendarId}`;
-      this.form = this._formGenerator.generate(this.formDescriptor.fields);
+      this.ajaxFormEndpoint = 'ajaxFormEndpoint' in this.formDescriptor.api && this.formDescriptor.api.ajaxFormEndpoint ? `${this.formDescriptor.api.ajaxFormEndpoint}/${this.calendarId}` : null;
+
+      this.composeCreateForm();
       this.errorBag = this._languageService.createErrorBagFor(this.form, this.formDescriptor);
       this.processor = this._formGenerator.generateResponseProcessorFor(this.form, this.formDescriptor);
       this.requestProcessor = new CalendarRequestProcessor(this.formDescriptor, this._languageService);
       this.currentLang = this._languageService.getCurrentLangIsCode();
       this.initData();
     });
+  }
+
+  async composeCreateForm(): Promise<void> {
+    if (this.ajaxFormEndpoint) {
+      this.isLoading = true;
+      try {
+        const formFields: { fields: any } = await this._apiService.get(this.ajaxFormEndpoint);
+        this.form = this._formGenerator.generate(formFields.fields);
+      } catch (e) {
+      }
+      this.isLoading = false;
+    } else {
+      this.form = this._formGenerator.generate(this.formDescriptor.fields);
+      return Promise.resolve();
+    }
   }
 
   /**
@@ -265,9 +280,9 @@ export class CalendarPageComponent implements OnInit, OnDestroy {
       .then((c: CalendarActivity) => {
         this.processor.syncResponse(c);
         this.form.patchValue(c);
+        this.isFormLoading = false
       })
-      .catch(e => this._toast.error())
-      .finally(() => this.isFormLoading = false);
+      .catch(e => {this._toast.error(); this.isFormLoading = false;});
 
     this.openFormModal();
   }
@@ -312,7 +327,7 @@ export class CalendarPageComponent implements OnInit, OnDestroy {
   }
 
   async loadAjaxForm() {
-    
+
   }
 
   /**
@@ -398,9 +413,18 @@ export class CalendarPageComponent implements OnInit, OnDestroy {
    */
   private async loadData() {
     this.isLoading = true;
-    const response = await this._apiService.get(this.listEndpoit, this.getViewDateBoundaries())
-      .finally(() => this.isLoading = false);
-    this.ev = response;
+    let loadingError = null;
+    try {
+      this.ev = await this._apiService.get(this.listEndpoit, this.getViewDateBoundaries())
+    } catch (error) {
+      loadingError = error;
+    }
+
+    this.isLoading = false;
+
+    if (loadingError) {
+      throw loadingError;
+    }
   }
 
   /**
