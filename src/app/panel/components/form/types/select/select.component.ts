@@ -200,7 +200,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
                         where: JSON.stringify(this.params.where)
                     };
 
-                    if (this.isEdit) {
+                  if (this.isEdit || this.field.useContextId) {
                         if (this.endpoint.indexOf(':id') !== -1) {
                             this.endpoint = this.endpoint.replace(':id', this._route.params['value'].id);
                         }
@@ -246,43 +246,48 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
         });
     }
 
-    private addQueryParams(): void {
-        if (this.field.search) {
-            return null;
-        }
-
-        if (this.field.options instanceof Array) {
-            this.endpoint = null;
-            return null;
-        } else {
-            const endpoint = this.field.options;
-            let filter;
-            if (endpoint.indexOf('?') !== -1) {
-                const queryParams = endpoint.split('?')[1];
-                if (queryParams.indexOf('where') !== -1) {
-                    console.log(queryParams.split('where=')[1]);
-                    filter = JSON.parse(queryParams.split('where=')[1]);
-                }
-                if (filter) {
-                    if ('and' in filter) {
-                        filter['and'].forEach((condition) => {
-                            this.params.where.and.push(condition);
-                        });
-                    } else {
-                        Object.keys(filter).forEach((key) => {
-                            const obj = {};
-                            obj[key] = filter[key];
-                            this.params.where.and.push(obj);
-                        });
-
-                    }
-                }
-                this.endpoint = endpoint.split('?')[0];
-            } else {
-                this.endpoint = endpoint;
-            }
-        }
+  private addQueryParams(): void {
+    if (this.field.search) {
+      return null;
     }
+
+    if (this.field.options instanceof Array) {
+      this.endpoint = null;
+      return null;
+    } else {
+      const endpoint = this.field.options;
+      let filter;
+      if (endpoint.indexOf('?') !== -1) {
+        const queryParams = endpoint.split('?')[1];
+        if (queryParams.indexOf('where') !== -1) {
+          console.log(queryParams.split('where=')[1]);
+          filter = JSON.parse(queryParams.split('where=')[1]);
+        }
+        if (filter) {
+          if ('and' in filter) {
+            filter['and'].forEach((condition) => {
+              this.params.where.and.push(condition);
+            });
+          } else {
+            Object.keys(filter).forEach((key) => {
+              const obj = {};
+              obj[key] = filter[key];
+              this.params.where.and.push(obj);
+            });
+
+          }
+        }
+        this.endpoint = endpoint.split('?')[0];
+      } else {
+        this.endpoint = endpoint;
+
+        if (this.field.useContextId) {
+          const endpointArray = endpoint.split('?');
+          this.endpoint = endpointArray[0] + '/:id' + (endpointArray.length > 1 ? endpointArray[1] : '');
+        }
+      }
+    }
+  }
 
     private checkSelection() {
         if (this.selected || (this.selected && this.selected.length > 0)) {

@@ -102,7 +102,6 @@ export class CalendarPageComponent implements OnInit, OnDestroy {
       try {
         const formFields = await this._apiService.get(this.ajaxFormEndpoint);
         this.formDescriptor.fields = formFields;
-        console.log(this._formGenerator.generate(formFields));
         this.form = this._formGenerator.generate(formFields);
       } catch (e) {
       }
