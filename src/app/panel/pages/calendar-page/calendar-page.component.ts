@@ -100,8 +100,10 @@ export class CalendarPageComponent implements OnInit, OnDestroy {
     if (this.ajaxFormEndpoint) {
       this.isLoading = true;
       try {
-        const formFields: { fields: any } = await this._apiService.get(this.ajaxFormEndpoint);
-        this.form = this._formGenerator.generate(formFields.fields);
+        const formFields = await this._apiService.get(this.ajaxFormEndpoint);
+        this.formDescriptor.fields = formFields;
+        console.log(this._formGenerator.generate(formFields));
+        this.form = this._formGenerator.generate(formFields);
       } catch (e) {
       }
       this.isLoading = false;
@@ -467,6 +469,6 @@ export class CalendarPageComponent implements OnInit, OnDestroy {
   }
 
   get isMultiLangEnabled() {
-    return 'en' in this.formDescriptor.fields && this._languageService.getContentLanguages().length > 0;
+    return 'fields' in this.formDescriptor && 'en' in this.formDescriptor.fields && this._languageService.getContentLanguages().length > 0;
   }
 }
