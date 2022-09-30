@@ -209,6 +209,11 @@ export class Select2Component extends BaseInputComponent implements OnInit, OnDe
                 this.endpoint = endpoint.split('?')[0];
             } else {
                 this.endpoint = endpoint;
+
+                if(this.field.useContextId){
+                  const endpointArray = endpoint.split('?');
+                  this.endpoint = endpointArray[0] + '/:id' + (endpointArray.length > 1 ? endpointArray[1] : '');
+                }
             }
         }
     }
@@ -239,7 +244,7 @@ export class Select2Component extends BaseInputComponent implements OnInit, OnDe
                         where: JSON.stringify(this.params.where)
                     };
 
-                    if (this.isEdit) {
+                    if (this.isEdit || this.field.useContextId) {
                         if (this.endpoint.indexOf(':id') !== -1) {
                             this.endpoint = this.endpoint.replace(':id', this._route.params['value'].id);
                         }

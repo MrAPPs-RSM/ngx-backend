@@ -5,6 +5,7 @@ export interface FormFieldSelect extends FormField {
     search?: {
         endpoint: string;
     };
+    useContextId?: boolean;
     multiple?: boolean;
     lang?: boolean; // if lang needed
     dependsOn?: any; // if options of the select depends on a field of the current form
