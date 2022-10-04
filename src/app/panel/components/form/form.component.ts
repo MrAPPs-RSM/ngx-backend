@@ -187,6 +187,7 @@ export class FormComponent extends BaseLongPollingComponent implements OnInit, O
         } else if (entity) {
             id = entity ? entity.id : null;
         }
+
         this.isLoading = true;
 
         let params = {};
@@ -198,6 +199,15 @@ export class FormComponent extends BaseLongPollingComponent implements OnInit, O
                 };
             }
         }
+
+      if(this._route.snapshot.params) {
+        const paramsKeys = Object.keys(this._route.snapshot.params);
+        for (const paramKey of paramsKeys) {
+          if (paramKey !== 'id') {
+            params[paramKey] = this._route.snapshot.params[paramKey];
+          }
+        }
+      }
 
         const endpoint = _endpoint ? _endpoint : this.settings.api.endpoint;
 
