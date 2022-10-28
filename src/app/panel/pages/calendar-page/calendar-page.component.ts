@@ -277,7 +277,7 @@ export class CalendarPageComponent implements OnInit, OnDestroy {
     this.editingEventId = id;
     const endpoint = this.getDetailUrl(id);
 
-    this._apiService.get(endpoint, this.getViewDateBoundaries())
+    this._apiService.get(endpoint, this.getBoundaries(this.viewDate))
       .then((c: CalendarActivity) => {
         this.processor.syncResponse(c);
         this.form.patchValue(c);
@@ -345,6 +345,16 @@ export class CalendarPageComponent implements OnInit, OnDestroy {
    */
   private getViewDateBoundaries(): {start: string; end: string} {
     return this.getDateBoundaries(this.viewDate);
+  }
+
+  private getBoundaries(date: any): {start: string; end: string} {
+    const  mode = this.getMomentMode();
+    const viewMoment = moment(date);
+
+    return {
+      start: encodeURIComponent(viewMoment.startOf(mode).format()),
+      end: encodeURIComponent(viewMoment.format())
+    };
   }
 
   /**
