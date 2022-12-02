@@ -270,14 +270,14 @@ export class CalendarPageComponent implements OnInit, OnDestroy {
    * Shows the edit form for the passed eventId
    * @param id
    */
-  showEditById(id: number) {
+  showEditById(id: number, start: Date, end: Date) {
     this.isFormLoading = true;
     this.closeErrors();
     this.isEdit = true;
     this.editingEventId = id;
     const endpoint = this.getDetailUrl(id);
 
-    this._apiService.get(endpoint, this.getViewDateBoundaries())
+    this._apiService.get(endpoint, this.getBoundaries(start, end))
       .then((c: CalendarActivity) => {
         this.processor.syncResponse(c);
         this.form.patchValue(c);
@@ -345,6 +345,16 @@ export class CalendarPageComponent implements OnInit, OnDestroy {
    */
   private getViewDateBoundaries(): {start: string; end: string} {
     return this.getDateBoundaries(this.viewDate);
+  }
+
+  private getBoundaries(start: Date, end: Date): {start: string; end: string} {
+    const startMoment = moment(start);
+    const endMoment = moment(end);
+
+    return {
+      start: encodeURIComponent(startMoment.format()),
+      end: encodeURIComponent(endMoment.format())
+    };
   }
 
   /**
@@ -459,7 +469,7 @@ export class CalendarPageComponent implements OnInit, OnDestroy {
             label: '<i class="fa fa-pencil fa-2x"></i>',
             cssClass: 'text-white',
             onClick: ({event}: { event: CalendarEvent }): void => {
-              this.showEditById(event.id as number);
+              this.showEditById(event.id as number, event.start, event.end);
             },
           },
         ]

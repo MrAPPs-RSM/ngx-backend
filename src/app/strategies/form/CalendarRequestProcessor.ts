@@ -58,7 +58,7 @@ export default class CalendarRequestProcessor extends RequestProcessor {
         c.getMinutes(),
         c.getSeconds()
       );
-      retval[key] = new Date(utc);
+      retval[key] = new Date(utc as any).toISOString();
     }
 
     return {...values, ...retval};
