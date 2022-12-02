@@ -133,7 +133,7 @@ export class FormComponent extends BaseLongPollingComponent implements OnInit, O
     }
 
     setupForms(currentLang?: string | null): FormGroup {
-        this.isMultiLangEnabled = 'en' in this.settings.fields && this._languageService.getContentLanguages().length > 0;
+        this.isMultiLangEnabled = Object.keys(this.settings.fields).length > 1 && this._languageService.getContentLanguages().length > 0;
 
         if (this.isMultiLangEnabled) {
             for (const contentLanguage of this._languageService.getContentLanguages()) {
