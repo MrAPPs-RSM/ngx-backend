@@ -6,5 +6,6 @@ export interface TableColumn {
         width?: string;
         sort?: boolean;
         filter?: any;
+        valuePrepareFunction?: (cell: any, row: any) => void;
     };
 }

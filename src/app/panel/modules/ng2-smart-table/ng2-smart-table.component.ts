@@ -34,6 +34,7 @@ export class Ng2SmartTableComponent implements OnChanges, OnInit, OnDestroy {
     @Output() sort: EventEmitter<any> = new EventEmitter<any>();
     @Output() filter: EventEmitter<any> = new EventEmitter<any>();
     @Output() paginate: EventEmitter<any> = new EventEmitter<any>();
+    @Output() valuePrepareFunction: EventEmitter<any> = new EventEmitter<any>();
 
     tableClass: string;
     tableId: string;

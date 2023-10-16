@@ -18,7 +18,7 @@ import { PageRefreshService } from '../../../services/page-refresh.service';
 import { Subscription } from 'rxjs';
 import { GlobalState } from '../../../global.state';
 import { isArray } from 'lodash';
-import {BaseLongPollingComponent} from '../base-long-polling/base-long-polling.component';
+import { BaseLongPollingComponent } from '../base-long-polling/base-long-polling.component';
 
 @Component({
     selector: 'app-table',
@@ -58,13 +58,13 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
 
     constructor(public _languageService: LanguageService,
         private _pageRefresh: PageRefreshService,
-         _apiService: ApiService,
+        _apiService: ApiService,
         private _state: GlobalState,
         private _router: Router,
         private _route: ActivatedRoute,
         private _toast: ToastsService,
         private _modal: ModalService) {
-      super(_apiService);
+        super(_apiService);
     }
 
     ngOnInit() {
@@ -150,9 +150,9 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
     }
 
     private prepareActions() {
-      if ('actions' in this.settings && !this.settings.actions.list) {
-        this.settings.actions.list = [];
-      }
+        if ('actions' in this.settings && !this.settings.actions.list) {
+            this.settings.actions.list = [];
+        }
     }
 
     private prepareColumnFilter(column: any, defaultValue?: any): any {
@@ -234,7 +234,7 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
         this.isLoading = true;
 
         if (doCount === false) {
-            this._apiService.get(this.settings.api.endpoint, this.composeParams())
+            this._apiService.get(this.composeEndpoint(this.settings.api.endpoint), this.composeParams())
                 .then((data) => {
                     // console.log(data);
                     this.isLoading = false;
@@ -259,7 +259,24 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
 
     private getCount(): Promise<any> {
         const endpoint = this.settings.api.countEndpoint ? this.settings.api.countEndpoint : this.settings.api.endpoint + '/count';
-        return this._apiService.get(endpoint, this.composeCountParams());
+        return this._apiService.get(this.composeEndpoint(endpoint), this.composeCountParams());
+    }
+
+    private composeEndpoint(endpoint: string) {
+        if (endpoint.indexOf(':') < 0) {
+            return endpoint;
+        }
+
+        if (this.activeFilters.filter && 'where' in this.activeFilters.filter) {
+            for (const key of Object.keys(this.activeFilters.filter.where)) {
+                if (endpoint.indexOf(':' + key) >= 0) {
+                    const regex = new RegExp(':' + key, 'g');
+                    endpoint = endpoint.replace(regex, this.activeFilters.filter.where[key]);
+                }
+            }
+        }
+
+        return endpoint;
     }
 
     private composeParams(countParams?: boolean, queryParams?: boolean, addInclude?: boolean): Object {
@@ -424,8 +441,8 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
 
                     action.config.params.associateFields.forEach((association: Association) => {
                         const queryKey = association.queryKey.indexOf('where') >= 0 || association.queryKey.indexOf('.') >= 0
-                          ? association.queryKey
-                          : 'where.' + association.queryKey;
+                            ? association.queryKey
+                            : 'where.' + association.queryKey;
                         params[association.formKey] = UtilsService.objectByString(this.filter, queryKey);
                     });
 
@@ -472,10 +489,10 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
 
                         if (updatedFilter.indexOf(':id') !== -1) {
                             updatedFilter = updatedFilter.replace(
-                              ':id',
-                              encodeURIComponent(
-                                'idField' in action.config ? data[action.config['idField']] : data.id
-                              )
+                                ':id',
+                                encodeURIComponent(
+                                    'idField' in action.config ? data[action.config['idField']] : data.id
+                                )
                             );
                         }
 
@@ -526,10 +543,10 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
             let endpoint = action.config.endpoint;
             if (endpoint.indexOf(':id') !== -1) {
                 endpoint = endpoint.replace(
-                  ':id',
-                  encodeURIComponent(
-                    'idField' in action.config ? data[action.config['idField']] : data.id
-                  )
+                    ':id',
+                    encodeURIComponent(
+                        'idField' in action.config ? data[action.config['idField']] : data.id
+                    )
                 );
             }
 
@@ -537,8 +554,8 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
             endpoint = UtilsService.parseEndpoint(endpoint, data);
 
             if (action.config.method) {
-              this.isLoading = true;
-              this.handleActionApi(action, endpoint, action.config.endpointData, data)
+                this.isLoading = true;
+                this.handleActionApi(action, endpoint, action.config.endpointData, data)
                     .then(() => {
                         if (action.config.refreshAfter !== false) {
                             this.getData();
@@ -553,32 +570,32 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
     }
 
     private handleActionApi(action: TableAction, endpoint: string, endpointData?: any, data?: any): Promise<any> {
-      return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
 
-        const manageError = (error: any) => {
-          this.isLoading = false;
-          reject(error);
-        };
+            const manageError = (error: any) => {
+                this.isLoading = false;
+                reject(error);
+            };
             switch (action.config.method) {
                 case 'post': {
 
-                  const executeOperation = () => {
-                    this.isLoading = true;
-                    this._apiService.post(endpoint, {})
-                      .then((response) => {
-                        this.handleResponseApi(action, response)
-                          .then(() => resolve(true))
-                          .catch(manageError);
-                      })
-                      .catch(manageError);
-                  };
+                    const executeOperation = () => {
+                        this.isLoading = true;
+                        this._apiService.post(endpoint, {})
+                            .then((response) => {
+                                this.handleResponseApi(action, response)
+                                    .then(() => resolve(true))
+                                    .catch(manageError);
+                            })
+                            .catch(manageError);
+                    };
 
                     if (action.config.confirm) {
-                      this.isLoading = false;
+                        this.isLoading = false;
                         this._modal.confirm()
                             .then(executeOperation)
                             .catch(() => {
-                              this.isLoading = false;
+                                this.isLoading = false;
                             });
                     } else {
                         executeOperation();
@@ -592,31 +609,31 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
                 case 'patch': {
                     if (typeof endpointData !== 'undefined' && endpointData) {
 
-                      const executeOperation = () => {
-                        try {
-                          this.isLoading = true;
-                          const body = JSON.parse(endpointData);
-                          this._apiService.patch(endpoint, body)
-                            .then((response) => {
-                              this.handleResponseApi(action, response)
-                                .then(() => resolve(true))
-                                .catch(manageError);
-                            })
-                            .catch(manageError);
-                        } catch (e) {
-                          reject({ error: { message: 'endpointData is not a valid JSON' } });
-                        }
-                    };
+                        const executeOperation = () => {
+                            try {
+                                this.isLoading = true;
+                                const body = JSON.parse(endpointData);
+                                this._apiService.patch(endpoint, body)
+                                    .then((response) => {
+                                        this.handleResponseApi(action, response)
+                                            .then(() => resolve(true))
+                                            .catch(manageError);
+                                    })
+                                    .catch(manageError);
+                            } catch (e) {
+                                reject({ error: { message: 'endpointData is not a valid JSON' } });
+                            }
+                        };
 
                         if (action.config.confirm) {
-                          this.isLoading = false;
+                            this.isLoading = false;
                             this._modal.confirm()
                                 .then(executeOperation)
                                 .catch(() => {
-                                  this.isLoading = false;
+                                    this.isLoading = false;
                                 });
                         } else {
-                          executeOperation();
+                            executeOperation();
                         }
                     } else {
                         resolve(true);
@@ -625,55 +642,55 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
                     break;
                 case 'get': {
 
-                  const executeOperation = () => {
-                    this.isLoading = true;
-                    if (action.config.responseType === 'file_download' && action.config.forceDownload) {
-                      (window as any).open(
-                        this._apiService.composeUrl(
-                          endpoint,
-                          true,
-                          action.config.addFilters ? this.composeCountParams() : null
-                        )
-                      );
-                      resolve(true);
-                    } else {
-                      this._apiService.get(endpoint, action.config.addFilters ? this.composeCountParams() : null)
-                        .then((response) => {
-                          this.handleResponseApi(action, response)
-                            .then(() => resolve(true))
-                            .catch(manageError);
-                        })
-                        .catch(manageError);
-                    }
-                  };
+                    const executeOperation = () => {
+                        this.isLoading = true;
+                        if (action.config.responseType === 'file_download' && action.config.forceDownload) {
+                            (window as any).open(
+                                this._apiService.composeUrl(
+                                    endpoint,
+                                    true,
+                                    action.config.addFilters ? this.composeCountParams() : null
+                                )
+                            );
+                            resolve(true);
+                        } else {
+                            this._apiService.get(endpoint, action.config.addFilters ? this.composeCountParams() : null)
+                                .then((response) => {
+                                    this.handleResponseApi(action, response)
+                                        .then(() => resolve(true))
+                                        .catch(manageError);
+                                })
+                                .catch(manageError);
+                        }
+                    };
 
                     if (action.config.confirm) {
-                      this.isLoading = false;
+                        this.isLoading = false;
                         this._modal.confirm()
                             .then(executeOperation)
                             .catch(() => {
-                              this.isLoading = false;
-                        });
+                                this.isLoading = false;
+                            });
                     } else {
-                      executeOperation();
+                        executeOperation();
                     }
                 }
                     break;
                 case 'delete': {
 
-                  const executeOperation = () => {
-                    this.isLoading = true;
-                    this._apiService.delete(endpoint)
-                      .then((response) => {
-                        this.handleResponseApi(action, response)
-                          .then(() => resolve(true))
-                          .catch(manageError);
-                      })
-                      .catch(manageError);
-                  };
+                    const executeOperation = () => {
+                        this.isLoading = true;
+                        this._apiService.delete(endpoint)
+                            .then((response) => {
+                                this.handleResponseApi(action, response)
+                                    .then(() => resolve(true))
+                                    .catch(manageError);
+                            })
+                            .catch(manageError);
+                    };
 
                     if (action.config.confirm) {
-                      this.isLoading = false;
+                        this.isLoading = false;
                         const title = action.config.modal && action.config.modal.delete && action.config.modal.delete.title ?
                             action.config.modal.delete.title : null;
                         const body = action.config.modal && action.config.modal.delete && action.config.modal.delete.body ?
@@ -681,10 +698,10 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
                         this._modal.confirm(title, body)
                             .then(executeOperation)
                             .catch(() => {
-                              this.isLoading = false;
+                                this.isLoading = false;
                             });
                     } else {
-                      executeOperation();
+                        executeOperation();
                     }
                 }
                     break;
@@ -693,37 +710,37 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
     }
 
     private async handleResponseApi(action: TableAction, response: any): Promise<any> {
-      if ('progress_url' in response) {
-          response = await this.checkProgressStatus(response);
-      }
+        if ('progress_url' in response) {
+            response = await this.checkProgressStatus(response);
+        }
 
         if (action.config.responseType) {
-          switch (action.config.responseType) {
-            case 'file_download': {
-              if (action.config.file) {
-                const now = new Date();
+            switch (action.config.responseType) {
+                case 'file_download': {
+                    if (action.config.file) {
+                        const now = new Date();
 
-                const name = (action.config.file.name) ? action.config.file.name : 'table';
+                        const name = (action.config.file.name) ? action.config.file.name : 'table';
 
-                const fileName = name + '_' + now.toISOString().substring(0, 19) + '.' + action.config.file.extension;
-                const fileType = UtilsService.getFileType(action.config.file.extension);
+                        const fileName = name + '_' + now.toISOString().substring(0, 19) + '.' + action.config.file.extension;
+                        const fileType = UtilsService.getFileType(action.config.file.extension);
 
-                const blob = new Blob([response], {type: fileType});
-                const file = new File([blob], fileName, {type: fileType});
-                FileSaver.saveAs(file);
-                return true;
-              } else {
-                throw Error('File configuration not defined');
-              }
+                        const blob = new Blob([response], { type: fileType });
+                        const file = new File([blob], fileName, { type: fileType });
+                        FileSaver.saveAs(file);
+                        return true;
+                    } else {
+                        throw Error('File configuration not defined');
+                    }
+                }
+                default: {
+                    this._toast.success();
+                    return true;
+                }
             }
-            default: {
-              this._toast.success();
-              return true;
-            }
-          }
         } else {
-          this._toast.success();
-          return true;
+            this._toast.success();
+            return true;
         }
     }
 
