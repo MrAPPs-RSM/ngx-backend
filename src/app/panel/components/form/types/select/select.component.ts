@@ -209,6 +209,17 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
                             queryParams.where = queryParams.where.replace(':id', this._route.params['value'].id);
                         }
                     }
+
+                  const paramsRegex = new RegExp(':[a-zA-Z0-9]+', 'g');
+                  const params = this.endpoint.match(paramsRegex);
+
+                  for (const param of params) {
+                    const formControl = this.getControl(param.substr(1));
+                    if (formControl) {
+                      this.endpoint.replace(param, formControl.value);
+                    }
+                  }
+
                     /** Add lang if not set by setup.json but defined in select*/
                     if (this.field.lang) {
                         let lang: Language = null;
