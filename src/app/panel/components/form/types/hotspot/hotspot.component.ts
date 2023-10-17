@@ -75,9 +75,6 @@ export class HotspotComponent extends BaseInputComponent implements OnInit {
     }
 
     public onDrop($event: any) {
-        console.log('ondrop');
-        console.log($event);
-
         $event.preventDefault();
         const id = $event.dataTransfer.getData('text/plain');
         const index = parseInt(id.split('_')[1], 10);

@@ -282,10 +282,6 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     }
 
     private updateFormValue(file: UploadedFile, remove?: boolean): void {
-        console.log('Updating form Value with file:');
-        console.log(file.id);
-        console.log(remove ? 'Remove' : 'Add');
-
         let files = this.filesList || [];
         if (remove) {
             files = UtilsService.removeObjectFromArray(file, files);

@@ -754,7 +754,6 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
 
     onRowSelect($event: TableSelection) {
         console.log('ON Select row(s)');
-        console.log($event);
     }
 
     onRowDrop($event: any) {
@@ -783,7 +782,6 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
     }
 
     refreshTable() {
-        console.log('refresh table');
         const params = this.composeParams(false, true, true);
         this._state.replaceLastPath = true;
         this._router.navigate([], { queryParams: { listParams: params['filter'] } });

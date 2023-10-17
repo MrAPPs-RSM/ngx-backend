@@ -237,7 +237,5 @@ export class HotspotCanvasComponent extends BaseInputComponent implements OnInit
 
   private patchValueAt(value: {x: number, y: number}, index: number) {
     this.getFormArray().controls[index].patchValue(value);
-
-    console.log(JSON.stringify(this.getFormArray().controls[index].value));
   }
 }

@@ -126,15 +126,12 @@ export class RefreshTokenInterceptor implements HttpInterceptor {
    * @param request
    */
   replaceTokenOn(request: HttpRequest<unknown>): HttpRequest<unknown> {
-    console.log(request);
-
     const url = this._api.updateToken(request.urlWithParams);
     const retval = request.clone({
       setParams: {
         access_token: this._userService.getToken()
       }
     });
-    console.log(retval);
     return retval;
   }
 

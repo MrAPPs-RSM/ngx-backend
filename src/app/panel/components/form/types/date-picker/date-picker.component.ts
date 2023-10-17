@@ -35,7 +35,6 @@ export class DatePickerComponent extends BaseInputComponent implements OnInit, O
             });
         } else {
             this._subscription = this.getControl().valueChanges.pipe(first()).subscribe((value) => {
-                console.log('CIAO: ', value);
                 this.setValue(value);
                 this._subscription.unsubscribe();
             });
@@ -52,10 +51,7 @@ export class DatePickerComponent extends BaseInputComponent implements OnInit, O
 
     setValue(value: any, options?: {emitEvent: boolean}) {
         if (value) {
-            console.log('value: ', value)
             const date = moment(value, 'YYYY-MM-DDTHH:mm:ssZZ').toDate();
-            // const date = new Date(value);
-            console.log('no sub: ', date)
             this.getControl().setValue(date, options);
         } else {
             this.clearValue(options);

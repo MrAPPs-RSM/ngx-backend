@@ -251,8 +251,6 @@ export class TicketDetailPageComponent implements OnInit {
       user_id: this.ticket.user.id
     };
 
-    console.log(payload);
-
     if (this.isCreate) {
       this.ticketService.createTicket(payload).then((res) => {
         // this.ticket.updateModel(res, this.userService.getUser().username);

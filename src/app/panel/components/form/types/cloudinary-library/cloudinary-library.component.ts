@@ -96,9 +96,6 @@ export class CloudinaryLibraryComponent extends BaseInputComponent implements On
     }
 
     removeTag(tag: string) {
-        console.log('Remove tag from media');
-        console.log(tag);
-
         const index = this.activeMedia.tags.indexOf(tag);
         if (index > -1) {
             this.activeMedia.tags.splice(index, 1);

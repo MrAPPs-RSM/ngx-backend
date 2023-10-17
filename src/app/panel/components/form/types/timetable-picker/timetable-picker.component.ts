@@ -50,7 +50,6 @@ export class TimetablePickerComponent extends BaseInputComponent implements OnIn
 
             if (this.isSubField) {
                 this._subFieldSubscription = this.getControl().parent.valueChanges.subscribe((value) => {
-                    console.log(value);
                     if (value && value[this.field.key]) {
                         this.subForm.patchValue(value[this.field.key], {emitEvent: false});
                         this._subFieldSubscription.unsubscribe();
@@ -129,7 +128,6 @@ export class TimetablePickerComponent extends BaseInputComponent implements OnIn
     }
 
     private updateControlValue(value: any): void {
-      console.log(value);
       Object.keys(value).forEach((key) => {
         if (value[key] && (value[key].length === 4 || value[key].length === 5)) {
           if (value[key].length === 4) {

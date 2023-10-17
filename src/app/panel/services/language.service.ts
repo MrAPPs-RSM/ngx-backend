@@ -77,11 +77,6 @@ export class LanguageService {
 
     public getCurrentLang(): Language {
         return this.backendLanguages.find((e: Language) => e.isoCode === environment['currentLang']);
-        console.log('EEEEEE => ' + environment['currentLang']);
-        if (this.isMultiLang()) {
-            return JSON.parse(localStorage.getItem('lang'));
-        }
-        return null;
     }
 
     public getBackendLanguages(): Language[] {

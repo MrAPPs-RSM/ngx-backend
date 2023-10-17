@@ -36,28 +36,22 @@ export class SetupService {
   }
 
   public setup(): Observable<any> {
-    console.log('CALLING SETUP');
     const promise = new Promise<any>((resolve, reject) => {
 
       if (this._lastRouteLoading == null || Date.now() - this._lastRouteLoading.getMilliseconds() < 10000) {
         this._apiService.setup()
           .then((data) => {
-            console.log('SETUP OK');
             this._lastRouteLoading = new Date();
 
             if ('contentLanguages' in data) {
               this._languageService.setContentLanguages(data['contentLanguages']);
             }
 
-            console.log('Before calling loadRoutes');
             this.loadRoutes(data);
-            console.log('Before calling prepareMenu');
             this._menuService.prepareMenu(data);
-            console.log('Before calling resolve()');
             resolve();
          })
           .catch((error) => {
-            console.log('SETUP KO');
             this._lastRouteLoading = null;
             reject();
           });

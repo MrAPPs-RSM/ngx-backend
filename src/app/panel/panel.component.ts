@@ -71,7 +71,6 @@ export class PanelComponent implements OnInit, AfterViewInit {
         }
 
         (routerConfig as any).every((item: Route) => {
-            console.log(item);
             if (item.path === 'panel') {
                 (item.children as any).every((child) => {
                     if ('data' in child && 'isHomePage' in child.data && child.data['isHomePage']) {

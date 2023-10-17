@@ -189,7 +189,6 @@ export class Select2Component extends BaseInputComponent implements OnInit, OnDe
             if (endpoint.indexOf('?') !== -1) {
                 const queryParams = endpoint.split('?')[1];
                 if (queryParams.indexOf('where') !== -1) {
-                    console.log(queryParams.split('where=')[1]);
                     filter = JSON.parse(queryParams.split('where=')[1]);
                 }
                 if (filter) {

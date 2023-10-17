@@ -45,8 +45,6 @@ export class FileUploaderComponent implements OnInit, OnChanges {
 
   public onUploadOutput(output: UploadOutput): void {
 
-    console.log(output);
-
     if (output.type === 'allAddedToQueue') {
       this.startUpload();
     } else if (output.type === 'addedToQueue' && typeof output.file !== 'undefined') {
@@ -69,10 +67,7 @@ export class FileUploaderComponent implements OnInit, OnChanges {
     } else if (output.type === 'drop') {
       this.dragOver = false;
     } else if (output.type === 'rejected' && typeof output.file !== 'undefined') {
-      console.log(output.file.name + ' rejected');
     }
-
-    console.log(this.files);
   }
 
   private startUpload(): void {
@@ -86,8 +81,6 @@ export class FileUploaderComponent implements OnInit, OnChanges {
   }
 
   private handleResponse(response: any, statusCode: number): void {
-    console.log('[HANDLE RESPONSE]');
-    console.log(response);
     if (response) {
       this.response.emit(response);
     }

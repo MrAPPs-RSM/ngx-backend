@@ -58,7 +58,6 @@ export class ApiService {
      * @param endpoint
      */
     public updateToken(endpoint: string): string {
-      console.log(endpoint);
       let [url, qs] = endpoint.split('?');
       url = url.replace(API_URL, '');
 
