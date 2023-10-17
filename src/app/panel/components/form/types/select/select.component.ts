@@ -5,7 +5,7 @@ import { FormFieldSelect } from '../../interfaces/form-field-select';
 import { BaseInputComponent } from '../base-input/base-input.component';
 import { Subject, Subscription } from 'rxjs';
 import { Language, LanguageService } from '../../../../services/language.service';
-import { first, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 
 @Component({
     selector: 'app-select',
@@ -44,82 +44,84 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
     }
 
     ngOnInit() {
-        if (this.field.search && this.field.search.endpoint) {
-            this.typeListener();
+      if (this.field.search && this.field.search.endpoint) {
+        this.typeListener();
 
-            this._valueChangesSubscription = this.getControl().valueChanges.subscribe(() => {
-                const value = this.getControl().value;
-                if (value) {
-                    this.options = [value];
-                    this.selected = value;
-                }
-                this._valueChangesSubscription.unsubscribe();
-            });
-        }
+        this._valueChangesSubscription = this.getControl().valueChanges.subscribe(() => {
+          const value = this.getControl().value;
+          if (value) {
+            this.options = [value];
+            this.selected = value;
+          }
+          this._valueChangesSubscription.unsubscribe();
+        });
+      }
 
-        this.selected = this.field.multiple === true ? [] : null;
+      this.selected = this.field.multiple === true ? [] : null;
+      this.addQueryParams();
 
-        this.addQueryParams();
-        this.loadOptions().then(() => {
-            if (!this.isEdit || !this.isSubField) {
-                this.listenValueChange();
-            } else if (this.isSubField) {
-                this.getControl().updateValueAndValidity();
-                if (this.getControl().value !== null && typeof this.getControl().value !== 'undefined') {
-                    this.updateSelectedOptions(this.getControl().value);
-                } else {
-                    this._subFieldSubscription = this.getControl().parent.valueChanges.subscribe((value) => {
-                        if (value && value[this.field.key]) {
-                            this.updateSelectedOptions(value[this.field.key]);
-                            this._subFieldSubscription.unsubscribe();
-                        }
-                    });
-                }
-            }
-        }).catch((err) => console.log(err));
-
+      setTimeout(() => {
         // For some reason, sometimes this.field.dependsOn was of type Subject, causing errors
         if (this.field.dependsOn && typeof this.field.dependsOn !== 'object') {
-            const key = Array.isArray(this.field.dependsOn) ? this.field.dependsOn[0] : this.field.dependsOn;
-            if (this.getControl(key)) {
-                this._dependsSubscription = this.getControl(key).valueChanges.subscribe((value) => {
-                    let keyNotSet = true;
-                    const indexesToDelete: number[] = [];
+          const key = Array.isArray(this.field.dependsOn) ? this.field.dependsOn[0] : this.field.dependsOn;
+          if (this.getControl(key)) {
+            this._dependsSubscription = this.getControl(key).valueChanges.subscribe((value) => {
+              let keyNotSet = true;
+              const indexesToDelete: number[] = [];
 
-                    this.params.where.and.forEach((cond, index) => {
-                        if (Object.keys(cond)[0] === key) { // update if already set
-                            if (value && value !== '') {
-                                cond[key] = value;
-                            } else {
-                                indexesToDelete.push(index);
-                            }
-                            keyNotSet = keyNotSet && false;
-                        }
-                    });
-                    if (keyNotSet) {
-                        if (value && value !== '') {
-                            const condition = {};
-                            condition[key] = value;
-                            this.params.where.and.push(condition);
-                        }
-                    }
-                    if (indexesToDelete.length > 0) {
-                        indexesToDelete.forEach((index) => {
-                            this.params.where.and.splice(index, 1);
-                        });
-                    }
-
-                    this.loadOptions(true)
-                        .then(() => {
-                            this.checkSelection();
-                            this.updateSelectedOptions(this.getControl().value);
-                        })
-                        .catch((error) => {
-                            console.log(error);
-                        });
+              this.params.where.and.forEach((cond, index) => {
+                if (Object.keys(cond)[0] === key) { // update if already set
+                  if (value && value !== '') {
+                    cond[key] = value;
+                  } else {
+                    indexesToDelete.push(index);
+                  }
+                  keyNotSet = keyNotSet && false;
+                }
+              });
+              if (keyNotSet) {
+                if (value && value !== '') {
+                  const condition = {};
+                  condition[key] = value;
+                  this.params.where.and.push(condition);
+                }
+              }
+              if (indexesToDelete.length > 0) {
+                indexesToDelete.forEach((index) => {
+                  this.params.where.and.splice(index, 1);
                 });
+              }
+
+              this.loadOptions(true)
+                .then(() => {
+                  this.checkSelection();
+                  this.updateSelectedOptions(this.getControl().value);
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+            });
+          }
+        } else {
+          this.loadOptions().then(() => {
+            if (!this.isEdit || !this.isSubField) {
+              this.listenValueChange();
+            } else if (this.isSubField) {
+              this.getControl().updateValueAndValidity();
+              if (this.getControl().value !== null && typeof this.getControl().value !== 'undefined') {
+                this.updateSelectedOptions(this.getControl().value);
+              } else {
+                this._subFieldSubscription = this.getControl().parent.valueChanges.subscribe((value) => {
+                  if (value && value[this.field.key]) {
+                    this.updateSelectedOptions(value[this.field.key]);
+                    this._subFieldSubscription.unsubscribe();
+                  }
+                });
+              }
             }
+          }).catch((err) => console.log(err));
         }
+      }, 500);
     }
 
     /* When type in select */
