@@ -7,24 +7,24 @@ import {Column} from "../../../lib/data-set/column";
 @Component({
     selector: '[ng2-st-thead-titles-row]',
     template: `
-        <th ng2-st-drag-title *ngIf="isDragEnabled"></th>
+        <th ng2-st-drag-title *ngIf="isDragEnabled" [ngStyle]="{'width': column?.width}"></th>
         <th ng2-st-checkbox-select-all *ngIf="isMultiSelectVisible"
             [grid]="grid"
             [source]="source"
             [isAllSelected]="isAllSelected"
-            (click)="selectAllRows.emit($event)">
+            (click)="selectAllRows.emit($event)" [ngStyle]="{'width': column?.width}">
         </th>
-        <th *ngFor="let column of grid.getVisibleColumns()" class="ng2-smart-th {{ column.id }}"
+        <th *ngFor="let column of grid.getVisibleColumns()" class="ng2-smart-th {{ column.id }}" [ngStyle]="{'width': column?.width}"
             [ngClass]="column.class">
             <ng2-st-column-title
                     [activeSort]="getActiveSort(column)"
                     [source]="source"
                     [column]="column"
                     (sort)="sort.emit($event)"
-                    [ngStyle]="{'width':column.width,'display':'inline-block'}">
+                   >
             </ng2-st-column-title>
         </th>
-        <th ng2-st-actions-title *ngIf="showActionsColumn" [grid]="grid"></th>
+        <th ng2-st-actions-title *ngIf="showActionsColumn" [grid]="grid" [ngStyle]="{'width': column?.width}"></th>
     `,
 })
 export class TheadTitlesRowComponent implements OnChanges {

@@ -1,4 +1,4 @@
-@import '../../../../assets/sass/partials/imports';
+@import "../../../../assets/sass/partials/imports";
 
 :host {
   font-size: 14px;
@@ -19,6 +19,26 @@
     }
 
     table {
+      th,
+      td {
+        &.left {
+          text-align: start;
+        }
+        &.right {
+          text-align: end;
+        }
+        &.center {
+          text-align: center;
+        }
+        > * {
+          div {
+
+            text-wrap: wrap;
+            word-break: break-word;
+          }
+        }
+      }
+
       margin: 0;
       border-collapse: separate;
       border: 1px solid $lightGrey;
@@ -77,7 +97,8 @@
                         min-height: 40px;
                         font-weight: $light;
 
-                        div.ng-input, div.ng-placeholder {
+                        div.ng-input,
+                        div.ng-placeholder {
                           top: 8px;
                         }
                       }
