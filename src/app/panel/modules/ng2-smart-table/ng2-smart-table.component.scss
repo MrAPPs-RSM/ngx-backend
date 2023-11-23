@@ -30,11 +30,12 @@
         &.center {
           text-align: center;
         }
-        > * {
-          div {
-
-            text-wrap: wrap;
-            word-break: break-word;
+        &.col-mod {
+          > * {
+            div {
+              text-wrap: wrap;
+              word-break: break-word;
+            }
           }
         }
       }

@@ -17,7 +17,7 @@
         </label>
     </td>
 
-    <td *ngFor="let cell of row.cells,let i = index" [ngClass]="cell?.column?.settings?.textAlign">
+    <td *ngFor="let cell of row.cells,let i = index" [ngClass]="setClasses(cell)">
 
         <ng2-smart-table-cell [cell]="cell"
                               [grid]="grid"

@@ -78,4 +78,8 @@ export class Ng2SmartTableTbodyComponent implements OnChanges {
 
         return bgColor;
     }
+
+    setClasses(cell: any) {
+      return (cell?.column?.settings?.textAlign ?? '') + ' ' + (cell?.column?.settings?.width ? 'col-mod' : '')
+    }
 }
