@@ -215,11 +215,13 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
                     const paramsRegex = new RegExp(':[a-zA-Z0-9]+', 'g');
                     const params = this.endpoint.match(paramsRegex);
 
-                    for (const param of params) {
+                    if (params) {
+                      for (const param of params ?? []) {
                         const formControl = this.getControl(param.substring(1));
                         if (formControl) {
                             this.endpoint = this.endpoint.replace(param, formControl.value);
                         }
+                    }
                     }
 
                     /** Add lang if not set by setup.json but defined in select*/
