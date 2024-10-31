@@ -1,34 +1,34 @@
-import { Language } from "../panel/services/language.service"
+import { Language } from '../panel/services/language.service';
 
-export type EnvAPI = {
+export interface EnvAPI {
     baseUrl: string;
     setupEndpoint: string;
     baseFilesUrl?: string;
 }
 
-export type Field = {
+export interface Field {
     key: string;
     type: string;
     label: string;
     placeholder?: string;
     validators?: {
         required: boolean;
-    }
+    };
 }
 
-export type FieldType = {
+export interface FieldType {
     [name: string]: Array<Field>;
 }
 
-export type Button = {
+export interface Button {
     class: string;
     content: string;
     config: {
         path: string;
-    }
+    };
 }
 
-export type LoginForm = {
+export interface LoginForm {
     title: string;
     class: string;
     fields: FieldType;
@@ -39,13 +39,13 @@ export type LoginForm = {
     isLoginForm: boolean;
 }
 
-export type AuthLogin = {
+export interface AuthLogin {
     endpoint: string;
     form: LoginForm;
     passwordResetEndpoint?: string;
 }
 
-export type EnvAuth = {
+export interface EnvAuth {
     passwordChange?: {
         endpoint: string;
         form: {
@@ -84,6 +84,7 @@ export type EnvAuth = {
 }
 
 export interface Environment {
+    version: number|null;
     production: boolean;
     name: string;
     logo: boolean;

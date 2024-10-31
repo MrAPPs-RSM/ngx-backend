@@ -1,6 +1,9 @@
 import {FormSettings} from '../../panel/components/form/interfaces/form-settings';
 import {Language, LanguageService} from '../../panel/services/language.service';
 import {formConfig} from '../../panel/components/form/form.config';
+import { environment } from '../../../environments/environment';
+
+
 
 export default class RequestProcessor {
   constructor(protected settings: FormSettings, protected _languageService: LanguageService) {}
@@ -50,6 +53,8 @@ export default class RequestProcessor {
         }, fileKeys);
     }
 
+    const languages = [];
+
     for (const langKey of keysToCheck) {
       if (langKey !== 'base' && !rawValues[langKey]) {
         continue;
@@ -62,10 +67,20 @@ export default class RequestProcessor {
       const fixed = this.filterValues(fileKeys, ref);
 
       if (langKey !== 'base') {
-        rawValues[langKey] = {...fixed};
+        if (environment.version >= 2) {
+          const language = {language: langKey, ...fixed};
+          languages.push(language);
+          delete rawValues[langKey];
+        } else {
+          rawValues[langKey] = {...fixed};
+        }
       } else {
         rawValues = {...rawValues, ...fixed};
       }
+    }
+
+    if (environment.version >= 2) {
+      rawValues['languages'] = languages;
     }
 
     return rawValues;

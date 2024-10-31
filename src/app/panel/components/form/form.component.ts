@@ -24,6 +24,7 @@ import RequestProcessor from '../../../strategies/form/RequestProcessor';
 import {BaseLongPollingComponent} from '../base-long-polling/base-long-polling.component';
 import {CopyLangHelperService} from './copy-lang-chooser/copy-lang-helper.service';
 
+
 @Component({
     selector: 'app-form',
     templateUrl: './form.component.html',
