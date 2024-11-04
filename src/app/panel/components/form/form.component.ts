@@ -217,13 +217,26 @@ export class FormComponent extends BaseLongPollingComponent implements OnInit, O
             .then((response) => {
                 this.isLoading = false;
                 this.processor.syncResponse(response);
-                this.form.patchValue(response);
+                this.form.patchValue(this.remapFormResponse(response));
             })
             .catch((response: ErrorResponse) => {
                 this.isLoading = false;
                 this.response.emit((response));
             });
 
+    }
+
+    private remapFormResponse(response: any): any {
+      if ('languages' in response) {
+        response.languages.forEach((language) => {
+          response[language.language] = language;
+        });
+
+        delete response.languages;
+      }
+
+      console.log(response);
+      return response;
     }
 
     onCancel(): void {
