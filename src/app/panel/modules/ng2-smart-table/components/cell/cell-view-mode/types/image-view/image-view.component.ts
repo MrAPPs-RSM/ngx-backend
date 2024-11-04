@@ -22,7 +22,7 @@ export class ImageViewComponent implements OnInit {
     @Input() cell: Cell;
 
     renderValue: string;
-    isDownloadable: boolean = true;
+    isDownloadable = true;
     private count: number;
 
     ngOnInit() {
@@ -37,8 +37,12 @@ export class ImageViewComponent implements OnInit {
                     this.renderValue = value;
                 }
             } else {
-                // Google Cloud Storage File
-                this.renderValue = value.thumbnails.small;
+                if ('thumbnails' in value) {
+                  // Google Cloud Storage File
+                  this.renderValue = value.thumbnails.small;
+                } else {
+                  this.renderValue = value.url ?? '';
+                }
             }
         } else {
             this.renderValue = environment.assets.imageError;
