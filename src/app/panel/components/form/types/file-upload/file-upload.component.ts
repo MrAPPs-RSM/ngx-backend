@@ -1,5 +1,5 @@
 import {
-    Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Renderer2, ViewChild,
+    Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, ViewChild,
     ViewEncapsulation
 } from '@angular/core';
 import {
@@ -12,7 +12,7 @@ import { UtilsService } from '../../../../../services/utils.service';
 import { BaseInputComponent } from '../base-input/base-input.component';
 import { ToastsService } from '../../../../../services/toasts.service';
 import { Subscription } from 'rxjs';
-import { Language, LanguageService } from '../../../../services/language.service';
+import { Language } from '../../../../services/language.service';
 import { DragulaService } from 'ng2-dragula';
 import { ActivatedRoute } from '@angular/router';
 import { environment } from '../../../../../../environments/environment';
@@ -59,12 +59,11 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     private _subscription = Subscription.EMPTY;
     private _routeSubscription = Subscription.EMPTY;
 
-    constructor(private _renderer: Renderer2,
+    constructor(
         private _route: ActivatedRoute,
         private _toastsService: ToastsService,
         private _copyLangHelper: CopyLangHelperService,
         private _apiService: ApiService,
-        public _langService: LanguageService,
         private _dragulaService: DragulaService) {
         super();
     }
@@ -111,7 +110,8 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         : [data];
 
       this.filesList = d.filter(e => !! e);
-      this.getControl().setValue(this.filesList.length > 0 ? this.filesList : null, {emitEvent: false});
+
+      this.getControl().setValue(this.filesList.length > 0 ? (environment.version && environment.version >= 2 && this.maxFiles === 1 ? this.filesList[0] : this.filesList) : null, {emitEvent: false});
     }
 
 
@@ -245,7 +245,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
     private removeFile(file: UploadFile): void {
 
       if (this._fileUpload.nativeElement.files.length === 1) {
-        this._fileUpload.nativeElement.value = "";
+        this._fileUpload.nativeElement.value = '';
         this.uploadInput.emit({type: 'removeAll'});
       } else {
         this.uploadInput.emit({type: 'remove', file});
@@ -256,7 +256,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         this.files.forEach((file) => {
             this.removeFile(file);
         });
-        this._fileUpload.nativeElement.value = "";
+        this._fileUpload.nativeElement.value = '';
     }
 
     private handleResponse(file: UploadFile): void {
@@ -308,7 +308,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
                                 const unique = UtilsService.uniqueArray(currentValue, 'id');
 
                                 this.form.parent.controls[key].controls[this.field.key].setValue(
-                                    unique.length > 0 ? unique : null
+                                    unique.length > 0 ? (environment.version && environment.version >= 2 && this.maxFiles === 1 ? unique[0] : unique) : null
                                 );
                             }
                         });
@@ -316,7 +316,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
                 });
             }
         } else {
-            this.getControl().setValue(files.length > 0 ? files : null);
+            this.getControl().setValue(files.length > 0 ? (environment.version && environment.version >= 2 && this.maxFiles === 1 ? files[0] : files) : null);
         }
     }
 
