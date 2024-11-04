@@ -67,7 +67,7 @@ export default class RequestProcessor {
       const fixed = this.filterValues(fileKeys, ref);
 
       if (langKey !== 'base') {
-        if (environment.version >= 2) {
+        if (environment.version && environment.version >= 2) {
           const language = {language: langKey, ...fixed};
           languages.push(language);
           delete rawValues[langKey];
@@ -79,7 +79,7 @@ export default class RequestProcessor {
       }
     }
 
-    if (environment.version >= 2) {
+    if (environment.version && environment.version >= 2) {
       rawValues['languages'] = languages;
     }
 
