@@ -42,15 +42,17 @@ export default class RequestProcessor {
         continue;
       }
 
-      /**
-       * Accumulate all keys of file field type
-       */
-      fileKeys = this.settings.fields[langKey]
-        .reduce((acc: [], field: any) => {
-          return field.type === formConfig.types.FILE
-            ? [...acc, field.key]
-            : acc;
-        }, fileKeys);
+      if (!environment || environment.version < 2) {
+        /**
+         * Accumulate all keys of file field type
+         */
+        fileKeys = this.settings.fields[langKey]
+          .reduce((acc: [], field: any) => {
+            return field.type === formConfig.types.FILE
+              ? [...acc, field.key]
+              : acc;
+          }, fileKeys);
+      }
     }
 
     const languages = [];
