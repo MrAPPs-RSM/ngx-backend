@@ -235,7 +235,6 @@ export class FormComponent extends BaseLongPollingComponent implements OnInit, O
         delete response.languages;
       }
 
-      console.log(response);
       return response;
     }
 
