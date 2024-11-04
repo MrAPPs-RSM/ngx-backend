@@ -5,7 +5,6 @@ import { ModalService } from '../../services/modal.service';
 import { TableFilter } from '../../modules/ng2-smart-table/lib/data-filters/table-filter';
 import { TableSort } from '../../modules/ng2-smart-table/lib/data-filters/table-sort';
 import { TablePagination } from '../../modules/ng2-smart-table/lib/data-filters/table-pagination';
-import { TableSelection } from '../../modules/ng2-smart-table/lib/data-filters/table-selection';
 import { TableActiveFilters } from '../../modules/ng2-smart-table/lib/data-filters/table-active-filters';
 import { TableDrop } from '../../modules/ng2-smart-table/lib/data-filters/table-drop';
 import { Association, TableAction } from './interfaces/table-action';
@@ -68,6 +67,11 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
         super(_apiService);
     }
 
+  private extractKey(input: string): string | null {
+    const match = input.match(/filter\[(\w+)]/);
+    return match ? match[1] : null;
+  }
+
     ngOnInit() {
         this.translateLabels();
         this.resetPagination = false;
@@ -85,6 +89,15 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
             if (params) {
               if (environment.version && environment.version >= 2) {
                 this.filter = UtilsService.mergeDeep(this.filter, params);
+               const keys = Object.keys(this.filter);
+               keys.forEach((key) => {
+                    const filterKey = this.extractKey(key);
+                    if (filterKey) {
+                      this.filter[filterKey] = this.filter[key];
+                      delete this.filter[key];
+                    }
+               });
+
               } else {
                 if (params['listParams']) {
                   const queryParamsFilter = JSON.parse(params['listParams']);
@@ -287,7 +300,7 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
         return endpoint;
     }
 
-    private composeParams(countParams?: boolean, queryParams?: boolean, addInclude?: boolean, apiCall: boolean = true): Object {
+    private composeParams(countParams?: boolean, queryParams?: boolean, addInclude?: boolean): Object {
       if (countParams === null) {
         countParams = false;
       }
@@ -802,10 +815,6 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
         this.parseAction(this.settings.actions.add);
     }
 
-    onRowSelect($event: TableSelection) {
-        console.log('ON Select row(s)');
-    }
-
     onRowDrop($event: any) {
         const dragDropSettings: TableDrop = {
             data: $event.data,
@@ -832,7 +841,7 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
     }
 
     refreshTable() {
-        const params = this.composeParams(false, true, true, false);
+        const params = this.composeParams(false, true, true);
         this._state.replaceLastPath = true;
         let queryParams = {};
         if (environment.version && environment.version >= 2) {
