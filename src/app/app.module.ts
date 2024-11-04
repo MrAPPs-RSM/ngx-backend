@@ -111,7 +111,7 @@ const routes: Routes = [
         DomainNotFoundComponent
     ]
 })
-  
+
 export class AppModule {
 
     constructor(private _router: Router) {

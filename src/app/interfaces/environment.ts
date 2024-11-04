@@ -84,7 +84,7 @@ export interface EnvAuth {
 }
 
 export interface Environment {
-    version: number|null;
+    version?: number;
     production: boolean;
     name: string;
     logo: boolean;

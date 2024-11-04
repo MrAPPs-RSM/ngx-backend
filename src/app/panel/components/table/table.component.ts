@@ -19,6 +19,7 @@ import { Subscription } from 'rxjs';
 import { GlobalState } from '../../../global.state';
 import { isArray } from 'lodash';
 import { BaseLongPollingComponent } from '../base-long-polling/base-long-polling.component';
+import { environment } from '../../../../environments/environment';
 
 @Component({
     selector: 'app-table',
@@ -81,14 +82,21 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
                 this.filter = this.settings.api.filter;
             }
 
-            if (params && params['listParams']) {
-                const queryParamsFilter = JSON.parse(this._route.snapshot.queryParams['listParams']);
+            if (params) {
+              if (environment.version && environment.version >= 2) {
+                this.filter = UtilsService.mergeDeep(this.filter, params);
+              } else {
+                if (params['listParams']) {
+                  const queryParamsFilter = JSON.parse(params['listParams']);
 
-                this.filter = UtilsService.mergeDeep(this.filter, queryParamsFilter);
+                  this.filter = UtilsService.mergeDeep(this.filter, queryParamsFilter);
+                }
+              }
 
-                this.activeFilters.pagination.perPage = 'limit' in queryParamsFilter ? queryParamsFilter['limit'] : this.preparePerPage();
-                this.activeFilters.pagination.page = 'skip' in queryParamsFilter ?
-                    queryParamsFilter['skip'] / this.activeFilters.pagination.perPage + 1 : 1;
+              this.activeFilters.pagination.perPage = 'limit' in this.filter
+                ? this.filter['limit'] : this.preparePerPage();
+              this.activeFilters.pagination.page = 'skip' in this.filter ?
+                this.filter['skip'] / this.activeFilters.pagination.perPage + 1 : 1;
             }
 
             this.activeFilters.filter = this.filter;
@@ -279,147 +287,182 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
         return endpoint;
     }
 
-    private composeParams(countParams?: boolean, queryParams?: boolean, addInclude?: boolean): Object {
-        if (countParams === null) {
-            countParams = false;
-        }
+    private composeParams(countParams?: boolean, queryParams?: boolean, addInclude?: boolean, apiCall: boolean = true): Object {
+      if (countParams === null) {
+        countParams = false;
+      }
 
-        const params: any = countParams ?
-            {
-                where: {
-                    and: []
-                },
-            } :
-            {
-                where: {
-                    and: []
-                },
-                order: null,
-                skip: 0,
-                limit: this.preparePerPage(),
-            };
-
-        if (!countParams) {
-            /** Pagination */
-            if (this.activeFilters.pagination) {
-                params.limit = this.activeFilters.pagination.perPage;
-                params.skip = (this.activeFilters.pagination.page - 1) * params.limit;
-            }
-
-            /** Sort (if drag enabled, always sort by weight ascending) */
-            if (this.settings.drag) {
-                params.order = this.settings.drag.sortField ? this.settings.drag.sortField : this.DEFAULTS.drag.sortField;
-                params.order += ' ASC';
-            } else {
-                if (this.filter.order && this.filter.order.length > 0) {
-                    let order = '';
-                    for (let i = 0; i < this.filter.order.length; i++) {
-                        const sort = this.filter.order[i];
-                        order += (order.length > 0 ? ', ' : '') + sort.field + ' ' + sort.direction.toUpperCase();
-                    }
-                    params.order = order;
-                }
-            }
-        }
-
-        /** Filters */
-        if (this.filter && !queryParams) {
-
-            if (this.filter.where) {
-
-                if ('and' in this.filter.where) {
-
-                    this.filter.where['and'].forEach((object) => {
-                        const condition = {};
-                        const key = Object.keys(object)[0];
-                        if (this.settings.columns[key]) {
-                            switch (this.settings.columns[key].type) {
-                                case 'boolean': {
-                                    condition[key] = object[key];
-                                }
-                                    break;
-                                case 'date': {
-                                    condition[key] = {
-                                        between: [object[key].from, object[key].to]
-                                    };
-                                }
-                                    break;
-                                default: {
-                                    condition[key] = {
-                                        like: '%' + object[key] + '%'
-                                    };
-                                }
-                                    break;
-                            }
-                        } else {
-                            condition[key] = object[key];
-                        }
-                        params.where.and.push(condition);
-                    });
-
-                } else {
-                    Object.keys(this.filter.where).forEach((key) => {
-                        const condition = {};
-                        if (this.settings.columns[key]) {
-                            switch (this.settings.columns[key].type) {
-                                case 'boolean': {
-                                    condition[key] = this.filter.where[key];
-                                }
-                                    break;
-                                case 'date': {
-                                    condition[key] = {
-                                        between: [this.filter.where[key].from, this.filter.where[key].to]
-                                    };
-                                }
-                                    break;
-                                default: {
-                                    condition[key] = {
-                                        like: '%' + this.filter.where[key] + '%'
-                                    };
-                                }
-                                    break;
-                            }
-                        } else {
-                            condition[key] = this.filter.where[key];
-                        }
-                        params.where.and.push(condition);
-                    });
-                }
-
-                if (this.resetPagination && !countParams) {
-                    this.resetPagination = false;
-                    params.skip = 0; // reset pagination if filters
-                }
-            }
-
-            if (this.filter.include) {
-                params['include'] = this.filter.include;
-            }
-        }
-
-        if (addInclude) {
-            if (this.filter.include && !params['include']) {
-                params['include'] = this.filter.include;
-            }
-        }
-
-        if (queryParams) {
-            params.where = this.filter.where;
-        }
-
-        const response = {
-            filter: JSON.stringify(params),
-            lang: null
+      const params: any = countParams ?
+        {
+          where: {
+            and: []
+          },
+        } :
+        {
+          where: {
+            and: []
+          },
+          order: null,
+          skip: 0,
+          limit: this.preparePerPage(),
         };
 
-        /** Lang, if enabled */
-        if (this.currentLang) {
-            response.lang = this.currentLang.isoCode;
-        } else {
-            delete response.lang;
+      if (!countParams) {
+        /** Pagination */
+        if (this.activeFilters.pagination) {
+          params.limit = this.activeFilters.pagination.perPage;
+          params.skip = (this.activeFilters.pagination.page - 1) * params.limit;
         }
 
-        return response;
+        /** Sort (if drag enabled, always sort by weight ascending) */
+        if (this.settings.drag) {
+          params.order = this.settings.drag.sortField ? this.settings.drag.sortField : this.DEFAULTS.drag.sortField;
+          params.order += ' ASC';
+        } else {
+          if (this.filter.order && this.filter.order.length > 0) {
+            let order = '';
+            for (let i = 0; i < this.filter.order.length; i++) {
+              const sort = this.filter.order[i];
+              order += (order.length > 0 ? ', ' : '') + sort.field + ' ' + sort.direction.toUpperCase();
+            }
+            params.order = order;
+          }
+        }
+      }
+
+      /** Filters */
+      if (this.filter && !queryParams) {
+
+        if (this.filter.where && !environment.version || environment.version < 2) {
+
+          if ('and' in this.filter.where) {
+
+            this.filter.where['and'].forEach((object) => {
+              const condition = {};
+              const key = Object.keys(object)[0];
+              if (this.settings.columns[key]) {
+                switch (this.settings.columns[key].type) {
+                  case 'boolean': {
+                    condition[key] = object[key];
+                  }
+                    break;
+                  case 'date': {
+                    condition[key] = {
+                      between: [object[key].from, object[key].to]
+                    };
+                  }
+                    break;
+                  default: {
+                    condition[key] = {
+                      like: '%' + object[key] + '%'
+                    };
+                  }
+                    break;
+                }
+              } else {
+                condition[key] = object[key];
+              }
+              params.where.and.push(condition);
+            });
+
+          } else {
+            Object.keys(this.filter.where).forEach((key) => {
+              const condition = {};
+              if (this.settings.columns[key]) {
+                switch (this.settings.columns[key].type) {
+                  case 'boolean': {
+                    condition[key] = this.filter.where[key];
+                  }
+                    break;
+                  case 'date': {
+                    condition[key] = {
+                      between: [this.filter.where[key].from, this.filter.where[key].to]
+                    };
+                  }
+                    break;
+                  default: {
+                    condition[key] = {
+                      like: '%' + this.filter.where[key] + '%'
+                    };
+                  }
+                    break;
+                }
+              } else {
+                condition[key] = this.filter.where[key];
+              }
+              params.where.and.push(condition);
+            });
+          }
+
+          if (this.resetPagination && !countParams) {
+            this.resetPagination = false;
+            params.skip = 0; // reset pagination if filters
+          }
+        }
+
+        if (this.filter.include) {
+          params['include'] = this.filter.include;
+        }
+      }
+
+      if (addInclude) {
+        if (this.filter.include && !params['include']) {
+          params['include'] = this.filter.include;
+        }
+      }
+
+      if (queryParams) {
+        params.where = this.filter.where;
+      }
+
+      const response = {};
+
+      if (environment.version && environment.version >= 2) {
+
+        if (this.filter.where) {
+          if ('and' in this.filter.where) {
+            this.filter.where.and.forEach((filter) => {
+              const keys = Object.keys(filter);
+              if (keys.length > 0) {
+                const key = keys[0];
+                let value: string = filter.key;
+
+                if (this.settings.columns[key]) {
+                  switch (this.settings.columns[key].type) {
+                    case 'date': {
+                      value = 'from' in filter[key]
+                        ? `${filter[key].from},${filter[key].from}`
+                        : filter[key];
+                      break;
+                    }
+                  }
+                }
+                response[`filter[${key}]`] = value;
+              }
+            });
+            delete this.filter.where.and;
+          }
+
+          Object.keys(this.filter.where).forEach((key) => {
+            response[`filter[${key}]`] = this.filter.where[key];
+          });
+        }
+
+        response['order'] = params.order;
+        response['skip'] = params.skip;
+        response['limit'] = params.limit;
+
+        console.log(response);
+      } else {
+        response['filter'] = JSON.stringify(params);
+      }
+
+      /** Lang, if enabled */
+      if (this.currentLang) {
+        response['lang'] = this.currentLang.isoCode;
+      }
+
+      return response;
     }
 
     private composeCountParams(): Object {
@@ -496,7 +539,14 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
                             );
                         }
 
-                        extraParams = { queryParams: { listParams: updatedFilter } };
+                        let queryParams = {};
+                      if (environment.version && environment.version >= 2) {
+                        queryParams = updatedFilter;
+                      } else {
+                        queryParams['listParams'] = updatedFilter;
+                      }
+
+                        extraParams = { queryParams };
                     } else if (action.config.params.loadData) {
                         extraParams = {
                             queryParams: {
@@ -782,9 +832,15 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
     }
 
     refreshTable() {
-        const params = this.composeParams(false, true, true);
+        const params = this.composeParams(false, true, true, false);
         this._state.replaceLastPath = true;
-        this._router.navigate([], { queryParams: { listParams: params['filter'] } });
+        let queryParams = {};
+        if (environment.version && environment.version >= 2) {
+          queryParams = params;
+        } else {
+          queryParams['listParams'] = params['filter'];
+        }
+        this._router.navigate([], { queryParams });
     }
 
     onFilter(filter: TableFilter) {
