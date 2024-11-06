@@ -15,7 +15,7 @@ import { ModalService } from '../../services/modal.service';
 import { ApiService, ErrorResponse } from '../../../api/api.service';
 import { FormSettings } from './interfaces/form-settings';
 import { FormButton } from './interfaces/form-button';
-import { Language, LanguageService } from '../../services/language.service';
+import { LanguageService } from '../../services/language.service';
 import { Subscription, Observable } from 'rxjs';
 import { Location } from '@angular/common';
 import ErrorBag from '../../../strategies/form/ErrorBag';

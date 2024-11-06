@@ -81,7 +81,7 @@ export default class RequestProcessor {
       }
     }
 
-    if (environment.version && environment.version >= 2) {
+    if (environment.version && environment.version >= 2 && languages.length > 0) {
       rawValues['languages'] = languages;
     }
 
