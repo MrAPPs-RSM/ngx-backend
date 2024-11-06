@@ -7,7 +7,7 @@ export interface FormField {
     calculatedValue?: string;
     disabled?: boolean;
     placeholder?: string;
-    value?: any;
+    value?: any|null;
     class?: string;
     description?: string;
     dependsOn?: any[];

@@ -293,10 +293,25 @@ export class FormComponent extends BaseLongPollingComponent implements OnInit, O
       }
     }
 
+  private transformEmptyToNull(formData: any): any {
+    if (typeof formData !== 'object' || formData === null) {
+      return formData === '' ? null : formData;
+    }
+
+    if (Array.isArray(formData)) {
+      return formData.map((item) => this.transformEmptyToNull(item));
+    }
+
+    return Object.keys(formData).reduce((acc, key) => {
+      acc[key] = this.transformEmptyToNull(formData[key]);
+      return acc;
+    }, {} as Record<string, any>);
+  }
+
     submit(): void {
         /** Using getRawValue() because form.value is not changed when FormArray order changes
          *  Useful to support drag&drop on list detail */
-        const value = this.requestProcessor.createFormRequestBody(this.form.getRawValue());
+        const value = this.transformEmptyToNull(this.requestProcessor.createFormRequestBody(this.form.getRawValue()));
 
         const manageError = (response: ErrorResponse) => {
           this.isLoading = false;
