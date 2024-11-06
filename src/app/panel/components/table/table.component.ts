@@ -91,6 +91,9 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
                 this.filter = UtilsService.mergeDeep(this.filter, params);
                const keys = Object.keys(this.filter);
                keys.forEach((key) => {
+                 if (['skip', 'limit', 'order'].includes(key)) {
+                   return;
+                 }
                     const filterKey = this.extractKey(key);
                     if (filterKey) {
                       this.filter[filterKey] = this.filter[key];
@@ -284,22 +287,55 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
     }
 
     private composeEndpoint(endpoint: string) {
-        if (endpoint.indexOf(':') < 0) {
-            return endpoint;
-        }
-
-        if (this.activeFilters.filter && 'where' in this.activeFilters.filter) {
-            for (const key of Object.keys(this.activeFilters.filter.where)) {
-                if (endpoint.indexOf(':' + key) >= 0) {
-                    const regex = new RegExp(':' + key, 'g');
-                    endpoint = endpoint.replace(regex, this.activeFilters.filter.where[key]);
-                }
-            }
-        }
-
+      if (endpoint.indexOf(':') < 0) {
         return endpoint;
+      }
+
+      if (this.activeFilters.filter) {
+        const filterKeys = Object.keys('where' in this.activeFilters.filter
+          ? this.activeFilters.filter.where
+          : this.activeFilters.filter);
+        for (const key of filterKeys) {
+          if (endpoint.indexOf(':' + key) >= 0) {
+            const regex = new RegExp(':' + key, 'g');
+            const value = 'where' in this.activeFilters.filter
+              ? this.activeFilters.filter.where[key]
+              : this.activeFilters.filter[key];
+            endpoint = endpoint.replace(regex, value);
+          }
+        }
+      }
+
+      return endpoint;
     }
 
+    private prepareResponseFilters(filters: Array<any>): Object {
+      const response = {};
+      filters.forEach((filter: any) => {
+        const keys = Object.keys(filter);
+        if (keys.length > 0) {
+          const key = keys[0];
+          if (['skip', 'limit', 'order'].includes(key)) {
+            return;
+          }
+          let value: string = filter.key;
+
+          if (this.settings.columns[key]) {
+            switch (this.settings.columns[key].type) {
+              case 'date': {
+                value = 'from' in filter[key]
+                  ? `${filter[key].from.toISOString()},${filter[key].to.toISOString()}`
+                  : filter[key].toISOString();
+                break;
+              }
+            }
+          }
+          response[`filter[${key}]`] = value;
+        }
+      });
+
+      return response;
+    }
     private composeParams(countParams?: boolean, queryParams?: boolean, addInclude?: boolean): Object {
       if (countParams === null) {
         countParams = false;
@@ -428,37 +464,22 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
         params.where = this.filter.where;
       }
 
-      const response = {};
+      let response = {};
 
       if (environment.version && environment.version >= 2) {
 
-        if (this.filter.where) {
-          if ('and' in this.filter.where) {
-            this.filter.where.and.forEach((filter) => {
-              const keys = Object.keys(filter);
-              if (keys.length > 0) {
-                const key = keys[0];
-                let value: string = filter.key;
-
-                if (this.settings.columns[key]) {
-                  switch (this.settings.columns[key].type) {
-                    case 'date': {
-                      value = 'from' in filter[key]
-                        ? `${filter[key].from},${filter[key].from}`
-                        : filter[key];
-                      break;
-                    }
-                  }
-                }
-                response[`filter[${key}]`] = value;
-              }
-            });
-            delete this.filter.where.and;
+        if (this.filter) {
+          if ('where' in this.filter) {
+            if ('and' in this.filter.where) {
+              response = this.prepareResponseFilters(this.filter.where.and);
+            } else {
+              response = this.prepareResponseFilters(Object.keys(this.filter.where).map((key) => {
+                const value = {};
+                value[key] = this.filter.where[key];
+                return value;
+              }));
+            }
           }
-
-          Object.keys(this.filter.where).forEach((key) => {
-            response[`filter[${key}]`] = this.filter.where[key];
-          });
         }
 
         response['order'] = params.order;
