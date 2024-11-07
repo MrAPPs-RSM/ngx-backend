@@ -841,12 +841,13 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
         };
 
         if (this.settings.drag) {
-            const endpoint = this.settings.drag.endpoint ?
+            const dragEndpoint = this.settings.drag.endpoint ?
                 this.settings.drag.endpoint : this.settings.api.endpoint + '/sort';
 
             if (this.settings.drag.method) {
                 // TODO: support if necessary
             } else {
+                const endpoint = environment.version && environment.version >= 2 ? UtilsV2Service.getEndpoint(dragEndpoint, this.filter) : dragEndpoint;
                 this._apiService.patch(endpoint, dragDropSettings)
                     .then(() => {
                         this.getData(); // Refresh table
@@ -863,7 +864,7 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
         this._state.replaceLastPath = true;
         let queryParams = {};
         if (environment.version && environment.version >= 2) {
-            queryParams = params;
+            queryParams = UtilsV2Service.concatOnRefresh(this.filter, params);
         } else {
             queryParams['listParams'] = params['filter'];
         }

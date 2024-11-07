@@ -51,6 +51,16 @@ export class UtilsV2Service {
         return parsed[key] ?? null;
     }
 
+    public static concatOnRefresh(filter: any, params: any): any {
+        if (!('listParams' in filter)) {
+            return params;
+        }
+
+        return Object.assign(params, {
+            listParams: filter['listParams']
+        });
+    }
+
     private static extractKey(input: string): string | null {
         const match = input.match(/filter\[(\w+)]/);
         return match ? match[1] : null;
