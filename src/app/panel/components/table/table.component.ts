@@ -19,6 +19,7 @@ import { GlobalState } from '../../../global.state';
 import { isArray } from 'lodash';
 import { BaseLongPollingComponent } from '../base-long-polling/base-long-polling.component';
 import { environment } from '../../../../environments/environment';
+import { UtilsV2Service } from '../../../services/utils-v2.service';
 
 @Component({
     selector: 'app-table',
@@ -88,19 +89,7 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
 
             if (params) {
               if (environment.version && environment.version >= 2) {
-                this.filter = UtilsService.mergeDeep(this.filter, params);
-               const keys = Object.keys(this.filter);
-               keys.forEach((key) => {
-                 if (['skip', 'limit', 'order'].includes(key)) {
-                   return;
-                 }
-                    const filterKey = this.extractKey(key);
-                    if (filterKey) {
-                      this.filter[filterKey] = this.filter[key];
-                      delete this.filter[key];
-                    }
-               });
-
+                this.filter = UtilsV2Service.composeFilters(this.filter, params);
               } else {
                 if (params['listParams']) {
                   const queryParamsFilter = JSON.parse(params['listParams']);
@@ -287,24 +276,30 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
     }
 
     private composeEndpoint(endpoint: string) {
-      if (endpoint.indexOf(':') < 0) {
-        return endpoint;
-      }
+        if (endpoint.indexOf(':') < 0) {
+            return endpoint;
+        }
 
-      if (this.activeFilters.filter) {
+        if (!this.activeFilters.filter) {
+            return endpoint;
+        }
+
+        if (environment.version && environment.version >= 2) {
+            return UtilsV2Service.getEndpoint(endpoint, this.activeFilters.filter);
+        }
+
         const filterKeys = Object.keys('where' in this.activeFilters.filter
-          ? this.activeFilters.filter.where
-          : this.activeFilters.filter);
+            ? this.activeFilters.filter.where
+            : this.activeFilters.filter);
         for (const key of filterKeys) {
-          if (endpoint.indexOf(':' + key) >= 0) {
+            if (endpoint.indexOf(':' + key) >= 0) {
             const regex = new RegExp(':' + key, 'g');
             const value = 'where' in this.activeFilters.filter
-              ? this.activeFilters.filter.where[key]
-              : this.activeFilters.filter[key];
+                ? this.activeFilters.filter.where[key]
+                : this.activeFilters.filter[key];
             endpoint = endpoint.replace(regex, value);
-          }
+            }
         }
-      }
 
       return endpoint;
     }
@@ -313,25 +308,27 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
       const response = {};
       filters.forEach((filter: any) => {
         const keys = Object.keys(filter);
-        if (keys.length > 0) {
-          const key = keys[0];
-          if (['skip', 'limit', 'order'].includes(key)) {
+        if (keys.length === 0) {
             return;
-          }
-          let value: string = filter.key;
-
-          if (this.settings.columns[key]) {
-            switch (this.settings.columns[key].type) {
-              case 'date': {
-                value = 'from' in filter[key]
-                  ? `${filter[key].from.toISOString()},${filter[key].to.toISOString()}`
-                  : filter[key].toISOString();
-                break;
-              }
-            }
-          }
-          response[`filter[${key}]`] = value;
         }
+
+        const key = keys[0];
+        if (['skip', 'limit', 'order'].includes(key)) {
+            return;
+        }
+        
+        let value: string = filter[key];
+        if (this.settings.columns[key]) {
+        switch (this.settings.columns[key].type) {
+            case 'date': {
+            value = 'from' in filter[key]
+                ? `${filter[key].from.toISOString()},${filter[key].to.toISOString()}`
+                : filter[key].toISOString();
+            break;
+            }
+        }
+        }
+        response[`filter[${key}]`] = value;
       });
 
       return response;
@@ -486,7 +483,7 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
         response['skip'] = params.skip;
         response['limit'] = params.limit;
 
-        console.log(response);
+        console.log('query string v2: ', response);
       } else {
         response['filter'] = JSON.stringify(params);
       }
@@ -575,7 +572,7 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
 
                         let queryParams = {};
                       if (environment.version && environment.version >= 2) {
-                        queryParams = updatedFilter;
+                        queryParams['listParams'] = updatedFilter;
                       } else {
                         queryParams['listParams'] = updatedFilter;
                       }

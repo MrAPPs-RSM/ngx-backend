@@ -30,6 +30,7 @@ import { environment } from '../environments/environment';
 import { StorageService } from './services/storage.service';
 import { DomainNotFoundComponent } from './auth/domain-not-found/domain-not-found.component';
 import {httpInterceptorProviders} from './interceptors';
+import { UtilsV2Service } from './services/utils-v2.service';
 
 registerLocaleData(localeIt);
 
@@ -100,6 +101,7 @@ const routes: Routes = [
         PendingChangesGuard,
         PasswordResetGuard,
         UtilsService,
+        UtilsV2Service,
         FormGeneratorService,
         PageRefreshService,
         ToastsService,
