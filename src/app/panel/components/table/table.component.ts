@@ -68,10 +68,10 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
         super(_apiService);
     }
 
-  private extractKey(input: string): string | null {
-    const match = input.match(/filter\[(\w+)]/);
-    return match ? match[1] : null;
-  }
+    private extractKey(input: string): string | null {
+        const match = input.match(/filter\[(\w+)]/);
+        return match ? match[1] : null;
+    }
 
     ngOnInit() {
         this.translateLabels();
@@ -88,20 +88,20 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
             }
 
             if (params) {
-              if (environment.version && environment.version >= 2) {
-                this.filter = UtilsV2Service.composeFilters(this.filter, params);
-              } else {
-                if (params['listParams']) {
-                  const queryParamsFilter = JSON.parse(params['listParams']);
+                if (environment.version && environment.version >= 2) {
+                    this.filter = UtilsV2Service.composeFilters(this.filter, params);
+                } else {
+                    if (params['listParams']) {
+                        const queryParamsFilter = JSON.parse(params['listParams']);
 
-                  this.filter = UtilsService.mergeDeep(this.filter, queryParamsFilter);
+                        this.filter = UtilsService.mergeDeep(this.filter, queryParamsFilter);
+                    }
                 }
-              }
 
-              this.activeFilters.pagination.perPage = 'limit' in this.filter
-                ? this.filter['limit'] : this.preparePerPage();
-              this.activeFilters.pagination.page = 'skip' in this.filter ?
-                this.filter['skip'] / this.activeFilters.pagination.perPage + 1 : 1;
+                this.activeFilters.pagination.perPage = 'limit' in this.filter
+                    ? this.filter['limit'] : this.preparePerPage();
+                this.activeFilters.pagination.page = 'skip' in this.filter ?
+                    this.filter['skip'] / this.activeFilters.pagination.perPage + 1 : 1;
             }
 
             this.activeFilters.filter = this.filter;
@@ -293,207 +293,205 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
             : this.activeFilters.filter);
         for (const key of filterKeys) {
             if (endpoint.indexOf(':' + key) >= 0) {
-            const regex = new RegExp(':' + key, 'g');
-            const value = 'where' in this.activeFilters.filter
-                ? this.activeFilters.filter.where[key]
-                : this.activeFilters.filter[key];
-            endpoint = endpoint.replace(regex, value);
+                const regex = new RegExp(':' + key, 'g');
+                const value = 'where' in this.activeFilters.filter
+                    ? this.activeFilters.filter.where[key]
+                    : this.activeFilters.filter[key];
+                endpoint = endpoint.replace(regex, value);
             }
         }
 
-      return endpoint;
+        return endpoint;
     }
 
     private prepareResponseFilters(filters: Array<any>): Object {
-      const response = {};
-      filters.forEach((filter: any) => {
-        const keys = Object.keys(filter);
-        if (keys.length === 0) {
-            return;
-        }
-
-        const key = keys[0];
-        if (['skip', 'limit', 'order'].includes(key)) {
-            return;
-        }
-        
-        let value: string = filter[key];
-        if (this.settings.columns[key]) {
-        switch (this.settings.columns[key].type) {
-            case 'date': {
-            value = 'from' in filter[key]
-                ? `${filter[key].from.toISOString()},${filter[key].to.toISOString()}`
-                : filter[key].toISOString();
-            break;
+        const response = {};
+        filters.forEach((filter: any) => {
+            const keys = Object.keys(filter);
+            if (keys.length === 0) {
+                return;
             }
-        }
-        }
-        response[`filter[${key}]`] = value;
-      });
 
-      return response;
+            const key = keys[0];
+            if (['skip', 'limit', 'order'].includes(key)) {
+                return;
+            }
+
+            let value: string = filter[key];
+            if (this.settings.columns[key]) {
+                switch (this.settings.columns[key].type) {
+                    case 'date': {
+                        value = 'from' in filter[key]
+                            ? `${filter[key].from.toISOString()},${filter[key].to.toISOString()}`
+                            : filter[key].toISOString();
+                        break;
+                    }
+                }
+            }
+            response[`filter[${key}]`] = value;
+        });
+
+        return response;
     }
     private composeParams(countParams?: boolean, queryParams?: boolean, addInclude?: boolean): Object {
-      if (countParams === null) {
-        countParams = false;
-      }
-
-      const params: any = countParams ?
-        {
-          where: {
-            and: []
-          },
-        } :
-        {
-          where: {
-            and: []
-          },
-          order: null,
-          skip: 0,
-          limit: this.preparePerPage(),
-        };
-
-      if (!countParams) {
-        /** Pagination */
-        if (this.activeFilters.pagination) {
-          params.limit = this.activeFilters.pagination.perPage;
-          params.skip = (this.activeFilters.pagination.page - 1) * params.limit;
+        if (countParams === null) {
+            countParams = false;
         }
 
-        /** Sort (if drag enabled, always sort by weight ascending) */
-        if (this.settings.drag) {
-          params.order = this.settings.drag.sortField ? this.settings.drag.sortField : this.DEFAULTS.drag.sortField;
-          params.order += ' ASC';
-        } else {
-          if (this.filter.order && this.filter.order.length > 0) {
-            let order = '';
-            for (let i = 0; i < this.filter.order.length; i++) {
-              const sort = this.filter.order[i];
-              order += (order.length > 0 ? ', ' : '') + sort.field + ' ' + sort.direction.toUpperCase();
+        const params: any = countParams ?
+            {
+                where: {
+                    and: []
+                },
+            } :
+            {
+                where: {
+                    and: []
+                },
+                order: null,
+                skip: 0,
+                limit: this.preparePerPage(),
+            };
+
+        if (!countParams) {
+            /** Pagination */
+            if (this.activeFilters.pagination) {
+                params.limit = this.activeFilters.pagination.perPage;
+                params.skip = (this.activeFilters.pagination.page - 1) * params.limit;
             }
-            params.order = order;
-          }
-        }
-      }
 
-      /** Filters */
-      if (this.filter && !queryParams) {
-
-        if (this.filter.where && !environment.version || environment.version < 2) {
-
-          if ('and' in this.filter.where) {
-
-            this.filter.where['and'].forEach((object) => {
-              const condition = {};
-              const key = Object.keys(object)[0];
-              if (this.settings.columns[key]) {
-                switch (this.settings.columns[key].type) {
-                  case 'boolean': {
-                    condition[key] = object[key];
-                  }
-                    break;
-                  case 'date': {
-                    condition[key] = {
-                      between: [object[key].from, object[key].to]
-                    };
-                  }
-                    break;
-                  default: {
-                    condition[key] = {
-                      like: '%' + object[key] + '%'
-                    };
-                  }
-                    break;
-                }
-              } else {
-                condition[key] = object[key];
-              }
-              params.where.and.push(condition);
-            });
-
-          } else {
-            Object.keys(this.filter.where).forEach((key) => {
-              const condition = {};
-              if (this.settings.columns[key]) {
-                switch (this.settings.columns[key].type) {
-                  case 'boolean': {
-                    condition[key] = this.filter.where[key];
-                  }
-                    break;
-                  case 'date': {
-                    condition[key] = {
-                      between: [this.filter.where[key].from, this.filter.where[key].to]
-                    };
-                  }
-                    break;
-                  default: {
-                    condition[key] = {
-                      like: '%' + this.filter.where[key] + '%'
-                    };
-                  }
-                    break;
-                }
-              } else {
-                condition[key] = this.filter.where[key];
-              }
-              params.where.and.push(condition);
-            });
-          }
-
-          if (this.resetPagination && !countParams) {
-            this.resetPagination = false;
-            params.skip = 0; // reset pagination if filters
-          }
-        }
-
-        if (this.filter.include) {
-          params['include'] = this.filter.include;
-        }
-      }
-
-      if (addInclude) {
-        if (this.filter.include && !params['include']) {
-          params['include'] = this.filter.include;
-        }
-      }
-
-      if (queryParams) {
-        params.where = this.filter.where;
-      }
-
-      let response = {};
-
-      if (environment.version && environment.version >= 2) {
-
-        if (this.filter) {
-          if ('where' in this.filter) {
-            if ('and' in this.filter.where) {
-              response = this.prepareResponseFilters(this.filter.where.and);
+            /** Sort (if drag enabled, always sort by weight ascending) */
+            if (this.settings.drag) {
+                params.order = this.settings.drag.sortField ? this.settings.drag.sortField : this.DEFAULTS.drag.sortField;
+                params.order += ' ASC';
             } else {
-              response = this.prepareResponseFilters(Object.keys(this.filter.where).map((key) => {
-                const value = {};
-                value[key] = this.filter.where[key];
-                return value;
-              }));
+                if (this.filter.order && this.filter.order.length > 0) {
+                    let order = '';
+                    for (let i = 0; i < this.filter.order.length; i++) {
+                        const sort = this.filter.order[i];
+                        order += (order.length > 0 ? ', ' : '') + sort.field + ' ' + sort.direction.toUpperCase();
+                    }
+                    params.order = order;
+                }
             }
-          }
         }
 
-        response['order'] = params.order;
-        response['skip'] = params.skip;
-        response['limit'] = params.limit;
+        /** Filters */
+        if (this.filter && !queryParams) {
 
-        console.log('query string v2: ', response);
-      } else {
-        response['filter'] = JSON.stringify(params);
-      }
+            if (this.filter.where && !environment.version || environment.version < 2) {
 
-      /** Lang, if enabled */
-      if (this.currentLang) {
-        response['lang'] = this.currentLang.isoCode;
-      }
+                if ('and' in this.filter.where) {
 
-      return response;
+                    this.filter.where['and'].forEach((object) => {
+                        const condition = {};
+                        const key = Object.keys(object)[0];
+                        if (this.settings.columns[key]) {
+                            switch (this.settings.columns[key].type) {
+                                case 'boolean': {
+                                    condition[key] = object[key];
+                                }
+                                    break;
+                                case 'date': {
+                                    condition[key] = {
+                                        between: [object[key].from, object[key].to]
+                                    };
+                                }
+                                    break;
+                                default: {
+                                    condition[key] = {
+                                        like: '%' + object[key] + '%'
+                                    };
+                                }
+                                    break;
+                            }
+                        } else {
+                            condition[key] = object[key];
+                        }
+                        params.where.and.push(condition);
+                    });
+
+                } else {
+                    Object.keys(this.filter.where).forEach((key) => {
+                        const condition = {};
+                        if (this.settings.columns[key]) {
+                            switch (this.settings.columns[key].type) {
+                                case 'boolean': {
+                                    condition[key] = this.filter.where[key];
+                                }
+                                    break;
+                                case 'date': {
+                                    condition[key] = {
+                                        between: [this.filter.where[key].from, this.filter.where[key].to]
+                                    };
+                                }
+                                    break;
+                                default: {
+                                    condition[key] = {
+                                        like: '%' + this.filter.where[key] + '%'
+                                    };
+                                }
+                                    break;
+                            }
+                        } else {
+                            condition[key] = this.filter.where[key];
+                        }
+                        params.where.and.push(condition);
+                    });
+                }
+
+                if (this.resetPagination && !countParams) {
+                    this.resetPagination = false;
+                    params.skip = 0; // reset pagination if filters
+                }
+            }
+
+            if (this.filter.include) {
+                params['include'] = this.filter.include;
+            }
+        }
+
+        if (addInclude) {
+            if (this.filter.include && !params['include']) {
+                params['include'] = this.filter.include;
+            }
+        }
+
+        if (queryParams) {
+            params.where = this.filter.where;
+        }
+
+        let response = {};
+
+        if (environment.version && environment.version >= 2) {
+
+            if (this.filter) {
+                if ('where' in this.filter) {
+                    if ('and' in this.filter.where) {
+                        response = this.prepareResponseFilters(this.filter.where.and);
+                    } else {
+                        response = this.prepareResponseFilters(Object.keys(this.filter.where).map((key) => {
+                            const value = {};
+                            value[key] = this.filter.where[key];
+                            return value;
+                        }));
+                    }
+                }
+            }
+
+            response['order'] = params.order;
+            response['skip'] = params.skip;
+            response['limit'] = params.limit;
+        } else {
+            response['filter'] = JSON.stringify(params);
+        }
+
+        /** Lang, if enabled */
+        if (this.currentLang) {
+            response['lang'] = this.currentLang.isoCode;
+        }
+
+        return response;
     }
 
     private composeCountParams(): Object {
@@ -517,7 +515,9 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
                         const queryKey = association.queryKey.indexOf('where') >= 0 || association.queryKey.indexOf('.') >= 0
                             ? association.queryKey
                             : 'where.' + association.queryKey;
-                        params[association.formKey] = UtilsService.objectByString(this.filter, queryKey);
+                        params[association.formKey] = environment.version && environment.version >= 2
+                            ? UtilsV2Service.objectByString(this.filter, queryKey)
+                            : UtilsService.objectByString(this.filter, queryKey);
                     });
 
                     extraParams = { queryParams: { formParams: JSON.stringify(params) }, relativeTo: this._route.parent };
@@ -571,11 +571,11 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
                         }
 
                         let queryParams = {};
-                      if (environment.version && environment.version >= 2) {
-                        queryParams['listParams'] = updatedFilter;
-                      } else {
-                        queryParams['listParams'] = updatedFilter;
-                      }
+                        if (environment.version && environment.version >= 2) {
+                            queryParams['listParams'] = updatedFilter;
+                        } else {
+                            queryParams['listParams'] = updatedFilter;
+                        }
 
                         extraParams = { queryParams };
                     } else if (action.config.params.loadData) {
@@ -863,9 +863,9 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
         this._state.replaceLastPath = true;
         let queryParams = {};
         if (environment.version && environment.version >= 2) {
-          queryParams = params;
+            queryParams = params;
         } else {
-          queryParams['listParams'] = params['filter'];
+            queryParams['listParams'] = params['filter'];
         }
         this._router.navigate([], { queryParams });
     }

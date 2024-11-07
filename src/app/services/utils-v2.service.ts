@@ -26,17 +26,29 @@ export class UtilsV2Service {
     }
 
     public static getEndpoint(endpoint: string, filter: any): any {
-        if ('listParams' in filter) {
-            const parsed = JSON.parse(filter['listParams']);
-            for (const key of Object.keys(parsed)) {
-                endpoint = endpoint.replace(
-                    ':' + key,
-                    parsed[key]
-                );
-            }
+        if (!('listParams' in filter)) {
+            return endpoint;
+        }
+        
+        const parsed = JSON.parse(filter['listParams']);
+        for (const key of Object.keys(parsed)) {
+            endpoint = endpoint.replace(
+                ':' + key,
+                parsed[key]
+            );
         }
 
         return endpoint;
+    }
+
+    public static objectByString(filter: any, queryKey: string): any {
+        if (!('listParams' in filter)) {
+            return null;
+        }
+
+        const parsed = JSON.parse(filter['listParams']);
+        const key = queryKey.indexOf('where.') >= 0 ? queryKey.replace(/where./g, '') : queryKey;
+        return parsed[key] ?? null;
     }
 
     private static extractKey(input: string): string | null {
