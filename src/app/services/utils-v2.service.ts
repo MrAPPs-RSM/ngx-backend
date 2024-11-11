@@ -29,7 +29,7 @@ export class UtilsV2Service {
         if (!('listParams' in filter)) {
             return endpoint;
         }
-        
+
         const parsed = JSON.parse(filter['listParams']);
         for (const key of Object.keys(parsed)) {
             endpoint = endpoint.replace(
@@ -61,8 +61,39 @@ export class UtilsV2Service {
         });
     }
 
+    public static transformEmptyToNull(formData: any): any {
+        if (typeof formData !== 'object' || formData === null) {
+            return formData === '' ? null : formData;
+        }
+
+        if (formData instanceof Date) {
+            return formData.toISOString();
+        }
+
+        if (Array.isArray(formData)) {
+            return formData.map((item) => this.transformEmptyToNull(item));
+        }
+
+        return Object.keys(formData).reduce((acc, key) => {
+            acc[key] = this.transformEmptyToNull(formData[key]);
+            return acc;
+        }, {} as Record<string, any>);
+    }
+
     private static extractKey(input: string): string | null {
         const match = input.match(/filter\[(\w+)]/);
         return match ? match[1] : null;
+    }
+
+    private static isDateValid(dateStr: any) {
+        if (this.isNumeric(dateStr)) {
+            return false;
+        }
+
+        return !isNaN(new Date(dateStr) as any);
+    }
+
+    private static isNumeric(num: any) {
+        return !isNaN(num);
     }
 }
