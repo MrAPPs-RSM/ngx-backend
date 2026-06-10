@@ -6,7 +6,7 @@ import {ApiService, ErrorResponse} from '../../../../../api/api.service';
 import {FormFieldSelect} from '../../interfaces/form-field-select';
 import {Subject, Subscription} from 'rxjs';
 import {SelectData} from '../select/select.component';
-import {first, debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
+import {first, debounceTime, distinctUntilChanged, switchMap, filter} from 'rxjs/operators';
 
 @Component({
     selector: 'app-select-2',
@@ -127,6 +127,7 @@ export class Select2Component extends BaseInputComponent implements OnInit, OnDe
         this.typeAhead.pipe(
             distinctUntilChanged(),
             debounceTime(300),
+            filter(tag => tag.length >= 3),
             switchMap(tag => this._apiService.get(this.field.search.endpoint, {search: tag}))
         ).subscribe(data => {
             this._cd.markForCheck();
