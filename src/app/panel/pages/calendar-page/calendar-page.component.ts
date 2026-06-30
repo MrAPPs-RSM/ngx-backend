@@ -271,6 +271,7 @@ export class CalendarPageComponent implements OnInit, OnDestroy {
    * @param id
    */
   showEditById(id: number, start: Date, end: Date) {
+    this.form.reset();
     this.isFormLoading = true;
     this.closeErrors();
     this.isEdit = true;
