@@ -1,51 +1,59 @@
 <div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="profile-card">
+        <header>
+          <h3>{{'profile.user_info' | translate}}</h3>
+        </header>
+        <ul>
+          <li>
+            <i class="fa fa-user"></i>
+            {{user.username}}
+          </li>
+          <li>
+            <i class="fa fa-envelope"></i>
+            {{user.email}}
+          </li>
+          @if (_languageService.isMultiLang()) {
+            <li>
+              <i class="fa fa-language"></i>
+              {{currentLang.name}}
+            </li>
+          }
+        </ul>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      @if (_languageService.isMultiLang()) {
+        <div class="multilang">
+          <ng-select [items]="_languageService.getBackendLanguages()"
+            [clearable]="false"
+            [searchable]="false"
+            [(ngModel)]="currentLang"
+            [ngModelOptions]="{standalone: true}"
+            (change)="onLanguageChange($event)"
+            bindLabel="name">
+            <ng-template ng-label-tmp let-item="item">
+              <i [class]="'flag-icon flag-icon-' + _languageService.getIsoCodeForFlag(item)"></i> {{item.name}}
+            </ng-template>
+            <ng-template ng-option-tmp let-item="item">
+              <i [class]="'flag-icon flag-icon-' + _languageService.getIsoCodeForFlag(item)"></i> {{item.name}}
+            </ng-template>
+          </ng-select>
+        </div>
+      }
+    </div>
+  </div>
+  @if (params.forms) {
     <div class="row">
-        <div class="col-sm-6">
-            <div class="profile-card">
-                <header>
-                    <h3>{{'profile.user_info' | translate}}</h3>
-                </header>
-                <ul>
-                    <li>
-                        <i class="fa fa-user"></i>
-                        {{user.username}}
-                    </li>
-                    <li>
-                        <i class="fa fa-envelope"></i>
-                        {{user.email}}
-                    </li>
-                    <li *ngIf="_languageService.isMultiLang()">
-                        <i class="fa fa-language"></i>
-                        {{currentLang.name}}
-                    </li>
-                </ul>
-            </div>
+      @for (form of params.forms; track form) {
+        <div [class]="form.class ? form.class : 'col-sm-12'">
+          <app-form
+            [settings]="form"
+            (response)="onResponse(form, $event)">
+          </app-form>
         </div>
-        <div class="col-sm-6">
-            <div class="multilang" *ngIf="_languageService.isMultiLang()">
-                <ng-select [items]="_languageService.getBackendLanguages()"
-                           [clearable]="false"
-                           [searchable]="false"
-                           [(ngModel)]="currentLang"
-                           [ngModelOptions]="{standalone: true}"
-                           (change)="onLanguageChange($event)"
-                           bindLabel="name">
-                    <ng-template ng-label-tmp let-item="item">
-                        <i [class]="'flag-icon flag-icon-' + _languageService.getIsoCodeForFlag(item)"></i> {{item.name}}
-                    </ng-template>
-                    <ng-template ng-option-tmp let-item="item">
-                        <i [class]="'flag-icon flag-icon-' + _languageService.getIsoCodeForFlag(item)"></i> {{item.name}}
-                    </ng-template>
-                </ng-select>
-            </div>
-        </div>
+      }
     </div>
-    <div class="row" *ngIf="params.forms">
-        <div *ngFor="let form of params.forms" [class]="form.class ? form.class : 'col-sm-12'">
-            <app-form
-                    [settings]="form"
-                    (response)="onResponse(form, $event)">
-            </app-form>
-        </div>
-    </div>
+  }
 </div>

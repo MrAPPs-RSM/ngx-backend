@@ -1,29 +1,51 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500');
-@import 'partials/imports';
-/* Partials */
-@import 'partials/_buttons.scss';
-@import 'partials/_alerts.scss';
-@import 'partials/_modal.scss';
-@import 'partials/_progress-bar.scss';
-@import 'partials/_form.scss';
-@import 'partials/_toasts.scss';
-@import 'partials/_tooltip.scss';
-@import 'partials/_slider.scss';
-/* Externals */
-@import '~dragula/dist/dragula.min.css';
-@import "~@ng-select/ng-select/themes/default.theme.css";
-@import "~@danielmoncada/angular-datetime-picker/assets/style/picker.min.css";
-@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@use "sass:color";
+@use "sass:meta";
+@use 'partials/imports' as *;
+@use "../../environments/colors";
+@use "mixins/transition";
+@use "partials/variables";
 
-@import '~ngx-toastr/toastr';
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500');
+/* Partials */
+@include meta.load-css('partials/_buttons.scss');
+@include meta.load-css('partials/_alerts.scss');
+@include meta.load-css('partials/_modal.scss');
+@include meta.load-css('partials/_progress-bar.scss');
+@include meta.load-css('partials/_form.scss');
+@include meta.load-css('partials/_toasts.scss');
+@include meta.load-css('partials/_tooltip.scss');
+@include meta.load-css('partials/_slider.scss');
+
+/* Dropdowns appended to body by compact ng-select table filters. */
+body > ng-dropdown-panel.ng-dropdown-panel {
+  width: max-content !important;
+  min-width: 280px;
+  max-width: min(480px, calc(100vw - 24px));
+
+  .ng-dropdown-panel-items .ng-option {
+    font-size: 14px;
+    font-weight: variables.$light;
+    overflow: visible;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-overflow: clip;
+  }
+}
+
+/* Externals */
+@import "@ng-select/ng-select/themes/default.theme.css";
+@import "@danielmoncada/angular-datetime-picker/assets/style/picker.min.css";
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
+
+@include meta.load-css('ngx-toastr/toastr');
 
 body {
   background-color: #F1F1F1 !important;
   font-family: 'Roboto', sans-serif;
-  font-weight: $light;
+  font-weight: variables.$light;
 
   h1, h2, h3, h4, h5, h6 {
-    font-weight: $regular;
+    font-weight: variables.$regular;
   }
 
   a {
@@ -32,7 +54,7 @@ body {
     &:focus,
     &:active {
       text-decoration: none;
-      @include _transition(all 0.3s);
+      @include transition.transition(all 0.3s);
     }
   }
 
@@ -42,22 +64,22 @@ body {
 
   h1, h2, h3, h4, h5, h6, a, i, p, span, small {
     &.primary {
-      color: $primary;
+      color: colors.$primary;
     }
     &.success {
-      color: $success;;
+      color: colors.$success;;
     }
     &.danger {
-      color: $danger;
+      color: colors.$danger;
     }
     &.info {
-      color: $info;
+      color: colors.$info;
     }
     &.warning {
-      color: $warning;
+      color: colors.$warning;
     }
     &.default {
-      color: $default;
+      color: colors.$default;
     }
   }
 
@@ -71,7 +93,7 @@ body {
     > ng-select.ng-select {
       > div.ng-select-container {
         min-height: 35px;
-        border-radius: $borderRadius;
+        border-radius: variables.$borderRadius;
       }
       i {
         margin-right: 5px;
@@ -83,15 +105,15 @@ body {
   nav {
     div.ng-select-dropdown-outer.bottom {
       margin-top: 0;
-      border-radius: $borderRadius;
-      border: 1px solid $lightGrey;
+      border-radius: variables.$borderRadius;
+      border: 1px solid colors.$lightGrey;
       > ng-select-virtual-scroll.ng-select-dropdown {
         top: -1px;
         > div {
           > div.ng-option {
-            border-radius: $borderRadius;
+            border-radius: variables.$borderRadius;
             &.marked {
-              border-radius: $borderRadius;
+              border-radius: variables.$borderRadius;
               background-color: #f5f5f5;
             }
           }
@@ -102,56 +124,67 @@ body {
 
 }
 
+ng-select.ng-select {
+  font-size: 14px;
+  font-weight: variables.$light;
+
+  .ng-select-container,
+  .ng-dropdown-panel .ng-option {
+    font-size: 14px;
+    font-weight: variables.$light;
+  }
+}
+
 .ng2-smart-action {
   cursor: pointer;
-  font-weight: $light;
+  font-weight: variables.$light;
   padding: 6px 8px;
   border: none;
   color: #ffffff !important;
-  background-color: $primary;
+  background-color: colors.$primary;
   &:hover {
     color: #ffffff;
-    background-color: darken($primary, 10);
+    background-color: color.adjust(colors.$primary, $lightness: -10%);
   }
   &.success {
-    background-color: $success;
+    background-color: colors.$success;
     &:hover {
-      background-color: darken($success, 10);
+      background-color: color.adjust(colors.$success, $lightness: -10%);
     }
   }
   &.danger {
-    background-color: $danger;
+    background-color: colors.$danger;
     &:hover {
-      background-color: darken($danger, 10);
+      background-color: color.adjust(colors.$danger, $lightness: -10%);
     }
   }
   &.info {
-    background-color: $info;
+    background-color: colors.$info;
     &:hover {
-      background-color: darken($info, 10);
+      background-color: color.adjust(colors.$info, $lightness: -10%);
 
     }
   }
   &.warning {
-    background-color: $warning;
+    background-color: colors.$warning;
     &:hover {
-      background-color: darken($warning, 10);
+      background-color: color.adjust(colors.$warning, $lightness: -10%);
     }
   }
   &.default {
-    background-color: $default;
+    background-color: colors.$default;
     &:hover {
-      background-color: darken($default, 10);
+      background-color: color.adjust(colors.$default, $lightness: -10%);
     }
   }
 
   &.disabled {
     cursor: not-allowed;
-    background-color: $lightGrey;
-    color: $grey;
+    background-color: colors.$lightGrey;
+    color: colors.$grey;
     &:hover {
-      background-color: $lightGrey;
-      color: $grey;
+      background-color: colors.$lightGrey;
+      color: colors.$grey;
     }
   }
 }
@@ -168,7 +201,7 @@ body {
 
   /* List detail items - COPIED FROM list-details.component.scss */
   &.list-detail-item {
-    border: 1px dotted $lightGrey;
+    border: 1px dotted colors.$lightGrey;
     padding: 15px 15px 5px;
     background-color: #fafafa;
     > span.delete {
@@ -184,7 +217,7 @@ body {
       position: absolute;
       top: -8px;
       left: -8px;
-      background-color: $lightGrey;
+      background-color: colors.$lightGrey;
       color: #000000;
       padding: 0 3px;
       font-size: 16px;
@@ -207,18 +240,18 @@ body {
   /* Table items - COPIED FROM ng2-smart-table.component.scss */
   &.ng2-smart-row {
     background: #fff;
-    border-top: 1px solid $lightGrey;
-    border-bottom: 1px solid $lightGrey;
-    border-left: 1px solid $lightGrey;
+    border-top: 1px solid colors.$lightGrey;
+    border-bottom: 1px solid colors.$lightGrey;
+    border-left: 1px solid colors.$lightGrey;
     width: 100%;
     display: table;
     cursor: move;
     > td {
       width: auto;
-      border-right: 1px solid $lightGrey;
-      font-weight: $light;
+      border-right: 1px solid colors.$lightGrey;
+      font-weight: variables.$light;
       height: 40px;
-      color: $default;
+      color: colors.$default;
       font-size: 14px;
       margin: 0;
       padding: 5px 10px;
@@ -257,7 +290,7 @@ body {
 }
 
 .text-cyan {
-  color: $cyan !important;
+  color: colors.$cyan !important;
 }
 
 .text-white {

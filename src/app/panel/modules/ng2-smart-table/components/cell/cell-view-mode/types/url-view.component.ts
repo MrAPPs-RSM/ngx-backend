@@ -1,9 +1,11 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {Cell} from '../../../../lib/data-set/cell';
 
 @Component({
     selector: 'url-view-component',
     template: `<a [href]="renderValue" target="_blank">{{ cell.getValue() }}</a>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class UrlViewComponent implements OnInit {
 

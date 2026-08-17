@@ -1,4 +1,5 @@
-@import '../../../../../../assets/sass/partials/imports';
+@use "sass:color";
+@use '../../../../../../assets/sass/partials/imports' as *;
 
 ng2-smart-table-pager {
   > div {
@@ -23,8 +24,8 @@ ng2-smart-table-pager {
               background-color: $primary;
               color: #ffffff;
               &:hover {
-                border-color: darken($primary, 10);
-                background-color: darken($primary, 10);
+                border-color: color.adjust($primary, $lightness: -10%);
+                background-color: color.adjust($primary, $lightness: -10%);
                 color: #ffffff;
               }
               > span {

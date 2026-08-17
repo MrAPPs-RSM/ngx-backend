@@ -36,7 +36,7 @@ export class SetupService {
   }
 
   public setup(): Observable<any> {
-    const promise = new Promise<any>((resolve, reject) => {
+    const promise = new Promise<void>((resolve, reject) => {
 
       if (this._lastRouteLoading == null || Date.now() - this._lastRouteLoading.getMilliseconds() < 10000) {
         this._apiService.setup()

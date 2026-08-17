@@ -1,11 +1,13 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-input-text',
     templateUrl: './input-text.component.html',
-    styleUrls: ['./input-text.component.scss']
+    styleUrls: ['./input-text.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class InputTextComponent extends BaseInputComponent implements OnInit, OnDestroy {
 

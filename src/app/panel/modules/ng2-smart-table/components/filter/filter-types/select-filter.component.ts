@@ -1,6 +1,6 @@
 
 import {debounceTime, distinctUntilChanged, skip} from 'rxjs/operators';
-import {Component, Input, OnChanges, OnInit, SimpleChange} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChange, ChangeDetectionStrategy} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 
 
@@ -9,7 +9,6 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {DefaultFilter} from './default-filter';
 import {ApiService, ErrorResponse} from '../../../../../../api/api.service';
 import {Language, LanguageService} from '../../../../../services/language.service';
-import {type} from 'os';
 import {Subject} from 'rxjs';
 
 
@@ -25,7 +24,7 @@ declare const $: any;
                        [(ngModel)]="query"
                        (ngModelChange)="onModelChange($event)"
                        (clear)="onModelChange($event)"
-                       [appendTo]="'nav'"
+                       [appendTo]="'body'"
                        [closeOnSelect]="true"
                        bindLabel="text"
                        (keyup)="onSearchType($event.target.value)"
@@ -34,7 +33,9 @@ declare const $: any;
             >
             </ng-select>
         </div>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class SelectFilterComponent extends DefaultFilter implements OnInit, OnChanges {
 

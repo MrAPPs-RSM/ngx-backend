@@ -1,4 +1,4 @@
-import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
+import {Component, Input, Output, EventEmitter, OnInit, ChangeDetectionStrategy} from '@angular/core';
 
 import {DataSource} from '../../../../lib/data-source/data-source';
 import {Column} from '../../../../lib/data-set/column';
@@ -7,17 +7,25 @@ import {Column} from '../../../../lib/data-set/column';
     selector: 'ng2-smart-table-title',
     styleUrls: ['./title.component.scss'],
     template: `
-        <a href="#" *ngIf="column.isSortable"
-           (click)="_sort($event, column)"
-           class="ng2-smart-sort-link sort"
-           [ngClass]="currentDirection">
+        @if (column.isSortable) {
+          <a href="#"
+            (click)="_sort($event, column)"
+            class="ng2-smart-sort-link sort"
+            [ngClass]="currentDirection">
             {{ column.title }}
-        </a>
-        <span class="ng2-smart-sort remove-sort"
-              (click)="_sort($event, null)"
-              *ngIf="column.isSortable && currentDirection != ''">×</span>
-        <span class="ng2-smart-sort" *ngIf="!column.isSortable">{{ column.title }}</span>
-    `,
+          </a>
+        }
+        @if (column.isSortable && currentDirection != '') {
+          <span class="ng2-smart-sort remove-sort"
+            (click)="_sort($event, null)"
+          >×</span>
+        }
+        @if (!column.isSortable) {
+          <span class="ng2-smart-sort">{{ column.title }}</span>
+        }
+        `,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class TitleComponent implements OnInit {
 

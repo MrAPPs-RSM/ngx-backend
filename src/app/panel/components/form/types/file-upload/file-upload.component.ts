@@ -1,19 +1,19 @@
 import {
-    Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Renderer2, ViewChild,
-    ViewEncapsulation
+  Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Renderer2, ViewChild,
+  ViewEncapsulation,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
     FormFieldFile, Media,
     UploadedFile
 } from '../../interfaces/form-field-file';
-import { UploaderOptions, UploadFile, UploadInput, UploadOutput } from 'ngx-uploader';
+import { UploaderOptions, UploadFile, UploadInput, UploadOutput } from '../../../../directives/modern-uploader.directive';
 import { ApiService } from '../../../../../api/api.service';
 import { UtilsService } from '../../../../../services/utils.service';
 import { BaseInputComponent } from '../base-input/base-input.component';
 import { ToastsService } from '../../../../../services/toasts.service';
 import { Subscription } from 'rxjs';
 import { Language, LanguageService } from '../../../../services/language.service';
-import { DragulaService } from 'ng2-dragula';
 import { ActivatedRoute } from '@angular/router';
 import { environment } from '../../../../../../environments/environment';
 import {CopyLangHelperService} from '../../copy-lang-chooser/copy-lang-helper.service';
@@ -22,7 +22,9 @@ import {CopyLangHelperService} from '../../copy-lang-chooser/copy-lang-helper.se
     selector: 'app-file-upload',
     templateUrl: './file-upload.component.html',
     styleUrls: ['./file-upload.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class FileUploadComponent extends BaseInputComponent implements OnInit, OnDestroy {
 
@@ -64,8 +66,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
         private _toastsService: ToastsService,
         private _copyLangHelper: CopyLangHelperService,
         private _apiService: ApiService,
-        public _langService: LanguageService,
-        private _dragulaService: DragulaService) {
+        public _langService: LanguageService) {
         super();
     }
 
@@ -117,8 +118,6 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
 
 
     ngOnDestroy() {
-        this._dragulaService.destroy(this.getUniqueKey());
-
         if (this._subscription !== null) {
             this._subscription.unsubscribe();
         }
@@ -184,8 +183,7 @@ export class FileUploadComponent extends BaseInputComponent implements OnInit, O
               break;
             }
             case 'removed': {
-              // remove file from array when removed
-              this.removeFile(output.file);
+              this.files = this.files.filter(file => file.id !== output.file.id);
               break;
             }
             case 'dragOver': {

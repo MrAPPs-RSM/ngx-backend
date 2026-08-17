@@ -1,6 +1,6 @@
 
 import {first} from 'rxjs/operators';
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ChangeDetectionStrategy} from '@angular/core';
 
 import {FormField} from '../../interfaces/form-field';
 import {BaseInputComponent} from '../base-input/base-input.component';
@@ -9,7 +9,9 @@ import {Subscription} from 'rxjs';
 @Component({
     selector: 'app-input-color',
     templateUrl: './input-color.component.html',
-    styleUrls: ['./input-color.component.scss']
+    styleUrls: ['./input-color.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class InputColorComponent extends BaseInputComponent implements OnInit, OnDestroy {
 

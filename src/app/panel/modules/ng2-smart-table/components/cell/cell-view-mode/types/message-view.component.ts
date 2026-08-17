@@ -1,9 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Cell } from '../../../../lib/data-set/cell';
 
 @Component({
     selector: 'message-view-component',
     template: `{{renderValue}}`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class MessageviewComponent implements OnInit {
 

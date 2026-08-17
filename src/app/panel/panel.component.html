@@ -1,77 +1,99 @@
 <nav class="navbar navbar-default navbar-fixed-top">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" [routerLink]="homePage">
-                <img *ngIf="showLogo" [src]="logo">
-                <span *ngIf="!showLogo">{{ title }}</span>
-            </a>
-            <span class="hidden-xs toggler" (click)="toggleSidebar()"><i class="fa fa-bars"></i></span>
-        </div>
-        <div class="navbar-menu">
-            <ul class="nav navbar-nav">
-                <li class="hidden-sm hidden-md hidden-lg"><a class="toggler" (click)="toggleSidebar($event)"><i
-                            class="fa fa-bars"></i></a></li>
-                <!-- TODO: test -->
-                <li><a class="user" [routerLink]="'../panel/profile'" routerLinkActive="active"><i
-                            class="fa fa-user"></i>
-                        <span class="hidden-xs">{{user.username}}</span></a></li>
-                <li><a (click)="logout()" class="logout"><i class="fa fa-power-off"></i> <span
-                            class="hidden-xs">Logout</span></a></li>
-            </ul>
-        </div>
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" [routerLink]="homePage">
+        @if (showLogo) {
+          <img [src]="logo">
+        }
+        @if (!showLogo) {
+          <span>{{ title }}</span>
+        }
+      </a>
+      <span class="hidden-xs toggler" (click)="toggleSidebar()"><i class="fa fa-bars"></i></span>
     </div>
+    <div class="navbar-menu">
+      <ul class="nav navbar-nav">
+        <li class="hidden-sm hidden-md hidden-lg"><a class="toggler" (click)="toggleSidebar($event)"><i
+        class="fa fa-bars"></i></a></li>
+        <!-- TODO: test -->
+        <li><a class="user" [routerLink]="'../panel/profile'" routerLinkActive="active"><i
+        class="fa fa-user"></i>
+        <span class="hidden-xs">{{user.username}}</span></a></li>
+        <li><a (click)="logout()" class="logout"><i class="fa fa-power-off"></i> <span
+      class="hidden-xs">Logout</span></a></li>
+    </ul>
+  </div>
+</div>
 </nav>
 
 <div class="wrapper" id="wrapper">
-    <div class="sidebar">
-        <div class="menu">
-            <ul>
-                <li *ngFor="let item of menu, let i = index">
-                    <span (click)="redirect(item.path)">
-                        <a *ngIf="!item.children" [routerLink]="item.path" routerLinkActive="active"
+  <div class="sidebar">
+    <div class="menu">
+      <ul>
+        @for (item of menu; track item; let i = $index) {
+          <li>
+            <span (click)="redirect(item.path)">
+              @if (!item.children) {
+                <a [routerLink]="item.path" routerLinkActive="active"
                             [routerLinkActiveOptions]="{exact:
                             true}">
-                            <i *ngIf="item.icon" class="{{item.icon}}"></i>
-                            {{item.title}}
-                        </a>
-                    </span>
-                    <span class="group" *ngIf="item.children && item.children.length > 0"
-                        (click)="onGroupClick($event)">
-                        <a [ngStyle]="setSectionSelected(i)">
-                            <i *ngIf="item.icon" class="{{item.icon}}"></i>
-                            {{item.title}}
-                            <span class="fa fa-angle-down"></span>
-                        </a>
-                    </span>
-                    <ul *ngIf="item.children">
-                        <li *ngFor="let child of item.children">
-                            <span (click)="redirect(child.path,i)">
+                  @if (item.icon) {
+                    <i class="{{item.icon}}"></i>
+                  }
+                  {{item.title}}
+                </a>
+              }
+            </span>
+            @if (item.children && item.children.length > 0) {
+              <span class="group"
+                (click)="onGroupClick($event)">
+                <a [ngStyle]="setSectionSelected(i)">
+                  @if (item.icon) {
+                    <i class="{{item.icon}}"></i>
+                  }
+                  {{item.title}}
+                  <span class="fa fa-angle-down"></span>
+                </a>
+              </span>
+            }
+            @if (item.children) {
+              <ul>
+                @for (child of item.children; track child) {
+                  <li>
+                    <span (click)="redirect(child.path,i)">
                                 <a [routerLink]="child.path" routerLinkActive="active" [routerLinkActiveOptions]="{exact:
                                     true}">
-                                    <i *ngIf="child.icon" class="{{child.icon}}"></i>
-                                    {{child.sideTitle ? child.sideTitle : child.title}}
-                                </a>
-                            </span>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
+                        @if (child.icon) {
+                          <i class="{{child.icon}}"></i>
+                        }
+                        {{child.sideTitle ? child.sideTitle : child.title}}
+                      </a>
+                    </span>
+                  </li>
+                }
+              </ul>
+            }
+          </li>
+        }
+      </ul>
     </div>
-    <div class="content">
-        <app-content-top></app-content-top>
+  </div>
+  <div class="content">
+    <app-content-top></app-content-top>
 
-        <div class="container warnings" *ngIf="menu.length == 0">
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="alert alert-warning">
-                        User not authorized
-                        <!-- TODO: show custom message -->
-                    </div>
-                </div>
+    @if (menu.length == 0) {
+      <div class="container warnings">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="alert alert-warning">
+              User not authorized
+              <!-- TODO: show custom message -->
             </div>
+          </div>
         </div>
+      </div>
+    }
 
-        <router-outlet></router-outlet>
-    </div>
+    <router-outlet></router-outlet>
+  </div>
 </div>

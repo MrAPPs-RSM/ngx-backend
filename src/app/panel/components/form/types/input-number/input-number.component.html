@@ -2,16 +2,20 @@
   <div class="form-group" [ngClass]="{'has-error': !isValid()}">
     <label for="{{field.key}}">
       {{field.label}}
-      <span *ngIf="isRequired()">*</span>
+      @if (isRequired()) {
+        <span>*</span>
+      }
     </label>
     <input
-            type="number"
-            [attr.disabled]="field.disabled || onlyView ? '' : null"
-            formControlName="{{field.key}}"
-            class="form-control"
-            id="{{field.key}}"
-            placeholder="{{field.placeholder}}"
-    >
-    <span *ngIf="field.description" class="help-block">{{field.description}}</span>
+      type="number"
+      [attr.disabled]="field.disabled || onlyView ? '' : null"
+      formControlName="{{field.key}}"
+      class="form-control"
+      id="{{field.key}}"
+      placeholder="{{field.placeholder}}"
+      >
+    @if (field.description) {
+      <span class="help-block">{{field.description}}</span>
+    }
   </div>
 </div>

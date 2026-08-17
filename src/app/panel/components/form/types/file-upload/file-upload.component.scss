@@ -1,4 +1,5 @@
-@import '../../../../../../assets/sass/partials/imports';
+@use "sass:color";
+@use '../../../../../../assets/sass/partials/imports' as *;
 
 app-file-upload {
   > div {
@@ -21,11 +22,11 @@ app-file-upload {
         position: relative;
         text-align: center;
 
-        @include _transition(all 0.3s);
+        @include transition(all 0.3s);
 
         &.is-drop-over {
-          background-color: lighten($primary, 40);
-          border-color: lighten($primary, 20);
+          background-color: color.adjust($primary, $lightness: 40%);
+          border-color: color.adjust($primary, $lightness: 20%);
         }
 
         > div {
@@ -96,7 +97,7 @@ app-file-upload {
               width: $fileSize;
               display: block;
               overflow: hidden;
-              color: darken($default, 10);
+              color: color.adjust($default, $lightness: -10%);
               border: 1px solid #ddd;
               padding: 2px 3px;
               background-color: #ffffff;

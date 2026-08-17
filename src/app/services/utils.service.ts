@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as _ from 'lodash';
-import * as moment from 'moment';
-import * as url from 'url';
+import moment from 'moment';
 
 @Injectable()
 export class UtilsService {

@@ -1,13 +1,15 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
-import { UploaderOptions, UploadFile, UploadInput, UploadOutput } from 'ngx-uploader';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
+import { UploaderOptions, UploadFile, UploadInput, UploadOutput } from '../../../../directives/modern-uploader.directive';
 import { environment } from '../../../../../../environments/environment';
 import {ACCESS_TOKEN_KEY, UserService} from '../../../../../auth/services/user.service';
 
 @Component({
-  selector: 'app-file-uploader',
-  templateUrl: './file-uploader.component.html',
-  styleUrls: ['./file-uploader.component.scss'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'app-file-uploader',
+    templateUrl: './file-uploader.component.html',
+    styleUrls: ['./file-uploader.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class FileUploaderComponent implements OnInit, OnChanges {
 

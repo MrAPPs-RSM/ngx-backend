@@ -1,16 +1,18 @@
-import {Component, Input} from '@angular/core';
-import {AbstractControl, FormGroup} from '@angular/forms';
+import {Component, Input, ChangeDetectionStrategy} from '@angular/core';
+import {AbstractControl, UntypedFormGroup} from '@angular/forms';
 
 @Component({
     selector: 'app-base-input',
     templateUrl: './base-input.component.html',
-    styleUrls: ['./base-input.component.scss']
+    styleUrls: ['./base-input.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class BaseInputComponent {
 
     @Input() index: number;
     @Input() groupName: string;
-    @Input() form: FormGroup;
+    @Input() form: UntypedFormGroup;
     @Input() field: any = {};
     @Input() isEdit = false;
     @Input() onlyView = false;

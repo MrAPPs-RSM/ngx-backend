@@ -1,4 +1,4 @@
-import {Component, Input, Output, EventEmitter, OnChanges} from '@angular/core';
+import {Component, Input, Output, EventEmitter, OnChanges, ChangeDetectionStrategy} from '@angular/core';
 
 import {Grid} from '../../../lib/grid';
 import {DataSource} from '../../../lib/data-source/data-source';
@@ -7,25 +7,35 @@ import {Column} from "../../../lib/data-set/column";
 @Component({
     selector: '[ng2-st-thead-titles-row]',
     template: `
-        <th ng2-st-drag-title *ngIf="isDragEnabled" [ngStyle]="{'width': column?.width}" [ngClass]="{'col-mod': column?.width != null }"></th>
-        <th ng2-st-checkbox-select-all *ngIf="isMultiSelectVisible" [ngClass]="{'col-mod': column?.width != null }"
+        @if (isDragEnabled) {
+          <th ng2-st-drag-title [ngStyle]="{'width': $safeNavigationMigration(column?.width)}" [ngClass]="{'col-mod': column?.width != null }"></th>
+        }
+        @if (isMultiSelectVisible) {
+          <th ng2-st-checkbox-select-all [ngClass]="{'col-mod': column?.width != null }"
             [grid]="grid"
             [source]="source"
             [isAllSelected]="isAllSelected"
-            (click)="selectAllRows.emit($event)" [ngStyle]="{'width': column?.width}">
-        </th>
-        <th *ngFor="let column of grid.getVisibleColumns()" class="ng2-smart-th {{ column.id }}" [ngStyle]="{'width': column?.width}"
+            (click)="selectAllRows.emit($event)" [ngStyle]="{'width': $safeNavigationMigration(column?.width)}">
+          </th>
+        }
+        @for (column of grid.getVisibleColumns(); track column) {
+          <th class="ng2-smart-th {{ column.id }}" [ngStyle]="{'width': $safeNavigationMigration(column?.width)}"
             [ngClass]="setClasses(column)">
             <ng2-st-column-title
-                    [activeSort]="getActiveSort(column)"
-                    [source]="source"
-                    [column]="column"
-                    (sort)="sort.emit($event)"
-                   >
+              [activeSort]="getActiveSort(column)"
+              [source]="source"
+              [column]="column"
+              (sort)="sort.emit($event)"
+              >
             </ng2-st-column-title>
-        </th>
-        <th ng2-st-actions-title *ngIf="showActionsColumn" [grid]="grid" [ngStyle]="{'width': column?.width}" [ngClass]="{'col-mod': column?.width != null }"></th>
-    `,
+          </th>
+        }
+        @if (showActionsColumn) {
+          <th ng2-st-actions-title [grid]="grid" [ngStyle]="{'width': $safeNavigationMigration(column?.width)}" [ngClass]="{'col-mod': column?.width != null }"></th>
+        }
+        `,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class TheadTitlesRowComponent implements OnChanges {
 

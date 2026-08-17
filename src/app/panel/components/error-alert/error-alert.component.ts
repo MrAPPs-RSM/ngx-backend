@@ -1,10 +1,12 @@
-import {Component, OnInit, Input, EventEmitter, Output} from '@angular/core';
+import {Component, OnInit, Input, EventEmitter, Output, ChangeDetectionStrategy} from '@angular/core';
 import ErrorBag from '../../../strategies/form/ErrorBag';
 
 @Component({
-  selector: 'app-error-alert',
-  templateUrl: './error-alert.component.html',
-  styleUrls: ['./error-alert.component.css']
+    selector: 'app-error-alert',
+    templateUrl: './error-alert.component.html',
+    styleUrls: ['./error-alert.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class ErrorAlertComponent implements OnInit {
   @Input() errorBag: ErrorBag;

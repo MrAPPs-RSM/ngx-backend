@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {ApiService} from '../../../api/api.service';
 
 @Component({
-  selector: 'app-base-long-polling',
-  templateUrl: './base-long-polling.component.html',
-  styleUrls: ['./base-long-polling.component.css']
+    selector: 'app-base-long-polling',
+    templateUrl: './base-long-polling.component.html',
+    styleUrls: ['./base-long-polling.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class BaseLongPollingComponent {
 

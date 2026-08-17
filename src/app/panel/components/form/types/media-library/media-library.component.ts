@@ -1,15 +1,16 @@
 
 import {debounceTime, distinctUntilChanged, skip} from 'rxjs/operators';
 import {
-    Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChange,
-    ViewEncapsulation
+  Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChange,
+  ViewEncapsulation,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {Media, MediaLibraryOptions, MediaLibraryParams, UploadedFile} from '../../interfaces/form-field-file';
 import {ApiService, ErrorResponse} from '../../../../../api/api.service';
 import {UtilsService} from '../../../../../services/utils.service';
 import {ToastsService} from '../../../../../services/toasts.service';
 import {environment} from '../../../../../../environments/environment';
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 
 
 
@@ -21,7 +22,9 @@ declare const $: any;
     selector: 'app-media-library',
     templateUrl: './media-library.component.html',
     styleUrls: ['./media-library.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class MediaLibraryComponent implements OnInit, OnChanges, OnDestroy {
 
@@ -42,7 +45,7 @@ export class MediaLibraryComponent implements OnInit, OnChanges, OnDestroy {
     private params: MediaLibraryParams;
 
     subscriptionInputControl = Subscription.EMPTY;
-    inputControl = new FormControl();
+    inputControl = new UntypedFormControl();
 
     constructor(private _apiService: ApiService,
                 private _toast: ToastsService) {

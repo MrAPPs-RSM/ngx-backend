@@ -1,5 +1,5 @@
-import {Component, Input, OnChanges, OnInit, SimpleChange} from '@angular/core';
-import {FormControl} from '@angular/forms';
+import {Component, Input, OnChanges, OnInit, SimpleChange, ChangeDetectionStrategy} from '@angular/core';
+import {UntypedFormControl} from '@angular/forms';
 
 import {DefaultFilter} from './default-filter';
 import {Observable} from 'rxjs';
@@ -10,27 +10,31 @@ import { debounceTime } from 'rxjs/operators';
     selector: 'checkbox-filter',
     template: `
         <label class="checkbox">
-            <input type="checkbox"
-                   [formControl]="inputControl"
-                   class="form-control"
-                   [ngClass]="inputClass">
-            <span>
+          <input type="checkbox"
+            [formControl]="inputControl"
+            class="form-control"
+            [ngClass]="inputClass">
+          <span>
           </span>
         </label>
-        <a href="#" *ngIf="filterActive"
-           (click)="resetFilter($event)">×</a>
-    `,
+        @if (filterActive) {
+          <a href="#"
+          (click)="resetFilter($event)">×</a>
+        }
+        `,
     styles: [
         'label.checkbox > span { width: 0;}',
         'label.checkbox + a { font-weight: 300; }'
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class CheckboxFilterComponent extends DefaultFilter implements OnInit, OnChanges {
 
     @Input() filterValue: any;
 
     filterActive = false;
-    inputControl = new FormControl();
+    inputControl = new UntypedFormControl();
     delay = 0;
 
     constructor() {

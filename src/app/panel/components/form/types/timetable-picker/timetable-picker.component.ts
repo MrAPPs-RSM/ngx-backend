@@ -1,6 +1,6 @@
-import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewEncapsulation, ChangeDetectionStrategy} from '@angular/core';
 import {BaseInputComponent} from '../base-input/base-input.component';
-import {FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import { first } from 'rxjs/operators';
 
@@ -8,15 +8,17 @@ import { first } from 'rxjs/operators';
     selector: 'app-timetable-picker',
     templateUrl: './timetable-picker.component.html',
     styleUrls: ['./timetable-picker.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class TimetablePickerComponent extends BaseInputComponent implements OnInit, OnDestroy {
 
-    subForm: FormGroup;
-    mS: FormControl = new FormControl(); // morning start
-    mE: FormControl = new FormControl(); // morning end
-    aS: FormControl = new FormControl(); // afternoon start
-    aE: FormControl = new FormControl(); // afternoon end
+    subForm: UntypedFormGroup;
+    mS: UntypedFormControl = new UntypedFormControl(); // morning start
+    mE: UntypedFormControl = new UntypedFormControl(); // morning end
+    aS: UntypedFormControl = new UntypedFormControl(); // afternoon start
+    aE: UntypedFormControl = new UntypedFormControl(); // afternoon end
 
     private _subscription = Subscription.EMPTY;
     private _subFormSubscription = Subscription.EMPTY;
@@ -35,7 +37,7 @@ export class TimetablePickerComponent extends BaseInputComponent implements OnIn
     }
 
     ngOnInit() {
-        this.subForm = new FormGroup({
+        this.subForm = new UntypedFormGroup({
             'mS': this.mS,
             'mE': this.mE,
             'aS': this.aS,

@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy} from '@angular/core';
 import {User, UserService} from '../auth/services/user.service';
 import {environment} from '../../environments/environment';
 import {ActivatedRoute, NavigationEnd, Route, Router} from '@angular/router';
@@ -16,7 +16,9 @@ declare const $: any;
     selector: 'app-panel',
     templateUrl: './panel.component.html',
     styleUrls: ['./panel.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class PanelComponent implements OnInit, AfterViewInit {
 

@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, ChangeDetectionStrategy} from '@angular/core';
 
 import {Grid} from '../../../lib/grid';
 import {DataSource} from '../../../lib/data-source/data-source';
@@ -13,6 +13,8 @@ import {DataSource} from '../../../lib/data-source/data-source';
             <span></span>
         </label>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class CheckboxSelectAllComponent {
 

@@ -1,6 +1,9 @@
-@mixin card($paddingY: $cardPaddingY, $paddingX: $cardPaddingX, $border: 1px solid $lightGrey) {
+@use "../../../environments/colors";
+@use "../partials/variables";
+
+@mixin card($paddingY: variables.$cardPaddingY, $paddingX: variables.$cardPaddingX, $border: 1px solid colors.$lightGrey) {
   background-color: #ffffff;
-  border-radius: $borderRadius;
+  border-radius: variables.$borderRadius;
   padding: $paddingY $paddingX;
   margin: 20px 0 0;
   border: $border;

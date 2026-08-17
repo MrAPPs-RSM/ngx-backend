@@ -1,30 +1,34 @@
+@use "sass:color";
+@use "../../../environments/colors";
+@use "variables";
+
 .alert {
   padding: 15px 20px;
-  border-radius: $borderRadius;
+  border-radius: variables.$borderRadius;
 
   &.alert-default {
-    background-color: lighten($default, 20);
-    color: darken($default, 20);
+    background-color: color.adjust(colors.$default, $lightness: 20%);
+    color: color.adjust(colors.$default, $lightness: -20%);
   }
   &.alert-primary {
-    background-color: lighten($primary, 20);
-    color: darken($primary, 20);
+    background-color: color.adjust(colors.$primary, $lightness: 20%);
+    color: color.adjust(colors.$primary, $lightness: -20%);
   }
   &.alert-success {
-    background-color: lighten($success, 20);
-    color: darken($success, 20);
+    background-color: color.adjust(colors.$success, $lightness: 20%);
+    color: color.adjust(colors.$success, $lightness: -20%);
   }
   &.alert-warning {
-    background-color: lighten($warning, 20);
-    color: darken($warning, 20);
+    background-color: color.adjust(colors.$warning, $lightness: 20%);
+    color: color.adjust(colors.$warning, $lightness: -20%);
   }
   &.alert-info {
-    background-color: lighten($info, 20);
-    color: darken($info, 20);
+    background-color: color.adjust(colors.$info, $lightness: 20%);
+    color: color.adjust(colors.$info, $lightness: -20%);
   }
   &.alert-danger {
-    background-color: lighten($danger, 20);
-    color: darken($danger, 20);
+    background-color: color.adjust(colors.$danger, $lightness: 20%);
+    color: color.adjust(colors.$danger, $lightness: -20%);
   }
 
   position: relative;
@@ -34,6 +38,6 @@
     position: absolute;
     top: 1px;
     right: 8px;
-    color: darken($danger, 20);
+    color: color.adjust(colors.$danger, $lightness: -20%);
   }
 }

@@ -1,4 +1,4 @@
-import { Component, Input, Output, SimpleChange, EventEmitter, OnChanges, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, Output, SimpleChange, EventEmitter, OnChanges, ChangeDetectionStrategy } from '@angular/core';
 
 import { Grid } from './lib/grid';
 import { DataSource } from './lib/data-source/data-source';
@@ -9,14 +9,15 @@ import { TablePagination } from './lib/data-filters/table-pagination';
 import { TableSort } from './lib/data-filters/table-sort';
 import { TableFilter } from './lib/data-filters/table-filter';
 import { TableActiveFilters } from './lib/data-filters/table-active-filters';
-import { DragulaService } from 'ng2-dragula';
 
 @Component({
     selector: 'ng2-smart-table',
     styleUrls: ['./ng2-smart-table.component.scss'],
     templateUrl: './ng2-smart-table.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
-export class Ng2SmartTableComponent implements OnChanges, OnInit, OnDestroy {
+export class Ng2SmartTableComponent implements OnChanges {
 
     @Input() count: number;
     @Input() source: any;
@@ -63,22 +64,6 @@ export class Ng2SmartTableComponent implements OnChanges, OnInit, OnDestroy {
 
     isAllSelected: boolean = false;
 
-    constructor(private _dragulaService: DragulaService) {
-    }
-
-    ngOnInit() {
-        if (this.isDragEnabled) {
-            this._dragulaService.createGroup('row', {
-                moves: (el, container, handle) => {
-                    return handle.className === 'drag';
-                }
-            });
-            this._dragulaService.drop('row').subscribe(({ el, source }) => {
-                this.onDrop();
-            });
-        }
-    }
-
     ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
         if (this.grid) {
             if (changes['settings']) {
@@ -104,12 +89,6 @@ export class Ng2SmartTableComponent implements OnChanges, OnInit, OnDestroy {
         this.rowClassFunction = this.grid.getSetting('rowClassFunction');
     }
 
-
-    ngOnDestroy() {
-        if (this.isDragEnabled && this._dragulaService) {
-            this._dragulaService.destroy('row');
-        }
-    }
 
     multipleSelectRow(row: Row) {
         if (this.grid.getSetting('selectMode') === 'multi') {
@@ -189,7 +168,7 @@ export class Ng2SmartTableComponent implements OnChanges, OnInit, OnDestroy {
 
     /** ---------------- DRAG & DROP ------------------ */
 
-    private onDrop() {
+    onDrop() {
         this.rowDrop.emit({
             data: this.dragulaList
         });

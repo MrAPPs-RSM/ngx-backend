@@ -1,15 +1,22 @@
+@use "sass:color";
+@use "../../../environments/colors";
+@use "../mixins/box-shadow";
+@use "../mixins/transform";
+@use "../mixins/transition";
+@use "variables";
+
 .noUi-target {
   border: none;
-  border-radius: $borderRadius;
-  @include box-shadow(none);
+  border-radius: variables.$borderRadius;
+  @include box-shadow.box-shadow(none);
   height: 4px;
-  background-color: lighten($primary, 40);
+  background-color: color.adjust(colors.$primary, $lightness: 40%);
 }
 
 .noUi-connects {
-  border-radius: $borderRadius;
+  border-radius: variables.$borderRadius;
   > .noUi-connect {
-    background-color: darken($primary, 5);
+    background-color: color.adjust(colors.$primary, $lightness: -5%);
   }
 }
 
@@ -17,14 +24,14 @@
   $defaultSize: 14px;
   $hoverSize: 18px;
   > .noUi-handle {
-    @include _transition(all 0.3s);
-    background-color: darken($primary, 5);
+    @include transition.transition(all 0.3s);
+    background-color: color.adjust(colors.$primary, $lightness: -5%);
     box-shadow: none;
     border-radius: 50%;
     border: none;
     width: $defaultSize;
     height: $defaultSize;
-    right: -#{$defaultSize / 2} !important;
+    right: -#{$defaultSize * 0.5} !important;
     top: -5px;
     outline: none;
 
@@ -35,19 +42,19 @@
     &.noUi-active {
       width: $hoverSize;
       height: $hoverSize;
-      right: -#{$hoverSize / 2} !important;
+      right: -#{$hoverSize * 0.5} !important;
       top: -7px;
     }
 
     > .noUi-tooltip {
       font-size: 10px;
       border: none;
-      border-radius: $borderRadius;
-      font-weight: $light;
-      background-color: $sidebarDark;
-      color: $lightGrey;
+      border-radius: variables.$borderRadius;
+      font-weight: variables.$light;
+      background-color: colors.$sidebarDark;
+      color: colors.$lightGrey;
       padding: 2px 4px;
-      @include _transform(none);
+      @include transform.transform(none);
       left: -1px;
       bottom: -22px;
     }

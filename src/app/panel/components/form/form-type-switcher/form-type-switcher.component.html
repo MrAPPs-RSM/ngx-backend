@@ -1,263 +1,261 @@
-<div [ngSwitch]="field.type"
-     [hidden]="!isVisible()">
-
-    <app-separator
-            *ngSwitchCase="formConfig.noInputTypes.SEPARATOR"
-            [field]="field">
-    </app-separator>
-
-    <app-gallery
-            *ngSwitchCase="formConfig.noInputTypes.GALLERY"
-            [field]="field">
-    </app-gallery>
-
-    <app-image
-            *ngSwitchCase="formConfig.types.IMAGE"
-            [field]="field"
-            [form]="form">
-    </app-image>
-
-    <app-input-text
-            *ngSwitchCase="formConfig.types.TEXT"
-            [isSubField]="isSubField"
-            [onlyView]="onlyView"
-            [form]="form"
-            [groupName]="groupName"
-            [field]="field"
-            [isEdit]="isEdit"
-            [index]="index">
-    </app-input-text>
-
-    <app-geo-search
-            *ngSwitchCase="formConfig.types.GEOSEARCH"
-            [isSubField]="isSubField"
-            [onlyView]="onlyView"
-            [form]="form"
-            [groupName]="groupName"
-            [field]="field"
-            [isEdit]="isEdit"
-            [index]="index">
-    </app-geo-search>
-
-    <app-plain
-            *ngSwitchCase="formConfig.types.PLAIN"
-            [isSubField]="isSubField"
-            [onlyView]="onlyView"
-            [form]="form"
-            [groupName]="groupName"
-            [field]="field"
-            [isEdit]="isEdit"
-            [index]="index">
-    </app-plain>
-
-
-    <app-input-password
-            *ngSwitchCase="formConfig.types.PASSWORD"
-            [isSubField]="isSubField"
-            [onlyView]="onlyView"
-            [groupName]="groupName"
-            [form]="form"
-            [field]="field"
-            [isEdit]="isEdit"
-            [index]="index">
-    </app-input-password>
-
-    <app-input-url
-            *ngSwitchCase="formConfig.types.URL"
-            [isSubField]="isSubField"
-            [onlyView]="onlyView"
-            [groupName]="groupName"
-            [form]="form"
-            [field]="field"
-            [isEdit]="isEdit"
-            [index]="index">
-    </app-input-url>
-
-    <app-input-number
-            *ngSwitchCase="formConfig.types.NUMBER"
-            [isSubField]="isSubField"
-            [onlyView]="onlyView"
-            [groupName]="groupName"
-            [form]="form"
-            [field]="field"
-            [isEdit]="isEdit"
-            [index]="index">
-    </app-input-number>
-
-    <app-input-color
-            *ngSwitchCase="formConfig.types.COLOR"
-            [isSubField]="isSubField"
-            [onlyView]="onlyView"
-            [groupName]="groupName"
-            [form]="form"
-            [field]="field"
-            [isEdit]="isEdit"
-            [index]="index"
-    ></app-input-color>
-
-    <app-input-textarea
-            *ngSwitchCase="formConfig.types.TEXTAREA"
-            [isSubField]="isSubField"
-            [onlyView]="onlyView"
-            [groupName]="groupName"
-            [form]="form"
-            [field]="field"
-            [isEdit]="isEdit"
-            [index]="index">
-    </app-input-textarea>
-
-    <app-select
-            *ngSwitchCase="formConfig.types.SELECT"
-            [isSubField]="isSubField"
-            [onlyView]="onlyView"
-            [groupName]="groupName"
-            [unique]="unique"
-            [form]="form"
-            [field]="field"
-            [isEdit]="isEdit"
-            [index]="index">
-    </app-select>
-
-    <app-select-2
-            *ngSwitchCase="formConfig.types.SELECT_2"
-            [isSubField]="isSubField"
-            [onlyView]="onlyView"
-            [groupName]="groupName"
-            [unique]="unique"
-            [form]="form"
-            [field]="field"
-            [isEdit]="isEdit"
-            [index]="index">
-    </app-select-2>
-
-    <app-input-email
-            *ngSwitchCase="formConfig.types.EMAIL"
-            [isSubField]="isSubField"
-            [onlyView]="onlyView"
-            [groupName]="groupName"
-            [form]="form"
-            [field]="field"
-            [isEdit]="isEdit"
-            [index]="index">
-    </app-input-email>
-
-    <app-checkbox
-            *ngSwitchCase="formConfig.types.CHECKBOX"
-            [isSubField]="isSubField"
-            [onlyView]="onlyView"
-            [groupName]="groupName"
-            [form]="form"
-            [field]="field"
-            [isEdit]="isEdit"
-            [index]="index">
-    </app-checkbox>
-
-    <app-date-picker
-            *ngSwitchCase="formConfig.types.DATE"
-            [isSubField]="isSubField"
-            [onlyView]="onlyView"
-            [groupName]="groupName"
-            [form]="form"
-            [field]="field"
-            [isEdit]="isEdit"
-            [index]="index"
-    ></app-date-picker>
-
-    <app-date-range-picker
-            *ngSwitchCase="formConfig.types.DATE_RANGE"
-            [isSubField]="isSubField"
-            [onlyView]="onlyView"
-            [groupName]="groupName"
-            [form]="form"
-            [field]="field"
-            [isEdit]="isEdit"
-            [index]="index"
-    ></app-date-range-picker>
-
-    <app-timetable-picker
-            *ngSwitchCase="formConfig.types.TIMETABLE"
-            [isSubField]="isSubField"
-            [onlyView]="onlyView"
-            [groupName]="groupName"
-            [form]="form"
-            [field]="field"
-            [isEdit]="isEdit"
-            [index]="index"
-    ></app-timetable-picker>
-
-
-    <app-file-upload
-            *ngSwitchCase="formConfig.types.FILE"
-            [groupName]="groupName"
-            [onlyView]="onlyView"
-            [putFilesOnLanguages]="putFilesOnLanguages"
-            [form]="form"
-            [currentLang]="currentLang"
-            [field]="field"
-            [isEdit]="isEdit"
-            [index]="index"
-    ></app-file-upload>
-
-    <app-cloudinary-library
-            *ngSwitchCase="formConfig.types.CLOUDINARY"
-            [groupName]="groupName"
-            [form]="form"
-            [field]="field"
-            [isEdit]="isEdit"
-            [index]="index"
-    ></app-cloudinary-library>
-
-    <app-preview
-            *ngSwitchCase="formConfig.types.PREVIEW"
-            [groupName]="groupName"
-            [form]="form"
-            [field]="field"
-            [isEdit]="isEdit"
-            [index]="index"
-    ></app-preview>
-
-    <app-map
-            *ngSwitchCase="formConfig.types.MAP"
-            [groupName]="groupName"
-            [onlyView]="onlyView"
-            [form]="form"
-            [field]="field"
-            [isEdit]="isEdit"
-            [index]="index">
-    </app-map>
-    <app-list-details
-            *ngSwitchCase="formConfig.types.LIST_DETAILS"
-            [form]="form"
-            [groupName]="groupName"
-            [field]="field"
-            [isEdit]="isEdit"
-            [index]="index">
-    </app-list-details>
-
-    <app-hotspot
-            *ngSwitchCase="formConfig.types.HOTSPOT"
-            [field]="field"
-            [groupName]="groupName"
-            [form]="form"
-            [isEdit]="isEdit"
-            [index]="index">
-    </app-hotspot>
-
-  <app-hotspot-canvas
-    *ngSwitchCase="formConfig.types.HOTSPOT_CANVAS"
-    [field]="field"
-    [groupName]="groupName"
-    [form]="form"
-    [isEdit]="isEdit"
-    [index]="index">
-  </app-hotspot-canvas>
-
+<div
+  [hidden]="!isVisible()">
+  @switch (field.type) {
+    @case (formConfig.noInputTypes.SEPARATOR) {
+      <app-separator
+        [field]="field">
+      </app-separator>
+    }
+    @case (formConfig.noInputTypes.GALLERY) {
+      <app-gallery
+        [field]="field">
+      </app-gallery>
+    }
+    @case (formConfig.types.IMAGE) {
+      <app-image
+        [field]="field"
+        [form]="form">
+      </app-image>
+    }
+    @case (formConfig.types.TEXT) {
+      <app-input-text
+        [isSubField]="isSubField"
+        [onlyView]="onlyView"
+        [form]="form"
+        [groupName]="groupName"
+        [field]="field"
+        [isEdit]="isEdit"
+        [index]="index">
+      </app-input-text>
+    }
+    @case (formConfig.types.GEOSEARCH) {
+      <app-geo-search
+        [isSubField]="isSubField"
+        [onlyView]="onlyView"
+        [form]="form"
+        [groupName]="groupName"
+        [field]="field"
+        [isEdit]="isEdit"
+        [index]="index">
+      </app-geo-search>
+    }
+    @case (formConfig.types.PLAIN) {
+      <app-plain
+        [isSubField]="isSubField"
+        [onlyView]="onlyView"
+        [form]="form"
+        [groupName]="groupName"
+        [field]="field"
+        [isEdit]="isEdit"
+        [index]="index">
+      </app-plain>
+    }
+    @case (formConfig.types.PASSWORD) {
+      <app-input-password
+        [isSubField]="isSubField"
+        [onlyView]="onlyView"
+        [groupName]="groupName"
+        [form]="form"
+        [field]="field"
+        [isEdit]="isEdit"
+        [index]="index">
+      </app-input-password>
+    }
+    @case (formConfig.types.URL) {
+      <app-input-url
+        [isSubField]="isSubField"
+        [onlyView]="onlyView"
+        [groupName]="groupName"
+        [form]="form"
+        [field]="field"
+        [isEdit]="isEdit"
+        [index]="index">
+      </app-input-url>
+    }
+    @case (formConfig.types.NUMBER) {
+      <app-input-number
+        [isSubField]="isSubField"
+        [onlyView]="onlyView"
+        [groupName]="groupName"
+        [form]="form"
+        [field]="field"
+        [isEdit]="isEdit"
+        [index]="index">
+      </app-input-number>
+    }
+    @case (formConfig.types.COLOR) {
+      <app-input-color
+        [isSubField]="isSubField"
+        [onlyView]="onlyView"
+        [groupName]="groupName"
+        [form]="form"
+        [field]="field"
+        [isEdit]="isEdit"
+        [index]="index"
+      ></app-input-color>
+    }
+    @case (formConfig.types.TEXTAREA) {
+      <app-input-textarea
+        [isSubField]="isSubField"
+        [onlyView]="onlyView"
+        [groupName]="groupName"
+        [form]="form"
+        [field]="field"
+        [isEdit]="isEdit"
+        [index]="index">
+      </app-input-textarea>
+    }
+    @case (formConfig.types.SELECT) {
+      <app-select
+        [isSubField]="isSubField"
+        [onlyView]="onlyView"
+        [groupName]="groupName"
+        [unique]="unique"
+        [form]="form"
+        [field]="field"
+        [isEdit]="isEdit"
+        [index]="index">
+      </app-select>
+    }
+    @case (formConfig.types.SELECT_2) {
+      <app-select-2
+        [isSubField]="isSubField"
+        [onlyView]="onlyView"
+        [groupName]="groupName"
+        [unique]="unique"
+        [form]="form"
+        [field]="field"
+        [isEdit]="isEdit"
+        [index]="index">
+      </app-select-2>
+    }
+    @case (formConfig.types.EMAIL) {
+      <app-input-email
+        [isSubField]="isSubField"
+        [onlyView]="onlyView"
+        [groupName]="groupName"
+        [form]="form"
+        [field]="field"
+        [isEdit]="isEdit"
+        [index]="index">
+      </app-input-email>
+    }
+    @case (formConfig.types.CHECKBOX) {
+      <app-checkbox
+        [isSubField]="isSubField"
+        [onlyView]="onlyView"
+        [groupName]="groupName"
+        [form]="form"
+        [field]="field"
+        [isEdit]="isEdit"
+        [index]="index">
+      </app-checkbox>
+    }
+    @case (formConfig.types.DATE) {
+      <app-date-picker
+        [isSubField]="isSubField"
+        [onlyView]="onlyView"
+        [groupName]="groupName"
+        [form]="form"
+        [field]="field"
+        [isEdit]="isEdit"
+        [index]="index"
+      ></app-date-picker>
+    }
+    @case (formConfig.types.DATE_RANGE) {
+      <app-date-range-picker
+        [isSubField]="isSubField"
+        [onlyView]="onlyView"
+        [groupName]="groupName"
+        [form]="form"
+        [field]="field"
+        [isEdit]="isEdit"
+        [index]="index"
+      ></app-date-range-picker>
+    }
+    @case (formConfig.types.TIMETABLE) {
+      <app-timetable-picker
+        [isSubField]="isSubField"
+        [onlyView]="onlyView"
+        [groupName]="groupName"
+        [form]="form"
+        [field]="field"
+        [isEdit]="isEdit"
+        [index]="index"
+      ></app-timetable-picker>
+    }
+    @case (formConfig.types.FILE) {
+      <app-file-upload
+        [groupName]="groupName"
+        [onlyView]="onlyView"
+        [putFilesOnLanguages]="putFilesOnLanguages"
+        [form]="form"
+        [currentLang]="currentLang"
+        [field]="field"
+        [isEdit]="isEdit"
+        [index]="index"
+      ></app-file-upload>
+    }
+    @case (formConfig.types.CLOUDINARY) {
+      <app-cloudinary-library
+        [groupName]="groupName"
+        [form]="form"
+        [field]="field"
+        [isEdit]="isEdit"
+        [index]="index"
+      ></app-cloudinary-library>
+    }
+    @case (formConfig.types.PREVIEW) {
+      <app-preview
+        [groupName]="groupName"
+        [form]="form"
+        [field]="field"
+        [isEdit]="isEdit"
+        [index]="index"
+      ></app-preview>
+    }
+    @case (formConfig.types.MAP) {
+      <app-map
+        [groupName]="groupName"
+        [onlyView]="onlyView"
+        [form]="form"
+        [field]="field"
+        [isEdit]="isEdit"
+        [index]="index">
+      </app-map>
+    }
+    @case (formConfig.types.LIST_DETAILS) {
+      <app-list-details
+        [form]="form"
+        [groupName]="groupName"
+        [field]="field"
+        [isEdit]="isEdit"
+        [index]="index">
+      </app-list-details>
+    }
+    @case (formConfig.types.HOTSPOT) {
+      <app-hotspot
+        [field]="field"
+        [groupName]="groupName"
+        [form]="form"
+        [isEdit]="isEdit"
+        [index]="index">
+      </app-hotspot>
+    }
+    @case (formConfig.types.HOTSPOT_CANVAS) {
+      <app-hotspot-canvas
+        [field]="field"
+        [groupName]="groupName"
+        [form]="form"
+        [isEdit]="isEdit"
+        [index]="index">
+      </app-hotspot-canvas>
+    }
     <!--
-
-                     <calendar
-                             *ngSwitchCase="formConfig.types.CALENDAR"
-                             [form]="form"
-                             [field]="field">
-                     </calendar> -->
-
+    <calendar
+      *ngSwitchCase="formConfig.types.CALENDAR"
+      [form]="form"
+      [field]="field">
+    </calendar> -->
+  }
 </div>

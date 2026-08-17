@@ -1,12 +1,14 @@
 <div class="general-actions">
-    <ul>
-        <li *ngFor="let action of actions">
-            <a href="#"
-               title="{{action.name}}"
-               [class]="'ng2-smart-action ' + action.class"
-               [innerHTML]="action.content"
-               (click)="onAction($event, action)">
-            </a>
-        </li>
-    </ul>
+  <ul>
+    @for (action of actions; track action) {
+      <li>
+        <a href="#"
+          title="{{action.name}}"
+          [class]="'ng2-smart-action ' + action.class"
+          [innerHTML]="action.content"
+          (click)="onAction($event, action)">
+        </a>
+      </li>
+    }
+  </ul>
 </div>

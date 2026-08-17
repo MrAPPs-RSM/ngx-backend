@@ -1,4 +1,6 @@
-@mixin ellipsis-multiline($lines: 2, $font-size: $defaultFontSize, $line-height: $defaultLineHeight) {
+@use "../partials/variables";
+
+@mixin ellipsis-multiline($lines: 2, $font-size: variables.$defaultFontSize, $line-height: variables.$defaultLineHeight) {
   display: block;
   display: -webkit-box !important;
   max-width: 100%;

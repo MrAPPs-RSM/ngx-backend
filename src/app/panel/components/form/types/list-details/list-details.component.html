@@ -1,32 +1,41 @@
 <div [formGroup]="form" [class]="field.class ? field.class : 'col-sm-12'">
-    <div [formArrayName]="field.key" class="form-group">
-        <label>
-            {{field.label}}
-            <span *ngIf="isRequired()">*</span>
-        </label>
-        <div class="wrapper">
-            <div [dragula]="'bag'"
-                 [(dragulaModel)]="getControl().controls">
-                <div [formGroupName]="i"
-                     class="list-detail-item"
-                     *ngFor="let control of getControl().controls; let i = index">
-                    <span class="drag" *ngIf="!!field.drag"></span>
-                    <div *ngFor="let controlField of field.fields" class="row">
-                        <app-form-type-switcher [form]="control"
-                                                [isSubField]="true"
-                                                [field]="controlField"
-                                                [isEdit]="isEdit"
-                                                [groupName]="i"
-                                                [unique]="field.unique ? filterOptions : null"
-                                                [index]="i">
-                        </app-form-type-switcher>
-                    </div>
-                    <span (click)="deleteDetail(i)" class="delete danger">×</span>
-                </div>
-            </div>
-            <span *ngIf="addEnabled" (click)="addDetail()" class="add ng2-smart-action primary">
-                <i class="fa fa-plus"></i>
-            </span>
-        </div>
+  <div [formArrayName]="field.key" class="form-group">
+    <label>
+      {{field.label}}
+      @if (isRequired()) {
+        <span>*</span>
+      }
+    </label>
+    <div class="wrapper">
+      <div [appSortable]="getControl().controls">
+        @for (control of getControl().controls; track control; let i = $index) {
+          <div [formGroupName]="i"
+            class="list-detail-item"
+            >
+            @if (!!field.drag) {
+              <span class="drag"></span>
+            }
+            @for (controlField of field.fields; track controlField) {
+              <div class="row">
+                <app-form-type-switcher [form]="control"
+                  [isSubField]="true"
+                  [field]="controlField"
+                  [isEdit]="isEdit"
+                  [groupName]="i"
+                  [unique]="field.unique ? filterOptions : null"
+                  [index]="i">
+                </app-form-type-switcher>
+              </div>
+            }
+            <span (click)="deleteDetail(i)" class="delete danger">×</span>
+          </div>
+        }
+      </div>
+      @if (addEnabled) {
+        <span (click)="addDetail()" class="add ng2-smart-action primary">
+          <i class="fa fa-plus"></i>
+        </span>
+      }
     </div>
+  </div>
 </div>

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewEncapsulation, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { TableSettings } from './interfaces/table-settings';
 import { ApiService, ErrorResponse } from '../../../api/api.service';
 import { ModalService } from '../../services/modal.service';
@@ -24,7 +24,9 @@ import { BaseLongPollingComponent } from '../base-long-polling/base-long-polling
     selector: 'app-table',
     templateUrl: './table.component.html',
     styleUrls: ['./table.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class TableComponent extends BaseLongPollingComponent implements OnInit, OnDestroy {
 

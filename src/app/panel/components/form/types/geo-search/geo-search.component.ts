@@ -2,15 +2,17 @@
 import {of as observableOf, Observable} from 'rxjs';
 
 import {delay, distinctUntilChanged, debounceTime, switchMap} from 'rxjs/operators';
-import {ChangeDetectorRef, Component, EventEmitter, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {BaseInputComponent} from '../base-input/base-input.component';
-import {HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import {LanguageService} from '../../../../services/language.service';
 
 @Component({
     selector: 'app-geo-search',
     templateUrl: './geo-search.component.html',
-    styleUrls: ['./geo-search.component.scss']
+    styleUrls: ['./geo-search.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class GeoSearchComponent extends BaseInputComponent implements OnInit {
 

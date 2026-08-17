@@ -1,117 +1,172 @@
 <div [formGroup]="form" [class]="field.class ? field.class : 'col-sm-12'" [ngClass]="{'hidden': field.hidden}">
-    <div class="form-group" [ngClass]="{'has-error': !isValid()}">
+  <div class="form-group" [ngClass]="{'has-error': !isValid()}">
 
-        <label>
-            {{field.label}}
-            <span *ngIf="isRequired()">*</span>
-        </label>
-        <label *ngIf="field.options.allowedContentTypes"
-               [ngClass]="{'error': rejected}"
+    <label>
+      {{field.label}}
+      @if (isRequired()) {
+        <span>*</span>
+      }
+    </label>
+    @if (field.options.allowedContentTypes) {
+      <label
+        [ngClass]="{'error': rejected}"
         >
-              ({{field.options.allowedContentTypes.join()}})
-        </label>
+        ({{field.options.allowedContentTypes.join()}})
+      </label>
+    }
 
+    @if (putFilesOnLanguages && !copyOnLanguages && canUpload() && !isLoading) {
       <app-copy-lang-chooser
         [currentLang]="currentLang"
-        *ngIf="putFilesOnLanguages && !copyOnLanguages && canUpload() && !isLoading">
+        >
       </app-copy-lang-chooser>
+    }
 
-        <div class="progress" [ngClass]="{'visible': isLoading}">
-            <div class="indeterminate"></div>
-        </div>
+    <div class="progress" [ngClass]="{'visible': isLoading}">
+      <div class="indeterminate"></div>
+    </div>
 
-        <!-- TODO: add this part to re-enable drag&drop -->
-        <!--        <div class="drop-container"
-                     [options]="options"
-                     (uploadOutput)="onUploadOutput($event)"
-                     [uploadInput]="uploadInput"
-                     [ngClass]="{ 'is-drop-over': dragOver }">
-                     <div>
-                <span *ngIf="isLoading">{{'forms.inputs.uploading_files' | translate}}</span>
-                <span *ngIf="(maxFiles > 0 && uploadedFiles.length >= maxFiles) && !isLoading">{{'forms.inputs.max_files' | translate}} {{maxFiles}}</span>
-                <span *ngIf="(uploadedFiles.length === 0 || (maxFiles > 0 && uploadedFiles.length < maxFiles)) && !isLoading">{{'forms.inputs.drag_drop' | translate}} <span
-                        class="choose" (click)="bringFileSelector()">{{'forms.inputs.choose_files' | translate}}</span></span>
-            </div>
-                    <div> -->
+    <!-- TODO: add this part to re-enable drag&drop -->
+    <!--        <div class="drop-container"
+    [options]="options"
+    (uploadOutput)="onUploadOutput($event)"
+    [uploadInput]="uploadInput"
+    [ngClass]="{ 'is-drop-over': dragOver }">
+    <div>
+      <span *ngIf="isLoading">{{'forms.inputs.uploading_files' | translate}}</span>
+      <span *ngIf="(maxFiles > 0 && uploadedFiles.length >= maxFiles) && !isLoading">{{'forms.inputs.max_files' | translate}} {{maxFiles}}</span>
+      <span *ngIf="(uploadedFiles.length === 0 || (maxFiles > 0 && uploadedFiles.length < maxFiles)) && !isLoading">{{'forms.inputs.drag_drop' | translate}} <span
+      class="choose" (click)="bringFileSelector()">{{'forms.inputs.choose_files' | translate}}</span></span>
+    </div>
+    <div> -->
 
-        <!-- TODO: remove this part to re-enable drag&drop -->
+      <!-- TODO: remove this part to re-enable drag&drop -->
 
-        <div class="drop-container" *ngIf="!onlyView">
-            <div>
-                <span *ngIf="isLoading">{{'forms.inputs.uploading_files' | translate}}</span>
-                <span *ngIf="maxFiles > 0 && filesList.length >= maxFiles && !isLoading">
-                  {{'forms.inputs.max_files' | translate}}: {{maxFiles}}
+      @if (!onlyView) {
+        <div class="drop-container">
+          <div>
+            @if (isLoading) {
+              <span>{{'forms.inputs.uploading_files' | translate}}</span>
+            }
+            @if (maxFiles > 0 && filesList.length >= maxFiles && !isLoading) {
+              <span>
+                {{'forms.inputs.max_files' | translate}}: {{maxFiles}}
+              </span>
+            }
+            @if (canUpload() && !isLoading) {
+              <span>
+                <span class="choose btn btn-sm btn-default"
+                  (click)="bringFileSelector()"
+                  >
+                  {{'forms.inputs.upload_files' | translate}}
                 </span>
-
-                <span *ngIf="canUpload() && !isLoading">
-                    <span class="choose btn btn-sm btn-default"
-                          (click)="bringFileSelector()"
+                @if (!!field.options.mediaLibrary) {
+                  <span class="choose btn btn-sm btn-info"
+                    (click)="openMediaLibrary()"
                     >
-                        {{'forms.inputs.upload_files' | translate}}
-                    </span>
-                    <span class="choose btn btn-sm btn-info"
-                          *ngIf="!!field.options.mediaLibrary"
-                          (click)="openMediaLibrary()"
-                    >
-                        {{'forms.inputs.select_from_library' | translate}}
-                    </span>
-                </span>
-            </div>
+                    {{'forms.inputs.select_from_library' | translate}}
+                  </span>
+                }
+              </span>
+            }
+          </div>
         </div>
+      }
 
-        <input type="file"
-               #fileUpload
-               class="hidden"
-               ngFileSelect
-               [options]="options"
-               [uploadInput]="uploadInput"
-               (uploadOutput)="onUploadOutput($event)"
-               [multiple]="!!field.options.multiple"
+      <input type="file"
+        #fileUpload
+        class="hidden"
+        ngFileSelect
+        [options]="options"
+        [uploadInput]="uploadInput"
+        (uploadOutput)="onUploadOutput($event)"
+        [multiple]="!!field.options.multiple"
         >
 
+      @if (!!field.options.mediaLibrary) {
         <app-media-library
-                *ngIf="!!field.options.mediaLibrary"
-                [show]="showMediaLibrary"
-                [allowedContentTypes]="options.allowedContentTypes"
-                [uploadedFiles]="getControl().value"
-                [options]="field.options.mediaLibrary"
-                [maxFiles]="maxFiles"
-                (confirm)="onConfirmMediaLibrarySelection($event)"
+          [show]="showMediaLibrary"
+          [allowedContentTypes]="options.allowedContentTypes"
+          [uploadedFiles]="getControl().value"
+          [options]="field.options.mediaLibrary"
+          [maxFiles]="maxFiles"
+          (confirm)="onConfirmMediaLibrarySelection($event)"
         ></app-media-library>
+      }
 
 
+      @if (filesList && filesList.length > 0) {
         <div class="uploaded-files-container"
-             *ngIf="filesList && filesList.length > 0">
-            <label class="uploaded-files-label" *ngIf="!onlyView">Uploaded file(s)</label>
-            <ul>
-                <li *ngFor="let file of filesList"
-                    class="uploaded-file">
-                    <div class="file-wrapper">
-                        <div [ngSwitch]="file.type">
-                            <i *ngSwitchCase="'text/plain'" class="fa fa-file-text-o txt"></i>
-                            <i *ngSwitchCase="'application/msword'" class="fa fa-file-text-o txt"></i>
-                            <i *ngSwitchCase="'text/csv'" class="fa fa-file-code-o code"></i>
-                            <i *ngSwitchCase="'application/pdf'" class="fa fa-file-pdf-o pdf"></i>
-                            <i *ngSwitchCase="'application/zip'" class="fa fa-file-zip-o zip"></i>
-                            <i *ngSwitchCase="'video/mp4'" class="fa fa-file-video-o video"></i>
-                            <i *ngSwitchDefault class="fa fa-file-o default"></i>
-                            <img *ngSwitchCase="'image/jpeg'" [src]="file.url" (error)="retryUrl($event, file.url)"/>
-                            <img *ngSwitchCase="'image/jpg'" [src]="file.url" (error)="retryUrl($event, file.url)"/>
-                            <img *ngSwitchCase="'jpeg'" [src]="file.url" (error)="retryUrl($event, file.url)"/>
-                            <img *ngSwitchCase="'jpg'" [src]="file.url" (error)="retryUrl($event, file.url)"/>
-                            <img *ngSwitchCase="'image/png'" [src]="file.url" (error)="retryUrl($event, file.url)"/>
-                            <img *ngSwitchCase="'png'" [src]="file.url" (error)="retryUrl($event, file.url)"/>
-                        </div>
-                    </div>
-                    <span class="file-name" *ngIf="!onlyView">
-                        <span *ngIf="file.type == 'video/mp4'">{{file.name}}&nbsp;&nbsp;</span>
-                        <span class="remove"
-                              (click)="removeUploadedFile(file)"
-                        >×</span>
-                    </span>
-                </li>
-            </ul>
+          >
+          @if (!onlyView) {
+            <label class="uploaded-files-label">Uploaded file(s)</label>
+          }
+          <ul>
+            @for (file of filesList; track file) {
+              <li
+                class="uploaded-file">
+                <div class="file-wrapper">
+                  <div>
+                    @switch (file.type) {
+                      @case ('text/plain') {
+                        <i class="fa fa-file-text-o txt"></i>
+                      }
+                      @case ('application/msword') {
+                        <i class="fa fa-file-text-o txt"></i>
+                      }
+                      @case ('text/csv') {
+                        <i class="fa fa-file-code-o code"></i>
+                      }
+                      @case ('application/pdf') {
+                        <i class="fa fa-file-pdf-o pdf"></i>
+                      }
+                      @case ('application/zip') {
+                        <i class="fa fa-file-zip-o zip"></i>
+                      }
+                      @case ('video/mp4') {
+                        <i class="fa fa-file-video-o video"></i>
+                      }
+                      @default {
+                        <i class="fa fa-file-o default"></i>
+                      }
+                      @case ('image/jpeg') {
+                        <img [src]="file.url" (error)="retryUrl($event, file.url)"/>
+                      }
+                      @case ('image/jpg') {
+                        <img [src]="file.url" (error)="retryUrl($event, file.url)"/>
+                      }
+                      @case ('jpeg') {
+                        <img [src]="file.url" (error)="retryUrl($event, file.url)"/>
+                      }
+                      @case ('jpg') {
+                        <img [src]="file.url" (error)="retryUrl($event, file.url)"/>
+                      }
+                      @case ('image/png') {
+                        <img [src]="file.url" (error)="retryUrl($event, file.url)"/>
+                      }
+                      @case ('png') {
+                        <img [src]="file.url" (error)="retryUrl($event, file.url)"/>
+                      }
+                    }
+                  </div>
+                </div>
+                @if (!onlyView) {
+                  <span class="file-name">
+                    @if (file.type == 'video/mp4') {
+                      <span>{{file.name}}&nbsp;&nbsp;</span>
+                    }
+                    <span class="remove"
+                      (click)="removeUploadedFile(file)"
+                    >×</span>
+                  </span>
+                }
+              </li>
+            }
+          </ul>
         </div>
-        <span *ngIf="field.description" class="help-block">{{field.description}}</span>
+      }
+      @if (field.description) {
+        <span class="help-block">{{field.description}}</span>
+      }
     </div>
-</div>
+  </div>

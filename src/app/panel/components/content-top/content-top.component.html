@@ -1,14 +1,15 @@
 <div>
-    <div class="row">
-        <div class="col-sm-8">
-            <ul class="breadcrumb">
-                <li *ngFor="let item of getBreadcrumbs()">
-                    <a (click)="navigateTo(item)"
-                       [ngClass]="{'active': item.url === activePage}"
-                       routerLinkActive="active"
-                       [innerHTML]="item.title"></a>
-                </li>
-            </ul>
-        </div>
+  <div class="row">
+    <div class="col-sm-8">
+      <ul class="breadcrumb">
+        @for (item of getBreadcrumbs(); track item) {
+          <li>
+            <a (click)="navigateTo(item)"
+              [class.active]="isActive(item)"
+            [innerHTML]="item.title"></a>
+          </li>
+        }
+      </ul>
     </div>
+  </div>
 </div>

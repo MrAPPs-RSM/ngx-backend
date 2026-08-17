@@ -1,10 +1,10 @@
-import {FormArray, FormGroup} from '@angular/forms';
+import {UntypedFormArray, UntypedFormGroup} from '@angular/forms';
 import {FormSettings} from '../../panel/components/form/interfaces/form-settings';
 import {FormGeneratorService} from '../../panel/services/form-generator.service';
 import {formConfig} from '../../panel/components/form/form.config';
 
 export default class ResponseProcessor {
-  constructor(private _form: FormGroup, private _settings: FormSettings, private _formGenerator: FormGeneratorService) {
+  constructor(private _form: UntypedFormGroup, private _settings: FormSettings, private _formGenerator: FormGeneratorService) {
   }
 
   syncResponse(response: any) {
@@ -40,10 +40,10 @@ export default class ResponseProcessor {
 
     Object.keys(listDetailsFields)
       .forEach(key => {
-        (this._form.controls[key] as FormArray).clear();
+        (this._form.controls[key] as UntypedFormArray).clear();
         for (let i = 0; i < response[key].length; i++) {
-          (this._form.controls[key] as FormArray).push(
-            new FormGroup(this._formGenerator.generateFormFields(listDetailsFields[key]))
+          (this._form.controls[key] as UntypedFormArray).push(
+            new UntypedFormGroup(this._formGenerator.generateFormFields(listDetailsFields[key]))
           );
         }
     });
@@ -51,8 +51,8 @@ export default class ResponseProcessor {
     // (this._form.controls[key] as FormGroup).removeControl('hotSpots');
     hotSpotKeys.forEach((key) => {
       for (let i = 0; i < response[key]['hotSpots'].length; i++) {
-        ((this._form.controls[key] as FormGroup).controls['hotSpots'] as FormArray).push(
-          new FormGroup(this._formGenerator.generateFormFields(hotSpotFields))
+        ((this._form.controls[key] as UntypedFormGroup).controls['hotSpots'] as UntypedFormArray).push(
+          new UntypedFormGroup(this._formGenerator.generateFormFields(hotSpotFields))
         );
       }
     });

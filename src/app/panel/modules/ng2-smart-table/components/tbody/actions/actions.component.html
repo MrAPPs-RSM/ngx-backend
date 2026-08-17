@@ -1,15 +1,17 @@
-<a *ngFor="let action of actions"
-   href="#"
+@for (action of actions; track action) {
+  <a
+    href="#"
    [ngClass]="{
     'disabled': !action.enabled,
     'hidden': !action.visible
     }"
-   [class]="'ng2-smart-action ' + action.class"
-   [style.background-color]="action.bgColor ? action.bgColor : null"
-   [innerHTML]="action.content"
-   (click)="action.enabled && onAction($event, action)"
-   [matTooltip]="action.name"
-   matTooltipPosition="above"
-   [matTooltipDisabled]="!action.enabled"
->
-</a>
+    [class]="'ng2-smart-action ' + action.class"
+    [style.background-color]="action.bgColor ? action.bgColor : null"
+    [innerHTML]="action.content"
+    (click)="action.enabled && onAction($event, action)"
+    [matTooltip]="action.name"
+    matTooltipPosition="above"
+    [matTooltipDisabled]="!action.enabled"
+    >
+  </a>
+}

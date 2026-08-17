@@ -1,18 +1,19 @@
-import {Component, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ViewEncapsulation, ChangeDetectionStrategy} from '@angular/core';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {FormFieldListDetails} from '../../interfaces/form-field-list-details';
-import {FormArray, FormGroup} from '@angular/forms';
+import {UntypedFormArray, UntypedFormGroup} from '@angular/forms';
 import {FormGeneratorService} from '../../../../services/form-generator.service';
 import {SelectComponent, SelectData} from '../select/select.component';
 import {formConfig} from '../../form.config';
 import { Subject } from 'rxjs';
-import {DragulaService} from 'ng2-dragula';
 
 @Component({
     selector: 'app-list-details',
     templateUrl: './list-details.component.html',
     styleUrls: ['./list-details.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class ListDetailsComponent extends BaseInputComponent implements OnInit, OnDestroy {
 
@@ -21,8 +22,7 @@ export class ListDetailsComponent extends BaseInputComponent implements OnInit, 
     observer: Subject<any>;
     addEnabled: boolean;
 
-    constructor(private _dragulaService: DragulaService,
-                private _formGenerator: FormGeneratorService) {
+    constructor(private _formGenerator: FormGeneratorService) {
         super();
 
         this.checkAddEnabled();
@@ -32,12 +32,6 @@ export class ListDetailsComponent extends BaseInputComponent implements OnInit, 
         if (!this.isRequired()) {
             this.deleteDetail(0);
         }
-
-        this._dragulaService.createGroup('bag', {
-            moves: function (el, container, handle) {
-                return handle.className === 'drag';
-            }
-        });
 
         this.filterOptions = this.filterOptions.bind(this);
 
@@ -59,7 +53,6 @@ export class ListDetailsComponent extends BaseInputComponent implements OnInit, 
     }
 
     ngOnDestroy() {
-        this._dragulaService.destroy('bag');
         if (this.observer) {
             this.observer.complete();
         }
@@ -68,7 +61,7 @@ export class ListDetailsComponent extends BaseInputComponent implements OnInit, 
     filterOptions(select: SelectComponent, options: SelectData[]): SelectData[] {
         const updatedOptions = [];
 
-        const formArray = this.form.get(this.field.key) as FormArray;
+        const formArray = this.form.get(this.field.key) as UntypedFormArray;
 
         for (const option of options) {
 
@@ -79,7 +72,7 @@ export class ListDetailsComponent extends BaseInputComponent implements OnInit, 
             for (const group of formArray.controls) {
 
                 if (index !== select.index) {
-                    const formGroup = group as FormGroup;
+                    const formGroup = group as UntypedFormGroup;
 
                     if (option.id === formGroup.get(select.field.key).value) {
                         found = true;
@@ -98,19 +91,19 @@ export class ListDetailsComponent extends BaseInputComponent implements OnInit, 
         return updatedOptions;
     }
 
-    public getControl(): FormArray {
-        return this.form.get(this.field.key) as FormArray;
+    public getControl(): UntypedFormArray {
+        return this.form.get(this.field.key) as UntypedFormArray;
     }
 
     addDetail() {
         // add new formgroup
-        this.getControl().push(new FormGroup(this._formGenerator.generateFormFields(this.field.fields)));
+        this.getControl().push(new UntypedFormGroup(this._formGenerator.generateFormFields(this.field.fields)));
         this.checkAddEnabled();
     }
 
     deleteDetail(index: number) {
         if (this.observer) {
-            this.observer.next();
+            this.observer.next(undefined);
         }
         // remove the chosen row
         this.getControl().removeAt(index);

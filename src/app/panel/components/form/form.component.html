@@ -1,109 +1,139 @@
-<form *ngIf="form"
-      [formGroup]="form"
-      (keyup.enter)="enableAutoSubmit && onSubmit()"
-      [ngClass]="{'loading': isFormLoading(), 'error': hasErrors()}">
+@if (form) {
+  <form
+    [formGroup]="form"
+    (keyup.enter)="enableAutoSubmit && onSubmit()"
+    [ngClass]="{'loading': isFormLoading(), 'error': hasErrors()}">
     <header>
-        <h3 *ngIf="settings.title">{{ settings.title }}</h3>
-        <div class="progress">
-            <div class="indeterminate"></div>
-        </div>
+      @if (settings.title) {
+        <h3>{{ settings.title }}</h3>
+      }
+      <div class="progress">
+        <div class="indeterminate"></div>
+      </div>
     </header>
-
     <app-error-alert
       [errorBag]="errorBag"
       [errorMessages]="settings.errors"
       (close)="closeErrors()"
     ></app-error-alert>
-
     <div class="fields-wrapper">
-        <div class="row">
-            <div class="col-sm-12 multilang" *ngIf="isMultiLangEnabled">
-                <app-language-selector
-                  (selectedLangChange)="onLanguageChange($event)"
-                  [(selectedLang)]="currentLang"
-                ></app-language-selector>
-            </div>
-
-          <div class="col-sm-12" *ngIf="isMultiLangEnabled">
-            <app-copy-lang-chooser
-              [currentLang]="currentLang"
-              *ngIf="settings.copyOnLanguages">
-            </app-copy-lang-chooser>
+      <div class="row">
+        @if (isMultiLangEnabled) {
+          <div class="col-sm-12 multilang">
+            <app-language-selector
+              (selectedLangChange)="onLanguageChange($event)"
+              [(selectedLang)]="currentLang"
+            ></app-language-selector>
           </div>
-
-            <div *ngIf="!settings.putTranslationsFirst">
-                <div *ngFor="let field of settings.fields.base">
-                    <app-form-type-switcher [form]="form"
-                                            [putFilesOnLanguages]="settings.putFilesOnLanguages"
-                                            [currentLang]="currentLang"
-                                            [field]="field"
-                                            [onlyView]="settings.onlyView"
-                                            [isEdit]="settings.isEdit"></app-form-type-switcher>
-                </div>
-
-                <div *ngFor="let key of objectKeys(settings.fields)">
-                    <div *ngIf="key!='base'">
-                        <div [formGroupName]="key" [hidden]="currentLang.isoCode != key"
-                             *ngFor="let field of valueOfSettingsField(key)">
-                            <app-form-type-switcher [groupName]="key"
-                                                    [form]="form.get(key)"
-                                                    [putFilesOnLanguages]="settings.putFilesOnLanguages"
-                                                    [currentLang]="currentLang"
-                                                    [field]="field"
-                                                    [onlyView]="settings.onlyView"
-                                                    [isEdit]="settings.isEdit"></app-form-type-switcher>
-                        </div>
-                    </div>
-
-                </div>
+        }
+        @if (isMultiLangEnabled) {
+          <div class="col-sm-12">
+            @if (settings.copyOnLanguages) {
+              <app-copy-lang-chooser
+                [currentLang]="currentLang"
+                >
+              </app-copy-lang-chooser>
+            }
+          </div>
+        }
+        @if (!settings.putTranslationsFirst) {
+          <div>
+            @for (field of settings.fields.base; track field) {
+              <div>
+                <app-form-type-switcher [form]="form"
+                  [putFilesOnLanguages]="settings.putFilesOnLanguages"
+                  [currentLang]="currentLang"
+                  [field]="field"
+                  [onlyView]="settings.onlyView"
+                [isEdit]="settings.isEdit"></app-form-type-switcher>
+              </div>
+            }
+            @for (key of objectKeys(settings.fields); track key) {
+              <div>
+                @if (key!='base') {
+                  <div>
+                    @for (field of valueOfSettingsField(key); track field) {
+                      <div [formGroupName]="key" [hidden]="currentLang.isoCode != key"
+                        >
+                        <app-form-type-switcher [groupName]="key"
+                          [form]="form.get(key)"
+                          [putFilesOnLanguages]="settings.putFilesOnLanguages"
+                          [currentLang]="currentLang"
+                          [field]="field"
+                          [onlyView]="settings.onlyView"
+                        [isEdit]="settings.isEdit"></app-form-type-switcher>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+        @if (settings.putTranslationsFirst) {
+          <div>
+            @for (key of objectKeys(settings.fields); track key) {
+              <div>
+                @if (key!='base') {
+                  <div>
+                    @for (field of valueOfSettingsField(key); track field) {
+                      <div [formGroupName]="key" [hidden]="currentLang.isoCode != key"
+                        >
+                        <app-form-type-switcher [groupName]="key"
+                          [form]="form.get(key)"
+                          [putFilesOnLanguages]="settings.putFilesOnLanguages"
+                          [field]="field"
+                          [currentLang]="currentLang"
+                          [onlyView]="settings.onlyView"
+                        [isEdit]="settings.isEdit"></app-form-type-switcher>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            }
+            @for (field of settings.fields.base; track field) {
+              <div>
+                <app-form-type-switcher [form]="form" [field]="field"
+                  [putFilesOnLanguages]="settings.putFilesOnLanguages"
+                  [currentLang]="currentLang"
+                  [onlyView]="settings.onlyView"
+                [isEdit]="settings.isEdit"></app-form-type-switcher>
+              </div>
+            }
+          </div>
+        }
+      </div>
+      <div class="row buttons">
+        <div class="col-sm-12">
+          @if (settings.buttons && settings.buttons.length > 0) {
+            <div class="pull-left">
+              @for (button of settings.buttons; track button) {
+                <button
+                  type="button" (click)="onButton(button)"
+                  [innerHTML]="button.content"
+                  [class]="'btn btn-' + button.class">
+                </button>
+              }
             </div>
-            <div *ngIf="settings.putTranslationsFirst">
-                <div *ngFor="let key of objectKeys(settings.fields)">
-                    <div *ngIf="key!='base'">
-                        <div [formGroupName]="key" [hidden]="currentLang.isoCode != key"
-                             *ngFor="let field of valueOfSettingsField(key)">
-                            <app-form-type-switcher [groupName]="key"
-                                                    [form]="form.get(key)"
-                                                    [putFilesOnLanguages]="settings.putFilesOnLanguages"
-                                                    [field]="field"
-                                                    [currentLang]="currentLang"
-                                                    [onlyView]="settings.onlyView"
-                                                    [isEdit]="settings.isEdit"></app-form-type-switcher>
-                        </div>
-                    </div>
-                </div>
-                <div *ngFor="let field of settings.fields.base">
-                    <app-form-type-switcher [form]="form" [field]="field"
-                                            [putFilesOnLanguages]="settings.putFilesOnLanguages"
-                                            [currentLang]="currentLang"
-                                            [onlyView]="settings.onlyView"
-                                            [isEdit]="settings.isEdit"></app-form-type-switcher>
-                </div>
-            </div>
-
+          }
+          <div class="pull-right">
+            @if (!isExternalForm) {
+              <button (click)="onCancel()" class="btn btn-default">
+                {{ (!settings.onlyView ? 'forms.labels.cancel' : 'forms.labels.close') | translate}}
+              </button>
+            }
+            @if (!settings.onlyView) {
+              <button type="button" (click)="onSubmit()" class="btn btn-primary"
+                [disabled]="isLoading || isExternalLoading">
+                {{ settings.submit?.label ? settings.submit.label : 'forms.labels.submit' | translate}}
+              </button>
+            }
+          </div>
         </div>
-
-        <div class="row buttons">
-            <div class="col-sm-12">
-                <div class="pull-left" *ngIf="settings.buttons && settings.buttons.length > 0">
-                    <button *ngFor="let button of settings.buttons"
-                            type="button" (click)="onButton(button)"
-                            [innerHTML]="button.content"
-                            [class]="'btn btn-' + button.class">
-                    </button>
-                </div>
-                <div class="pull-right">
-                    <button (click)="onCancel()" *ngIf="!isExternalForm" class="btn btn-default">
-                        {{ (!settings.onlyView ? 'forms.labels.cancel' : 'forms.labels.close') | translate}}
-                    </button>
-                    <button type="button" (click)="onSubmit()" class="btn btn-primary" *ngIf="!settings.onlyView"
-                            [disabled]="isLoading || isExternalLoading">
-                        {{ settings.submit?.label ? settings.submit.label : 'forms.labels.submit' | translate}}
-                    </button>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
-</form>
+  </form>
+}
 
 

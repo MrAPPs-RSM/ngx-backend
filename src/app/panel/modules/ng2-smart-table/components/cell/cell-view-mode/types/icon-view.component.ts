@@ -1,10 +1,12 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {Cell} from '../../../../lib/data-set/cell';
 
 @Component({
     selector: 'icon-view-component',
     template: `<i [style.color]="color" [class]="'fa ' + icon"></i>`,
-    styles: ['i { font-size: 20px; }']
+    styles: ['i { font-size: 20px; }'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class IconViewComponent implements OnInit {
 

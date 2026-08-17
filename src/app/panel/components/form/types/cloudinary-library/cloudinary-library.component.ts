@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, ViewEncapsulation, ChangeDetectionStrategy} from '@angular/core';
 import {CloudinaryField, Media, MediaLibraryParams} from '../../interfaces/form-field-file';
 import {ApiService, ErrorResponse} from '../../../../../api/api.service';
 import {UtilsService} from '../../../../../services/utils.service';
@@ -14,7 +14,9 @@ declare const $: any;
     selector: 'app-cloudinary-library',
     templateUrl: './cloudinary-library.component.html',
     styleUrls: ['./cloudinary-library.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class CloudinaryLibraryComponent extends BaseInputComponent implements OnInit, OnDestroy {
 

@@ -1,4 +1,5 @@
-@import '../../../../../../assets/sass/partials/imports';
+@use "sass:color";
+@use '../../../../../../assets/sass/partials/imports' as *;
 
 app-cloudinary-library {
   div.cloudinary-library {
@@ -186,8 +187,8 @@ app-cloudinary-library {
                         background-color: $primary;
                         color: #ffffff;
                         &:hover {
-                          border-color: darken($primary, 10);
-                          background-color: darken($primary, 10);
+                          border-color: color.adjust($primary, $lightness: -10%);
+                          background-color: color.adjust($primary, $lightness: -10%);
                           color: #ffffff;
                         }
                         > span {
@@ -196,7 +197,7 @@ app-cloudinary-library {
                       }
                     }
                     > a, > span {
-                      @include _transition(all 0.3s);
+                      @include transition(all 0.3s);
                       padding: 6px 12px;
                       cursor: pointer;
                       color: $primary;
@@ -220,7 +221,7 @@ app-cloudinary-library {
         }
 
         float: left;
-        @include _transition(all 0.5s);
+        @include transition(all 0.5s);
         width: calc(100% - #{$sidebarWidth});
       }
       > div.media-detail {
@@ -232,7 +233,7 @@ app-cloudinary-library {
         right: 0;
         border-top: 1px solid $grey;
         border-left: 1px solid $grey;
-        @include _transition(all 0.5s);
+        @include transition(all 0.5s);
 
         > .wrapper {
           position: relative;
@@ -293,7 +294,7 @@ app-cloudinary-library {
 
       &.media-closed {
         > .media-detail {
-          @include _transform(translateX(100%));
+          @include transform(translateX(100%));
         }
         > .medias {
           width: 100%;

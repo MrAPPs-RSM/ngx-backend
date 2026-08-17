@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild, ViewEncapsulation, EventEmitter } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild, ViewEncapsulation, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { Ticket } from './models/ticket';
 import { TicketService } from './services/ticket.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -10,10 +10,12 @@ import { ApiService } from '../../../api/api.service';
 import { ToastsService } from '../../../services/toasts.service';
 
 @Component({
-  selector: 'app-ticket-detail-page',
-  templateUrl: './ticket-detail-page.component.html',
-  styleUrls: ['./ticket-detail-page.component.scss'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'app-ticket-detail-page',
+    templateUrl: './ticket-detail-page.component.html',
+    styleUrls: ['./ticket-detail-page.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class TicketDetailPageComponent implements OnInit {
 

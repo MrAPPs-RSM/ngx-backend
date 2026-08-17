@@ -1,4 +1,4 @@
-import {Component, Input, Output, EventEmitter, AfterViewInit, ElementRef, OnChanges} from '@angular/core';
+import {Component, Input, Output, EventEmitter, AfterViewInit, ElementRef, OnChanges, ChangeDetectionStrategy} from '@angular/core';
 
 import {Grid} from '../../../lib/grid';
 import {DataSource} from '../../../lib/data-source/data-source';
@@ -13,10 +13,14 @@ import {DataSource} from '../../../lib/data-source/data-source';
 @Component({
     selector: '[ng2-st-add-button]',
     template: `
-        <a *ngIf="isActionAdd" href="#"
-           [class]="'ng2-smart-action ng2-smart-action-add-add ' + grid.getSetting('actions.add.class')"
-           [innerHTML]="addNewButtonContent" (click)="onAdd($event)"></a>
-    `,
+        @if (isActionAdd) {
+          <a href="#"
+            [class]="'ng2-smart-action ng2-smart-action-add-add ' + grid.getSetting('actions.add.class')"
+          [innerHTML]="addNewButtonContent" (click)="onAdd($event)"></a>
+        }
+        `,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class AddButtonComponent implements AfterViewInit, OnChanges {
 

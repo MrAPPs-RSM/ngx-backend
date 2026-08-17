@@ -1,4 +1,10 @@
 <div [class]="field.class ? field.class : 'col-sm-12'" [ngClass]="{'hidden': field.hidden}">
-    <p class="title"><i *ngIf="field.icon" [class]="field.icon"></i><span *ngIf="field.title">{{field.title}}</span> </p>
-    <p class="text" *ngIf="field.text">{{ field.text }}</p>
+  <p class="title">@if (field.icon) {
+    <i [class]="field.icon"></i>
+    }@if (field.title) {
+    <span>{{field.title}}</span>
+  } </p>
+  @if (field.text) {
+    <p class="text">{{ field.text }}</p>
+  }
 </div>

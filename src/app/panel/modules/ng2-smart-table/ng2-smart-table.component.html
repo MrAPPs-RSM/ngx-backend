@@ -1,50 +1,59 @@
 <div class="table-responsive">
-    <table [id]="tableId" [ngClass]="tableClass">
+  <table [id]="tableId" [ngClass]="tableClass">
 
-        <thead ng2-st-thead *ngIf="!isHideHeader || !isHideSubHeader"
-               [grid]="grid"
-               [activeFilters]="activeFilters"
-               [isAllSelected]="isAllSelected"
-               [isDragEnabled]="isDragEnabled"
-               [source]="source"
-               (create)="create.emit()"
-               (selectAllRows)="onSelectAllRows($event)"
-               (sort)="onSort($event)"
-               (filter)="onFilter($event)">
-        </thead>
+    @if (!isHideHeader || !isHideSubHeader) {
+      <thead ng2-st-thead
+        [grid]="grid"
+        [activeFilters]="activeFilters"
+        [isAllSelected]="isAllSelected"
+        [isDragEnabled]="isDragEnabled"
+        [source]="source"
+        (create)="create.emit()"
+        (selectAllRows)="onSelectAllRows($event)"
+        (sort)="onSort($event)"
+        (filter)="onFilter($event)">
+      </thead>
+    }
 
-        <tbody *ngIf="isDragEnabled"
-                ng2-st-tbody
-               [grid]="grid"
-               [source]="source"
-               (action)="action.emit($event)"
-               (multipleSelectRow)="multipleSelectRow($event)"
-               [isDragEnabled]="true"
-               [dragula]="'row'"
-               [(dragulaModel)]="dragulaList">
-        </tbody>
+    @if (isDragEnabled) {
+      <tbody
+        ng2-st-tbody
+        [grid]="grid"
+        [source]="source"
+        (action)="action.emit($event)"
+        (multipleSelectRow)="multipleSelectRow($event)"
+        [isDragEnabled]="true"
+        [appSortable]="dragulaList"
+        (sorted)="onDrop()">
+      </tbody>
+    }
 
-        <tbody *ngIf="!isDragEnabled"
-               ng2-st-tbody
-               [grid]="grid"
-               [source]="source"
-               (action)="action.emit($event)"
-               (multipleSelectRow)="multipleSelectRow($event)"
-               [isDragEnabled]="false">
-        </tbody>
+    @if (!isDragEnabled) {
+      <tbody
+        ng2-st-tbody
+        [grid]="grid"
+        [source]="source"
+        (action)="action.emit($event)"
+        (multipleSelectRow)="multipleSelectRow($event)"
+        [isDragEnabled]="false">
+      </tbody>
+    }
 
-    </table>
+  </table>
 </div>
 
-<ng2-smart-table-pager *ngIf="isPagerDisplay"
-                       [source]="source"
-                       (pagination)="onPagination($event)">
-</ng2-smart-table-pager>
+@if (isPagerDisplay) {
+  <ng2-smart-table-pager
+    [source]="source"
+    (pagination)="onPagination($event)">
+  </ng2-smart-table-pager>
+}
 
 
-<ng2-smart-table-general-actions
-        *ngIf="settings.generalActions"
-        (action)="action.emit($event)"
-        [source]="source"
-        [grid]="grid">
-</ng2-smart-table-general-actions>
+@if (settings.generalActions) {
+  <ng2-smart-table-general-actions
+    (action)="action.emit($event)"
+    [source]="source"
+    [grid]="grid">
+  </ng2-smart-table-general-actions>
+}

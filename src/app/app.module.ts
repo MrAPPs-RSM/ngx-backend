@@ -3,15 +3,13 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule, LOCALE_ID, APP_INITIALIZER } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import localeIt from '@angular/common/locales/it';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { Router, RouterModule, Routes } from '@angular/router';
 import { PanelModule } from './panel/panel.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ToastrModule, ToastNoAnimation, ToastNoAnimationModule } from 'ngx-toastr';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './auth/login/login.component';
-import { ModalModule } from 'ngx-modialog-7';
-import { BootstrapModalModule } from 'ngx-modialog-7/plugins/bootstrap';
 
 import { GlobalState } from './global.state';
 import { ApiService } from './api/api.service';
@@ -57,16 +55,14 @@ const routes: Routes = [
     }
 ];
 
-@NgModule({
-    declarations: [
+@NgModule({ declarations: [
         AppComponent,
         LoginComponent,
         PasswordResetComponent,
         PasswordChangeComponent,
         DomainNotFoundComponent
     ],
-    imports: [
-        RouterModule.forRoot(routes, { useHash: false, onSameUrlNavigation: 'reload', relativeLinkResolution: 'legacy' }),
+    bootstrap: [AppComponent], imports: [RouterModule.forRoot(routes, { useHash: false, onSameUrlNavigation: 'reload' }),
         ReactiveFormsModule,
         BrowserModule,
         NoopAnimationsModule,
@@ -79,13 +75,8 @@ const routes: Routes = [
             tapToDismiss: true,
             toastComponent: ToastNoAnimation,
         }),
-        HttpClientModule,
-        PanelModule,
-        ModalModule.forRoot(),
-        BootstrapModalModule
-    ],
-    providers: [
-        { provide: LOCALE_ID, useValue: 'it-IT'},
+        PanelModule], providers: [
+        { provide: LOCALE_ID, useValue: 'it-IT' },
         {
             provide: APP_INITIALIZER,
             useFactory: (PageRefreshService: PageRefreshService) => () => PageRefreshService.setBreadcrumb(),
@@ -104,13 +95,9 @@ const routes: Routes = [
         PageRefreshService,
         ToastsService,
         StorageService,
-        httpInterceptorProviders
-    ],
-    bootstrap: [AppComponent],
-    entryComponents: [
-        DomainNotFoundComponent
-    ]
-})
+        httpInterceptorProviders,
+        provideHttpClient(withXhr(), withInterceptorsFromDi())
+    ] })
   
 export class AppModule {
 

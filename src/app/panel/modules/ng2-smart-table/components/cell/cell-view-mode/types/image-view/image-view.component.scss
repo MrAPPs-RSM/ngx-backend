@@ -1,4 +1,4 @@
-@import '../../../../../../../../../assets/sass/partials/imports';
+@use '../../../../../../../../../assets/sass/partials/imports' as *;
 
 image-view-component {
   div.img-wrapper {
@@ -25,16 +25,16 @@ image-view-component {
       position: absolute;
       top: 50%;
       left: 50%;
-      @include _transform(translate(-50%, -50%));
+      @include transform(translate(-50%, -50%));
       color: #ffffff;
       font-size: 25px;
       z-index: 1;
-      @include _transition(all 0.3s);
+      @include transition(all 0.3s);
     }
 
     &::after {
       pointer-events: none;
-      @include _transition(all 0.3s);
+      @include transition(all 0.3s);
       content: '';
       position: absolute;
       width: 100%;

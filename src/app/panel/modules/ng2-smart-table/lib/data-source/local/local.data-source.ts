@@ -1,6 +1,5 @@
 import {DataSource} from '../data-source';
 import {deepExtend} from '../../helpers';
-import {Local} from "protractor/built/driverProviders";
 
 export class LocalDataSource extends DataSource {
 

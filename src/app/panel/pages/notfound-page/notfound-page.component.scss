@@ -1,4 +1,4 @@
-@import '../../../../assets/sass/partials/imports';
+@use '../../../../assets/sass/partials/imports' as *;
 
 app-notfound-page {
   > div {

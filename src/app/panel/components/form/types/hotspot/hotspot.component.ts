@@ -1,13 +1,14 @@
 import {
-    Component,
-    ElementRef,
-    Input,
-    OnInit,
-    ViewChild,
-    ViewEncapsulation
+  Component,
+  ElementRef,
+  Input,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {FormFieldHotspot} from '../../interfaces/form-field-hotspot';
-import {FormArray, FormGroup} from '@angular/forms';
+import {UntypedFormArray, UntypedFormGroup} from '@angular/forms';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {FormGeneratorService} from '../../../../services/form-generator.service';
 import {ApiService} from '../../../../../api/api.service';
@@ -16,12 +17,14 @@ import {ApiService} from '../../../../../api/api.service';
     selector: 'app-hotspot',
     templateUrl: './hotspot.component.html',
     styleUrls: ['./hotspot.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class HotspotComponent extends BaseInputComponent implements OnInit {
 
     @Input() field: FormFieldHotspot;
-    @Input() form: FormGroup;
+    @Input() form: UntypedFormGroup;
     @Input() isEdit = false;
 
     public activeHotSpot: number = null;
@@ -39,20 +42,20 @@ export class HotspotComponent extends BaseInputComponent implements OnInit {
     ngOnInit() {
     }
 
-    public getControl(): FormGroup {
-        return this.form.get(this.field.key) as FormGroup;
+    public getControl(): UntypedFormGroup {
+        return this.form.get(this.field.key) as UntypedFormGroup;
     }
 
-    public getFormArray(): FormArray {
-        return this.getControl()['controls'].hotSpots as FormArray;
+    public getFormArray(): UntypedFormArray {
+        return this.getControl()['controls'].hotSpots as UntypedFormArray;
     }
 
-    public getActiveForm(): FormGroup | any {
-        return this.getFormArray().controls[this.activeHotSpot] as FormGroup;
+    public getActiveForm(): UntypedFormGroup | any {
+        return this.getFormArray().controls[this.activeHotSpot] as UntypedFormGroup;
     }
 
     public add($event: any) {
-        this.getFormArray().push(new FormGroup(this._formGenerator.generateFormFields(this.field.fields)));
+        this.getFormArray().push(new UntypedFormGroup(this._formGenerator.generateFormFields(this.field.fields)));
         this.getFormArray().controls[this.getFormArray().controls.length - 1].patchValue({x: $event.offsetX, y: $event.offsetY});
     }
 

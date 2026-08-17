@@ -1,4 +1,4 @@
-import {Component, Input, Output, EventEmitter} from '@angular/core';
+import {Component, Input, Output, EventEmitter, ChangeDetectionStrategy} from '@angular/core';
 
 import {Grid} from '../../lib/grid';
 import {Cell} from '../../lib/data-set/cell';
@@ -9,6 +9,8 @@ import {Row} from '../../lib/data-set/row';
     template: `
         <table-cell-view-mode [cell]="cell"></table-cell-view-mode>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class CellComponent {
 

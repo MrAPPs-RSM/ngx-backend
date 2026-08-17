@@ -1,21 +1,25 @@
 <div [formGroup]="form" [class]="field.class ? field.class : 'col-sm-12'" [ngClass]="{'hidden': field.hidden}">
-    <div class="form-group" [ngClass]="{'has-error': !isValid()}">
-        <label class="select-label">{{field.label}}
-            <span *ngIf="isRequired()">*</span>
-        </label>
-        <ng-select [disabled]="field.disabled || onlyView"
-                   [items]="options"
-                   [typeahead]="field.search ? typeAhead : null"
-                   [addTag]="true"
-                   [multiple]="true"
-                   bindLabel="text"
-                   placeholder="{{field.placeholder}}"
-                   [(ngModel)]="selected"
-                   (change)="onChange($event)"
-                   [ngModelOptions]="{standalone: true}"
-        >
-        </ng-select>
+  <div class="form-group" [ngClass]="{'has-error': !isValid()}">
+    <label class="select-label">{{field.label}}
+      @if (isRequired()) {
+        <span>*</span>
+      }
+    </label>
+    <ng-select [disabled]="field.disabled || onlyView"
+      [items]="options"
+      [typeahead]="field.search ? typeAhead : null"
+      [addTag]="true"
+      [multiple]="true"
+      bindLabel="text"
+      placeholder="{{field.placeholder}}"
+      [(ngModel)]="selected"
+      (change)="onChange($event)"
+      [ngModelOptions]="{standalone: true}"
+      >
+    </ng-select>
 
-        <span *ngIf="field.description" class="help-block sub-little-text">{{field.description}}</span>
-    </div>
+    @if (field.description) {
+      <span class="help-block sub-little-text">{{field.description}}</span>
+    }
+  </div>
 </div>

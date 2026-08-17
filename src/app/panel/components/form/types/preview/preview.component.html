@@ -1,36 +1,41 @@
-<div [formGroup]="form" [class]="field.class ? field.class : 'col-sm-12'" *ngIf="isVisible">
+@if (isVisible) {
+  <div [formGroup]="form" [class]="field.class ? field.class : 'col-sm-12'">
     <div class="form-group">
-        <label>
-            {{field.label}}
-            <span *ngIf="isRequired()">*</span>
-        </label>
-
+      <label>
+        {{field.label}}
+        @if (isRequired()) {
+          <span>*</span>
+        }
+      </label>
       <mat-slider
         [min]="min"
         [max]="max"
         step="1"
         [value]="offset"
-      (change)="updateOffset($event)">
+        (change)="updateOffset($event)">
       </mat-slider>
-
-        <div class="preview-wrapper">
-            <div class="preview">
-                <img [src]="url"
-                     (error)="onImageError()">
-                <div class="value" *ngIf="max > 0">
-                    <input type="number"
-                           [(ngModel)]="offset"
-                           (ngModelChange)="onChange()"
-                           [ngModelOptions]="{standalone: true}"
-                           [min]="min"
-                           [max]="max"
-                    >
-                    <span>/ {{max}}</span>
-                </div>
+      <div class="preview-wrapper">
+        <div class="preview">
+          <img [src]="url"
+            (error)="onImageError()">
+          @if (max > 0) {
+            <div class="value">
+              <input type="number"
+                [(ngModel)]="offset"
+                (ngModelChange)="onChange()"
+                [ngModelOptions]="{standalone: true}"
+                [min]="min"
+                [max]="max"
+                >
+              <span>/ {{max}}</span>
             </div>
+          }
         </div>
-
-        <!-- Others -->
-        <span *ngIf="field.description" class="help-block">{{field.description}}</span>
+      </div>
+      <!-- Others -->
+      @if (field.description) {
+        <span class="help-block">{{field.description}}</span>
+      }
     </div>
-</div>
+  </div>
+}

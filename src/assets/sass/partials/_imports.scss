@@ -1,16 +1,16 @@
 /* Colors */
-@import '../../../environments/colors.scss';
+@forward '../../../environments/colors.scss';
 
 /* Sizes, fonts */
-@import '_variables.scss';
+@forward '_variables.scss';
 
 /* Mixins */
-@import '../mixins/_responsive.scss';
-@import '../mixins/_transform.scss';
-@import '../mixins/_transition.scss';
-@import '../mixins/_box-shadow.scss';
-@import '../mixins/_clean-nl.scss';
-@import '../mixins/_clearfix.scss';
-@import '../mixins/_ellipsis-multiline.scss';
-@import '../mixins/_card.scss';
-@import '../mixins/_form-input.scss';
+@forward '../mixins/_responsive.scss';
+@forward '../mixins/_transform.scss';
+@forward '../mixins/_transition.scss';
+@forward '../mixins/_box-shadow.scss';
+@forward '../mixins/_clean-nl.scss';
+@forward '../mixins/_clearfix.scss';
+@forward '../mixins/_ellipsis-multiline.scss';
+@forward '../mixins/_card.scss';
+@forward '../mixins/_form-input.scss';

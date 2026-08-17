@@ -1,4 +1,5 @@
-<tr ng2-st-thead-titles-row *ngIf="!isHideHeader"
+@if (!isHideHeader) {
+  <tr ng2-st-thead-titles-row
     class="ng2-smart-titles"
     [grid]="grid"
     [activeSort]="activeFilters.sort"
@@ -7,9 +8,11 @@
     [source]="source"
     (sort)="sort.emit($event)"
     (selectAllRows)="selectAllRows.emit($event)">
-</tr>
+  </tr>
+}
 
-<tr ng2-st-thead-filters-row *ngIf="!isHideSubHeader"
+@if (!isHideSubHeader) {
+  <tr ng2-st-thead-filters-row
     class="ng2-smart-filters"
     [activeFilters]="activeFilters.filter"
     [isDragEnabled]="isDragEnabled"
@@ -17,4 +20,5 @@
     [source]="source"
     (create)="create.emit($event)"
     (filter)="filter.emit($event)">
-</tr>
+  </tr>
+}
