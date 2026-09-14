@@ -1,7 +1,6 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {DragulaModule} from 'ng2-dragula';
 
 import {CellModule} from './components/cell/cell.module';
 import {FilterModule} from './components/filter/filter.module';
@@ -11,6 +10,7 @@ import {THeadModule} from './components/thead/thead.module';
 import {GeneralActionsModule} from './components/general-actions/general-actions.module';
 
 import {Ng2SmartTableComponent} from './ng2-smart-table.component';
+import {SortableDirective} from '../../directives/sortable.directive';
 
 @NgModule({
     imports: [
@@ -23,14 +23,13 @@ import {Ng2SmartTableComponent} from './ng2-smart-table.component';
         TBodyModule,
         THeadModule,
         GeneralActionsModule,
-        DragulaModule.forRoot()
+        SortableDirective,
     ],
     declarations: [
         Ng2SmartTableComponent,
     ],
     exports: [
         Ng2SmartTableComponent,
-        DragulaModule
     ],
 })
 export class Ng2SmartTableModule {

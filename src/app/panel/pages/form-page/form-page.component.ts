@@ -1,4 +1,4 @@
-import {Component, HostListener, OnDestroy, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit, ViewChild, ViewEncapsulation, ChangeDetectionStrategy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {PageTitleService} from '../../services/page-title.service';
 import {PageRefreshService} from '../../../services/page-refresh.service';
@@ -17,7 +17,9 @@ import { environment } from '../../../../environments/environment';
     selector: 'app-form-page',
     templateUrl: './form-page.component.html',
     styleUrls: ['./form-page.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class FormPageComponent implements OnInit, OnDestroy, ComponentCanDeactivate {
 

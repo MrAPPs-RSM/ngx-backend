@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {environment} from '../../../environments/environment';
 import {ApiService, ErrorResponse} from '../../api/api.service';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -7,7 +7,9 @@ import {ToastsService} from '../../services/toasts.service';
 @Component({
     selector: 'app-password-reset',
     templateUrl: './password-reset.component.html',
-    styleUrls: ['./password-reset.component.scss']
+    styleUrls: ['./password-reset.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class PasswordResetComponent implements OnInit {
 

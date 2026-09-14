@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {AfterViewInit, Component, Input, OnInit, ViewEncapsulation, ChangeDetectionStrategy} from '@angular/core';
 import {Gallery} from '../../interfaces/gallery';
 import {ApiService} from '../../../../../api/api.service';
 import {ToastsService} from '../../../../../services/toasts.service';
@@ -11,7 +11,9 @@ declare const $: any;
     selector: 'app-gallery',
     templateUrl: './gallery.component.html',
     styleUrls: ['./gallery.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class GalleryComponent implements OnInit, AfterViewInit {
 

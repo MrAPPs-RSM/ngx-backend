@@ -1,42 +1,33 @@
-import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
-import {GlobalState} from '../../../global.state';
+import {Component, ViewEncapsulation, ChangeDetectionStrategy} from '@angular/core';
 
 import {Router} from '@angular/router';
 import {MenuService} from '../../services/menu.service';
-import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-content-top',
     templateUrl: './content-top.component.html',
     styleUrls: ['./content-top.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
-export class ContentTopComponent implements OnInit,OnDestroy {
+export class ContentTopComponent {
 
-    private activePage: string;
-    private _activePageSub = Subscription.EMPTY;
-
-    constructor(private _state: GlobalState,
-                private _router: Router,
+    constructor(private _router: Router,
                 private _menuService: MenuService) {
-    }
-
-    ngOnInit() {
-      this._activePageSub = this._state._activePageSubject.subscribe( (activeLink) => {
-
-            // console.log("ACTIVE LINK: "+JSON.stringify(activeLink));
-            if (activeLink) {
-                  this.activePage = activeLink.url;
-            }
-        });
-    }
-
-    ngOnDestroy() {
-        this._activePageSub.unsubscribe();
     }
 
     getBreadcrumbs() {
         return this._menuService.breadcrumbs;
+    }
+
+    isActive(item: any): boolean {
+        const normalize = (url: string): string => {
+            const path = decodeURIComponent((url || '').split('?')[0]);
+            return path.length > 1 ? path.replace(/\/$/, '') : path;
+        };
+
+        return normalize(item.url) === normalize(this._router.url);
     }
 
 

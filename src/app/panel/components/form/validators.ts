@@ -1,5 +1,6 @@
 import {AbstractControl, ValidatorFn, Validators} from '@angular/forms';
-import {isNullOrUndefined} from 'util';
+
+const isNullOrUndefined = (value: unknown): value is null | undefined => value == null;
 
 export class CustomValidators {
 

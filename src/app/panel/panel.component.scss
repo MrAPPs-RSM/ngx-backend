@@ -1,4 +1,4 @@
-@import '../../assets/sass/partials/imports';
+@use '../../assets/sass/partials/imports' as *;
 
 app-panel {
   $navbarHeight: 50px;
@@ -77,7 +77,7 @@ app-panel {
       top: 0;
       left: 0;
       background-color: $sidebar;
-      @include _transition(all 0.5s);
+      @include transition(all 0.5s);
 
       > .menu {
         margin-top: $navbarHeight;
@@ -87,7 +87,7 @@ app-panel {
           list-style: none;
           > li {
             > span {
-              @include _transition(all 0.3s);
+              @include transition(all 0.3s);
               cursor: pointer;
               display: block;
               > a {
@@ -101,7 +101,7 @@ app-panel {
                   margin-right: 15px;
                 }
                 > span.fa-angle-down {
-                  @include _transition(all 0.3s);
+                  @include transition(all 0.3s);
                   pointer-events: none;
                   margin: 3px 13px 0 0;
                   float: right;
@@ -125,7 +125,7 @@ app-panel {
               &.open {
                 background-color: $sidebarDark;
                 > span {
-                  @include _transform(rotate(180deg));
+                  @include transform(rotate(180deg));
                 }
               }
             }
@@ -137,7 +137,7 @@ app-panel {
               list-style: none;
               > li {
                 > span {
-                  @include _transition(all 0.3s);
+                  @include transition(all 0.3s);
                   cursor: pointer;
                   display: block;
                   > a {
@@ -179,7 +179,7 @@ app-panel {
     > .content {
       margin-top: $navbarHeight;
       float: right;
-      @include _transition(all 0.5s);
+      @include transition(all 0.5s);
 
       @include respond-to(from-sm) {
         width: calc(100% - #{$sidebarWidth});
@@ -196,7 +196,7 @@ app-panel {
 
     &.sidebar-closed {
       > .sidebar {
-        @include _transform(translateX(-100%));
+        @include transform(translateX(-100%));
       }
       > .content {
         width: 100%;

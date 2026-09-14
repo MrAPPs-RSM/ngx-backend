@@ -1,15 +1,23 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { FormFieldTextarea } from '../../interfaces/form-field-textarea';
 import { BaseInputComponent } from '../base-input/base-input.component';
 import { LanguageService } from '../../../../services/language.service';
+import {
+    Alignment, Bold, ClassicEditor, Essentials, Font, GeneralHtmlSupport, Heading, Italic,
+    Link, List, Paragraph, Strikethrough, Table, TableToolbar, Underline, Undo
+} from 'ckeditor5';
 
 @Component({
     selector: 'app-input-textarea',
     templateUrl: './input-textarea.component.html',
     styleUrls: ['./input-textarea.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class InputTextareaComponent extends BaseInputComponent implements OnInit {
+
+    readonly Editor = ClassicEditor;
 
     @Input() field: FormFieldTextarea;
     private focus: boolean;
@@ -59,12 +67,25 @@ export class InputTextareaComponent extends BaseInputComponent implements OnInit
 
             this.config = {
                 language: this._language.getCurrentLangIsCode(),
-                toolbar: this.options
+                licenseKey: 'GPL',
+                plugins: [
+                    Essentials, Paragraph, Heading, Bold, Italic, Underline, Strikethrough, Undo,
+                    Font, List, Alignment, Table, TableToolbar, Link, GeneralHtmlSupport
+                ],
+                toolbar: [
+                    'undo', 'redo', '|', 'heading', '|', 'fontFamily', 'fontSize',
+                    'bold', 'italic', 'underline', 'strikethrough', '|',
+                    'bulletedList', 'numberedList', '|', 'alignment', 'insertTable', 'link'
+                ],
+                table: {
+                    contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells']
+                }
             };
 
             if (this.field.options.allowContent) {
-                this.config['allowedContent'] = true;
-                this.config['extraAllowedContent'] = '*(*);*{*}';
+                this.config['htmlSupport'] = {
+                    allow: [{name: /.*/, attributes: true, classes: true, styles: true}]
+                };
             }
         }
     }

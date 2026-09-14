@@ -1,43 +1,50 @@
-<tr *ngFor="let row of grid.getRows()"
+@for (row of grid.getRows(); track row) {
+  <tr
     class="ng2-smart-row"
     [style.background]="getRowBgColor(row)"
     [ngClass]="{selected: row.isSelected}">
-
-    <td *ngIf="isDragEnabled" class="ng2-smart-actions ng2-smart-action-drag">
+    @if (isDragEnabled) {
+      <td class="ng2-smart-actions ng2-smart-action-drag">
         <span class="drag"><i class="fa fa-arrows"></i></span>
-    </td>
-
-    <td *ngIf="isMultiSelectVisible" class="ng2-smart-actions ng2-smart-action-multiple-select"
+      </td>
+    }
+    @if (isMultiSelectVisible) {
+      <td class="ng2-smart-actions ng2-smart-action-multiple-select"
         (click)="onMultipleSelectRow($event, row)">
         <label class="checkbox">
-            <input type="checkbox"
-                   [ngModel]="row.isSelected"
-                   class="form-control">
-            <span></span>
+          <input type="checkbox"
+            [ngModel]="row.isSelected"
+            class="form-control">
+          <span></span>
         </label>
-    </td>
-
-    <td *ngFor="let cell of row.cells,let i = index" [ngClass]="setClasses(cell)">
-
+      </td>
+    }
+    @for (cell of row.cells; track cell; let i = $index) {
+      <td [ngClass]="setClasses(cell)">
         <ng2-smart-table-cell [cell]="cell"
-                              [grid]="grid"
-                              [row]="row"
-                              [isNew]="false"
-                              [mode]="mode">
+          [grid]="grid"
+          [row]="row"
+          [isNew]="false"
+          [mode]="mode">
         </ng2-smart-table-cell>
-    </td>
-
-    <td *ngIf="!row.isInEditing && showActionsColumn" class="ng2-smart-actions">
+      </td>
+    }
+    @if (!row.isInEditing && showActionsColumn) {
+      <td class="ng2-smart-actions">
         <ng2-st-tbody-actions
-                [row]="row"
-                [grid]="grid"
-                (action)="action.emit($event)"
+          [row]="row"
+          [grid]="grid"
+          (action)="action.emit($event)"
         ></ng2-st-tbody-actions>
-    </td>
-</tr>
+      </td>
+    }
+  </tr>
+}
 
-<tr *ngIf="grid.getRows().length == 0">
+@if (grid.getRows().length == 0) {
+  <tr>
     <td [attr.colspan]="getColspan()">
-        {{ noDataMessage }}
+      {{ noDataMessage }}
     </td>
-</tr>
+  </tr>
+}

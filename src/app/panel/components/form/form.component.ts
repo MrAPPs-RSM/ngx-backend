@@ -1,14 +1,15 @@
 import {
-    Component,
-    Input,
-    OnInit,
-    Output,
-    EventEmitter,
-    ViewEncapsulation,
-    ChangeDetectorRef,
-    OnDestroy
+  Component,
+  Input,
+  OnInit,
+  Output,
+  EventEmitter,
+  ViewEncapsulation,
+  ChangeDetectorRef,
+  OnDestroy,
+  ChangeDetectionStrategy
 } from '@angular/core';
-import { AbstractControl, FormArray, FormControl, FormGroup } from '@angular/forms';
+import { AbstractControl, FormArray, FormControl, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGeneratorService } from '../../services/form-generator.service';
 import { ModalService } from '../../services/modal.service';
@@ -28,7 +29,9 @@ import {CopyLangHelperService} from './copy-lang-chooser/copy-lang-helper.servic
     selector: 'app-form',
     templateUrl: './form.component.html',
     styleUrls: ['./form.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class FormComponent extends BaseLongPollingComponent implements OnInit, OnDestroy {
 
@@ -40,7 +43,7 @@ export class FormComponent extends BaseLongPollingComponent implements OnInit, O
 
     dataStored: boolean;
 
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     public currentLang: any = null;
     public isMultiLangEnabled = false;
     objectKeys = Object.keys;
@@ -132,7 +135,7 @@ export class FormComponent extends BaseLongPollingComponent implements OnInit, O
         return this._apiService.unauthorized || ((!this.form.dirty || this.dataStored) && !this.isLoading);
     }
 
-    setupForms(currentLang?: string | null): FormGroup {
+    setupForms(currentLang?: string | null): UntypedFormGroup {
         this.isMultiLangEnabled = Object.keys(this.settings.fields).length > 1 && this._languageService.getContentLanguages().length > 0;
 
         if (this.isMultiLangEnabled) {

@@ -1,10 +1,12 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {Cell} from '../../../../lib/data-set/cell';
 import {UtilsService} from '../../../../../../../services/utils.service';
 
 @Component({
     selector: 'date-view-component',
     template: `{{renderValue}}`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class DateViewComponent implements OnInit {
 

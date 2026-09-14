@@ -2,14 +2,16 @@
   <div class="form-group">
     <label class="select-label">{{field.label}}</label>
     <ng-select [items]="locations"
-               [typeahead]="typeAhead"
-               (change)="onSelection($event)"
-               [multiple]="false"
-               bindLabel="name"
-               typeToSearchText="{{'forms.inputs.search_address' | translate}}"
-               formControlName="{{field.key}}"
-    >
+      [typeahead]="typeAhead"
+      (change)="onSelection($event)"
+      [multiple]="false"
+      bindLabel="name"
+      typeToSearchText="{{'forms.inputs.search_address' | translate}}"
+      formControlName="{{field.key}}"
+      >
     </ng-select>
   </div>
-  <span *ngIf="field.description" class="help-block sub-little-text">{{field.description}}</span>
+  @if (field.description) {
+    <span class="help-block sub-little-text">{{field.description}}</span>
+  }
 </div>

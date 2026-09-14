@@ -1,11 +1,13 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {FormFieldPassword} from '../../interfaces/form-field-password';
 import {BaseInputComponent} from '../base-input/base-input.component';
 
 @Component({
     selector: 'app-input-password',
     templateUrl: './input-password.component.html',
-    styleUrls: ['./input-password.component.scss']
+    styleUrls: ['./input-password.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class InputPasswordComponent extends BaseInputComponent implements OnInit {
 

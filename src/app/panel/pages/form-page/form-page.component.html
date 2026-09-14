@@ -1,10 +1,12 @@
 <div class="container-fluid">
-    <div class="row">
-        <div *ngFor="let form of params.forms" [class]="form.class ? form.class : 'col-sm-12'">
-            <app-form
-                    [settings]="form"
-                    (response)="onResponse(form, $event)">
-            </app-form>
-        </div>
-    </div>
+  <div class="row">
+    @for (form of params.forms; track form) {
+      <div [class]="form.class ? form.class : 'col-sm-12'">
+        <app-form
+          [settings]="form"
+          (response)="onResponse(form, $event)">
+        </app-form>
+      </div>
+    }
+  </div>
 </div>

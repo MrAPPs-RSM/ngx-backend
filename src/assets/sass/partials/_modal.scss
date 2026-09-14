@@ -1,3 +1,6 @@
+@use "../../../environments/colors";
+@use "variables";
+
 /* Modals */
 bs-modal-container {
   &.show {
@@ -11,10 +14,10 @@ div.modal-content {
   margin: 30px auto;
   box-shadow: none;
   border: 0;
-  border-radius: $borderRadius;
+  border-radius: variables.$borderRadius;
   .modal-header {
     padding: 15px 0;
-    border-bottom: 1px solid $lightGrey;
+    border-bottom: 1px solid colors.$lightGrey;
     > h3.modal-title {
       font-size: 18px;
     }
@@ -28,7 +31,7 @@ div.modal-content {
       padding: 15px 20px;
       background-color: #000000;
       border-radius: 5px;
-      border-top: 10px solid $grey;
+      border-top: 10px solid colors.$grey;
       > pre {
         padding: 0;
         background: none;
@@ -42,7 +45,7 @@ div.modal-content {
   .modal-footer {
     padding: 15px 0;
     text-align: right;
-    border-top: 1px solid $lightGrey;
+    border-top: 1px solid colors.$lightGrey;
     button {
       margin: 0 5px 0 5px;
     }

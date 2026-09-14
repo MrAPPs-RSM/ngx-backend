@@ -1,22 +1,17 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
 import { ErrorAlertComponent } from './error-alert.component';
 
 describe('ErrorAlertComponent', () => {
   let component: ErrorAlertComponent;
-  let fixture: ComponentFixture<ErrorAlertComponent>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ ErrorAlertComponent ]
-    })
+    await TestBed.configureTestingModule({ providers: [ErrorAlertComponent] })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ErrorAlertComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = TestBed.inject(ErrorAlertComponent);
   });
 
   it('should create', () => {

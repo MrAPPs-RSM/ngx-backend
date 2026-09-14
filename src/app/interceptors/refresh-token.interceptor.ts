@@ -1,10 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  HttpRequest,
-  HttpHandler,
-  HttpEvent,
-  HttpInterceptor, HttpErrorResponse, HttpResponse
-} from '@angular/common/http';
+import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import {Observable, BehaviorSubject, throwError, AsyncSubject, of} from 'rxjs';
 import {catchError, filter, take, switchMap} from 'rxjs/operators';
 

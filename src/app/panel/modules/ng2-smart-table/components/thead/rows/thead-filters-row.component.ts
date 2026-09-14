@@ -1,4 +1,4 @@
-import {Component, Input, Output, EventEmitter, OnChanges} from '@angular/core';
+import {Component, Input, Output, EventEmitter, OnChanges, ChangeDetectionStrategy} from '@angular/core';
 
 import {Grid} from '../../../lib/grid';
 import {DataSource} from '../../../lib/data-source/data-source';
@@ -7,24 +7,33 @@ import {Column} from "../../../lib/data-set/column";
 @Component({
     selector: '[ng2-st-thead-filters-row]',
     template: `
-        <th *ngIf="isDragEnabled"></th>
-        <th *ngIf="isMultiSelectVisible"></th>
-        <th *ngFor="let column of grid.getVisibleColumns()" class="ng2-smart-th {{ column.id }}">
+        @if (isDragEnabled) {
+          <th></th>
+        }
+        @if (isMultiSelectVisible) {
+          <th></th>
+        }
+        @for (column of grid.getVisibleColumns(); track column) {
+          <th class="ng2-smart-th {{ column.id }}">
             <ng2-smart-table-filter [source]="source"
-                                    [grid]="grid"
-                                    [column]="column"
-                                    [filterValue]="getFilterValue(column)"
-                                    [inputClass]="filterInputClass"
-                                    (filter)="filter.emit($event)">
+              [grid]="grid"
+              [column]="column"
+              [filterValue]="getFilterValue(column)"
+              [inputClass]="filterInputClass"
+              (filter)="filter.emit($event)">
             </ng2-smart-table-filter>
-        </th>
-        <th ng2-st-add-button
-            *ngIf="showActionsColumn"
+          </th>
+        }
+        @if (showActionsColumn) {
+          <th ng2-st-add-button
             [grid]="grid"
             [source]="source"
             (create)="create.emit()">
-        </th>
-    `,
+          </th>
+        }
+        `,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class TheadFitlersRowComponent implements OnChanges {
 

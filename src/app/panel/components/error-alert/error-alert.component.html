@@ -1,14 +1,19 @@
-<div class="alert alert-danger errors" *ngIf="hasErrors()">
-  <ul>
-    <!-- Validation errors, handled locally (required fields, etc) -->
-    <li *ngFor="let error of errorBag.errorList">
-      <span>{{error.label}}</span> {{error.message}}
-    </li>
-
-    <!-- Errors from API RESPONSE, handled by external components -->
-    <li *ngFor="let error of errorMessages">
-      {{error}}
-    </li>
-  </ul>
-  <span class="close-alert" (click)="closeErrors()">×</span>
-</div>
+@if (hasErrors()) {
+  <div class="alert alert-danger errors">
+    <ul>
+      <!-- Validation errors, handled locally (required fields, etc) -->
+      @for (error of errorBag.errorList; track error) {
+        <li>
+          <span>{{error.label}}</span> {{error.message}}
+        </li>
+      }
+      <!-- Errors from API RESPONSE, handled by external components -->
+      @for (error of errorMessages; track error) {
+        <li>
+          {{error}}
+        </li>
+      }
+    </ul>
+    <span class="close-alert" (click)="closeErrors()">×</span>
+  </div>
+}

@@ -1,21 +1,23 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {FormFieldHotspotCanvas} from '../../interfaces/form-field-hotspot-canvas';
-import {FormArray, FormGroup} from '@angular/forms';
+import {UntypedFormArray, UntypedFormGroup} from '@angular/forms';
 import {FormGeneratorService} from '../../../../services/form-generator.service';
 import {ApiService} from '../../../../../api/api.service';
 import Konva from 'konva';
 import {Subscription} from 'rxjs';
 
 @Component({
-  selector: 'app-hotspot-canvas',
-  templateUrl: './hotspot-canvas.component.html',
-  styleUrls: ['./hotspot-canvas.component.scss']
+    selector: 'app-hotspot-canvas',
+    templateUrl: './hotspot-canvas.component.html',
+    styleUrls: ['./hotspot-canvas.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class HotspotCanvasComponent extends BaseInputComponent implements OnInit {
 
   @Input() field: FormFieldHotspotCanvas;
-  @Input() form: FormGroup;
+  @Input() form: UntypedFormGroup;
   @Input() isEdit = false;
 
   public activeHotSpot: number = null;
@@ -52,7 +54,7 @@ export class HotspotCanvasComponent extends BaseInputComponent implements OnInit
             y: 0,
             width: this.field.container.width,
             height: this.field.container.height,
-          });
+          } as any);
           backgroundLayer.add(backgroundImage);
           backgroundLayer.on('click', (ev) => {
             const pos = this.stage.getPointerPosition();
@@ -116,7 +118,7 @@ export class HotspotCanvasComponent extends BaseInputComponent implements OnInit
       image.setAttrs({
         width: hotspot.width,
         height: hotspot.height
-      });
+      } as any);
 
       const group = new Konva.Group({
         x: x - (hotspot.width / 2),
@@ -166,7 +168,7 @@ export class HotspotCanvasComponent extends BaseInputComponent implements OnInit
         this.onDelete(indexToDelete);
         group.remove();
 
-        layer.getChildren().each((child: Konva.Group) => {
+        layer.getChildren().forEach((child: Konva.Group) => {
           if (child !== group && child.attrs.name != null) {
             const oldIndex = parseInt(child.attrs.name, 10);
             if (oldIndex > indexToDelete) {
@@ -214,16 +216,16 @@ export class HotspotCanvasComponent extends BaseInputComponent implements OnInit
     });
   }
 
-  public getControl(): FormGroup {
-    return this.form.get(this.field.key) as FormGroup;
+  public getControl(): UntypedFormGroup {
+    return this.form.get(this.field.key) as UntypedFormGroup;
   }
 
-  public getFormArray(): FormArray {
-    return this.getControl()['controls'].hotSpots as FormArray;
+  public getFormArray(): UntypedFormArray {
+    return this.getControl()['controls'].hotSpots as UntypedFormArray;
   }
 
-  public getActiveForm(): FormGroup | any {
-    return this.getFormArray().controls[this.activeHotSpot] as FormGroup;
+  public getActiveForm(): UntypedFormGroup | any {
+    return this.getFormArray().controls[this.activeHotSpot] as UntypedFormGroup;
   }
 
   public onDelete(index: number) {
@@ -231,7 +233,7 @@ export class HotspotCanvasComponent extends BaseInputComponent implements OnInit
   }
 
   public add(x: number, y: number) {
-    this.getFormArray().push(new FormGroup(this._formGenerator.generateFormFields(this.field.fields)));
+    this.getFormArray().push(new UntypedFormGroup(this._formGenerator.generateFormFields(this.field.fields)));
     this.patchValueAt({x, y}, this.getFormArray().controls.length - 1);
   }
 

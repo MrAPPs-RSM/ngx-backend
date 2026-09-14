@@ -1,14 +1,15 @@
-import { Component, Input, Output, EventEmitter, OnChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, ChangeDetectionStrategy } from '@angular/core';
 
 import { Grid } from '../../lib/grid';
 import { DataSource } from '../../lib/data-source/data-source';
 import { Row } from '../../lib/data-set/row';
-import { isArray } from 'util';
 
 @Component({
     selector: '[ng2-st-tbody]',
     styleUrls: ['./tbody.component.scss'],
     templateUrl: './tbody.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class Ng2SmartTableTbodyComponent implements OnChanges {
 
@@ -56,9 +57,9 @@ export class Ng2SmartTableTbodyComponent implements OnChanges {
     getRowBgColor(row: Row): string {
 
         let bgColor = '';
-        if (this.rowBgColorSettings && isArray(this.rowBgColorSettings)) {
+        if (this.rowBgColorSettings && Array.isArray(this.rowBgColorSettings)) {
             this.rowBgColorSettings.forEach((setting) => {
-                if (setting.conditions && isArray(setting.conditions)) {
+                if (setting.conditions && Array.isArray(setting.conditions)) {
                     let i = 0;
                     while (i < setting.conditions.length) {
                         const fieldVal = row.getData()[setting.conditions[i].field];

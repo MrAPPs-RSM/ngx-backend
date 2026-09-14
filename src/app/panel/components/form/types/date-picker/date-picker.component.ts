@@ -1,15 +1,17 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {FormFieldDate} from '../../interfaces/form-field-date';
 import {UtilsService} from '../../../../../services/utils.service';
 import {Subscription} from 'rxjs';
 import { first } from 'rxjs/operators';
-import * as moment from 'moment';
+import moment from 'moment';
 
 @Component({
     selector: 'app-date-picker',
     templateUrl: './date-picker.component.html',
-    styleUrls: ['./date-picker.component.scss']
+    styleUrls: ['./date-picker.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class DatePickerComponent extends BaseInputComponent implements OnInit, OnDestroy {
 

@@ -1,11 +1,13 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import {LanguageService} from '../../services/language.service';
 
 
 @Component({
-  selector: 'app-language-selector',
-  templateUrl: './language-selector.component.html',
-  styleUrls: ['./language-selector.component.css']
+    selector: 'app-language-selector',
+    templateUrl: './language-selector.component.html',
+    styleUrls: ['./language-selector.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class LanguageSelectorComponent {
   @Input() selectedLang: string;

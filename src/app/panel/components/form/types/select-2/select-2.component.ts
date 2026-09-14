@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {ActivatedRoute} from '@angular/router';
 import {Language, LanguageService} from '../../../../services/language.service';
@@ -11,7 +11,9 @@ import {first, debounceTime, distinctUntilChanged, switchMap, filter} from 'rxjs
 @Component({
     selector: 'app-select-2',
     templateUrl: './select-2.component.html',
-    styleUrls: ['./select-2.component.scss']
+    styleUrls: ['./select-2.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class Select2Component extends BaseInputComponent implements OnInit, OnDestroy {
 
@@ -236,8 +238,8 @@ export class Select2Component extends BaseInputComponent implements OnInit, OnDe
         }
     }
 
-    private loadOptions(forceReload?: boolean): Promise<any> {
-        return new Promise((resolve, reject) => {
+    private loadOptions(forceReload?: boolean): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
             if (this.endpoint) {
                 if (this.options.length === 0 || forceReload === true) {
                     const queryParams = {
@@ -294,7 +296,7 @@ export class Select2Component extends BaseInputComponent implements OnInit, OnDe
         this.refreshFormValue($event);
 
         if (this.observable) {
-            this.observable.next();
+            this.observable.next(undefined);
         }
     }
 

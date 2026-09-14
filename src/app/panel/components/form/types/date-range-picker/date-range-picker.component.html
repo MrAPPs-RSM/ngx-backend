@@ -1,31 +1,36 @@
 <div [formGroup]="form" [class]="field.class ? field.class : 'col-sm-12'" [ngClass]="{'hidden': field.hidden}">
-    <div class="form-group" [ngClass]="{'has-error': !isValid()}">
-        <label for="{{field.key}}">
-            {{field.label}}
-            <span *ngIf="isRequired()">*</span>
-        </label>
-        <div class="date-picker-wrapper">
-            <input
-                    class="form-control"
-                    (keydown)="false"
-                    id="{{field.key}}"
-                    formControlName="{{field.key}}"
-                    [owlDateTimeTrigger]="dt"
-                    [owlDateTime]="dt"
-                    [selectMode]="'range'"
-                    [min]="min"
-                    [max]="max"
-                    [disabled]="field.disabled || onlyView"
-            >
-            <owl-date-time
-                    #dt
-                    [firstDayOfWeek]="1"
-                    [pickerType]="field.isDateTime ? 'both' : 'calendar'"
-            ></owl-date-time>
-            <span class="remove"
-                  *ngIf="allowClear()"
-                  (click)="clearValue()">×</span>
-        </div>
-        <span *ngIf="field.description" class="help-block sub-little-text">{{field.description}}</span>
+  <div class="form-group" [ngClass]="{'has-error': !isValid()}">
+    <label for="{{field.key}}">
+      {{field.label}}
+      @if (isRequired()) {
+        <span>*</span>
+      }
+    </label>
+    <div class="date-picker-wrapper">
+      <input
+        class="form-control"
+        (keydown)="false"
+        id="{{field.key}}"
+        formControlName="{{field.key}}"
+        [owlDateTimeTrigger]="dt"
+        [owlDateTime]="dt"
+        [selectMode]="'range'"
+        [min]="min"
+        [max]="max"
+        [disabled]="field.disabled || onlyView"
+        >
+      <owl-date-time
+        #dt
+        [firstDayOfWeek]="1"
+        [pickerType]="field.isDateTime ? 'both' : 'calendar'"
+      ></owl-date-time>
+      @if (allowClear()) {
+        <span class="remove"
+        (click)="clearValue()">×</span>
+      }
     </div>
+    @if (field.description) {
+      <span class="help-block sub-little-text">{{field.description}}</span>
+    }
+  </div>
 </div>

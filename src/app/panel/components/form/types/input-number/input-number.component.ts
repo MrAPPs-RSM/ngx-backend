@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {FormField} from '../../interfaces/form-field';
 import {BaseInputComponent} from '../base-input/base-input.component';
@@ -7,7 +7,9 @@ import {Subscription} from 'rxjs';
 @Component({
     selector: 'app-input-number',
     templateUrl: './input-number.component.html',
-    styleUrls: ['./input-number.component.scss']
+    styleUrls: ['./input-number.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class InputNumberComponent extends BaseInputComponent implements OnInit, OnDestroy {
 

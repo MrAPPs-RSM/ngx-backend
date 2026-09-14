@@ -1,32 +1,31 @@
 import {
   Component,
   Input,
-  ComponentFactoryResolver,
   ViewChild,
   ViewContainerRef,
-  OnInit,
+  AfterViewInit,
   OnDestroy,
+  ChangeDetectionStrategy
 } from '@angular/core';
 
 import { Cell } from '../../../lib/data-set/cell';
 import { ViewCell } from './view-cell';
 
 @Component({
-  selector: 'custom-view-component',
-  template: `
+    selector: 'custom-view-component',
+    template: `
     <ng-template #dynamicTarget></ng-template>
   `,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
-export class CustomViewComponent implements OnInit, OnDestroy {
+export class CustomViewComponent implements AfterViewInit, OnDestroy {
 
   customComponent: any;
   @Input() cell: Cell;
   @ViewChild('dynamicTarget', { read: ViewContainerRef }) dynamicTarget: any;
 
-  constructor(private resolver: ComponentFactoryResolver) {
-  }
-
-  ngOnInit() {
+  ngAfterViewInit() {
     if (this.cell && !this.customComponent) {
       this.createCustomComponent();
       this.callOnComponentInit();
@@ -41,8 +40,7 @@ export class CustomViewComponent implements OnInit, OnDestroy {
   }
 
   protected createCustomComponent() {
-    const componentFactory = this.resolver.resolveComponentFactory(this.cell.getColumn().renderComponent);
-    this.customComponent = this.dynamicTarget.createComponent(componentFactory);
+    this.customComponent = this.dynamicTarget.createComponent(this.cell.getColumn().renderComponent);
   }
 
   protected callOnComponentInit() {

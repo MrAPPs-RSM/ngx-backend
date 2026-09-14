@@ -1,3 +1,6 @@
+@use "sass:color";
+@use "../../../environments/colors";
+
 .progress {
   &.visible {
     display: block !important;
@@ -8,12 +11,12 @@
   margin: 0;
   width: 100%;
   border-radius: 0;
-  background-color: lighten($primary, 40);
+  background-color: color.adjust(colors.$primary, $lightness: 40%);
   background-clip: padding-box;
   overflow: hidden;
 
   > .indeterminate {
-    background-color: darken($primary, 5);
+    background-color: color.adjust(colors.$primary, $lightness: -5%);
 
     &:before {
       content: '';

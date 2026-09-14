@@ -1,26 +1,26 @@
-import {FormControl, FormGroup, AbstractControl, ValidationErrors} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup, AbstractControl, ValidationErrors} from '@angular/forms';
 import {FormSettings} from '../../panel/components/form/interfaces/form-settings';
 import {LanguageService} from '../../panel/services/language.service';
 
 export default class ErrorBag {
-  private _form: FormGroup;
+  private _form: UntypedFormGroup;
   private _formSettings: FormSettings;
   private _languageService: LanguageService;
   private _errorList: {label: string, message: string}[] = [];
   private _errors: {[key: string]: ValidationErrors |null } = {};
 
-  constructor(form: FormGroup, formSettings: FormSettings, languageService: LanguageService) {
+  constructor(form: UntypedFormGroup, formSettings: FormSettings, languageService: LanguageService) {
     this._form            = form;
     this._formSettings    = formSettings;
     this._languageService = languageService;
   }
 
-  private _extractErrorsFrom(form: FormGroup, parentKey?: string): void {
+  private _extractErrorsFrom(form: UntypedFormGroup, parentKey?: string): void {
     Object.entries(form.controls)
       .forEach(([key, control]: [string, AbstractControl]) => {
-          if (control instanceof FormGroup) {
-            this._extractErrorsFrom((form.controls[key] as FormGroup), key);
-          } else if (control instanceof FormControl && control.errors) {
+          if (control instanceof UntypedFormGroup) {
+            this._extractErrorsFrom((form.controls[key] as UntypedFormGroup), key);
+          } else if (control instanceof UntypedFormControl && control.errors) {
             if (parentKey) {
               this._errors[parentKey] = {[key]: control.errors};
             } else {

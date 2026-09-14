@@ -1,17 +1,19 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {AbstractControl, FormGroup} from '@angular/forms';
+import {Component, Input, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import {AbstractControl, UntypedFormGroup} from '@angular/forms';
 import {formConfig} from '../form.config';
 import {Language} from '../../../services/language.service';
 
 @Component({
     selector: 'app-form-type-switcher',
     templateUrl: './form-type-switcher.component.html',
-    styleUrls: ['./form-type-switcher.component.scss']
+    styleUrls: ['./form-type-switcher.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class FormTypeSwitcherComponent implements OnInit {
 
     @Input() index = 0;
-    @Input() form: FormGroup;
+    @Input() form: UntypedFormGroup;
     @Input() groupName: string;
     @Input() putFilesOnLanguages?: boolean;
     @Input() copyOnLanguages?: boolean;

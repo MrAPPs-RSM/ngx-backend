@@ -1,10 +1,10 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {CalendarEvent, CalendarView} from 'angular-calendar';
-import * as moment from 'moment';
+import moment from 'moment';
 import {ActivatedRoute} from '@angular/router';
 import {FormSettings} from '../../components/form/interfaces/form-settings';
 import {Subscription} from 'rxjs';
-import {FormGroup} from '@angular/forms';
+import {UntypedFormGroup} from '@angular/forms';
 import {FormGeneratorService} from '../../services/form-generator.service';
 import {ApiService} from '../../../api/api.service';
 import {CalendarActivity} from '../../../interfaces/CalendarActivity';
@@ -42,16 +42,18 @@ const colors = [
 
 
 @Component({
-  selector: 'app-calendar-page',
-  templateUrl: './calendar-page.component.html',
-  styleUrls: ['./calendar-page.component.scss']
+    selector: 'app-calendar-page',
+    templateUrl: './calendar-page.component.html',
+    styleUrls: ['./calendar-page.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class CalendarPageComponent implements OnInit, OnDestroy {
 
   viewDate = new Date();
   currentLang: string = null;
   formDescriptor: FormSettings;
-  form: FormGroup;
+  form: UntypedFormGroup;
   private calendarId: number;
 
   private _subscription = Subscription.EMPTY;

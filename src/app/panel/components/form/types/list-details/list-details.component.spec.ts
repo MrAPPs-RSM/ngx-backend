@@ -1,22 +1,17 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ListDetailsComponent } from './list-details.component';
 
 describe('ListDetailsComponent', () => {
   let component: ListDetailsComponent;
-  let fixture: ComponentFixture<ListDetailsComponent>;
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ ListDetailsComponent ]
-    })
+    TestBed.configureTestingModule({ providers: [ListDetailsComponent] })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ListDetailsComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = TestBed.inject(ListDetailsComponent);
   });
 
   it('should create', () => {

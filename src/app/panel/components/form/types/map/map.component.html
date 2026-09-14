@@ -1,56 +1,61 @@
 <div [formGroup]="form" [class]="field.class ? field.class : 'col-sm-12'" [ngClass]="{'hidden': field.hidden}">
-    <div class="form-group">
-        <div class="form-wrapper">
-            <div class="row">
-                <div class="col-sm-6">
-                    <div class="form-group no-margin" [ngClass]="{'has-error': !isValid(field.lat.key)}">
-                        <label for="{{field.lat.key}}">
-                            {{field.lat.label}}
-                            <span *ngIf="isRequired('lat')">*</span>
-                        </label>
-                        <input
-                                type="number"
-                                [attr.disabled]="field.lat.disabled || onlyView ? '' : null"
-                                formControlName="{{field.lat.key}}"
-                                class="form-control"
-                                id="{{field.lat.key}}"
-                                placeholder="{{field.lat.placeholder}}"
-                        >
-                    </div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="form-group no-margin" [ngClass]="{'has-error': !isValid(field.lng.key)}">
-                        <label for="{{field.lng.key}}">
-                            {{field.lng.label}}
-                            <span *ngIf="isRequired('lng')">*</span>
-                        </label>
-                        <input
-                                type="number"
-                                [attr.disabled]="field.lng.disabled || onlyView ? '' : null"
-                                formControlName="{{field.lng.key}}"
-                                class="form-control"
-                                id="{{field.lng.key}}"
-                                placeholder="{{field.lng.placeholder}}"
-                        >
-                    </div>
-                </div>
-            </div>
-            <span *ngIf="field.description" class="help-block">{{field.description}}</span>
+  <div class="form-group">
+    <div class="form-wrapper">
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="form-group no-margin" [ngClass]="{'has-error': !isValid(field.lat.key)}">
+            <label for="{{field.lat.key}}">
+              {{field.lat.label}}
+              @if (isRequired('lat')) {
+                <span>*</span>
+              }
+            </label>
+            <input
+              type="number"
+              [attr.disabled]="field.lat.disabled || onlyView ? '' : null"
+              formControlName="{{field.lat.key}}"
+              class="form-control"
+              id="{{field.lat.key}}"
+              placeholder="{{field.lat.placeholder}}"
+              >
+          </div>
         </div>
-
-        <agm-map
-                [zoom]="12"
-                [latitude]="getControl(field.lat.key).value"
-                [longitude]="getControl(field.lng.key).value"
-                [scrollwheel]="false"
-                (mapClick)="onMarkerChanged($event)">
-            <agm-marker
-                    [latitude]="getControl(field.lat.key).value"
-                    [longitude]="getControl(field.lng.key).value"
-                    [markerDraggable]="true"
-                    (dragEnd)="onMarkerChanged($event)">
-            </agm-marker>
-        </agm-map>
+        <div class="col-sm-6">
+          <div class="form-group no-margin" [ngClass]="{'has-error': !isValid(field.lng.key)}">
+            <label for="{{field.lng.key}}">
+              {{field.lng.label}}
+              @if (isRequired('lng')) {
+                <span>*</span>
+              }
+            </label>
+            <input
+              type="number"
+              [attr.disabled]="field.lng.disabled || onlyView ? '' : null"
+              formControlName="{{field.lng.key}}"
+              class="form-control"
+              id="{{field.lng.key}}"
+              placeholder="{{field.lng.placeholder}}"
+              >
+          </div>
+        </div>
+      </div>
+      @if (field.description) {
+        <span class="help-block">{{field.description}}</span>
+      }
     </div>
-</div>
 
+    @if (mapReady) {
+      <google-map
+        [zoom]="12"
+        [center]="center"
+        [options]="{scrollwheel: false}"
+        (mapClick)="onMarkerChanged($event)">
+        <map-marker
+          [position]="center"
+          [options]="{draggable: true}"
+          (mapDragend)="onMarkerChanged($event)">
+        </map-marker>
+      </google-map>
+    }
+  </div>
+</div>

@@ -1,22 +1,17 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 
 import { PlainComponent } from './plain.component';
 
 describe('PlainComponent', () => {
   let component: PlainComponent;
-  let fixture: ComponentFixture<PlainComponent>;
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ PlainComponent ]
-    })
+    TestBed.configureTestingModule({ providers: [PlainComponent] })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PlainComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = TestBed.inject(PlainComponent);
   });
 
   it('should create', () => {

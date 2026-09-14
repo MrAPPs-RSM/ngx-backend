@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { ApiService, ErrorResponse } from '../../../../../api/api.service';
 import { ActivatedRoute } from '@angular/router';
 import { FormFieldSelect } from '../../interfaces/form-field-select';
@@ -11,7 +11,9 @@ import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
     selector: 'app-select',
     templateUrl: './select.component.html',
     styleUrls: ['./select.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class SelectComponent extends BaseInputComponent implements OnInit, OnDestroy {
 
@@ -187,12 +189,12 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
     onChange($event: any): void {
         this.refreshFormValue($event);
         if (this.observable) {
-            this.observable.next();
+            this.observable.next(undefined);
         }
     }
 
-    private loadOptions(forceReload?: boolean): Promise<any> {
-        return new Promise((resolve, reject) => {
+    private loadOptions(forceReload?: boolean): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
             if (this.field.search) {
                 return resolve();
             }

@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {FormFieldDateRange} from '../../interfaces/form-field-date-range';
 import {UtilsService} from '../../../../../services/utils.service';
@@ -8,7 +8,9 @@ import { first } from 'rxjs/operators';
 @Component({
     selector: 'app-date-range-picker',
     templateUrl: './date-range-picker.component.html',
-    styleUrls: ['./date-range-picker.component.scss']
+    styleUrls: ['./date-range-picker.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class DateRangePickerComponent extends BaseInputComponent implements OnInit, OnDestroy {
 

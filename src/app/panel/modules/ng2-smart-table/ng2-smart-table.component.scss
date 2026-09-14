@@ -1,4 +1,5 @@
-@import "../../../../assets/sass/partials/imports";
+@use "sass:color";
+@use "../../../../assets/sass/partials/imports" as *;
 
 :host {
   font-size: 14px;
@@ -75,14 +76,14 @@
             a {
               color: $default;
               &:hover {
-                color: darken($default, 10);
+                color: color.adjust($default, $lightness: -10%);
               }
             }
             > ng2-smart-table-filter {
               > div.ng2-smart-filter {
                 > input-filter {
                   > input.form-control {
-                    @include _form-input();
+                    @include form-input();
                     height: 40px;
                     font-weight: $light;
                     border: none;
@@ -118,7 +119,7 @@
 
                 > date-filter {
                   input {
-                    @include _form-input();
+                    @include form-input();
                     height: 40px;
                     font-weight: $light;
                     border: none;

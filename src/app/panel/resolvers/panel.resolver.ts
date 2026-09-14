@@ -3,7 +3,7 @@ import {empty as observableEmpty, Observable} from 'rxjs';
 
 import {catchError} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
-import {ActivatedRoute, ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot} from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
 import {PanelComponent} from '../panel.component';
 import {SetupService} from '../services/setup.service';
 
@@ -14,7 +14,7 @@ import {LanguageService} from '../services/language.service';
 import {PageRefreshService} from '../../services/page-refresh.service';
 
 @Injectable()
-export class PanelResolver implements Resolve<PanelComponent> {
+export class PanelResolver  {
 
     constructor(private _setupService: SetupService,
                 private _router: Router,

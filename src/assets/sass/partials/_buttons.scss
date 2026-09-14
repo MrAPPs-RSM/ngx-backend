@@ -1,13 +1,18 @@
+@use "sass:color";
+@use "../../../environments/colors";
+@use "../mixins/transition";
+@use "variables";
+
 .btn {
   border: none !important;
-  border-radius: $borderRadius !important;
-  font-weight: $light !important;
+  border-radius: variables.$borderRadius !important;
+  font-weight: variables.$light !important;
   padding: 8px 15px !important;
   max-width: 100% !important;
   text-decoration: none !important;
   white-space: inherit !important;
   text-align: inherit !important;
-  @include _transition(all 0.3s);
+  @include transition.transition(all 0.3s);
   font-size: 14px !important;
 
   &:focus, &:active {
@@ -23,57 +28,57 @@
   }
 
   &.btn-link {
-    color: $default;
+    color: colors.$default;
     &:hover, &:active, &:focus {
-      color: $primary;
+      color: colors.$primary;
     }
   }
 
   &.btn-primary {
-    background-color: $primary;
+    background-color: colors.$primary;
     color: #FFF;
     &:hover, &:active, &:focus {
-      background-color: darken($primary, 20);
+      background-color: color.adjust(colors.$primary, $lightness: -20%);
     }
   }
 
   &.btn-info {
-    background-color: $info;
+    background-color: colors.$info;
     color: #FFF;
     &:hover, &:active, &:focus {
-      background-color: darken($info, 20);
+      background-color: color.adjust(colors.$info, $lightness: -20%);
     }
   }
 
   &.btn-warning {
-    background-color: $warning;
+    background-color: colors.$warning;
     color: #FFF;
     &:hover, &:active, &:focus {
-      background-color: darken($warning, 20);
+      background-color: color.adjust(colors.$warning, $lightness: -20%);
     }
   }
 
   &.btn-success {
-    background-color: $success;
+    background-color: colors.$success;
     color: #FFF;
     &:hover, &:active, &:focus {
-      background-color: darken($success, 20);
+      background-color: color.adjust(colors.$success, $lightness: -20%);
     }
   }
 
   &.btn-danger {
-    background-color: $danger;
+    background-color: colors.$danger;
     color: #FFF;
     &:hover, &:active, &:focus {
-      background-color: darken($danger, 20);
+      background-color: color.adjust(colors.$danger, $lightness: -20%);
     }
   }
 
   &.btn-default {
-    background-color: $default;
+    background-color: colors.$default;
     color: #FFF;
     &:hover, &:active, &:focus {
-      background-color: darken($default, 20);
+      background-color: color.adjust(colors.$default, $lightness: -20%);
     }
   }
 

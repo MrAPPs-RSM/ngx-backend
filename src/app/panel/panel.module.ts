@@ -2,14 +2,13 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { ColorPickerModule } from 'ngx-color-picker';
+import { ColorPickerDirective } from 'ngx-color-picker';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { NgxUploaderModule } from 'ngx-uploader';
-import { AgmCoreModule } from '@agm/core';
+import { GoogleMapsModule } from '@angular/google-maps';
 import { Ng2SmartTableModule } from './modules/ng2-smart-table/ng2-smart-table.module';
 import { PipesModule } from '../pipes/pipes.module';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
-import { NgxMaskModule, IConfig } from 'ngx-mask'
+import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 
 import { PanelComponent } from './panel.component';
 import { FormPageComponent } from './pages/form-page/form-page.component';
@@ -58,7 +57,6 @@ import { ImageComponent } from './components/form/types/image/image.component';
 import { Select2Component } from './components/form/types/select-2/select-2.component';
 import { CloudinaryLibraryComponent } from './components/form/types/cloudinary-library/cloudinary-library.component';
 import { HotspotComponent } from './components/form/types/hotspot/hotspot.component';
-import { environment } from '../../environments/environment';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { TicketDetailPageComponent } from './pages/ticket-detail-page/ticket-detail-page.component';
 import { FileUploaderComponent } from './pages/ticket-detail-page/components/file-uploader/file-uploader.component';
@@ -68,15 +66,16 @@ import {MatSliderModule} from '@angular/material/slider';
 import { HotspotCanvasComponent } from './components/form/types/hotspot-canvas/hotspot-canvas.component';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/moment';
-import { CKEditorModule } from 'ckeditor4-angular';
-import * as moment from 'moment';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import moment from 'moment';
 
-import {BootstrapModalModule} from 'ngx-modialog-7/plugins/bootstrap';
 import { CalendarPageComponent } from './pages/calendar-page/calendar-page.component';
 import { ErrorAlertComponent } from './components/error-alert/error-alert.component';
 import { LanguageSelectorComponent } from './components/language-selector/language-selector.component';
 import { BaseLongPollingComponent } from './components/base-long-polling/base-long-polling.component';
 import { CopyLangChooserComponent } from './components/form/copy-lang-chooser/copy-lang-chooser.component';
+import { ModernUploaderDirective } from './directives/modern-uploader.directive';
+import { SortableDirective } from './directives/sortable.directive';
 
 export function momentAdapterFactory() {
   return adapterFactory(moment);
@@ -162,57 +161,48 @@ const routes: Routes = [
   }
 ];
 
-export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
-
 @NgModule({
-  imports: [
-    CommonModule,
-    RouterModule.forChild(routes),
-    ReactiveFormsModule,
-    FormsModule,
-    ColorPickerModule,
-    ScrollingModule,
-    NgSelectModule,
-    MatSliderModule,
-    MatInputModule,
-    MatFormFieldModule,
-    NgxUploaderModule,
-    AgmCoreModule.forRoot({
-      apiKey: environment.googleMapsApiKey ? environment.googleMapsApiKey : ''
-    }),
-    Ng2SmartTableModule,
-    PipesModule,
-    OwlDateTimeModule,
-    OwlNativeDateTimeModule,
-    NgxMaskModule.forRoot(),
-    CalendarModule.forRoot({ provide: DateAdapter, useFactory: momentAdapterFactory }),
-    CKEditorModule
-  ],
-  exports: [
-    FormComponent,
-    InputTextComponent,
-    InputPasswordComponent
-  ],
-  declarations: [
-    ...COMPONENTS,
-    HotspotCanvasComponent,
-    CalendarPageComponent,
-    ErrorAlertComponent,
-    LanguageSelectorComponent,
-    BaseLongPollingComponent,
-    CopyLangChooserComponent
-  ],
-  providers: [
-    ...PROVIDERS
-  ],
-  entryComponents: [
-    FormPageComponent,
-    TablePageComponent,
-    DashboardPageComponent,
-    TicketDetailPageComponent,
-    ProfilePageComponent,
-    NotfoundPageComponent
-  ]
+    imports: [
+        CommonModule,
+        RouterModule.forChild(routes),
+        ReactiveFormsModule,
+        FormsModule,
+        ColorPickerDirective,
+        ScrollingModule,
+        NgSelectModule,
+        MatSliderModule,
+        MatInputModule,
+        MatFormFieldModule,
+        ModernUploaderDirective,
+        SortableDirective,
+        GoogleMapsModule,
+        Ng2SmartTableModule,
+        PipesModule,
+        OwlDateTimeModule,
+        OwlNativeDateTimeModule,
+        NgxMaskDirective,
+        NgxMaskPipe,
+        CalendarModule.forRoot({ provide: DateAdapter, useFactory: momentAdapterFactory }),
+        CKEditorModule
+    ],
+    exports: [
+        FormComponent,
+        InputTextComponent,
+        InputPasswordComponent
+    ],
+    declarations: [
+        ...COMPONENTS,
+        HotspotCanvasComponent,
+        CalendarPageComponent,
+        ErrorAlertComponent,
+        LanguageSelectorComponent,
+        BaseLongPollingComponent,
+        CopyLangChooserComponent
+    ],
+    providers: [
+        ...PROVIDERS,
+        provideNgxMask()
+    ]
 })
 export class PanelModule {
 

@@ -1,0 +1,39 @@
+:host {
+    display: block;
+}
+
+.toast-notification {
+    position: relative;
+    min-width: 260px;
+    padding-right: 22px;
+    cursor: pointer;
+    color: #ffffff;
+}
+
+.toast-notification__close {
+    position: absolute;
+    top: -9px;
+    right: -12px;
+    padding: 0 4px;
+    border: 0;
+    outline: 0;
+    color: inherit;
+    background: transparent;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.toast-notification__title {
+    margin-bottom: 2px;
+    font-size: 16px;
+    font-weight: 400;
+    text-transform: uppercase;
+}
+
+.toast-notification__message {
+    font-size: 14px;
+    font-weight: 300;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}

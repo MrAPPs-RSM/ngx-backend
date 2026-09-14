@@ -3,9 +3,9 @@ import { DateTimeAdapter } from '@danielmoncada/angular-datetime-picker';
 import { environment } from '../../../environments/environment';
 import { translations } from '../../../translations';
 import ErrorBag from '../../strategies/form/ErrorBag';
-import {FormGroup} from '@angular/forms';
+import {UntypedFormGroup} from '@angular/forms';
 import {FormSettings} from '../components/form/interfaces/form-settings';
-import * as moment from 'moment';
+import moment from 'moment';
 
 @Injectable()
 export class LanguageService {
@@ -123,7 +123,7 @@ export class LanguageService {
         return res;
     }
 
-    createErrorBagFor(form: FormGroup, formSettings: FormSettings): ErrorBag {
+    createErrorBagFor(form: UntypedFormGroup, formSettings: FormSettings): ErrorBag {
       return new ErrorBag(form, formSettings, this);
     }
 

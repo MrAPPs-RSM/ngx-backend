@@ -1,22 +1,17 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 
 import { PasswordChangeComponent } from './password-change.component';
 
 describe('PasswordResetComponent', () => {
   let component: PasswordChangeComponent;
-  let fixture: ComponentFixture<PasswordChangeComponent>;
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ PasswordChangeComponent ]
-    })
+    TestBed.configureTestingModule({ providers: [PasswordChangeComponent] })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PasswordChangeComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = TestBed.inject(PasswordChangeComponent);
   });
 
   it('should create', () => {

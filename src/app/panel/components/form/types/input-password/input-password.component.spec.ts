@@ -1,22 +1,17 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 
 import { InputPasswordComponent } from './input-password.component';
 
 describe('InputPasswordComponent', () => {
   let component: InputPasswordComponent;
-  let fixture: ComponentFixture<InputPasswordComponent>;
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ InputPasswordComponent ]
-    })
+    TestBed.configureTestingModule({ providers: [InputPasswordComponent] })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(InputPasswordComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = TestBed.inject(InputPasswordComponent);
   });
 
   it('should create', () => {

@@ -1,22 +1,17 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 
 import { FormComponent } from './form.component';
 
 describe('FormComponent', () => {
   let component: FormComponent;
-  let fixture: ComponentFixture<FormComponent>;
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ FormComponent ]
-    })
+    TestBed.configureTestingModule({ providers: [FormComponent] })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FormComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = TestBed.inject(FormComponent);
   });
 
   it('should create', () => {

@@ -1,5 +1,6 @@
 import {
-    Component, Input, Output, EventEmitter, ViewEncapsulation, OnInit
+  Component, Input, Output, EventEmitter, ViewEncapsulation, OnInit,
+  ChangeDetectionStrategy
 } from '@angular/core';
 
 import {DataSource} from '../../lib/data-source/data-source';
@@ -10,7 +11,9 @@ import {TableAction} from '../../../../components/table/interfaces/table-action'
     selector: 'ng2-smart-table-general-actions',
     styleUrls: ['./general-actions.component.scss'],
     templateUrl: './general-actions.html',
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class GeneralActionsComponent implements OnInit {
 

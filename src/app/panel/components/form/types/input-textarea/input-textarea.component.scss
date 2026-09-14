@@ -1,7 +1,9 @@
-@import '../../../../../../assets/sass/partials/imports';
+@use '../../../../../../assets/sass/partials/imports' as *;
 
 app-input-textarea {
   div.form-group {
-    
+    .ck-editor__editable_inline {
+      min-height: 250px;
+    }
   }
 }

@@ -1,9 +1,17 @@
+@use "sass:color";
+@use "../../../environments/colors";
+@use "../mixins/box-shadow";
+@use "../mixins/clearfix";
+@use "../mixins/form-input";
+@use "../mixins/transition";
+@use "variables";
+
 input {
   outline: none;
 }
 
 .form-group {
-  @include clearfix;
+  @include clearfix.clearfix;
   clear: both;
 
   margin-top: 0;
@@ -18,17 +26,17 @@ input {
   label {
     font-weight: inherit;
     font-size: 13px;
-    color: $default;
+    color: colors.$default;
   }
 
   input {
     &.form-control {
-      @include _form-input;
+      @include form-input.form-input;
     }
   }
   textarea {
     &.form-control {
-      @include _form-input;
+      @include form-input.form-input;
       resize: none;
       height: 150px;
       padding: 12px;
@@ -43,31 +51,31 @@ input {
 
   &.has-error {
     label {
-      color: $danger;
+      color: colors.$danger;
     }
     input, textarea {
-      border-color: $danger;
+      border-color: colors.$danger;
       &:focus {
-        border-color: $danger;
+        border-color: colors.$danger;
       }
     }
 
     ckeditor {
       > div.cke_2 {
-        border-color: $danger;
+        border-color: colors.$danger;
       }
     }
   }
 
   .help-block {
-    color: $default;
+    color: colors.$default;
     font-size: 13px;
 
     &.danger {
-      color: $danger;
+      color: colors.$danger;
     }
     &.success {
-      color: $success;
+      color: colors.$success;
     }
   }
 }
@@ -78,7 +86,7 @@ div.date-picker-wrapper {
   > span.remove {
     cursor: pointer;
     position: absolute;
-    color: $default;
+    color: colors.$default;
     font-size: 18px;
     top: 8px;
     right: 12px;
@@ -91,7 +99,7 @@ owl-date-time-container.owl-dt-container {
   z-index: 3000;
   &.owl-dt-popup-container {
     margin-top: 5px;
-    @include box-shadow();
+    @include box-shadow.box-shadow();
     border: none;
     width: 220px;
 
@@ -102,14 +110,14 @@ owl-date-time-container.owl-dt-container {
 
     div.owl-dt-calendar-control {
       font-size: 13px;
-      color: $default;
+      color: colors.$default;
 
       span.owl-dt-control-button-content {
-        border-radius: $borderRadius;
+        border-radius: variables.$borderRadius;
 
         span.owl-dt-control-button-arrow {
-          color: $default;
-          @include _transition(none);
+          color: colors.$default;
+          @include transition.transition(none);
         }
       }
     }
@@ -120,7 +128,7 @@ owl-date-time-container.owl-dt-container {
           > tr.owl-dt-weekdays {
             > th.owl-dt-weekday {
               padding-top: 5px;
-              color: $default;
+              color: colors.$default;
               font-size: 11px;
             }
           }
@@ -132,7 +140,7 @@ owl-date-time-container.owl-dt-container {
               font-size: 14px;
 
               > span.owl-dt-calendar-cell-selected {
-                background-color: $primary;
+                background-color: colors.$primary;
               }
             }
           }
@@ -141,19 +149,19 @@ owl-date-time-container.owl-dt-container {
     }
 
     owl-date-time-timer.owl-dt-timer {
-      border-top: 1px solid $lightGrey;
+      border-top: 1px solid colors.$lightGrey;
 
       input.owl-dt-timer-input {
-        font-weight: $light;
+        font-weight: variables.$light;
       }
     }
 
     div.owl-dt-container-info {
-      color: $default;
+      color: colors.$default;
       font-size: 15px;
 
       div.owl-dt-container-info-active {
-        color: $primary;
+        color: colors.$primary;
       }
     }
 
@@ -164,7 +172,7 @@ owl-date-time-container.owl-dt-container {
         }
 
         position: relative;
-        @include _transition(all 0.3s);
+        @include transition.transition(all 0.3s);
 
         &:after {
           position: absolute;
@@ -178,10 +186,10 @@ owl-date-time-container.owl-dt-container {
         }
 
         &:first-child {
-          background-color: $danger;
+          background-color: colors.$danger;
 
           &:hover {
-            background-color: darken($danger, 20);
+            background-color: color.adjust(colors.$danger, $lightness: -20%);
           }
 
           &:after {
@@ -190,10 +198,10 @@ owl-date-time-container.owl-dt-container {
         }
 
         &:last-child {
-          background-color: $primary;
+          background-color: colors.$primary;
 
           &:hover {
-            background-color: darken($primary, 20);
+            background-color: color.adjust(colors.$primary, $lightness: -20%);
           }
 
           &:after {
@@ -220,19 +228,19 @@ ng-select.ng-select {
   &.opened, &.focused {
     > div.ng-select-container {
       background-color: #f5f5f5;
-      @include box-shadow(none);
-      border-radius: $borderRadius;
-      border: 1px solid $lightGrey;
+      @include box-shadow.box-shadow(none);
+      border-radius: variables.$borderRadius;
+      border: 1px solid colors.$lightGrey;
     }
   }
   > div.ng-select-container {
     min-height: 45px;
-    border-radius: $borderRadius;
-    border: 1px solid $lightGrey;
+    border-radius: variables.$borderRadius;
+    border: 1px solid colors.$lightGrey;
     > span.ng-clear-zone {
       &:hover {
         > span {
-          color: $sidebar;
+          color: colors.$sidebar;
         }
       }
     }
@@ -244,8 +252,8 @@ ng-select.ng-select {
       > div.ng-value {
         top: 12px;
         overflow: hidden;
-        border-radius: $borderRadius;
-        border-color: $lightGrey;
+        border-radius: variables.$borderRadius;
+        border-color: colors.$lightGrey;
         font-size: 13px;
         padding: 2px;
         > span.ng-value-icon.left {
@@ -273,12 +281,12 @@ ng-select.ng-select {
   }
   > div.ng-select-dropdown-outer {
     margin-top: 0;
-    border-radius: $borderRadius;
-    border: 1px solid $lightGrey;
+    border-radius: variables.$borderRadius;
+    border: 1px solid colors.$lightGrey;
     > ng-select-virtual-scroll.ng-select-dropdown {
       > div {
         > div.ng-option {
-          border-radius: $borderRadius;
+          border-radius: variables.$borderRadius;
           &.marked {
             background-color: #f5f5f5;
           }
@@ -316,8 +324,8 @@ label.checkbox {
           -moz-osx-font-smoothing: grayscale;
           -webkit-font-smoothing: antialiased;
           font-smoothing: antialiased;
-          border-color: $primary;
-          background-color: $primary;
+          border-color: colors.$primary;
+          background-color: colors.$primary;
           color: #ffffff;
           content: "\f17b";
           font-size: 16px;
@@ -335,7 +343,7 @@ label.checkbox {
     padding-left: 22px;
     width: 100%;
     &:before {
-      color: $primary;
+      color: colors.$primary;
       cursor: pointer;
       font-size: 17px;
       line-height: 17px;
@@ -343,7 +351,7 @@ label.checkbox {
       width: $size;
       content: '';
       background-color: transparent;
-      border: 1px solid $lightGrey;
+      border: 1px solid colors.$lightGrey;
       border-radius: 0;
       display: inline-block;
       text-align: center;

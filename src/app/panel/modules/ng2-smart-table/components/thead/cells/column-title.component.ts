@@ -1,4 +1,4 @@
-import {Component, Input, Output, EventEmitter} from '@angular/core';
+import {Component, Input, Output, EventEmitter, ChangeDetectionStrategy} from '@angular/core';
 
 import {Column} from '../../../lib/data-set/column';
 import {DataSource} from '../../../lib/data-source/data-source';
@@ -13,6 +13,8 @@ import {DataSource} from '../../../lib/data-source/data-source';
                                    (sort)="sort.emit($event)"></ng2-smart-table-title>
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class ColumnTitleComponent {
 

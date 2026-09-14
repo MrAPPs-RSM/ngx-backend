@@ -1,4 +1,5 @@
-@import '../../../../../../assets/sass/partials/imports';
+@use "sass:color";
+@use '../../../../../../assets/sass/partials/imports' as *;
 
 app-media-library {
   > div.media-library {
@@ -160,8 +161,8 @@ app-media-library {
                       background-color: $primary;
                       color: #ffffff;
                       &:hover {
-                        border-color: darken($primary, 10);
-                        background-color: darken($primary, 10);
+                        border-color: color.adjust($primary, $lightness: -10%);
+                        background-color: color.adjust($primary, $lightness: -10%);
                         color: #ffffff;
                       }
                       > span {
@@ -170,7 +171,7 @@ app-media-library {
                     }
                   }
                   > a, > span {
-                    @include _transition(all 0.3s);
+                    @include transition(all 0.3s);
                     padding: 6px 12px;
                     cursor: pointer;
                     color: $primary;

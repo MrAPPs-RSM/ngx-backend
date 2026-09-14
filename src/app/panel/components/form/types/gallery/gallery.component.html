@@ -1,29 +1,35 @@
 <div [class]="field.class ? field.class : 'col-sm-12'" [ngClass]="{'hidden': field.hidden}">
-    <div class="form-group">
-        <label>
-            {{field.label}}
-        </label>
+  <div class="form-group">
+    <label>
+      {{field.label}}
+    </label>
 
-        <div class="gallery">
-            <div class="progress" [ngClass]="{'visible': isLoading}">
-                <div class="indeterminate"></div>
-            </div>
+    <div class="gallery">
+      <div class="progress" [ngClass]="{'visible': isLoading}">
+        <div class="indeterminate"></div>
+      </div>
 
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3"
-                         *ngFor="let media of gallery">
-                        <a data-fancybox="gallery" data-type="image" href="{{media.url}}">
-                            <div class="media">
-                                <img [src]="media.url" (error)="onImageError($event, media)">
-                            </div>
-                            <div *ngIf="media.title">{{media.title}}</div>
-                        </a>
-                    </div>
+      <div class="container-fluid">
+        <div class="row">
+          @for (media of gallery; track media) {
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3"
+              >
+              <a data-fancybox="gallery" data-type="image" href="{{media.url}}">
+                <div class="media">
+                  <img [src]="media.url" (error)="onImageError($event, media)">
                 </div>
+                @if (media.title) {
+                  <div>{{media.title}}</div>
+                }
+              </a>
             </div>
+          }
         </div>
-
-        <span *ngIf="field.description" class="help-block">{{field.description}}</span>
+      </div>
     </div>
+
+    @if (field.description) {
+      <span class="help-block">{{field.description}}</span>
+    }
+  </div>
 </div>

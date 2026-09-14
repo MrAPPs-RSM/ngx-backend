@@ -1,22 +1,17 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 
 import { InputColorComponent } from './input-color.component';
 
 describe('InputColorComponent', () => {
   let component: InputColorComponent;
-  let fixture: ComponentFixture<InputColorComponent>;
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ InputColorComponent ]
-    })
+    TestBed.configureTestingModule({ providers: [InputColorComponent] })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(InputColorComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = TestBed.inject(InputColorComponent);
   });
 
   it('should create', () => {

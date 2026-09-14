@@ -1,6 +1,7 @@
 import {
-    Component, Input, Output, EventEmitter, OnChanges, SimpleChanges,
-    ViewEncapsulation
+  Component, Input, Output, EventEmitter, OnChanges, SimpleChanges,
+  ViewEncapsulation,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {Subscription} from 'rxjs';
 
@@ -10,7 +11,9 @@ import {DataSource} from '../../lib/data-source/data-source';
     selector: 'ng2-smart-table-pager',
     styleUrls: ['./pager.component.scss'],
     templateUrl: './pager.html',
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class PagerComponent implements OnChanges {
 

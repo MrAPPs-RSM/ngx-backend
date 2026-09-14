@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ViewEncapsulation, ChangeDetectionStrategy} from '@angular/core';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {ApiService, ErrorResponse} from '../../../../../api/api.service';
 import {FormFieldPreview} from '../../interfaces/form-field-preview';
@@ -10,7 +10,9 @@ import { first } from 'rxjs/operators';
     selector: 'app-preview',
     templateUrl: './preview.component.html',
     styleUrls: ['./preview.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class PreviewComponent extends BaseInputComponent implements OnInit, OnDestroy {
 

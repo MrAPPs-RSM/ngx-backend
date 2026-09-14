@@ -1,22 +1,17 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 
 import { DashboardPageComponent } from './dashboard-page.component';
 
 describe('DashboardPageComponent', () => {
   let component: DashboardPageComponent;
-  let fixture: ComponentFixture<DashboardPageComponent>;
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ DashboardPageComponent ]
-    })
+    TestBed.configureTestingModule({ providers: [DashboardPageComponent] })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DashboardPageComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = TestBed.inject(DashboardPageComponent);
   });
 
   it('should create', () => {

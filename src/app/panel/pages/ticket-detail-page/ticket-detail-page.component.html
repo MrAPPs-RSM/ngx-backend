@@ -1,124 +1,126 @@
-<div *ngIf="ticket">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-sm-12">
-        <div class="thread">
-
-          <div class="editable-fields">
-            <div class="form-group title">
-              <input class="form-control" 
-              placeholder="Ticket title"
-              [(ngModel)]="ticket.title" />
-            </div>
-
-            <ng-container *ngIf="ticket.insertedAt && ticket.updatedAt">
-              <p class="date"><strong>Date opened:</strong> {{ticket.insertedAt}}</p>
-              <p class="date"><strong>Last update:</strong> {{ticket.updatedAt}}</p>
-            </ng-container>
-           
-            <div class="row">
-              <div class="col-xs-12 col-sm-6">
-                <div class="form-group status">
-                  <label>Status</label>
-                  <ng-select [items]="ticketStatuses" bindValue="id" bindLabel="text"
-                    [(ngModel)]="ticket.status">
-                  </ng-select>
-                </div>
+@if (ticket) {
+  <div>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="thread">
+            <div class="editable-fields">
+              <div class="form-group title">
+                <input class="form-control"
+                  placeholder="Ticket title"
+                  [(ngModel)]="ticket.title" />
               </div>
-
-              <div class="col-xs-12 col-sm-6">
-                <div class="form-group category">
-                  <label>Category</label>
-                  <ng-select [items]="ticketCategories" bindValue="id" bindLabel="title"
-                    [(ngModel)]="ticket.categoryId">
-                  </ng-select>
-                </div>
-              </div>
-
-              <div class="col-xs-12 col-sm-6">
-                <div class="form-group status">
-                  <label>Order ID</label>
-                  <ng-select 
-                    [items]="orders"
-                    [typeahead]="typeAheadOrders" 
-                    [addTag]="false" 
-                    [multiple]="false"
-                    bindValue="id"
-                    bindLabel="text" 
-                    placeholder="Select order ID" 
-                    [(ngModel)]="ticket.orderId"
-                    >
-                  </ng-select>
-                </div>
-              </div>
-
-              <div class="col-xs-12 col-sm-6">
-                <div class="form-group status">
-                  <label>User</label>
-                  <ng-select 
-                    [items]="users"
-                    [typeahead]="typeAheadUsers" 
-                    [addTag]="false" 
-                    [multiple]="false"
-                    bindValue="id"
-                    bindLabel="text" 
-                    placeholder="Select user" 
-                    [disabled]="!isCreate"
-                    [(ngModel)]="ticket.user.id"
-                    >
-                  </ng-select>
-                </div>
-              </div>
-            </div>
-
-            <div class="submit">
-              <button class="btn btn-primary" (click)="onEditableFieldsSubmit($event)">Save</button>
-            </div>
-          </div>
-
-          <div class="content" *ngIf="!isCreate">
-            <div class="messages" #msgWrapper (scroll)="onMsgListScroll($event)">
-              <ul #msgList>
-                <li *ngFor="let item of ticket.messages.slice().reverse()" class="clearfix"
-                  [ngClass]="{'left': !item.sent, 'right': item.sent}">
-                  <div class="body">
-                    <div class="content">
-                      <span class="username">{{item.user.username}}</span>
-                      <span *ngIf="item.message" class="message">{{item.message}}</span>
-                      <img *ngIf="item.pictureUrl" [src]="item.pictureUrl">
-                    </div>
-                    <span class="date-time">{{item.insertedAt}}</span>
+              @if (ticket.insertedAt && ticket.updatedAt) {
+                <p class="date"><strong>Date opened:</strong> {{ticket.insertedAt}}</p>
+                <p class="date"><strong>Last update:</strong> {{ticket.updatedAt}}</p>
+              }
+              <div class="row">
+                <div class="col-xs-12 col-sm-6">
+                  <div class="form-group status">
+                    <label>Status</label>
+                    <ng-select [items]="ticketStatuses" bindValue="id" bindLabel="text"
+                      [(ngModel)]="ticket.status">
+                    </ng-select>
                   </div>
-                </li>
-              </ul>
-            </div>
-            <div class="overlay" [ngClass]="{'visible': showFileUpload}"></div>
-
-            <div class="user-input">
-              <app-file-uploader (response)="onFileUpload($event)" (cancel)="onFileCancel($event)"
-                [removeFiles]="removeFiles" [ngClass]="{'visible': showFileUpload}"></app-file-uploader>
-
-              <div class="input-text">
-                <mat-form-field class="full-width">
-                  <textarea placeholder="Messaggio" matInput mat-autosize="true" [cdkAutosizeMaxRows]="5"
-                    [disabled]="disableTextArea" [(ngModel)]="newMessage" (keydown)="onKeyDownTextArea($event)">
-                        </textarea>
-                </mat-form-field>
-                <div class="buttons">
-                  <span class="file-counter" *ngIf="file.uploaded">1</span>
-                  <button (click)="toggleFileUpload()" class="btn btn-link attachment" matRipple
-                    [disabled]="ticket?.isClosed()">
-                    <i class="material-icons">attachment</i>
-                  </button>
-                  <button (click)="sendMessage()" [disabled]="disableSend" class="btn btn-primary send">
-                    <i class="material-icons">send</i>
-                  </button>
+                </div>
+                <div class="col-xs-12 col-sm-6">
+                  <div class="form-group category">
+                    <label>Category</label>
+                    <ng-select [items]="ticketCategories" bindValue="id" bindLabel="title"
+                      [(ngModel)]="ticket.categoryId">
+                    </ng-select>
+                  </div>
+                </div>
+                <div class="col-xs-12 col-sm-6">
+                  <div class="form-group status">
+                    <label>Order ID</label>
+                    <ng-select
+                      [items]="orders"
+                      [typeahead]="typeAheadOrders"
+                      [addTag]="false"
+                      [multiple]="false"
+                      bindValue="id"
+                      bindLabel="text"
+                      placeholder="Select order ID"
+                      [(ngModel)]="ticket.orderId"
+                      >
+                    </ng-select>
+                  </div>
+                </div>
+                <div class="col-xs-12 col-sm-6">
+                  <div class="form-group status">
+                    <label>User</label>
+                    <ng-select
+                      [items]="users"
+                      [typeahead]="typeAheadUsers"
+                      [addTag]="false"
+                      [multiple]="false"
+                      bindValue="id"
+                      bindLabel="text"
+                      placeholder="Select user"
+                      [disabled]="!isCreate"
+                      [(ngModel)]="ticket.user.id"
+                      >
+                    </ng-select>
+                  </div>
                 </div>
               </div>
+              <div class="submit">
+                <button class="btn btn-primary" (click)="onEditableFieldsSubmit($event)">Save</button>
+              </div>
             </div>
+            @if (!isCreate) {
+              <div class="content">
+                <div class="messages" #msgWrapper (scroll)="onMsgListScroll($event)">
+                  <ul #msgList>
+                    @for (item of ticket.messages.slice().reverse(); track item) {
+                      <li class="clearfix"
+                        [ngClass]="{'left': !item.sent, 'right': item.sent}">
+                        <div class="body">
+                          <div class="content">
+                            <span class="username">{{item.user.username}}</span>
+                            @if (item.message) {
+                              <span class="message">{{item.message}}</span>
+                            }
+                            @if (item.pictureUrl) {
+                              <img [src]="item.pictureUrl">
+                            }
+                          </div>
+                          <span class="date-time">{{item.insertedAt}}</span>
+                        </div>
+                      </li>
+                    }
+                  </ul>
+                </div>
+                <div class="overlay" [ngClass]="{'visible': showFileUpload}"></div>
+                <div class="user-input">
+                  <app-file-uploader (response)="onFileUpload($event)" (cancel)="onFileCancel($event)"
+                  [removeFiles]="removeFiles" [ngClass]="{'visible': showFileUpload}"></app-file-uploader>
+                  <div class="input-text">
+                    <mat-form-field class="full-width">
+                      <textarea placeholder="Messaggio" matInput mat-autosize="true" [cdkAutosizeMaxRows]="5"
+                        [disabled]="disableTextArea" [(ngModel)]="newMessage" (keydown)="onKeyDownTextArea($event)">
+                      </textarea>
+                    </mat-form-field>
+                    <div class="buttons">
+                      @if (file.uploaded) {
+                        <span class="file-counter">1</span>
+                      }
+                      <button (click)="toggleFileUpload()" class="btn btn-link attachment" matRipple
+                        [disabled]="$safeNavigationMigration(ticket?.isClosed())">
+                        <i class="material-icons">attachment</i>
+                      </button>
+                      <button (click)="sendMessage()" [disabled]="disableSend" class="btn btn-primary send">
+                        <i class="material-icons">send</i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            }
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+}

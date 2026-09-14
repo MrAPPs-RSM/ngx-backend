@@ -3,35 +3,44 @@
 
     <label for="{{field.key}}">
       {{field.label}}
-      <span *ngIf="isRequired()">*</span>
+      @if (isRequired()) {
+        <span>*</span>
+      }
     </label>
 
-    <ckeditor
-      *ngIf="field.options && field.options.editor"
-      formControlName="{{field.key}}"
-      (focus)="onFocus()"
-      [config]="config"
-      [readOnly]="readonly"
-    >
-    </ckeditor>
+    @if (field.options && field.options.editor) {
+      <ckeditor
+        [editor]="Editor"
+        formControlName="{{field.key}}"
+        (focus)="onFocus()"
+        [config]="config"
+        [readOnly]="readonly"
+        >
+      </ckeditor>
+    }
 
-    <textarea
-      id="{{field.key}}"
-      *ngIf="!field.options || !field.options.editor"
-      formControlName="{{field.key}}"
-      [attr.disabled]="field.disabled || onlyView ? '' : null"
-      class="form-control"
-      [attr.readonly]="field.readOnly ? true : null"
-      placeholder="{{field.placeholder}}" [attr.maxlength]="getMaxLength()"
-    >
-      {{field.value}}
-    </textarea>
+    @if (!field.options || !field.options.editor) {
+      <textarea
+        id="{{field.key}}"
+        formControlName="{{field.key}}"
+        [attr.disabled]="field.disabled || onlyView ? '' : null"
+        class="form-control"
+        [attr.readonly]="field.readOnly ? true : null"
+        placeholder="{{field.placeholder}}" [attr.maxlength]="getMaxLength()"
+        >
+        {{field.value}}
+      </textarea>
+    }
 
-    <small *ngIf="!field.options || !field.options.editor">
-      {{getCountCharacters()}}
-    </small>
+    @if (!field.options || !field.options.editor) {
+      <small>
+        {{getCountCharacters()}}
+      </small>
+    }
 
-    <span *ngIf="field.description" class="help-block">{{field.description}}</span>
+    @if (field.description) {
+      <span class="help-block">{{field.description}}</span>
+    }
   </div>
 
   <div id="editor"></div>

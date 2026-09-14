@@ -1,39 +1,43 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, ChangeDetectionStrategy} from '@angular/core';
 
 
 
 
 import {DefaultFilter} from './default-filter';
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 import { debounceTime } from 'rxjs/operators';
 
 @Component({
     selector: 'date-filter',
     template: `
         <div class="date-picker-wrapper">
-            <input
-                    class="form-control"
-                    (keydown)="false"
-                    [formControl]="inputControl"
-                    [owlDateTimeTrigger]="dt"
-                    [owlDateTime]="dt"
-                    [selectMode]="'range'"
+          <input
+            class="form-control"
+            (keydown)="false"
+            [formControl]="inputControl"
+            [owlDateTimeTrigger]="dt"
+            [owlDateTime]="dt"
+            [selectMode]="'range'"
             >
-            <owl-date-time
-                    #dt
-                    [firstDayOfWeek]="1"
-                    [pickerType]="'calendar'"
-            ></owl-date-time>
-            <span class="remove" *ngIf="inputControl.value"
-                  (click)="clear()">×</span>
+          <owl-date-time
+            #dt
+            [firstDayOfWeek]="1"
+            [pickerType]="'calendar'"
+          ></owl-date-time>
+          @if (inputControl.value) {
+            <span class="remove"
+            (click)="clear()">×</span>
+          }
         </div>
-    `
+        `,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class DateFilterComponent extends DefaultFilter implements OnInit {
 
     @Input() filterValue: any;
 
-    inputControl = new FormControl();
+    inputControl = new UntypedFormControl();
     delay = 0;
 
     ngOnInit() {

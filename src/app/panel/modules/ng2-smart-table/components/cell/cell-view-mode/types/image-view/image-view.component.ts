@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, Input, OnInit, ViewEncapsulation, ChangeDetectionStrategy} from '@angular/core';
 import {Cell} from '../../../../../lib/data-set/cell';
 import {environment} from '../../../../../../../../../environments/environment';
 import {UtilsService} from '../../../../../../../../services/utils.service';
@@ -15,7 +15,9 @@ import {UtilsService} from '../../../../../../../../services/utils.service';
         </div>
     `,
     styleUrls: ['./image-view.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class ImageViewComponent implements OnInit {
 

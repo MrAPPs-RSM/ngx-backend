@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { formConfig } from '../components/form/form.config';
 import { CustomValidators } from '../components/form/validators';
 import { UtilsService } from '../../services/utils.service';
@@ -52,7 +52,7 @@ export class FormGeneratorService {
         return output;
     }
 
-    public generateResponseProcessorFor(form: FormGroup, formSettings: FormSettings) {
+    public generateResponseProcessorFor(form: UntypedFormGroup, formSettings: FormSettings) {
       return new ResponseProcessor(form, formSettings, this);
     }
 
@@ -91,17 +91,17 @@ export class FormGeneratorService {
                  */
                 switch (field.type) {
                     case formConfig.types.LIST_DETAILS: {
-                        group[field.key] = new FormArray(
-                            [new FormGroup(this.generateFormFields(field.fields))],
+                        group[field.key] = new UntypedFormArray(
+                            [new UntypedFormGroup(this.generateFormFields(field.fields))],
                             validators.length > 0 ? Validators.compose(validators) : null
                         );
                     }
                         break;
                     case formConfig.types.HOTSPOT:
                     case formConfig.types.HOTSPOT_CANVAS: {
-                        group[field.key] = new FormGroup({
-                            image: new FormControl(null, null),
-                            hotSpots: new FormArray(
+                        group[field.key] = new UntypedFormGroup({
+                            image: new UntypedFormControl(null, null),
+                            hotSpots: new UntypedFormArray(
                                 [],
                                 null
                             )
@@ -109,23 +109,23 @@ export class FormGeneratorService {
                     }
                         break;
                     case formConfig.types.CHECKBOX: {
-                        group[field.key] = new FormControl({ value: null, disabled: field.disabled }, null);
+                        group[field.key] = new UntypedFormControl({ value: null, disabled: field.disabled }, null);
                     }
                         break;
                     case formConfig.types.PASSWORD: {
                         if (field.hasOwnProperty('confirm')) {
                             // Create password standard control
-                            group[field.key] = new FormControl(
+                            group[field.key] = new UntypedFormControl(
                                 null,
                                 validators.length > 0 ? Validators.compose(validators) : null
                             );
                             // Create password confirm control
-                            group[field['confirm'].key] = new FormControl(
+                            group[field['confirm'].key] = new UntypedFormControl(
                                 null,
                                 validators.length > 0 ? Validators.compose(validators) : null
                             );
                         } else {
-                            group[field.key] = new FormControl(
+                            group[field.key] = new UntypedFormControl(
                                 field.value || null,
                                 validators.length > 0 ? Validators.compose(validators) : null
                             );
@@ -133,9 +133,9 @@ export class FormGeneratorService {
                     }
                         break;
                     case formConfig.types.DATE_RANGE: {
-                        group[field['fromKey']] = new FormControl(null);
-                        group[field['toKey']] = new FormControl(null);
-                        group[field.key] = new FormControl(
+                        group[field['fromKey']] = new UntypedFormControl(null);
+                        group[field['toKey']] = new UntypedFormControl(null);
+                        group[field.key] = new UntypedFormControl(
                             null,
                             validators.length > 0 ? Validators.compose(validators) : null
                         );
@@ -143,12 +143,12 @@ export class FormGeneratorService {
                         break;
                     case formConfig.types.MAP: {
                         const latValidators = this.getValidators(field['lat'].validators);
-                        group[field['lat'].key] = new FormControl(
+                        group[field['lat'].key] = new UntypedFormControl(
                             null,
                             latValidators ? Validators.compose(latValidators) : null
                         );
                         const lngValidators = this.getValidators(field['lng'].validators);
-                        group[field['lng'].key] = new FormControl(
+                        group[field['lng'].key] = new UntypedFormControl(
                             null,
                             lngValidators ? Validators.compose(lngValidators) : null
                         );
@@ -156,7 +156,7 @@ export class FormGeneratorService {
                         break;
                     default: {
                         if (!UtilsService.containsValue(formConfig.noInputTypes, field.type)) {
-                            group[field.key] = new FormControl(
+                            group[field.key] = new UntypedFormControl(
                                 field.value || null,
                               {
                                 validators: validators.length > 0 ? Validators.compose(validators) : null,
@@ -174,9 +174,9 @@ export class FormGeneratorService {
         return null;
     }
 
-    public generate(fields: any): FormGroup | any {
+    public generate(fields: any): UntypedFormGroup | any {
         if (fields instanceof Array && fields.length > 0) {
-            return new FormGroup(this.generateFormFields(fields));
+            return new UntypedFormGroup(this.generateFormFields(fields));
         } else if (fields instanceof Object) {
 
             const group = ('base' in fields) && fields['base'].length > 0 ? this.generateFormFields(fields['base']) : {};
@@ -185,11 +185,11 @@ export class FormGeneratorService {
 
                 if (key !== 'base') {
                     const subFields = fields[key];
-                    group[key] = new FormGroup(this.generateFormFields(subFields));
+                    group[key] = new UntypedFormGroup(this.generateFormFields(subFields));
                 }
             }
 
-            return new FormGroup(group);
+            return new UntypedFormGroup(group);
         } else {
             return new Error('Form structure cannot be empty');
         }

@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewEncapsulation, ChangeDetectionStrategy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 
 
@@ -8,7 +8,9 @@ import {Subscription} from 'rxjs';
     selector: 'app-table-page',
     templateUrl: './table-page.component.html',
     styleUrls: ['./table-page.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class TablePageComponent implements OnInit, OnDestroy {
 

@@ -1,4 +1,4 @@
-@mixin _transform($property) {
+@mixin transform($property) {
   -webkit-transform: $property;
   -moz-transform: $property;
   -ms-transform: $property;

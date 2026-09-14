@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {FormField} from '../../interfaces/form-field';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {Subscription} from 'rxjs';
@@ -6,7 +6,9 @@ import {Subscription} from 'rxjs';
 @Component({
     selector: 'app-input-email',
     templateUrl: './input-email.component.html',
-    styleUrls: ['./input-email.component.scss']
+    styleUrls: ['./input-email.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class InputEmailComponent extends BaseInputComponent implements OnInit, OnDestroy {
     @Input() field: FormField;

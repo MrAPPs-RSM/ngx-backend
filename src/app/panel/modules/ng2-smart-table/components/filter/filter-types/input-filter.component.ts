@@ -1,5 +1,5 @@
 import {debounceTime, distinctUntilChanged, skip} from 'rxjs/operators';
-import {Component, Input, OnChanges, OnInit, SimpleChange} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChange, ChangeDetectionStrategy} from '@angular/core';
 import {FormControl} from '@angular/forms';
 
 
@@ -16,6 +16,8 @@ import {Subject} from 'rxjs/internal/Subject';
                type="text"
                placeholder="{{ column.title }}"/>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class InputFilterComponent extends DefaultFilter implements OnInit, OnChanges {
 
@@ -59,6 +61,6 @@ export class InputFilterComponent extends DefaultFilter implements OnInit, OnCha
     }
 
     onModelChange() {
-        this.searchSubject.next();
+        this.searchSubject.next(undefined);
     }
 }

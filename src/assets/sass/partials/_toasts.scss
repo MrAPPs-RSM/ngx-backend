@@ -1,54 +1,55 @@
-div.toast-container {
-  z-index: 1030;
-  position: fixed;
-  border-radius: $borderRadius;
-  top: 55px;
-  right: 20px;
-  width: 300px;
-  > div.toast {
-    margin-bottom: 10px;
-    color: #ffffff;
-    padding: 15px 20px;
-    @include box-shadow();
-    &:hover {
-      @include box-shadow(5px, 5px, 10px, 0, rgba(0, 0, 0, 0.3));
-    }
-    &.toast-error {
-      background-color: $danger;
-    }
-    &.toast-success {
-      background-color: $success;
-    }
-    &.toast-warning {
-      background-color: $warning;
-    }
-    &.toast-info {
-      background-color: $info;
-    }
+@use "../../../environments/colors";
+@use "../mixins/box-shadow";
+@use "variables";
 
-    > button.toast-close-button {
-      cursor: pointer;
-      outline: none;
-      background-color: inherit;
-      border: none;
-      position: absolute;
-      right: 0;
-      top: 0;
-      > span {
-        font-size: 16px;
-      }
+.mat-mdc-snack-bar-container.toast-snack-bar {
+  margin-top: 55px;
+  margin-right: 20px;
+  border-radius: variables.$borderRadius;
+  @include box-shadow.box-shadow();
+
+  &:hover {
+    @include box-shadow.box-shadow(5px, 5px, 10px, 0, rgba(0, 0, 0, 0.3));
+  }
+
+  .mdc-snackbar__surface {
+    min-width: 300px;
+    padding: 15px 20px;
+  }
+
+  .mat-mdc-snack-bar-label {
+    padding: 0;
+  }
+
+  &.toast-snack-bar-error {
+    --mdc-snackbar-container-color: #{colors.$danger};
+
+    .mdc-snackbar__surface {
+      background-color: colors.$danger;
     }
-    > .toast-title {
-      font-weight: $regular;
-      text-transform: uppercase;
-      font-size: 16px;
+  }
+
+  &.toast-snack-bar-success {
+    --mdc-snackbar-container-color: #{colors.$success};
+
+    .mdc-snackbar__surface {
+      background-color: colors.$success;
     }
-    > .toast-message {
-      font-weight: $light;
-      font-size: 14px;
-      white-space: normal;
-      word-wrap: break-word;
+  }
+
+  &.toast-snack-bar-warning {
+    --mdc-snackbar-container-color: #{colors.$warning};
+
+    .mdc-snackbar__surface {
+      background-color: colors.$warning;
+    }
+  }
+
+  &.toast-snack-bar-info {
+    --mdc-snackbar-container-color: #{colors.$info};
+
+    .mdc-snackbar__surface {
+      background-color: colors.$info;
     }
   }
 }
-

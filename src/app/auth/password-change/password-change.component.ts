@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {environment} from '../../../environments/environment';
 import {ApiService, ErrorResponse} from '../../api/api.service';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -9,7 +9,9 @@ import {ACCESS_TOKEN_KEY} from '../services/user.service';
 @Component({
     selector: 'app-password-change',
     templateUrl: './password-change.component.html',
-    styleUrls: ['./password-change.component.scss']
+    styleUrls: ['./password-change.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class PasswordChangeComponent implements OnInit, OnDestroy {
 
