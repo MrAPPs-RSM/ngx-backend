@@ -1,22 +1,17 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 
 import { TimetablePickerComponent } from './timetable-picker.component';
 
 describe('TimetablePickerComponent', () => {
   let component: TimetablePickerComponent;
-  let fixture: ComponentFixture<TimetablePickerComponent>;
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ TimetablePickerComponent ]
-    })
+    TestBed.configureTestingModule({ providers: [TimetablePickerComponent] })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TimetablePickerComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = TestBed.inject(TimetablePickerComponent);
   });
 
   it('should create', () => {

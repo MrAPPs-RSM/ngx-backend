@@ -1,22 +1,17 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 
 import { BaseInputComponent } from './base-input.component';
 
 describe('BaseInputComponent', () => {
   let component: BaseInputComponent;
-  let fixture: ComponentFixture<BaseInputComponent>;
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ BaseInputComponent ]
-    })
+    TestBed.configureTestingModule({ providers: [BaseInputComponent] })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(BaseInputComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = TestBed.inject(BaseInputComponent);
   });
 
   it('should create', () => {

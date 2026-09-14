@@ -1,22 +1,17 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 
 import { InputNumberComponent } from './input-number.component';
 
 describe('InputNumberComponent', () => {
   let component: InputNumberComponent;
-  let fixture: ComponentFixture<InputNumberComponent>;
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ InputNumberComponent ]
-    })
+    TestBed.configureTestingModule({ providers: [InputNumberComponent] })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(InputNumberComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = TestBed.inject(InputNumberComponent);
   });
 
   it('should create', () => {

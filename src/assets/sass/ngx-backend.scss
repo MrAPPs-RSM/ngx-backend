@@ -37,8 +37,6 @@ body > ng-dropdown-panel.ng-dropdown-panel {
 @import "@danielmoncada/angular-datetime-picker/assets/style/picker.min.css";
 @import "@angular/material/prebuilt-themes/indigo-pink.css";
 
-@include meta.load-css('ngx-toastr/toastr');
-
 body {
   background-color: #F1F1F1 !important;
   font-family: 'Roboto', sans-serif;

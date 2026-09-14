@@ -19,6 +19,7 @@ import { Subscription } from 'rxjs';
 import { GlobalState } from '../../../global.state';
 import { isArray } from 'lodash';
 import { BaseLongPollingComponent } from '../base-long-polling/base-long-polling.component';
+import { UserService } from '../../../auth/services/user.service';
 
 @Component({
     selector: 'app-table',
@@ -65,7 +66,8 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
         private _router: Router,
         private _route: ActivatedRoute,
         private _toast: ToastsService,
-        private _modal: ModalService) {
+        private _modal: ModalService,
+        private _userService: UserService) {
         super(_apiService);
     }
 
@@ -78,15 +80,14 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
                 perPage: this.preparePerPage(),
             };
 
-            /** Read fixed filter from settings if set */
-            if (this.settings.api.filter) {
-                this.filter = this.settings.api.filter;
-            }
+            /** Start from a fresh copy of the fixed filters on every URL change.
+             * Merging into the previous state would retain fields removed by the user. */
+            this.filter = this.prepareFilter();
 
             if (params && params['listParams']) {
                 const queryParamsFilter = JSON.parse(this._route.snapshot.queryParams['listParams']);
 
-                this.filter = UtilsService.mergeDeep(this.filter, queryParamsFilter);
+                this.filter = this.prepareFilter(queryParamsFilter);
 
                 this.activeFilters.pagination.perPage = 'limit' in queryParamsFilter ? queryParamsFilter['limit'] : this.preparePerPage();
                 this.activeFilters.pagination.page = 'skip' in queryParamsFilter ?
@@ -127,6 +128,16 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
         });
 
         this.setupLang();
+    }
+
+    private prepareFilter(queryParamsFilter?: any): any {
+        const fixedFilter = this.settings.api.filter
+            ? JSON.parse(JSON.stringify(this.settings.api.filter))
+            : {};
+
+        return queryParamsFilter
+            ? UtilsService.mergeDeep(fixedFilter, queryParamsFilter)
+            : fixedFilter;
     }
 
     private prepareColumns(): void {
@@ -734,6 +745,15 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
                     } else {
                         throw Error('File configuration not defined');
                     }
+                }
+                case 'async_confirmation': {
+                    // Job avviato in background (es. export CSV asincrono): nessun file da scaricare subito, solo un popup
+                    // informativo con testo statico e un unico bottone OK (vedi ActionConfig.message).
+                    // Il placeholder {{operatorEmail}} viene sostituito con l'email dell'utente admin attualmente loggato.
+                    const operatorEmail = this._userService.getUser()?.email || '';
+                    const message = (action.config.message || '').replace('{{operatorEmail}}', operatorEmail);
+                    await this._modal.alert(null, message);
+                    return true;
                 }
                 default: {
                     this._toast.success();

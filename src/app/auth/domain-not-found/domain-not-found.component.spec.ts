@@ -1,22 +1,17 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 
 import { DomainNotFoundComponent } from './domain-not-found.component';
 
 describe('LoginComponent', () => {
   let component: DomainNotFoundComponent;
-  let fixture: ComponentFixture<DomainNotFoundComponent>;
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ DomainNotFoundComponent ]
-    })
+    TestBed.configureTestingModule({ providers: [DomainNotFoundComponent] })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DomainNotFoundComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = TestBed.inject(DomainNotFoundComponent);
   });
 
   it('should create', () => {

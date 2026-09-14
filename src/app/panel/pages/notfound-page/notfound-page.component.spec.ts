@@ -1,22 +1,17 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 
 import { NotfoundPageComponent } from './notfound-page.component';
 
 describe('NotfoundPageComponent', () => {
   let component: NotfoundPageComponent;
-  let fixture: ComponentFixture<NotfoundPageComponent>;
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ NotfoundPageComponent ]
-    })
+    TestBed.configureTestingModule({ providers: [NotfoundPageComponent] })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(NotfoundPageComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = TestBed.inject(NotfoundPageComponent);
   });
 
   it('should create', () => {

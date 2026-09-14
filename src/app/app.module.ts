@@ -7,7 +7,7 @@ import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/com
 import { Router, RouterModule, Routes } from '@angular/router';
 import { PanelModule } from './panel/panel.module';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ToastrModule, ToastNoAnimation, ToastNoAnimationModule } from 'ngx-toastr';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './auth/login/login.component';
 
@@ -28,6 +28,7 @@ import { environment } from '../environments/environment';
 import { StorageService } from './services/storage.service';
 import { DomainNotFoundComponent } from './auth/domain-not-found/domain-not-found.component';
 import {httpInterceptorProviders} from './interceptors';
+import { ToastNotificationComponent } from './services/toast-notification/toast-notification.component';
 
 registerLocaleData(localeIt);
 
@@ -60,21 +61,14 @@ const routes: Routes = [
         LoginComponent,
         PasswordResetComponent,
         PasswordChangeComponent,
-        DomainNotFoundComponent
+        DomainNotFoundComponent,
+        ToastNotificationComponent
     ],
     bootstrap: [AppComponent], imports: [RouterModule.forRoot(routes, { useHash: false, onSameUrlNavigation: 'reload' }),
         ReactiveFormsModule,
         BrowserModule,
         NoopAnimationsModule,
-        ToastNoAnimationModule,
-        ToastrModule.forRoot({
-            maxOpened: 1,
-            timeOut: 3000,
-            closeButton: true,
-            preventDuplicates: true,
-            tapToDismiss: true,
-            toastComponent: ToastNoAnimation,
-        }),
+        MatSnackBarModule,
         PanelModule], providers: [
         { provide: LOCALE_ID, useValue: 'it-IT' },
         {

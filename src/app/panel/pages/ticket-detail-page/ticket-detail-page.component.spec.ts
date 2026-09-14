@@ -1,22 +1,17 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 
 import { TicketDetailPageComponent } from './ticket-detail-page.component';
 
 describe('TicketDetailPageComponent', () => {
   let component: TicketDetailPageComponent;
-  let fixture: ComponentFixture<TicketDetailPageComponent>;
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ TicketDetailPageComponent ]
-    })
+    TestBed.configureTestingModule({ providers: [TicketDetailPageComponent] })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TicketDetailPageComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = TestBed.inject(TicketDetailPageComponent);
   });
 
   it('should create', () => {

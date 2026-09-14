@@ -1,22 +1,17 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
 import { HotspotCanvasComponent } from './hotspot-canvas.component';
 
 describe('HotspotCanvasComponent', () => {
   let component: HotspotCanvasComponent;
-  let fixture: ComponentFixture<HotspotCanvasComponent>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ HotspotCanvasComponent ]
-    })
+    await TestBed.configureTestingModule({ providers: [HotspotCanvasComponent] })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(HotspotCanvasComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = TestBed.inject(HotspotCanvasComponent);
   });
 
   it('should create', () => {

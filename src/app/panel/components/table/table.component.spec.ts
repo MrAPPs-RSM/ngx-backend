@@ -1,25 +1,40 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 
 import { TableComponent } from './table.component';
 
 describe('TableComponent', () => {
   let component: TableComponent;
-  let fixture: ComponentFixture<TableComponent>;
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ TableComponent ]
-    })
+    TestBed.configureTestingModule({ providers: [TableComponent] })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TableComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = TestBed.inject(TableComponent);
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should not retain filters removed from query params', () => {
+    component.settings = {
+      api: {
+        endpoint: 'items',
+        filter: { where: { level: 1 } }
+      }
+    } as any;
+    (component as any).filter = {
+      where: {
+        level: 1,
+        code: '02'
+      }
+    };
+
+    const filter = (component as any).prepareFilter({ where: { level: 1 } });
+
+    expect(filter.where).toEqual({ level: 1 });
+    expect(filter.where.code).toBeUndefined();
   });
 });

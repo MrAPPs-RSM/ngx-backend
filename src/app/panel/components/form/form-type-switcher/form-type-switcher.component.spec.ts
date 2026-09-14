@@ -1,22 +1,17 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 
 import { FormTypeSwitcherComponent } from './form-type-switcher.component';
 
 describe('FormTypeSwitcherComponent', () => {
   let component: FormTypeSwitcherComponent;
-  let fixture: ComponentFixture<FormTypeSwitcherComponent>;
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ FormTypeSwitcherComponent ]
-    })
+    TestBed.configureTestingModule({ providers: [FormTypeSwitcherComponent] })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FormTypeSwitcherComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = TestBed.inject(FormTypeSwitcherComponent);
   });
 
   it('should create', () => {

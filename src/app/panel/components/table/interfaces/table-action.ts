@@ -28,7 +28,8 @@ export interface TableAction {
         }
         method?: string; // post | patch | put | delete
         refreshAfter?: boolean; // default = true, determines what to do after api,
-        responseType?: string; // 'file_download'
+        responseType?: string; // 'file_download' | 'async_confirmation' (job avviato in background: mostra `message` con un unico bottone OK)
+        message?: string; // testo statico mostrato per responseType 'async_confirmation'
         forceDownload?: boolean;
         file?: { // file to download configuration (only if response type == file_download)
             name?: string; // default = 'table'

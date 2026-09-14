@@ -1,22 +1,17 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ContentTopComponent } from './content-top.component';
 
 describe('ContentTopComponent', () => {
   let component: ContentTopComponent;
-  let fixture: ComponentFixture<ContentTopComponent>;
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ ContentTopComponent ]
-    })
+    TestBed.configureTestingModule({ providers: [ContentTopComponent] })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ContentTopComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = TestBed.inject(ContentTopComponent);
   });
 
   it('should create', () => {

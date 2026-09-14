@@ -1,0 +1,13 @@
+<div class="toast-notification" (click)="dismiss()">
+    <button
+        type="button"
+        class="toast-notification__close"
+        aria-label="Chiudi notifica"
+        (click)="$event.stopPropagation(); dismiss()">
+        &times;
+    </button>
+    @if (data.title) {
+        <div class="toast-notification__title">{{ data.title }}</div>
+    }
+    <div class="toast-notification__message">{{ data.message }}</div>
+</div>
