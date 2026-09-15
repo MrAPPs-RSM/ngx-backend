@@ -80,7 +80,11 @@ export class RefreshTokenInterceptor implements HttpInterceptor {
           sub.next(this._userService.getToken());
           sub.complete();
         })
-        .catch(error => sub.error(error))
+        .catch(error => {
+          $('.modal').modal('hide');
+          this._api.redirectToLogin();
+          sub.error(error);
+        })
         .finally(() => this.refreshingToken = false);
 
       return source$.pipe(

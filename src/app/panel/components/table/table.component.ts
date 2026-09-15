@@ -572,6 +572,8 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
                     .then(() => {
                         if (action.config.refreshAfter !== false) {
                             this.getData();
+                        } else {
+                            this.isLoading = false;
                         }
                     })
                     .catch((response: ErrorResponse | any) => {
