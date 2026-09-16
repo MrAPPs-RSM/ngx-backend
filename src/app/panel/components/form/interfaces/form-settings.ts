@@ -18,7 +18,11 @@ export interface FormSettings {
         label?: string; // if not set: "Save"
         confirm?: boolean; // if true, show modal to confirm
         refreshAfter?: boolean; // default = false, determines what to do after submit
-        redirectAfter?: string; // if set, redirect to a path after submit
+        redirectAfter?: string; // if set, redirect to a path after submit; may contain ":id" (replaced with the response's "id")
+        // se impostato, alla redirectAfter viene aggiunto un query param "listParams" che filtra la lista di destinazione
+        // per response[redirectAfterFilterKey] (stesso formato "where" usato dai bottoni tabella con params.filter.where,
+        // es. "Sotto-codici" in setup.json) — utile per tornare a un elenco filtrato per il parent del record modificato.
+        redirectAfterFilterKey?: string;
     };
     buttons?: FormButton[];
     responseType?: string; // 'default' | 'inline' | 'terminal'

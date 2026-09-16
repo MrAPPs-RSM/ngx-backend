@@ -258,13 +258,50 @@ export class FormComponent extends BaseLongPollingComponent implements OnInit, O
     postEditResponse(response: any): void {
       this.isLoading = false;
       this.dataStored = true;
+
+      // Stesso motivo del guard in postCreateResponse: senza redirectAfter esplicito qui, il redirect duplicato
+      // in FormPageComponent (innescato in modo asincrono dall'emit sotto) e questo _location.back() (sincrono)
+      // vanno in race — back() vince sempre perché la navigazione verso redirectAfter non ha ancora fatto in
+      // tempo a registrarsi nello storico del browser, quindi si finisce sulla pagina PRECEDENTE a questa (non
+      // necessariamente quella indicata da redirectAfter). Prima passava inosservato solo perché nel percorso
+      // più comune (lista -> modifica) le due destinazioni coincidono per coincidenza.
+      const willRedirect = !!(this.settings.submit && this.settings.submit.redirectAfter && this.settings.submit.refreshAfter !== true);
+      if (willRedirect) {
+        this._apiService.isRedirecting = true;
+      }
+
       this.response.emit(response);
 
       if (response != null && this.settings.submit && this.settings.submit.refreshAfter === true) {
         this.loadData(response);
+      } else if (willRedirect) {
+        this._router.navigateByUrl('/panel/' + this.buildRedirectPath(response));
       } else {
         this._location.back();
       }
+
+      if (willRedirect) {
+        this._apiService.isRedirecting = false;
+      }
+    }
+
+    // Sostituisce ":id" nel redirectAfter configurato con l'id della response, ed eventualmente aggiunge
+    // il query param "listParams" per filtrare la lista di destinazione per response[redirectAfterFilterKey]
+    // (stesso formato "where" dei bottoni tabella con params.filter.where, es. "Sotto-codici" in setup.json).
+    private buildRedirectPath(response: any): string {
+      let path = this.settings.submit.redirectAfter;
+
+      if (response && response.id !== undefined && response.id !== null) {
+        path = path.replace(':id', response.id);
+      }
+
+      const filterKey = this.settings.submit.redirectAfterFilterKey;
+      if (filterKey && response && response[filterKey] !== undefined && response[filterKey] !== null) {
+        const listParams = JSON.stringify({where: {[filterKey]: response[filterKey]}});
+        path += (path.indexOf('?') > -1 ? '&' : '?') + 'listParams=' + encodeURIComponent(listParams);
+      }
+
+      return path;
     }
 
     postCreateResponse(response: any): void {
@@ -288,10 +325,7 @@ export class FormComponent extends BaseLongPollingComponent implements OnInit, O
         if (this.settings.submit.refreshAfter) {
           this.loadData(response);
         } else if (this.settings.submit.redirectAfter) {
-          const redirectPath = response && response.id !== undefined && response.id !== null
-            ? this.settings.submit.redirectAfter.replace(':id', response.id)
-            : this.settings.submit.redirectAfter;
-          this._router.navigateByUrl('/panel/' + redirectPath);
+          this._router.navigateByUrl('/panel/' + this.buildRedirectPath(response));
         }
       } else {
         this._location.back();
