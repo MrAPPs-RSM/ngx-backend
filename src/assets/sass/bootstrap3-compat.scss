@@ -91,6 +91,12 @@ a:focus {
 .col-xs-4 { float: left; width: 33.33333333%; }
 .col-xs-12 { float: left; width: 100%; }
 
+// Bootstrap 3 forniva anche la classe incondizionata ".hidden" (rimossa in Bootstrap 5, che ha solo ".d-none").
+// I form generici del pannello (es. types/input-number, types/input-text, ...) applicano ancora
+// [ngClass]="{'hidden': field.hidden}" per i campi con "hidden": true in setup.json (es. "level"/"parentCode"
+// nei form Codici NC): senza questa regola quei campi restano visibili ed editabili invece che nascosti.
+.hidden { display: none !important; }
+
 @media (min-width: 768px) {
   .col-sm-3 { width: 25%; }
   .col-sm-4 { width: 33.33333333%; }
