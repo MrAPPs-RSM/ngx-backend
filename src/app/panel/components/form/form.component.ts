@@ -270,16 +270,35 @@ export class FormComponent extends BaseLongPollingComponent implements OnInit, O
     postCreateResponse(response: any): void {
       this.isLoading = false;
       this.dataStored = true;
+
+      // FormPageComponent.onResponse (in ascolto su questo stesso evento "response") esegue anch'esso
+      // un redirect basato su settings.submit.redirectAfter: il flag isRedirecting, pur non venendo mai
+      // resettato a true altrove, esiste apposta per evitare che i due redirect scattino entrambi.
+      // Qui serve soprattutto perché redirectAfter può contenere ":id" (sostituito sotto con l'id della
+      // response): senza questo guard, il redirect duplicato in FormPageComponent navigherebbe verso
+      // l'URL letterale con ":id" non sostituito, dato che lì la response non è disponibile.
+      const willRedirect = !!(this.settings.submit && this.settings.submit.redirectAfter && !this.settings.submit.refreshAfter);
+      if (willRedirect) {
+        this._apiService.isRedirecting = true;
+      }
+
       this.response.emit(response);
 
       if (this.settings.submit && (this.settings.submit.refreshAfter || this.settings.submit.redirectAfter)) {
         if (this.settings.submit.refreshAfter) {
           this.loadData(response);
         } else if (this.settings.submit.redirectAfter) {
-          this._router.navigateByUrl('/panel/' + this.settings.submit.redirectAfter);
+          const redirectPath = response && response.id !== undefined && response.id !== null
+            ? this.settings.submit.redirectAfter.replace(':id', response.id)
+            : this.settings.submit.redirectAfter;
+          this._router.navigateByUrl('/panel/' + redirectPath);
         }
       } else {
         this._location.back();
+      }
+
+      if (willRedirect) {
+        this._apiService.isRedirecting = false;
       }
     }
 
