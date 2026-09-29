@@ -32,6 +32,16 @@ npm run build
 
 Runs `ng build --configuration production`; artifacts are output to `dist/`.
 
+To deploy the application below a path, pass `--base-path`. The build normalizes
+the value and writes it to the generated `index.html` as the `<base href>`:
+
+```bash
+npm run build -- --base-path=/admin/
+```
+
+Both `admin` and `/admin` are normalized to `/admin/`. The source
+`src/index.html` is not modified.
+
 ## Type checking
 
 ```bash
