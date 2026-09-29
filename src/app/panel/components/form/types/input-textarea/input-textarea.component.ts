@@ -2,10 +2,6 @@ import { Component, Input, OnInit, ViewEncapsulation, ChangeDetectionStrategy } 
 import { FormFieldTextarea } from '../../interfaces/form-field-textarea';
 import { BaseInputComponent } from '../base-input/base-input.component';
 import { LanguageService } from '../../../../services/language.service';
-import {
-    Alignment, Bold, ClassicEditor, Essentials, Font, GeneralHtmlSupport, Heading, Italic,
-    Link, List, Paragraph, Strikethrough, Table, TableToolbar, Underline, Undo
-} from 'ckeditor5';
 
 @Component({
     selector: 'app-input-textarea',
@@ -17,7 +13,9 @@ import {
 })
 export class InputTextareaComponent extends BaseInputComponent implements OnInit {
 
-    readonly Editor = ClassicEditor;
+    private static editorStylesPromise: Promise<void>;
+
+    Editor: any = null;
 
     @Input() field: FormFieldTextarea;
     private focus: boolean;
@@ -46,8 +44,16 @@ export class InputTextareaComponent extends BaseInputComponent implements OnInit
       return !!(this.field.disabled || this.onlyView);
     }
 
-    ngOnInit() {
+    async ngOnInit() {
         if (this.field.options && this.field.options.editor) {
+            await this.loadEditorStyles();
+            const {
+                Alignment, Bold, ClassicEditor, Essentials, Font, GeneralHtmlSupport, Heading, Italic,
+                Link, List, Paragraph, Strikethrough, Table, TableToolbar, Underline, Undo
+            } = await import('ckeditor5');
+
+            this.Editor = ClassicEditor;
+
             if (this.field.options.disable && this.field.options.disable.length > 0) {
                 this.field.options.disable.forEach((option) => {
                     let index = this.options[0].indexOf(option);
@@ -88,6 +94,28 @@ export class InputTextareaComponent extends BaseInputComponent implements OnInit
                 };
             }
         }
+    }
+
+    private loadEditorStyles(): Promise<void> {
+        if (!InputTextareaComponent.editorStylesPromise) {
+            InputTextareaComponent.editorStylesPromise = new Promise((resolve, reject) => {
+                const existing = document.getElementById('ckeditor-styles') as HTMLLinkElement;
+                if (existing) {
+                    resolve();
+                    return;
+                }
+
+                const link = document.createElement('link');
+                link.id = 'ckeditor-styles';
+                link.rel = 'stylesheet';
+                link.href = new URL('assets/ckeditor5/ckeditor5.css', document.baseURI).toString();
+                link.onload = () => resolve();
+                link.onerror = () => reject(new Error('Unable to load CKEditor styles'));
+                document.head.appendChild(link);
+            });
+        }
+
+        return InputTextareaComponent.editorStylesPromise;
     }
 
     getCountCharacters(key?: string): string {

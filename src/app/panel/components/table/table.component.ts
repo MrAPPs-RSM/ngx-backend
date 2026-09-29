@@ -10,14 +10,12 @@ import { TableActiveFilters } from '../../modules/ng2-smart-table/lib/data-filte
 import { TableDrop } from '../../modules/ng2-smart-table/lib/data-filters/table-drop';
 import { Association, TableAction } from './interfaces/table-action';
 import { ActivatedRoute, Router } from '@angular/router';
-import * as FileSaver from 'file-saver';
 import { UtilsService } from '../../../services/utils.service';
 import { Language, LanguageService } from '../../services/language.service';
 import { ToastsService } from '../../../services/toasts.service';
 import { PageRefreshService } from '../../../services/page-refresh.service';
 import { Subscription } from 'rxjs';
 import { GlobalState } from '../../../global.state';
-import { isArray } from 'lodash';
 import { BaseLongPollingComponent } from '../base-long-polling/base-long-polling.component';
 import { UserService } from '../../../auth/services/user.service';
 
@@ -97,7 +95,7 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
             this.activeFilters.filter = this.filter;
 
             if ('order' in this.filter && this.filter['order'] !== null) {
-                const sortArray = isArray(this.filter.order) ? this.filter.order : this.filter.order.split(',');
+                const sortArray = Array.isArray(this.filter.order) ? this.filter.order : this.filter.order.split(',');
                 this.filter.order = [];
                 for (let i = 0; i < sortArray.length; i++) {
 
@@ -461,9 +459,9 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
 
                     extraParams = { queryParams: { formParams: JSON.stringify(params) }, relativeTo: this._route.parent };
 
-                    this._router.navigate(['../panel/' + path], extraParams);
+                    this._router.navigate([path], extraParams);
                 } else {
-                    this._router.navigate(['../panel/' + path], { relativeTo: this._route.parent });
+                    this._router.navigate([path], { relativeTo: this._route.parent });
                 }
             } else {
 
@@ -550,7 +548,7 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
                 path = UtilsService.parseEndpoint(path, data);
 
                 extraParams['relativeTo'] = this._route.parent;
-                this._router.navigate(['../panel/' + path], extraParams);
+                this._router.navigate([path], extraParams);
             }
         } else if (action.config.endpoint) {
             let endpoint = action.config.endpoint;
@@ -740,9 +738,7 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
                         const fileName = name + '_' + now.toISOString().substring(0, 19) + '.' + action.config.file.extension;
                         const fileType = UtilsService.getFileType(action.config.file.extension);
 
-                        const blob = new Blob([response], { type: fileType });
-                        const file = new File([blob], fileName, { type: fileType });
-                        FileSaver.saveAs(file);
+                        this.downloadFile(response, fileName, fileType);
                         return true;
                     } else {
                         throw Error('File configuration not defined');
@@ -766,6 +762,24 @@ export class TableComponent extends BaseLongPollingComponent implements OnInit, 
             this._toast.success();
             return true;
         }
+    }
+
+    private downloadFile(content: BlobPart, fileName: string, fileType: string): void {
+        const blob = content instanceof Blob && content.type === fileType
+            ? content
+            : new Blob([content], {type: fileType});
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+
+        link.href = url;
+        link.download = fileName;
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+
+        // Revoke on the next task so the browser has time to start the download.
+        setTimeout(() => URL.revokeObjectURL(url), 0);
     }
 
     onAction($event: { action: TableAction, data?: any }) {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import * as _ from 'lodash';
+import isEqual from 'lodash/isEqual';
 import moment from 'moment';
 
 @Injectable()
@@ -145,7 +145,7 @@ export class UtilsService {
     public static containsObject(obj: any, list: any[]): number {
         let i;
         for (i = 0; i < list.length; i++) {
-            if (_.isEqual(list[i], obj)) {
+            if (isEqual(list[i], obj)) {
                 return i;
             }
         }
@@ -160,7 +160,7 @@ export class UtilsService {
     public static containsValue(obj: any, value: any): boolean {
         let notContains = true;
         Object.keys(obj).forEach((key) => {
-            if (_.isEqual(obj[key], value)) {
+            if (isEqual(obj[key], value)) {
                 notContains = notContains && false;
             } else {
                 notContains = notContains && true;
@@ -173,7 +173,7 @@ export class UtilsService {
     public static removeObjectFromArray(obj: any, list: any[]): any[] {
         let index = -1;
         list.forEach((item, i) => {
-            if (_.isEqual(obj, item)) {
+            if (isEqual(obj, item)) {
                 index = i;
             }
         });

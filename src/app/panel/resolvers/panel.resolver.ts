@@ -26,7 +26,7 @@ export class PanelResolver  {
     }
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> {
-        return this._setupService.setup().pipe(catchError((error) => {
+        return this._setupService.setup(route.routeConfig).pipe(catchError((error) => {
             this._toasts.error(error);
             this._userService.removeToken();
             this._userService.removeUser();

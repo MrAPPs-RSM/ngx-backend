@@ -9,7 +9,6 @@ import {environment} from '../../environments/environment';
 const API_URL     = environment.api.baseUrl;
 import {RefreshToken} from '../interfaces';
 import {Router} from '@angular/router';
-import * as _ from 'lodash';
 declare const $: any;
 @Injectable()
 export class RefreshTokenInterceptor implements HttpInterceptor {
@@ -150,6 +149,6 @@ export class RefreshTokenInterceptor implements HttpInterceptor {
   }
 
   checkTokenInLocalStorage() {
-    return _.isNil(localStorage.getItem('refresh_token'))
+    return localStorage.getItem('refresh_token') == null;
   }
 }

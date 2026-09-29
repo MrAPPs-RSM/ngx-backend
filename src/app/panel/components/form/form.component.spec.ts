@@ -29,7 +29,7 @@ describe('FormComponent', () => {
     expect(path).toBe('items/42/details/Titolo%20con%20spazi');
   });
 
-  it('should use a safe fallback for missing redirect values', () => {
+  it('should preserve placeholders when redirect values are missing', () => {
     component.settings = {
       submit: {redirectAfter: 'items/:id/details/:title'},
       fields: {}
@@ -37,7 +37,7 @@ describe('FormComponent', () => {
 
     const path = (component as any).buildRedirectPath({id: 42});
 
-    expect(path).toBe('items/42/details/---');
+    expect(path).toBe('items/42/details/:title');
   });
 
   it('should append an encoded list filter to a redirect', () => {

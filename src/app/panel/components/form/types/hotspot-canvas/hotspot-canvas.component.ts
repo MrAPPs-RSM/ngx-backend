@@ -1,10 +1,10 @@
-import {Component, Input, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {BaseInputComponent} from '../base-input/base-input.component';
 import {FormFieldHotspotCanvas} from '../../interfaces/form-field-hotspot-canvas';
 import {UntypedFormArray, UntypedFormGroup} from '@angular/forms';
 import {FormGeneratorService} from '../../../../services/form-generator.service';
 import {ApiService} from '../../../../../api/api.service';
-import Konva from 'konva';
+import type Konva from 'konva';
 import {Subscription} from 'rxjs';
 
 @Component({
@@ -14,7 +14,7 @@ import {Subscription} from 'rxjs';
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
-export class HotspotCanvasComponent extends BaseInputComponent implements OnInit {
+export class HotspotCanvasComponent extends BaseInputComponent implements OnInit, OnDestroy {
 
   @Input() field: FormFieldHotspotCanvas;
   @Input() form: UntypedFormGroup;
@@ -25,6 +25,7 @@ export class HotspotCanvasComponent extends BaseInputComponent implements OnInit
 
   private stage: Konva.Stage;
   private hotspotsLayer: Konva.Layer;
+  private konva: typeof Konva;
 
   private _subscription: Subscription;
 
@@ -33,22 +34,23 @@ export class HotspotCanvasComponent extends BaseInputComponent implements OnInit
   }
 
   ngOnInit() {
-    this._subscription = this.getControl().valueChanges.subscribe((value) => {
+    this._subscription = this.getControl().valueChanges.subscribe(async (value) => {
       const currentValue: { image: string, hotSpots: [{ x: number, y: number }] } = value;
 
       if (currentValue.image != null) {
         this._subscription.unsubscribe();
+        this.konva = (await import('konva')).default;
 
-        this.stage = new Konva.Stage({
+        this.stage = new this.konva.Stage({
           container: this.field.key,
           width: this.field.container.width,
           height: this.field.container.height
         });
 
-        const backgroundLayer = new Konva.Layer();
+        const backgroundLayer = new this.konva.Layer();
         this.stage.add(backgroundLayer);
 
-        Konva.Image.fromURL(currentValue.image, (backgroundImage) => {
+        this.konva.Image.fromURL(currentValue.image, (backgroundImage) => {
           backgroundImage.setAttrs({
             x: 0,
             y: 0,
@@ -79,7 +81,7 @@ export class HotspotCanvasComponent extends BaseInputComponent implements OnInit
           backgroundLayer.batchDraw();
         });
 
-        this.hotspotsLayer = new Konva.Layer();
+        this.hotspotsLayer = new this.konva.Layer();
         this.stage.add(this.hotspotsLayer);
 
         let index = 0;
@@ -90,6 +92,11 @@ export class HotspotCanvasComponent extends BaseInputComponent implements OnInit
       }
     });
 
+  }
+
+  ngOnDestroy() {
+    this._subscription?.unsubscribe();
+    this.stage?.destroy();
   }
 
   private dragLimits(pos) {
@@ -114,13 +121,13 @@ export class HotspotCanvasComponent extends BaseInputComponent implements OnInit
     y: number,
     hotspot: { width: number, height: number, previewImage: string },
     layer: Konva.Layer) {
-    Konva.Image.fromURL(hotspot.previewImage,  (image) => {
+    this.konva.Image.fromURL(hotspot.previewImage,  (image) => {
       image.setAttrs({
         width: hotspot.width,
         height: hotspot.height
       } as any);
 
-      const group = new Konva.Group({
+      const group = new this.konva.Group({
         x: x - (hotspot.width / 2),
         y: y - (hotspot.height / 2),
         draggable: true,
@@ -130,17 +137,17 @@ export class HotspotCanvasComponent extends BaseInputComponent implements OnInit
         }
       });
 
-      const deleteGroup = new Konva.Group({
+      const deleteGroup = new this.konva.Group({
         x: hotspot.width - 30,
         y: 30
       });
 
-      const deleteButton = new Konva.Circle({
+      const deleteButton = new this.konva.Circle({
         radius: 10,
         fill: 'red'
       });
 
-      const deleteText = new Konva.Text({
+      const deleteText = new this.konva.Text({
         text: 'X',
         fontSize: 10,
         fill: 'white'

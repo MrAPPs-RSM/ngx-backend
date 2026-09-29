@@ -13,7 +13,7 @@
     "typeRoots": [
       "node_modules/@types"
     ],
-    "module": "es2015",
+    "module": "ES2022",
     "strict": false,
     "useDefineForClassFields": false
   }

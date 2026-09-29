@@ -1,8 +1,7 @@
 import { from as observableFrom, Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { ApiService } from '../../api/api.service';
-import { Router } from '@angular/router';
-import { environment } from '../../../environments/environment';
+import { Route } from '@angular/router';
 import { DashboardPageComponent } from '../pages/dashboard-page/dashboard-page.component';
 import { TablePageComponent } from '../pages/table-page/table-page.component';
 import { FormPageComponent } from '../pages/form-page/form-page.component';
@@ -13,6 +12,7 @@ import { NotfoundPageComponent } from '../pages/notfound-page/notfound-page.comp
 import {CalendarPageComponent} from '../pages/calendar-page/calendar-page.component';
 import { PendingChangesGuard } from '../../auth/guards/pending-changes.guard';
 import { TicketDetailPageComponent } from '../pages/ticket-detail-page/ticket-detail-page.component';
+import { PanelSetupStateService } from '../../services/panel-setup-state.service';
 
 
 const TYPES = {
@@ -27,32 +27,30 @@ const TYPES = {
 @Injectable()
 export class SetupService {
 
-  public _lastRouteLoading: Date;
-
-  constructor(private _router: Router,
-    private _menuService: MenuService,
+  constructor(private _menuService: MenuService,
     private _apiService: ApiService,
-    private _languageService: LanguageService) {
+    private _languageService: LanguageService,
+    private _setupState: PanelSetupStateService) {
   }
 
-  public setup(): Observable<any> {
+  public setup(panelRoute: Route): Observable<any> {
     const promise = new Promise<void>((resolve, reject) => {
 
-      if (this._lastRouteLoading == null || Date.now() - this._lastRouteLoading.getMilliseconds() < 10000) {
+      if (this._setupState.lastRouteLoading == null || Date.now() - this._setupState.lastRouteLoading.getTime() > 10000) {
         this._apiService.setup()
           .then((data) => {
-            this._lastRouteLoading = new Date();
+            this._setupState.lastRouteLoading = new Date();
 
             if ('contentLanguages' in data) {
               this._languageService.setContentLanguages(data['contentLanguages']);
             }
 
-            this.loadRoutes(data);
+            this.loadRoutes(data, panelRoute);
             this._menuService.prepareMenu(data);
             resolve();
          })
           .catch((error) => {
-            this._lastRouteLoading = null;
+            this._setupState.reset();
             reject();
           });
       } else {
@@ -81,11 +79,9 @@ export class SetupService {
     return routes;
   }
 
-  private loadRoutes(data: any): void {
-
-    const routerConfig = this._router.config;
-
+  private loadRoutes(data: any, panelRoute: Route): void {
     const routes = [{ path: '404', component: NotfoundPageComponent }];
+    this._setupState.defaultRoute = null;
 
     for (const item of this.remapRoutesData(data)) {
       if (item.type in TYPES) {
@@ -99,17 +95,15 @@ export class SetupService {
           route['canDeactivate'] = [PendingChangesGuard];
         }
 
+        if (this._setupState.defaultRoute == null && item.params && item.params.isHomePage) {
+          this._setupState.defaultRoute = item.path;
+        }
+
         routes.push(route);
       }
     }
 
-    if (environment.domains) {
-      routerConfig[0].children[0].children = routes;
-    } else {
-      routerConfig[0].children = routes;
-    }
-
-    this._router.resetConfig(routerConfig);
+    panelRoute.children = routes;
   }
 
 }

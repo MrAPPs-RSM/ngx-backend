@@ -68,10 +68,10 @@ export class FormPageComponent implements OnInit, OnDestroy, ComponentCanDeactiv
                             this._router.navigate(['panel/' + form.submit.redirectAfter]);
                         });
                     } else {
-                        this._router.navigate(['../panel/' + form.submit.redirectAfter], {relativeTo: this._route.parent});
+                        this._router.navigate([form.submit.redirectAfter], {relativeTo: this._route.parent});
                     }
                 } else {
-                    this._router.navigate(['../panel/' + form.submit.redirectAfter], {relativeTo: this._route.parent});
+                    this._router.navigate([form.submit.redirectAfter], {relativeTo: this._route.parent});
                 }
             }
         }

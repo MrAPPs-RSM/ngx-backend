@@ -8,7 +8,7 @@
       }
     </label>
 
-    @if (field.options && field.options.editor) {
+    @if (field.options && field.options.editor && Editor) {
       <ckeditor
         [editor]="Editor"
         formControlName="{{field.key}}"

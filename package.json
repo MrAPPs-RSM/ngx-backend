@@ -1,15 +1,18 @@
 {
   "name": "ngx-backend",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build --configuration production",
-    "test": "ng test --watch=false --browsers=ChromeHeadless",
+    "ng": "node scripts/run-angular.mjs",
+    "start": "node scripts/run-angular.mjs serve",
+    "build": "node scripts/run-angular.mjs build --configuration production",
+    "test": "node scripts/run-angular.mjs test --watch=false --browsers=ChromeHeadless",
     "typecheck": "tsc --noEmit -p src/tsconfig.app.json"
   },
   "private": true,
+  "engines": {
+    "node": "^22.22.3 || ^24.15.0 || >=26.0.0"
+  },
   "dependencies": {
     "@angular/animations": "22.1.6",
     "@angular/cdk": "22.1.6",
@@ -32,7 +35,6 @@
     "bootstrap": "^5.3.8",
     "ckeditor5": "^48.4.0",
     "date-fns": "^4.4.0",
-    "file-saver": "^2.0.5",
     "jquery": "^3.7.1",
     "konva": "^10.3.0",
     "lodash": "^4.17.20",
@@ -43,29 +45,29 @@
     "zone.js": "~0.15.1"
   },
   "devDependencies": {
-    "@angular/build": "22.1.8",
-    "@angular/cli": "22.1.8",
+    "@angular/build": "22.2.0",
+    "@angular/cli": "22.2.0",
     "@angular/compiler-cli": "22.1.6",
     "@angular/language-service": "22.1.6",
-    "@types/file-saver": "^2.0.3",
-    "@types/jasmine": "^2.8.17",
+    "@types/jasmine": "5.1.15",
     "@types/lodash": "^4.14.161",
-    "@types/node": "^10.17.35",
+    "@types/node": "24.19.0",
     "istanbul-lib-instrument": "^6.0.3",
-    "jasmine-core": "~3.3.0",
+    "jasmine-core": "5.13.0",
     "karma": "^6.4.4",
-    "karma-chrome-launcher": "~2.2.0",
+    "karma-chrome-launcher": "3.2.0",
     "karma-coverage": "^2.2.1",
     "karma-coverage-istanbul-reporter": "^2.1.1",
-    "karma-jasmine": "^1.1.2",
-    "karma-jasmine-html-reporter": "^1.5.4",
+    "karma-jasmine": "5.1.0",
+    "karma-jasmine-html-reporter": "2.3.0",
     "typescript": "6.0.3"
   },
   "allowScripts": {
+    "@scarf/scarf@1.4.0": false,
     "esbuild@0.28.2": true,
     "@parcel/watcher@2.6.0": true,
     "fsevents@2.3.3": true,
-    "lmdb@3.5.6": true,
-    "msgpackr-extract@3.0.4": true
+    "lmdb@3.5.6": false,
+    "msgpackr-extract@3.0.4": false
   }
 }

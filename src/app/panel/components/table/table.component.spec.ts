@@ -37,4 +37,24 @@ describe('TableComponent', () => {
     expect(filter.where).toEqual({ level: 1 });
     expect(filter.where.code).toBeUndefined();
   });
+
+  it('should download files using the native browser API', () => {
+    const createObjectUrl = spyOn(URL, 'createObjectURL').and.returnValue('blob:test-download');
+    const revokeObjectUrl = spyOn(URL, 'revokeObjectURL');
+    const click = spyOn(HTMLAnchorElement.prototype, 'click');
+
+    (component as any).downloadFile('content', 'export.csv', 'text/csv');
+
+    expect(createObjectUrl).toHaveBeenCalled();
+    const blob = createObjectUrl.calls.mostRecent().args[0] as Blob;
+    expect(blob.type).toBe('text/csv');
+    expect(click).toHaveBeenCalled();
+
+    return new Promise<void>((resolve) => {
+      setTimeout(() => {
+        expect(revokeObjectUrl).toHaveBeenCalledWith('blob:test-download');
+        resolve();
+      }, 0);
+    });
+  });
 });

@@ -22,13 +22,17 @@
             ],
             "assets": [
               "src/assets",
-              "src/favicon.ico"
+              "src/favicon.ico",
+              {
+                "glob": "ckeditor5.css",
+                "input": "node_modules/ckeditor5/dist",
+                "output": "assets/ckeditor5"
+              }
             ],
             "styles": [
               "node_modules/@angular/cdk/a11y-prebuilt.css",
               "node_modules/angular-calendar/css/angular-calendar.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "node_modules/ckeditor5/dist/ckeditor5.css",
               "src/assets/sass/bootstrap3-compat.scss",
               "src/assets/sass/ngx-backend.scss",
               "src/lib/fancybox/css/jquery.fancybox.min.css"
@@ -114,14 +118,18 @@
               "node_modules/@angular/cdk/a11y-prebuilt.css",
               "node_modules/angular-calendar/css/angular-calendar.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "node_modules/ckeditor5/dist/ckeditor5.css",
               "src/assets/sass/bootstrap3-compat.scss",
               "src/assets/sass/ngx-backend.scss",
               "src/lib/fancybox/css/jquery.fancybox.min.css"
             ],
             "assets": [
               "src/assets",
-              "src/favicon.ico"
+              "src/favicon.ico",
+              {
+                "glob": "ckeditor5.css",
+                "input": "node_modules/ckeditor5/dist",
+                "output": "assets/ckeditor5"
+              }
             ]
           }
         }

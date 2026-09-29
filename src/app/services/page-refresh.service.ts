@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
-import * as _ from 'lodash';
 import { MenuService } from '../panel/services/menu.service';
 
 @Injectable()
@@ -30,7 +29,7 @@ export class PageRefreshService {
 
     public setBreadcrumb() : void {
         let breadcrumb = this.loadBreadcrumbfromLocalStorage();
-        if (!_.isNil(breadcrumb) && breadcrumb.length !==0) {
+        if (breadcrumb != null && breadcrumb.length !== 0) {
             this._menuService.breadcrumbs = breadcrumb
         } 
     }

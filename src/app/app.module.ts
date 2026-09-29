@@ -5,9 +5,9 @@ import { registerLocaleData } from '@angular/common';
 import localeIt from '@angular/common/locales/it';
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { Router, RouterModule, Routes } from '@angular/router';
-import { PanelModule } from './panel/panel.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './auth/login/login.component';
 
@@ -29,10 +29,19 @@ import { StorageService } from './services/storage.service';
 import { DomainNotFoundComponent } from './auth/domain-not-found/domain-not-found.component';
 import {httpInterceptorProviders} from './interceptors';
 import { ToastNotificationComponent } from './services/toast-notification/toast-notification.component';
+import { LanguageService } from './panel/services/language.service';
+import { MenuService } from './panel/services/menu.service';
+import { PageTitleService } from './panel/services/page-title.service';
+import { DynamicFormModule } from './panel/components/form/dynamic-form.module';
+import { ModalService } from './panel/services/modal.service';
 
 registerLocaleData(localeIt);
 
 const routes: Routes = [
+    {
+        path: 'panel',
+        loadChildren: () => import('./panel/panel.module').then(module => module.PanelModule)
+    },
     {
         path: 'password-reset',
         canActivate: [
@@ -69,7 +78,8 @@ const routes: Routes = [
         BrowserModule,
         NoopAnimationsModule,
         MatSnackBarModule,
-        PanelModule], providers: [
+        DynamicFormModule,
+        OwlNativeDateTimeModule], providers: [
         { provide: LOCALE_ID, useValue: 'it-IT' },
         {
             provide: APP_INITIALIZER,
@@ -89,6 +99,10 @@ const routes: Routes = [
         PageRefreshService,
         ToastsService,
         StorageService,
+        LanguageService,
+        MenuService,
+        ModalService,
+        PageTitleService,
         httpInterceptorProviders,
         provideHttpClient(withXhr(), withInterceptorsFromDi())
     ] })

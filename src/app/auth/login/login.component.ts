@@ -3,7 +3,7 @@ import { environment } from '../../../environments/environment';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../services/user.service';
 import { ToastsService } from '../../services/toasts.service';
-import { SetupService } from '../../panel/services/setup.service';
+import { PanelSetupStateService } from '../../services/panel-setup-state.service';
 import { StorageService } from '../../services/storage.service';
 import { ApiService, ErrorResponse } from '../../api/api.service';
 
@@ -23,14 +23,14 @@ export class LoginComponent implements OnInit {
     constructor(private _toastsService: ToastsService,
         private _route: ActivatedRoute,
         private _storageService: StorageService,
-        private _setupService: SetupService,
+        private _panelSetupState: PanelSetupStateService,
         private _apiService: ApiService,
         private _userService: UserService,
         private _router: Router) {
     }
 
     ngOnInit() {
-        this._setupService._lastRouteLoading = null;
+        this._panelSetupState.reset();
     }
 
     onSubmit(data: any): void {
