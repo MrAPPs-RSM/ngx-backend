@@ -285,15 +285,16 @@ export class FormComponent extends BaseLongPollingComponent implements OnInit, O
       }
     }
 
-    // Sostituisce ":id" nel redirectAfter configurato con l'id della response, ed eventualmente aggiunge
+    // Sostituisce i placeholder (es. ":id" e ":title") nel redirectAfter con i valori della response, ed eventualmente aggiunge
     // il query param "listParams" per filtrare la lista di destinazione per response[redirectAfterFilterKey]
     // (stesso formato "where" dei bottoni tabella con params.filter.where, es. "Sotto-codici" in setup.json).
     private buildRedirectPath(response: any): string {
-      let path = this.settings.submit.redirectAfter;
-
-      if (response && response.id !== undefined && response.id !== null) {
-        path = path.replace(':id', response.id);
-      }
+      let path = this.settings.submit.redirectAfter.replace(/:([a-zA-Z0-9_]+)/g, (placeholder, key) => {
+        const value = response && response[key];
+        return value !== undefined && value !== null && value !== ''
+          ? encodeURIComponent(String(value))
+          : placeholder;
+      });
 
       const filterKey = this.settings.submit.redirectAfterFilterKey;
       if (filterKey && response && response[filterKey] !== undefined && response[filterKey] !== null) {

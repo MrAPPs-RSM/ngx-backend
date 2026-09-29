@@ -34,6 +34,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
 
     private _subscription = Subscription.EMPTY;
     private _dependsSubscription = Subscription.EMPTY;
+    private _dependsObserverSubscription = Subscription.EMPTY;
     private _subFieldSubscription = Subscription.EMPTY;
 
     private _valueChangesSubscription = Subscription.EMPTY;
@@ -63,67 +64,94 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
       this.addQueryParams();
 
       setTimeout(() => {
-        // For some reason, sometimes this.field.dependsOn was of type Subject, causing errors
-        if (this.field.dependsOn && typeof this.field.dependsOn !== 'object') {
-          const key = Array.isArray(this.field.dependsOn) ? this.field.dependsOn[0] : this.field.dependsOn;
-          if (this.getControl(key)) {
-            this._dependsSubscription = this.getControl(key).valueChanges.subscribe((value) => {
-              let keyNotSet = true;
-              const indexesToDelete: number[] = [];
+        this.setupDependencies();
 
-              this.params.where.and.forEach((cond, index) => {
-                if (Object.keys(cond)[0] === key) { // update if already set
-                  if (value && value !== '') {
-                    cond[key] = value;
-                  } else {
-                    indexesToDelete.push(index);
-                  }
-                  keyNotSet = keyNotSet && false;
+        this.loadOptions().then(() => {
+          if (!this.isEdit || !this.isSubField) {
+            this.listenValueChange();
+          } else if (this.isSubField) {
+            this.getControl().updateValueAndValidity();
+            if (this.getControl().value !== null && typeof this.getControl().value !== 'undefined') {
+              this.updateSelectedOptions(this.getControl().value);
+            } else {
+              this._subFieldSubscription = this.getControl().parent.valueChanges.subscribe((value) => {
+                if (value && value[this.field.key]) {
+                  this.updateSelectedOptions(value[this.field.key]);
+                  this._subFieldSubscription.unsubscribe();
                 }
               });
-              if (keyNotSet) {
-                if (value && value !== '') {
-                  const condition = {};
-                  condition[key] = value;
-                  this.params.where.and.push(condition);
-                }
-              }
-              if (indexesToDelete.length > 0) {
-                indexesToDelete.forEach((index) => {
-                  this.params.where.and.splice(index, 1);
-                });
-              }
-
-              this.loadOptions(true)
-                .then(() => {
-                  this.checkSelection();
-                  this.updateSelectedOptions(this.getControl().value);
-                })
-                .catch((error) => {
-                  console.log(error);
-                });
-            });
-          }
-        } else {
-          this.loadOptions().then(() => {
-            if (!this.isEdit || !this.isSubField) {
-              this.listenValueChange();
-            } else if (this.isSubField) {
-              this.getControl().updateValueAndValidity();
-              if (this.getControl().value !== null && typeof this.getControl().value !== 'undefined') {
-                this.updateSelectedOptions(this.getControl().value);
-              } else {
-                this._subFieldSubscription = this.getControl().parent.valueChanges.subscribe((value) => {
-                  if (value && value[this.field.key]) {
-                    this.updateSelectedOptions(value[this.field.key]);
-                    this._subFieldSubscription.unsubscribe();
-                  }
-                });
-              }
             }
-          }).catch((err) => console.log(err));
-        }
+          }
+        }).catch((err) => console.log(err));
       }, 500);
+    }
+
+    private setupDependencies(): void {
+        const dependencies = Array.isArray(this.field.dependsOn)
+            ? this.field.dependsOn
+            : this.field.dependsOn ? [this.field.dependsOn] : [];
+
+        const subscriptions = new Subscription();
+        const observerSubscriptions = new Subscription();
+
+        dependencies.forEach((dependency) => {
+            if (typeof dependency === 'string') {
+                const control = this.getControl(dependency);
+                if (!control) {
+                    return;
+                }
+
+                this.updateDependencyCondition(dependency, control.value);
+                subscriptions.add(control.valueChanges.subscribe((value) => {
+                    this.updateDependencyCondition(dependency, value);
+                    this.reloadDependentOptions();
+                }));
+            } else if (dependency instanceof Subject) {
+                this.observable = dependency;
+                observerSubscriptions.add(dependency.subscribe(() => this.reloadDependentOptions()));
+            }
+        });
+
+        this._dependsSubscription = subscriptions;
+        this._dependsObserverSubscription = observerSubscriptions;
+    }
+
+    private updateDependencyCondition(key: string, rawValue: any): void {
+        const value = this.normalizeDependencyValue(rawValue);
+        const conditionIndex = this.params.where.and.findIndex((condition) => Object.keys(condition)[0] === key);
+        const hasValue = value !== null
+            && typeof value !== 'undefined'
+            && value !== ''
+            && (!Array.isArray(value) || value.length > 0);
+
+        if (!hasValue) {
+            if (conditionIndex !== -1) {
+                this.params.where.and.splice(conditionIndex, 1);
+            }
+            return;
+        }
+
+        if (conditionIndex !== -1) {
+            this.params.where.and[conditionIndex][key] = value;
+        } else {
+            this.params.where.and.push({[key]: value});
+        }
+    }
+
+    private normalizeDependencyValue(value: any): any {
+        if (Array.isArray(value)) {
+            return value.map((item) => item && typeof item === 'object' && 'id' in item ? item.id : item);
+        }
+        return value && typeof value === 'object' && 'id' in value ? value.id : value;
+    }
+
+    private reloadDependentOptions(): void {
+        this.loadOptions(true)
+            .then(() => {
+                this.checkSelection();
+                this.updateSelectedOptions(this.getControl().value);
+            })
+            .catch((error) => console.log(error));
     }
 
     /* When type in select */
@@ -163,6 +191,18 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
 
         if (this._subFieldSubscription) {
             this._subFieldSubscription.unsubscribe();
+        }
+
+        if (this._dependsSubscription) {
+            this._dependsSubscription.unsubscribe();
+        }
+
+        if (this._dependsObserverSubscription) {
+            this._dependsObserverSubscription.unsubscribe();
+        }
+
+        if (this._valueChangesSubscription) {
+            this._valueChangesSubscription.unsubscribe();
         }
     }
 
@@ -215,15 +255,19 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
                     }
 
                     const paramsRegex = new RegExp(':[a-zA-Z0-9]+', 'g');
-                    const params = this.endpoint.match(paramsRegex);
+                    let requestEndpoint = this.endpoint;
+                    const params = requestEndpoint.match(paramsRegex);
 
                     if (params) {
-                      for (const param of params ?? []) {
-                        const formControl = this.getControl(param.substring(1));
-                        if (formControl) {
-                            this.endpoint = this.endpoint.replace(param, formControl.value);
+                        for (const param of params) {
+                            const formControl = this.getControl(param.substring(1));
+                            if (formControl) {
+                                requestEndpoint = requestEndpoint.replace(
+                                    param,
+                                    this.normalizeDependencyValue(formControl.value)
+                                );
+                            }
                         }
-                    }
                     }
 
                     /** Add lang if not set by setup.json but defined in select*/
@@ -238,7 +282,7 @@ export class SelectComponent extends BaseInputComponent implements OnInit, OnDes
                         }
                     }
 
-                    this._apiService.get(this.endpoint, queryParams)
+                    this._apiService.get(requestEndpoint, queryParams)
                         .then((response) => {
                             this.options = this.filterOptionsIfNeeded(response);
                             this.setValueIfSingleOptionAndRequired();

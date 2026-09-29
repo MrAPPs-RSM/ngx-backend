@@ -57,6 +57,7 @@ export class Select2Component extends BaseInputComponent implements OnInit, OnDe
         }
         // Fixed options
         this.addQueryParams();
+        this.setupDependencies();
         this.loadOptions().then(() => {
             if (this.isEdit) {
                 /** Only if subField of list-detail-component */
@@ -80,48 +81,62 @@ export class Select2Component extends BaseInputComponent implements OnInit, OnDe
             }
         }).catch((err) => console.log(err));
 
-        if (this.field.dependsOn) {
-            const key = Array.isArray(this.field.dependsOn) ? this.field.dependsOn[0] : this.field.dependsOn;
+    }
 
-            if (this.getControl(key)) {
-                this._dependsSubscription = this.getControl(key).valueChanges.subscribe((value) => {
-                    let keyNotSet = true;
-                    const indexesToDelete: number[] = [];
+    private setupDependencies(): void {
+        const dependencies = Array.isArray(this.field.dependsOn)
+            ? this.field.dependsOn
+            : this.field.dependsOn ? [this.field.dependsOn] : [];
+        const subscriptions = new Subscription();
 
-                    this.params.where.and.forEach((cond, index) => {
-                        if (Object.keys(cond)[0] === key) { // update if already set
-                            if (value && value !== '') {
-                                cond[key] = value;
-                            } else {
-                                indexesToDelete.push(index);
-                            }
-                            keyNotSet = keyNotSet && false;
-                        }
-                    });
-                    if (keyNotSet) {
-                        if (value && value !== '') {
-                            const condition = {};
-                            condition[key] = value;
-                            this.params.where.and.push(condition);
-                        }
-                    }
-                    if (indexesToDelete.length > 0) {
-                        indexesToDelete.forEach((index) => {
-                            this.params.where.and.splice(index, 1);
-                        });
-                    }
-
-                    this.loadOptions(true)
-                        .then(() => {
-                            this.checkSelection();
-                            this.updateSelectedOptions(this.getControl().value);
-                        })
-                        .catch((error) => {
-                            console.log(error);
-                        });
-                });
+        dependencies.filter((dependency) => typeof dependency === 'string').forEach((key) => {
+            const control = this.getControl(key);
+            if (!control) {
+                return;
             }
+
+            this.updateDependencyCondition(key, control.value);
+            subscriptions.add(control.valueChanges.subscribe((value) => {
+                this.updateDependencyCondition(key, value);
+                this.loadOptions(true)
+                    .then(() => {
+                        this.checkSelection();
+                        this.updateSelectedOptions(this.getControl().value);
+                    })
+                    .catch((error) => console.log(error));
+            }));
+        });
+
+        this._dependsSubscription = subscriptions;
+    }
+
+    private updateDependencyCondition(key: string, rawValue: any): void {
+        const value = this.normalizeDependencyValue(rawValue);
+        const conditionIndex = this.params.where.and.findIndex((condition) => Object.keys(condition)[0] === key);
+        const hasValue = value !== null
+            && typeof value !== 'undefined'
+            && value !== ''
+            && (!Array.isArray(value) || value.length > 0);
+
+        if (!hasValue) {
+            if (conditionIndex !== -1) {
+                this.params.where.and.splice(conditionIndex, 1);
+            }
+            return;
         }
+
+        if (conditionIndex !== -1) {
+            this.params.where.and[conditionIndex][key] = value;
+        } else {
+            this.params.where.and.push({[key]: value});
+        }
+    }
+
+    private normalizeDependencyValue(value: any): any {
+        if (Array.isArray(value)) {
+            return value.map((item) => item && typeof item === 'object' && 'id' in item ? item.id : item);
+        }
+        return value && typeof value === 'object' && 'id' in value ? value.id : value;
     }
 
     /* When type in select */
@@ -148,6 +163,10 @@ export class Select2Component extends BaseInputComponent implements OnInit, OnDe
         if (this._subFieldSubscription) {
             this._subFieldSubscription.unsubscribe();
         }
+
+        if (this._dependsSubscription) {
+            this._dependsSubscription.unsubscribe();
+        }
     }
 
     /** Used in edit mode, but also in create if value is pre-set from table or query params */
@@ -166,6 +185,7 @@ export class Select2Component extends BaseInputComponent implements OnInit, OnDe
 
     private updateSelectedOptions(value: any) {
         if (typeof value !== 'undefined' && value !== null) {
+            this.selected = [];
             value.forEach((item) => {
                 this.options.forEach((option) => {
                     if (option.id === item.id) {
