@@ -33,7 +33,7 @@
     "angular-draggable-droppable": "^9.0.1",
     "angular-resizable-element": "^8.0.0",
     "bootstrap": "^5.3.8",
-    "ckeditor5": "^48.4.0",
+    "ckeditor5": "^48.5.3",
     "date-fns": "^4.4.0",
     "jquery": "^3.7.1",
     "konva": "^10.3.0",
